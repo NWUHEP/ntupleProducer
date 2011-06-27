@@ -252,7 +252,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 		Handle<PFMETCollection> MET;
 		iEvent.getByLabel(metTag_, MET);
 
-		for (PFMETCollection::const_iterator iMET = MET->begin(); iMET != MET->end(); ++iMET) {
+		if (pfMET.isValid()) {
 			TCMET* metCon = new ((*recoMET)[metCount]) TCMET;
 			metCon->SetSumEt(iMET->sumEt());
 			metCon->SetMet(iMET->et());
