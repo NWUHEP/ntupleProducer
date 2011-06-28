@@ -251,20 +251,19 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 		Handle<PFMETCollection> MET;
 		iEvent.getByLabel(metTag_, MET);
-
-		if (pfMET.isValid()) {
-			TCMET* metCon = new ((*recoMET)[metCount]) TCMET;
-			metCon->SetSumEt(iMET->sumEt());
-			metCon->SetMet(iMET->et());
-			metCon->SetPhi(iMET->phi());
-			metCon->SetPhotonEtFraction(iMET->photonEtFraction());
-			metCon->SetElectronEtFraction(iMET->electronEtFraction());
-			metCon->SetMuonEtFraction(iMET->muonEtFraction());
-			metCon->SetNeutralHadronEtFraction(iMET->neutralHadronEtFraction());
-			metCon->SetChargedHadronEtFraction(iMET->chargedHadronEtFraction());
-			metCon->SetHFHadronEtFraction(iMET->HFHadronEtFraction());
-			metCon->SetHFEMEtFraction(iMET->HFEMEtFraction());
-			++metCount;
+		for (PFMETCollection::const_iterator iMET = MET->begin(); iMET != MET->end(); ++iMET) {
+		  TCMET* metCon = new ((*recoMET)[metCount]) TCMET;
+		  metCon->SetSumEt(iMET->sumEt());
+		  metCon->SetMet(iMET->et());
+		  metCon->SetPhi(iMET->phi());
+		  metCon->SetPhotonEtFraction(iMET->photonEtFraction());
+		  metCon->SetElectronEtFraction(iMET->electronEtFraction());
+		  metCon->SetMuonEtFraction(iMET->muonEtFraction());
+		  metCon->SetNeutralHadronEtFraction(iMET->neutralHadronEtFraction());
+		  metCon->SetChargedHadronEtFraction(iMET->chargedHadronEtFraction());
+		  metCon->SetHFHadronEtFraction(iMET->HFHadronEtFraction());
+		  metCon->SetHFEMEtFraction(iMET->HFEMEtFraction());
+		  ++metCount;
 		}
 	}
 
