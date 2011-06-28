@@ -125,7 +125,7 @@ class ntupleProducer : public edm::EDAnalyzer {
 
 		int eventNumber, runNumber, lumiSection, bunchCross;
 		float ptHat, qScale, crossSection, evtWeight;
-		float deliveredLumi, recordedLumi;
+		float deliveredLumi, recordedLumi, lumiDeadCount;
 		float rhoFactor;
 
 		TTree* eventTree;
