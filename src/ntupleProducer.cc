@@ -251,19 +251,21 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 		Handle<PFMETCollection> MET;
 		iEvent.getByLabel(metTag_, MET);
-		for (PFMETCollection::const_iterator iMET = MET->begin(); iMET != MET->end(); ++iMET) {
-		  TCMET* metCon = new ((*recoMET)[metCount]) TCMET;
-		  metCon->SetSumEt(iMET->sumEt());
-		  metCon->SetMet(iMET->et());
-		  metCon->SetPhi(iMET->phi());
-		  metCon->SetPhotonEtFraction(iMET->photonEtFraction());
-		  metCon->SetElectronEtFraction(iMET->electronEtFraction());
-		  metCon->SetMuonEtFraction(iMET->muonEtFraction());
-		  metCon->SetNeutralHadronEtFraction(iMET->neutralHadronEtFraction());
-		  metCon->SetChargedHadronEtFraction(iMET->chargedHadronEtFraction());
-		  metCon->SetHFHadronEtFraction(iMET->HFHadronEtFraction());
-		  metCon->SetHFEMEtFraction(iMET->HFEMEtFraction());
-		  ++metCount;
+		PFMETCollection::const_iterator pfMET = MET->begin();
+
+		if (MET.isValid()) {
+			TCMET* metCon = new ((*recoMET)[metCount]) TCMET;
+			metCon->SetSumEt(pfMET->sumEt());
+			metCon->SetMet(pfMET->et());
+			metCon->SetPhi(pfMET->phi());
+			metCon->SetPhotonEtFraction(pfMET->photonEtFraction());
+			metCon->SetElectronEtFraction(pfMET->electronEtFraction());
+			metCon->SetMuonEtFraction(pfMET->muonEtFraction());
+			metCon->SetNeutralHadronEtFraction(pfMET->neutralHadronEtFraction());
+			metCon->SetChargedHadronEtFraction(pfMET->chargedHadronEtFraction());
+			metCon->SetHFHadronEtFraction(pfMET->HFHadronEtFraction());
+			metCon->SetHFEMEtFraction(pfMET->HFEMEtFraction());
+			++metCount;
 		}
 	}
 
@@ -394,6 +396,22 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 				++partonCount;
 			}
 		}
+
+		for (GenJetCollection::const_iterator jet_iter = GenJets->begin(); jet_iter!= GenJets->end(); ++jet_iter) {
+			reco::GenJet myJet = reco::GenJet(*jet_iter);      
+			if (myJet.pt() > 10) { 
+
+				TCGenJet* jetCon = new ((*genJets)[genCount]) TCGenJet;
+				jetCon->SetP4(myJet.px(), myJet.py(), myJet.pz(), myJet.energy());
+				jetCon->SetHadEnergy(myJet.hadEnergy());
+				jetCon->SetEmEnergy(myJet.emEnergy());
+				jetCon->SetInvEnergy(myJet.invisibleEnergy());
+				jetCon->SetAuxEnergy(myJet.auxiliaryEnergy());
+				jetCon->SetNumConstit(myJet.getGenConstituents().size());
+
+				++genCount;	
+			}
+		}
 	}
 
 
@@ -414,14 +432,13 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 		for (int i=0; i < (int)hlNames.size(); ++i) {      
 			if (!triggerDecision(hltR, i)) continue;	
 			for (int j = 0; j < (int)triggerPaths_.size(); ++j){
-				hltPrescale[i] = hltConfig_.prescaleValue(iEvent, iSetup, triggerPaths_[i]); //This should be done at the end of the run
 				if (hlNames[i].compare(0, triggerPaths_[j].length(),triggerPaths_[j]) == 0) {
 					triggerStatus |= 0x01 << j;
 				}
 			}
 		} 
 
-	if (true) sTree -> Fill(); // possibly specify a cut in configuration
+	if (true) eventTree -> Fill(); // possibly specify a cut in configuration
 
 	primaryVtx->Clear("C");
 	recoJets->Clear("C");
@@ -437,43 +454,51 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 void  ntupleProducer::beginJob()
 {  
 	ntupleFile               = new TFile(rootfilename.c_str(), "RECREATE");
-	sTree                    = new TTree("ntupleTree", "Tree for Jets");
+	eventTree                = new TTree("eventTree", "Tree ");
+	runTree                  = new TTree("runTree", "Tree for Jets");
 
+	primaryVtx               = new TClonesArray("TCPrimaryVtx");
 	recoJets                 = new TClonesArray("TCJet");
-	genJets                  = new TClonesArray("TCGenJet");
 	recoMET                  = new TClonesArray("TCMET");
 	recoElectrons            = new TClonesArray("TCElectron");
 	recoMuons                = new TClonesArray("TCMuon");
-	primaryVtx               = new TClonesArray("TCPrimaryVtx");
+	recoTaus                 = new TClonesArray("TCTau");
+	recoPhotons              = new TClonesArray("TCPhoton");
+	genJets                  = new TClonesArray("TCGenJet");
 	hardPartonP4             = new TClonesArray("TLorentzVector");
 
-	sTree->Branch("recoJets",&recoJets, 6400, 0);
-	sTree->Branch("recoElectrons",&recoElectrons, 6400, 0);
-	sTree->Branch("recoMuons",&recoMuons, 6400, 0);
-	sTree->Branch("recoMET",&recoMET, 6400, 0);
-	sTree->Branch("primaryVtx",&primaryVtx, 6400, 0);
+	eventTree->Branch("primaryVtx",&primaryVtx, 6400, 0);
+	eventTree->Branch("recoJets",&recoJets, 6400, 0);
+	eventTree->Branch("recoElectrons",&recoElectrons, 6400, 0);
+	eventTree->Branch("recoMuons",&recoMuons, 6400, 0);
+	eventTree->Branch("recoTaus",&recoTaus, 6400, 0);
+	eventTree->Branch("recoPhotons",&recoPhotons, 6400, 0);
+	eventTree->Branch("recoMET",&recoMET, 6400, 0);
+	eventTree->Branch("genJets",&genJets, 6400, 0);
 
-	sTree->Branch("eventNumber",&eventNumber, "eventNumber/I");
-	sTree->Branch("runNumber",&runNumber, "runNumber/I");
-	sTree->Branch("lumiSection",&lumiSection, "lumiSection/I");
-	sTree->Branch("triggerStatus",&triggerStatus, "triggerStatus/i");
-	sTree->Branch("hltPrescale",hltPrescale, "hltPrescale[32]/i");
-	sTree->Branch("isRealData",&isRealData, "isRealData/i");
-	sTree->Branch("bunchCross",&bunchCross, "bunchCross/i");
-	sTree->Branch("lumiDeadCount",&lumiDeadCount, "lumiDeadCount/f");
-	sTree->Branch("lumiLiveFrac",&lumiLiveFrac, "lumiLiveFrac/f");
-	sTree->Branch("intDelLumi",&intDelLumi, "intDelLumi/f");
-	sTree->Branch("ptHat",&ptHat, "ptHat/f");
-	sTree->Branch("qScale", &qScale, "qScale/f");
-	sTree->Branch("evtWeight", &evtWeight, "evtWeight/f");
-	sTree->Branch("crossSection", &crossSection, "crossSection/f");
-	sTree->Branch("rhoFactor",&rhoFactor, "rhoFactor/F");
+	eventTree->Branch("eventNumber",&eventNumber, "eventNumber/I");
+	eventTree->Branch("runNumber",&runNumber, "runNumber/I");
+	eventTree->Branch("lumiSection",&lumiSection, "lumiSection/I");
+	eventTree->Branch("triggerStatus",&triggerStatus, "triggerStatus/i");
+	eventTree->Branch("isRealData",&isRealData, "isRealData/i");
+	eventTree->Branch("bunchCross",&bunchCross, "bunchCross/i");
+	eventTree->Branch("ptHat",&ptHat, "ptHat/f");
+	eventTree->Branch("qScale", &qScale, "qScale/f");
+	eventTree->Branch("evtWeight", &evtWeight, "evtWeight/f");
+	eventTree->Branch("crossSection", &crossSection, "crossSection/f");
+	eventTree->Branch("rhoFactor",&rhoFactor, "rhoFactor/F");
+
+	runTree->Branch("deliveredLumi",&deliveredLumi, "deliveredLumi/f");
+	runTree->Branch("recordedLumi",&recordedLumi, "recordedLumi/f");
+	runTree->Branch("hltPrescale",hltPrescale, "hltPrescale[32]/i");
 }
 
 void ntupleProducer::beginRun(const edm::Run& iRun, const edm::EventSetup& iEvent)
 {
 	bool changed = true; 
 	hltConfig_.init(iRun, iEvent, hltProcess_, changed);
+	deliveredLumi = 0;
+	recordedLumi  = 0;
 }
 
 void ntupleProducer::endLuminosityBlock(const edm::LuminosityBlock& iLumi, const edm::EventSetup& iEvent)
@@ -482,8 +507,8 @@ void ntupleProducer::endLuminosityBlock(const edm::LuminosityBlock& iLumi, const
 	iLumi.getByLabel("lumiProducer", lumiSummary);
 
 	lumiDeadCount  = lumiSummary->deadcount();
-	lumiLiveFrac   = lumiSummary->liveFrac();
-	intDelLumi     = lumiSummary->avgInsDelLumi()*93.244;
+	deliveredLumi  += lumiSummary->avgInsDelLumi()*93.244;
+	recordedLumi   += lumiSummary->avgInsDelLumi()*lumiSummary->liveFrac()*93.244;
 
 	//cout<<iLumi.id().luminosityBlock()<<endl;
 	//cout<<"\t Dead Count = "<<lumiSummary->deadcount()<<endl;
@@ -494,13 +519,20 @@ void ntupleProducer::endLuminosityBlock(const edm::LuminosityBlock& iLumi, const
 
 void ntupleProducer::endRun(const edm::Run& iRun, const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-	Handle<GenRunInfoProduct> GenRunInfoHandle;
-	iEvent.getByLabel("generator", GenRunInfoHandle);
+	isRealData   = iEvent.isRealData();
 
-	if (GenRunInfoHandle.isValid()) {
-		crossSection = GenRunInfoHandle->crossSection();
+	if (!isRealData) {
+		Handle<GenRunInfoProduct> GenRunInfoHandle;
+		iEvent.getByLabel("generator", GenRunInfoHandle);
+
+		if (GenRunInfoHandle.isValid() && !isRealData) {
+			crossSection = GenRunInfoHandle->crossSection();
+		}
 	}
 
+	for(int i = 0; i < (int)triggerPaths_.size(); ++i) hltPrescale[i] = hltConfig_.prescaleValue(iEvent, iSetup, triggerPaths_[i]); //This should be done at the end of the run
+
+	runTree->Fill();
 }
 // ------------ method called once each job just after ending the event loop  ------------
 void ntupleProducer::endJob() 

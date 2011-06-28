@@ -125,10 +125,11 @@ class ntupleProducer : public edm::EDAnalyzer {
 
 		int eventNumber, runNumber, lumiSection, bunchCross;
 		float ptHat, qScale, crossSection, evtWeight;
-		float lumiDeadCount, lumiLiveFrac, intDelLumi;
+		float deliveredLumi, recordedLumi;
 		float rhoFactor;
 
-		TTree* sTree;
+		TTree* eventTree;
+		TTree* runTree;
 		TFile* ntupleFile;
 		edm::InputTag jetTag_;
 		edm::InputTag metTag_;
@@ -153,10 +154,12 @@ class ntupleProducer : public edm::EDAnalyzer {
 		//Physics object containers
 		TClonesArray* recoJets;
 		TClonesArray* recoMET;
-		TClonesArray* genJets;
-		TClonesArray* primaryVtx;
 		TClonesArray* recoMuons;
 		TClonesArray* recoElectrons;
+		TClonesArray* recoTaus;
+		TClonesArray* recoPhotons;
+		TClonesArray* genJets;
+		TClonesArray* primaryVtx;
 
 		//GenParticles
 		TClonesArray* hardPartonP4;
