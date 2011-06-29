@@ -353,6 +353,28 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 	// Get photons //
 	/////////////////
 
+	if (savePhotons_) {
+		edm::Handle<reco::PhotonCollection> photons;
+		iEvent.getByLabel(photonTag_, photons);
+
+		int photonCount = 0;
+		for (reco::PhotonCollection::const_iterator iPhoton = photons->begin(); iPhoton != photons->end() ; ++iPhoton)
+		{
+			TCPhoton* myPhoton = new ((*recoPhotons)[photonCount]) TCPhoton;
+			myPhoton->SetP4(iPhoton->px(), iPhoton->py(), iPhoton->pz(), iPhoton->p());
+			myPhoton->SetEMIso(iPhoton->ecalRecHitSumEtConeDR04());
+			myPhoton->SetHADIso(iPhoton->hcalTowerSumEtConeDR04());
+			myPhoton->SetTRKIso(iPhoton->trkSumPtHollowConeDR04());
+			myPhoton->SetHadOverEm(iPhoton->hadronicOverEm());
+			myPhoton->SetSigmaIEtaIEta(iPhoton->sigmaIetaIeta());
+			//myPhoton->SetSigmaIphiIphi();
+			//myPhoton->SetE2OverE9();
+			myPhoton->SetEtaSupercluster(iPhoton->superCluster()->eta());
+			myPhoton->SetTrackVeto(iPhoton->hasPixelSeed());
+
+			photonCount++;
+		}
+	}
 
 	//////////////
 	// Get taus //
@@ -376,24 +398,32 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 		Handle<reco::GenJetCollection> GenJets;
 		iEvent.getByLabel(genJetTag_, GenJets);
 
-		ptHat = qScale = -1; crossSection = 0;
+		evtWeight = ptHat = qScale = -1;
 
 		if (GenEventInfoHandle.isValid()) {
 			qScale       = GenEventInfoHandle->qScale();
 			ptHat        = (GenEventInfoHandle->hasBinningValues() ? GenEventInfoHandle->binningValues()[0] : 0.0);
-			evtWeight    = GenEventInfoHandle->weight();
+			//evtWeight    = GenEventInfoHandle->weight();
 		}
 
-		//vector<HepMC::GenParticle*> genPartons;
+		//////////////////////
+		// Get genParticles //
+		//////////////////////
 
-		//for (HepMC::GenEvent::particle_const_iterator iGenParticle = Evt->particles_begin(); iGenParticle != Evt->particles_end(); ++iGenParticle) {
-		//	HepMC::GenParticle *myGenPart = *iGenParticle;
-		//	if (myGenPart->status() == 23) {
-		//		new ((*hardPartonP4)[partonCount]) TLorentzVector(myGenPart->momentum().px(), myGenPart->momentum().py(), myGenPart->momentum().pz(), myGenPart->momentum().e());
-		//		partonPdgId[partonCount] = myGenPart->pdg_id();
-		//		++partonCount;
-		//	}
-		//}
+		vector<HepMC::GenParticle*> genPartons;
+
+		for (HepMC::GenEvent::particle_const_iterator iGenParticle = Evt->particles_begin(); iGenParticle != Evt->particles_end(); ++iGenParticle) {
+			HepMC::GenParticle *myGenPart = *iGenParticle;
+			if (myGenPart->status() == 23) {
+				new ((*hardPartonP4)[partonCount]) TLorentzVector(myGenPart->momentum().px(), myGenPart->momentum().py(), myGenPart->momentum().pz(), myGenPart->momentum().e());
+				partonPdgId[partonCount] = myGenPart->pdg_id();
+				++partonCount;
+			}
+		}
+
+		/////////////////
+		// Get genJets //
+		/////////////////
 
 		if (saveGenJets_) {
 
@@ -442,7 +472,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 		}
 	} 
 
-	if (triggerStatus == 0x0) eventTree -> Fill(); // possibly specify a cut in configuration
+	if (triggerStatus != 0x0) eventTree -> Fill(); // possibly specify a cut in configuration
 
 	primaryVtx->Clear("C");
 	recoJets->Clear("C");
@@ -488,7 +518,6 @@ void  ntupleProducer::beginJob()
 	eventTree->Branch("ptHat",&ptHat, "ptHat/f");
 	eventTree->Branch("qScale", &qScale, "qScale/f");
 	eventTree->Branch("evtWeight", &evtWeight, "evtWeight/f");
-	eventTree->Branch("crossSection", &crossSection, "crossSection/f");
 	eventTree->Branch("rhoFactor",&rhoFactor, "rhoFactor/F");
 	eventTree->Branch("hltPrescale",hltPrescale, "hltPrescale[64]/i");
 
@@ -530,7 +559,6 @@ void ntupleProducer::endLuminosityBlock(const edm::LuminosityBlock& iLumi, const
 void ntupleProducer::endRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
 {
 	cout<<"\t Integrated luminosity = "<<deliveredLumi<<endl;
-
 	runTree->Fill();
 }
 // ------------ method called once each job just after ending the event loop  ------------
