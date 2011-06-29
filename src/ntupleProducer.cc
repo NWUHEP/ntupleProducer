@@ -24,6 +24,14 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
 	savePhotons_      = iConfig.getUntrackedParameter<bool>("savePhotons");
 	saveMET_          = iConfig.getUntrackedParameter<bool>("saveMET");
 	saveGenJets_      = iConfig.getUntrackedParameter<bool>("saveGenJets");
+
+	electronIDMap95_            = iConfig.getParameter<edm::InputTag>("electronIDMap95");
+	electronIDMap90_            = iConfig.getParameter<edm::InputTag>("electronIDMap90");
+	electronIDMap85_            = iConfig.getParameter<edm::InputTag>("electronIDMap85");
+	electronIDMap80_            = iConfig.getParameter<edm::InputTag>("electronIDMap80");
+	electronIDMap70_            = iConfig.getParameter<edm::InputTag>("electronIDMap70");
+	electronIDMap60_            = iConfig.getParameter<edm::InputTag>("electronIDMap60");
+
 }
 
 ntupleProducer::~ntupleProducer()
@@ -281,22 +289,54 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 		for (MuonCollection::const_iterator mu = muons->begin(); mu != muons->end(); ++mu) {
 			if (!(mu->isGlobalMuon() && mu->isTrackerMuon()) || mu->pt() < 10.) continue;
 			TCMuon* muCon = new ((*recoMuons)[muCount]) TCMuon;
-			muCon->Setp4(mu->px(), mu->py(), mu->pz(), mu->p());
+
+			
+			muCon->SetP4(mu->px(), mu->py(), mu->pz(), mu->energy());
 			muCon->SetVtx(mu->globalTrack()->vx(),mu->globalTrack()->vy(),mu->globalTrack()->vz());
+			muCon->SetptError(mu->globalTrack()->ptError());
 			muCon->SetCharge(mu->charge());
 			muCon->SetisGLB(mu->isGlobalMuon());
 			muCon->SetisTRK(mu->isTrackerMuon());
-			muCon->Setdxy(mu->globalTrack()->dxy(vertexBeamSpot.position()));
-			muCon->SetnPXLHits(mu->globalTrack()->hitPattern().numberOfValidPixelHits());
-			muCon->SetnTRKHits(mu->globalTrack()->hitPattern().numberOfValidTrackerHits());
-			muCon->SetnValidMuHits(mu->globalTrack()->hitPattern().numberOfValidMuonHits());
-			muCon->SetNormChi2(mu->globalTrack()->normalizedChi2());
-			muCon->SetnMatchSeg(mu->numberOfMatches());
+			muCon->SetnumberOfMatches(mu->numberOfMatches());
+			//muCon->Setdxy(mu->globalTrack()->dxy(vertexBeamSpot.position()));
+			muCon->SetnumberOfValidPixelHits(mu->globalTrack()->hitPattern().numberOfValidPixelHits());
+			muCon->SetnumberOfValidTrackerHits(mu->globalTrack()->hitPattern().numberOfValidTrackerHits()); 
+			muCon->SetnumberOfValidMuonHits(mu->globalTrack()->hitPattern().numberOfValidMuonHits());
+			muCon->SetnumberOfLostPixelHits(mu->globalTrack()->hitPattern().numberOfLostPixelHits());
+			muCon->SetnumberOfLostTrackerHits(mu->globalTrack()->hitPattern().numberOfLostTrackerHits());
+			muCon->SetnormalizedChi2(mu->globalTrack()->normalizedChi2());
+			
+			muCon->SetnTracks(mu->isolationR03().nTracks);
 			muCon->SetCaloComp(mu->caloCompatibility());
 			muCon->SetSegComp(muon::segmentCompatibility(*mu));
 			muCon->SetEMIso(mu->isolationR03().emEt);
 			muCon->SetHADIso(mu->isolationR03().hadEt);
 			muCon->SetTRKIso(mu->isolationR03().sumPt);
+			
+
+			float sumPt3 = 0;
+			float gamma3 = 0;
+			float neutral3 = 0;
+			float sumPt4 = 0;
+			float gamma4 = 0;
+			float neutral4 = 0;
+			float sumPt5 = 0;
+			float gamma5 = 0;
+			float neutral5 = 0;
+
+			muCon->SetPFSumPt(0.5, sumPt5);
+			muCon->SetPFSumPt(0.4, sumPt4);
+			muCon->SetPFSumPt(0.3, sumPt3);
+			muCon->SetPFEGamma(0.5, gamma5);
+			muCon->SetPFEGamma(0.4, gamma4);
+			muCon->SetPFEGamma(0.3, gamma3);
+			muCon->SetPFENeutral(0.5, neutral5);
+			muCon->SetPFENeutral(0.4, neutral4);
+			muCon->SetPFENeutral(0.3, neutral3);
+   
+			//muCon->SetDxy(myMuon.innerTrack()->dxy(BSPoint));
+			//muCon->SetDz(myMuon.innerTrack()->dz(BSPoint));
+
 			muCount++;
 		}
 	}
@@ -308,47 +348,102 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 	if (saveElectrons_) {
 
-		Handle<edm::ValueMap<float> > eIDValueMap;
-		iEvent.getByLabel( electronIDMap_ , eIDValueMap );
-		const edm::ValueMap<float> & eIDmap = * eIDValueMap ;
+	  //Handle<edm::ValueMap<float> > eIDValueMap;
+	  //iEvent.getByLabel( electronIDMap_ , eIDValueMap );
+	  //const edm::ValueMap<float> & eIDmap = * eIDValueMap ;
+	  
+	  Handle<GsfElectronCollection> electrons;
+	  iEvent.getByLabel(electronTag_, electrons);
+	  
+	  edm::Handle<edm::ValueMap<float> > eIDValueMap95;
+	  iEvent.getByLabel( electronIDMap95_ , eIDValueMap95 );
+	  const edm::ValueMap<float> & eIDmap95 = * eIDValueMap95 ;
 
-		Handle<GsfElectronCollection> electrons;
-		iEvent.getByLabel(electronTag_, electrons);
-
-		for (unsigned int i = 0; i < electrons->size(); i++){
-			edm::Ref<reco::GsfElectronCollection> electronRef(electrons,i);
-			//cout<<eIDmap[electronRef]<<"\t";
-
-			if (electronRef->pt() < 10) continue;
-
-			TCElectron* eleCon = new ((*recoElectrons)[eleCount]) TCElectron;
-			eleCon->Setp4(electronRef->px(),electronRef->py(),electronRef->pz(),electronRef->p());
-			eleCon->SetVtx(electronRef->gsfTrack()->vx(),electronRef->gsfTrack()->vy(),electronRef->gsfTrack()->vz());
-			eleCon->SetCharge(electronRef->charge());
-			eleCon->Setdxy(electronRef->gsfTrack()->dxy(vertexBeamSpot.position()));
-			eleCon->SetNormChi2(electronRef->gsfTrack()->normalizedChi2());
-
-			eleCon->SetIDMap(eIDmap[electronRef]);
-			eleCon->SetEMIso(electronRef->dr03EcalRecHitSumEt());
-			eleCon->SetHADIso(electronRef->dr03HcalTowerSumEt());
-			eleCon->SetTRKIso(electronRef->dr03TkSumPt());
-			eleCon->SetHoverE(electronRef->hadronicOverEm());
-			eleCon->SetdPhiSC(electronRef->deltaPhiSuperClusterTrackAtVtx());
-			eleCon->SetdEtaSC(electronRef->deltaEtaSuperClusterTrackAtVtx());
-			eleCon->SetSig_IEtaIEta(electronRef->sigmaIetaIeta());
-			eleCon->SetConversionFlag(electronRef->convFlags());
-			eleCon->SetConversionDist(electronRef->convDist());
-			eleCon->SetConversionDcot(electronRef->convDcot());
-			eleCon->SetConversionRad(electronRef->convRadius());
-
-			eleCon->SetPFChargedHadronIso(electronRef->pfIsolationVariables().chargedHadronIso);
-			eleCon->SetPFNeutralHadronIso(electronRef->pfIsolationVariables().neutralHadronIso);
-			eleCon->SetPFPhotonIso(electronRef->pfIsolationVariables().photonIso);
-
-			eleCount++;
-		}
+	  edm::Handle<edm::ValueMap<float> > eIDValueMap90;
+	  iEvent.getByLabel( electronIDMap90_ , eIDValueMap90 );
+	  const edm::ValueMap<float> & eIDmap90 = * eIDValueMap90 ;
+	  
+	  edm::Handle<edm::ValueMap<float> > eIDValueMap85;
+	  iEvent.getByLabel( electronIDMap85_ , eIDValueMap85 );
+	  const edm::ValueMap<float> & eIDmap85 = * eIDValueMap85 ;
+	  
+	  edm::Handle<edm::ValueMap<float> > eIDValueMap80;
+	  iEvent.getByLabel( electronIDMap80_ , eIDValueMap80 );
+	  const edm::ValueMap<float> & eIDmap80 = * eIDValueMap80 ;
+	  
+	  edm::Handle<edm::ValueMap<float> > eIDValueMap70;
+	  iEvent.getByLabel( electronIDMap70_ , eIDValueMap70 );
+	  const edm::ValueMap<float> & eIDmap70 = * eIDValueMap70 ;
+	  
+	  edm::Handle<edm::ValueMap<float> > eIDValueMap60;
+	  iEvent.getByLabel( electronIDMap60_ , eIDValueMap60 );
+	  const edm::ValueMap<float> & eIDmap60 = * eIDValueMap60 ;
+	  
+	  
+	  for (unsigned int i = 0; i < electrons->size(); i++){
+	    edm::Ref<reco::GsfElectronCollection> electronRef(electrons,i);
+	    //cout<<eIDmap[electronRef]<<"\t";
+	    
+	    if (electronRef->pt() < 10) continue;
+	    
+	    int cuts95 = eIDmap95[electronRef];
+	    int cuts90 = eIDmap90[electronRef];
+	    int cuts85 = eIDmap85[electronRef];
+	    int cuts80 = eIDmap80[electronRef];
+	    int cuts70 = eIDmap70[electronRef];
+	    int cuts60 = eIDmap60[electronRef];
+	    
+	    TCElectron* eleCon = new ((*recoElectrons)[eleCount]) TCElectron;
+	    
+	    eleCon->SetP4(electronRef->px(),electronRef->py(),electronRef->pz(),electronRef->p());
+	    eleCon->SetVtx(electronRef->gsfTrack()->vx(),electronRef->gsfTrack()->vy(),electronRef->gsfTrack()->vz());
+	    eleCon->SetCharge(electronRef->charge());
+	    //eleCon->Setdxy(electronRef->gsfTrack()->dxy(vertexBeamSpot.position()));
+	    
+	    //eleCon->SetIDMap(eIDmap[electronRef]);
+	    eleCon->SetEMIso(electronRef->dr03EcalRecHitSumEt());
+	    eleCon->SetHADIso(electronRef->dr03HcalTowerSumEt());
+	    eleCon->SetTRKIso(electronRef->dr03TkSumPt());
+	    eleCon->SetHadOverEm(electronRef->hadronicOverEm());
+	    eleCon->SetDPhiSuperCluster(electronRef->deltaPhiSuperClusterTrackAtVtx());
+	    eleCon->SetDEtaSuperCluster(electronRef->deltaEtaSuperClusterTrackAtVtx());
+	    eleCon->SetSigmaIetaIeta(electronRef->sigmaIetaIeta());
+	    
+	    eleCon->SetConversionFlag(electronRef->convFlags());
+	    eleCon->SetConversionDist(electronRef->convDist());
+	    eleCon->SetConversionDcot(electronRef->convDcot());
+	    eleCon->SetConversionRad(electronRef->convRadius());
+	    
+	    eleCon->SetCutLevel(cuts95, 95);
+	    eleCon->SetCutLevel(cuts90, 90);
+	    eleCon->SetCutLevel(cuts85, 85);
+	    eleCon->SetCutLevel(cuts80, 80);
+	    eleCon->SetCutLevel(cuts70, 70);
+	    eleCon->SetCutLevel(cuts60, 60);
+	    
+	    float sumPt3 = 0;
+	    float gamma3 = 0;
+	    float neutral3 = 0;
+	    float sumPt4 = 0;
+	    float gamma4 = 0;
+	    float neutral4 = 0;
+	    float sumPt5 = 0;
+	    float gamma5 = 0;
+	    float neutral5 = 0;
+	    eleCon->SetPFSumPt(0.5, sumPt5);
+	    eleCon->SetPFSumPt(0.4, sumPt4);
+	    eleCon->SetPFSumPt(0.3, sumPt3);
+	    eleCon->SetPFEGamma(0.5, gamma5);
+	    eleCon->SetPFEGamma(0.4, gamma4);
+	    eleCon->SetPFEGamma(0.3, gamma3);
+	    eleCon->SetPFENeutral(0.5, neutral5);
+	    eleCon->SetPFENeutral(0.4, neutral4);
+	    eleCon->SetPFENeutral(0.3, neutral3);
+	    
+	    eleCount++;
+	  }
 	}
-
+	
 	/////////////////
 	// Get photons //
 	/////////////////

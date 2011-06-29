@@ -144,6 +144,15 @@ class ntupleProducer : public edm::EDAnalyzer {
 		edm::InputTag triggerResultsTag_;
 		edm::InputTag electronIDMap_;
 		edm::InputTag rhoCorrTag_;
+
+		edm::InputTag electronIDMap95_;
+		edm::InputTag electronIDMap90_;
+		edm::InputTag electronIDMap85_;
+		edm::InputTag electronIDMap80_;
+		edm::InputTag electronIDMap70_;
+		edm::InputTag electronIDMap60_;
+
+
 		bool saveJets_;
 		bool saveElectrons_;
 		bool saveMuons_;
