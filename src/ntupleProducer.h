@@ -69,12 +69,14 @@
 #include "CondFormats/JetMETObjects/interface/JetCorrectorParameters.h"
 
 // ntuple storage classes
+#include "TCPrimaryVtx.h"
 #include "TCJet.h"
 #include "TCMET.h"
-#include "TCPrimaryVtx.h"
-#include "TCGenJet.h"
 #include "TCMuon.h"
 #include "TCElectron.h"
+#include "TCTau.h"
+#include "TCPhoton.h"
+#include "TCGenJet.h"
 
 // Need for HLT trigger info:
 #include "FWCore/Common/interface/TriggerNames.h"
@@ -114,7 +116,7 @@ class ntupleProducer : public edm::EDAnalyzer {
 		virtual void beginRun(const edm::Run&, const edm::EventSetup&) ;
 		virtual void analyze(const edm::Event&, const edm::EventSetup&);
 		virtual void endLuminosityBlock(const edm::LuminosityBlock&,const edm::EventSetup&);
-		virtual void endRun(const edm::Run&, const edm::Event&, const edm::EventSetup&);
+		virtual void endRun(const edm::Run&, const edm::EventSetup&);
 		virtual void endJob() ;
 
 		bool triggerDecision(edm::Handle<edm::TriggerResults>& hltR, int iTrigger);
@@ -125,12 +127,12 @@ class ntupleProducer : public edm::EDAnalyzer {
 
 		int eventNumber, runNumber, lumiSection, bunchCross;
 		float ptHat, qScale, crossSection, evtWeight;
-		float deliveredLumi, recordedLumi, lumiDeadCount;
+		float deliveredLumi, recordedLumi, lumiDeadTime;
 		float rhoFactor;
 
+		TFile* ntupleFile;
 		TTree* eventTree;
 		TTree* runTree;
-		TFile* ntupleFile;
 		edm::InputTag jetTag_;
 		edm::InputTag metTag_;
 		edm::InputTag genJetTag_;
@@ -148,6 +150,7 @@ class ntupleProducer : public edm::EDAnalyzer {
 		bool savePhotons_;
 		bool saveTaus_;
 		bool saveMET_;
+		bool saveGenJets_;
 		bool isRealData;
 		string rootfilename;
 

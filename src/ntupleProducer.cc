@@ -23,6 +23,7 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
 	saveTaus_         = iConfig.getUntrackedParameter<bool>("saveTaus");
 	savePhotons_      = iConfig.getUntrackedParameter<bool>("savePhotons");
 	saveMET_          = iConfig.getUntrackedParameter<bool>("saveMET");
+	saveGenJets_      = iConfig.getUntrackedParameter<bool>("saveGenJets");
 }
 
 ntupleProducer::~ntupleProducer()
@@ -37,7 +38,6 @@ ntupleProducer::~ntupleProducer()
 // ------------ method called to for each event  ------------
 void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-
 	eventNumber  = iEvent.id().event(); 
 	runNumber    = iEvent.id().run();
 	lumiSection  = (unsigned int)iEvent.getLuminosityBlock().luminosityBlock();
@@ -382,34 +382,35 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 			qScale       = GenEventInfoHandle->qScale();
 			ptHat        = (GenEventInfoHandle->hasBinningValues() ? GenEventInfoHandle->binningValues()[0] : 0.0);
 			evtWeight    = GenEventInfoHandle->weight();
-
-			h1_ptHat->Fill(ptHat);
 		}
 
-		vector<HepMC::GenParticle*> genPartons;
+		//vector<HepMC::GenParticle*> genPartons;
 
-		for (HepMC::GenEvent::particle_const_iterator iGenParticle = Evt->particles_begin(); iGenParticle != Evt->particles_end(); ++iGenParticle) {
-			HepMC::GenParticle *myGenPart = *iGenParticle;
-			if (myGenPart->status() == 23) {
-				new ((*hardPartonP4)[partonCount]) TLorentzVector(myGenPart->momentum().px(), myGenPart->momentum().py(), myGenPart->momentum().pz(), myGenPart->momentum().e());
-				partonPdgId[partonCount] = myGenPart->pdg_id();
-				++partonCount;
-			}
-		}
+		//for (HepMC::GenEvent::particle_const_iterator iGenParticle = Evt->particles_begin(); iGenParticle != Evt->particles_end(); ++iGenParticle) {
+		//	HepMC::GenParticle *myGenPart = *iGenParticle;
+		//	if (myGenPart->status() == 23) {
+		//		new ((*hardPartonP4)[partonCount]) TLorentzVector(myGenPart->momentum().px(), myGenPart->momentum().py(), myGenPart->momentum().pz(), myGenPart->momentum().e());
+		//		partonPdgId[partonCount] = myGenPart->pdg_id();
+		//		++partonCount;
+		//	}
+		//}
 
-		for (GenJetCollection::const_iterator jet_iter = GenJets->begin(); jet_iter!= GenJets->end(); ++jet_iter) {
-			reco::GenJet myJet = reco::GenJet(*jet_iter);      
-			if (myJet.pt() > 10) { 
+		if (saveGenJets_) {
 
-				TCGenJet* jetCon = new ((*genJets)[genCount]) TCGenJet;
-				jetCon->SetP4(myJet.px(), myJet.py(), myJet.pz(), myJet.energy());
-				jetCon->SetHadEnergy(myJet.hadEnergy());
-				jetCon->SetEmEnergy(myJet.emEnergy());
-				jetCon->SetInvEnergy(myJet.invisibleEnergy());
-				jetCon->SetAuxEnergy(myJet.auxiliaryEnergy());
-				jetCon->SetNumConstit(myJet.getGenConstituents().size());
+			for (GenJetCollection::const_iterator jet_iter = GenJets->begin(); jet_iter!= GenJets->end(); ++jet_iter) {
+				reco::GenJet myJet = reco::GenJet(*jet_iter);      
+				if (myJet.pt() > 10) { 
 
-				++genCount;	
+					TCGenJet* jetCon = new ((*genJets)[genCount]) TCGenJet;
+					jetCon->SetP4(myJet.px(), myJet.py(), myJet.pz(), myJet.energy());
+					jetCon->SetHadEnergy(myJet.hadEnergy());
+					jetCon->SetEmEnergy(myJet.emEnergy());
+					jetCon->SetInvEnergy(myJet.invisibleEnergy());
+					jetCon->SetAuxEnergy(myJet.auxiliaryEnergy());
+					jetCon->SetNumConstit(myJet.getGenConstituents().size());
+
+					++genCount;	
+				}
 			}
 		}
 	}
@@ -428,17 +429,20 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 	triggerStatus = 0x0;    
 
-	for(int i = 0; i < (int)triggerPaths_.size(); ++i) 
-		for (int i=0; i < (int)hlNames.size(); ++i) {      
-			if (!triggerDecision(hltR, i)) continue;	
-			for (int j = 0; j < (int)triggerPaths_.size(); ++j){
-				if (hlNames[i].compare(0, triggerPaths_[j].length(),triggerPaths_[j]) == 0) {
-					triggerStatus |= 0x01 << j;
-				}
+	for (int i=0; i < (int)hlNames.size(); ++i) {      
+		if (!triggerDecision(hltR, i)) continue;	
+		for (int j = 0; j < (int)triggerPaths_.size(); ++j){
+			if (hlNames[i].compare(0, triggerPaths_[j].length(),triggerPaths_[j]) == 0) {
+				triggerStatus |= 0x01 << j;
+				pair<int, int> preScales;
+				preScales = hltConfig_.prescaleValues(iEvent, iSetup, hlNames[i]); 
+				hltPrescale[j] = preScales.first*preScales.second;
+				cout<<hlNames[i]<<"\t"<<hltPrescale[j]<<endl;
 			}
-		} 
+		}
+	} 
 
-	if (true) eventTree -> Fill(); // possibly specify a cut in configuration
+	if (triggerStatus == 0x0) eventTree -> Fill(); // possibly specify a cut in configuration
 
 	primaryVtx->Clear("C");
 	recoJets->Clear("C");
@@ -447,7 +451,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 	recoElectrons->Clear("C");
 	recoMuons->Clear("C");
 	hardPartonP4->Clear("C");
-
 }
 
 // ------------ method called once each job just before starting event loop  ------------
@@ -487,26 +490,33 @@ void  ntupleProducer::beginJob()
 	eventTree->Branch("evtWeight", &evtWeight, "evtWeight/f");
 	eventTree->Branch("crossSection", &crossSection, "crossSection/f");
 	eventTree->Branch("rhoFactor",&rhoFactor, "rhoFactor/F");
+	eventTree->Branch("hltPrescale",hltPrescale, "hltPrescale[64]/i");
 
 	runTree->Branch("deliveredLumi",&deliveredLumi, "deliveredLumi/f");
 	runTree->Branch("recordedLumi",&recordedLumi, "recordedLumi/f");
-	runTree->Branch("hltPrescale",hltPrescale, "hltPrescale[32]/i");
+	runTree->Branch("lumiDeadTime",&lumiDeadTime, "lumiDeadTime/f");
+	runTree->Branch("runNumber",&runNumber, "runNumber/f");
+	
+	// Initialize HLT prescales //
+	
+	for (int i = 0; i < (int)triggerPaths_.size(); ++i) hltPrescale[i] = 1;
 }
 
-void ntupleProducer::beginRun(const edm::Run& iRun, const edm::EventSetup& iEvent)
+void ntupleProducer::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
 {
 	bool changed = true; 
-	hltConfig_.init(iRun, iEvent, hltProcess_, changed);
+	hltConfig_.init(iRun, iSetup, hltProcess_, changed);
 	deliveredLumi = 0;
 	recordedLumi  = 0;
+	lumiDeadTime  = 0;
 }
 
-void ntupleProducer::endLuminosityBlock(const edm::LuminosityBlock& iLumi, const edm::EventSetup& iEvent)
+void ntupleProducer::endLuminosityBlock(const edm::LuminosityBlock& iLumi, const edm::EventSetup& iSetup)
 {
 	edm::Handle<LumiSummary> lumiSummary;
 	iLumi.getByLabel("lumiProducer", lumiSummary);
 
-	lumiDeadCount  = lumiSummary->deadcount();
+	lumiDeadTime   += lumiSummary->deadcount()*93.244;
 	deliveredLumi  += lumiSummary->avgInsDelLumi()*93.244;
 	recordedLumi   += lumiSummary->avgInsDelLumi()*lumiSummary->liveFrac()*93.244;
 
@@ -517,20 +527,9 @@ void ntupleProducer::endLuminosityBlock(const edm::LuminosityBlock& iLumi, const
 	//cout<<"\t Dead time corrected luminosity = "<<lumiSummary->avgInsDelLumi()*lumiSummary->liveFrac()*93.244<<endl;
 }
 
-void ntupleProducer::endRun(const edm::Run& iRun, const edm::Event& iEvent, const edm::EventSetup& iSetup)
+void ntupleProducer::endRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
 {
-	isRealData   = iEvent.isRealData();
-
-	if (!isRealData) {
-		Handle<GenRunInfoProduct> GenRunInfoHandle;
-		iEvent.getByLabel("generator", GenRunInfoHandle);
-
-		if (GenRunInfoHandle.isValid() && !isRealData) {
-			crossSection = GenRunInfoHandle->crossSection();
-		}
-	}
-
-	for(int i = 0; i < (int)triggerPaths_.size(); ++i) hltPrescale[i] = hltConfig_.prescaleValue(iEvent, iSetup, triggerPaths_[i]); //This should be done at the end of the run
+	cout<<"\t Integrated luminosity = "<<deliveredLumi<<endl;
 
 	runTree->Fill();
 }
