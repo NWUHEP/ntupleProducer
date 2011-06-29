@@ -7,7 +7,7 @@ process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.threshold = 'ERROR'
 
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(100)
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000))
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100))
 
 process.load("Configuration.StandardSequences.Services_cff")
 process.load('Configuration.StandardSequences.GeometryExtended_cff')
@@ -23,7 +23,7 @@ process.GlobalTag.globaltag = 'GR_R_42_V14::All'
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-        'file:/tmp/naodell/62CCADC4-EC7B-E011-AC6F-0015178C4994.root'
+        'file:/tmp/naodell/FEB6499E-8C7B-E011-98DA-0018F3D09702.root'
 #       '/store/data/Run2010A/JetMET/RECO/Sep17ReReco_v2/0026/FE9C387C-24C8-DF11-8CAA-003048679274.root'
 )
 )
@@ -47,20 +47,20 @@ process.HBHENoiseFilterResultProducer.minIsolatedNoiseSumEt = cms.double(9999)
 process.HBHENoiseFilterResultProducer.useTS4TS5 = cms.bool(True)
 
 ### Ecal noise filter
-process.load('PhysicsTools/EcalAnomalousEventFilter/ecalanomalouseventfilter_cfi')
-process.EcalAnomalousEventFilter.FilterAlgo= cms.untracked.string("TuningMode")
-process.EcalAnomalousEventFilter.cutBoundEnergyDeadCellsEB=cms.untracked.double(10)
-process.EcalAnomalousEventFilter.cutBoundEnergyDeadCellsEE=cms.untracked.double(10)
-process.EcalAnomalousEventFilter.cutBoundEnergyGapEB=cms.untracked.double(100)
-process.EcalAnomalousEventFilter.cutBoundEnergyGapEE=cms.untracked.double(100)
-process.EcalAnomalousEventFilter.enableGap=cms.untracked.bool(False)
-
-process.BE1214 = process.EcalAnomalousEventFilter.clone()
-process.BE1214.limitDeadCellToChannelStatusEB = cms.vint32(12,14)
-process.BE1214.limitDeadCellToChannelStatusEE = cms.vint32(12,14)
-process.load('JetMETAnalysis.ecalDeadCellTools.RA2TPfilter_cff')
-
-ecalDead = cms.Sequence(process.BE1214)
+# process.load('PhysicsTools/EcalAnomalousEventFilter/ecalanomalouseventfilter_cfi')
+# process.EcalAnomalousEventFilter.FilterAlgo= cms.untracked.string("TuningMode")
+# process.EcalAnomalousEventFilter.cutBoundEnergyDeadCellsEB=cms.untracked.double(10)
+# process.EcalAnomalousEventFilter.cutBoundEnergyDeadCellsEE=cms.untracked.double(10)
+# process.EcalAnomalousEventFilter.cutBoundEnergyGapEB=cms.untracked.double(100)
+# process.EcalAnomalousEventFilter.cutBoundEnergyGapEE=cms.untracked.double(100)
+# process.EcalAnomalousEventFilter.enableGap=cms.untracked.bool(False)
+# 
+# process.BE1214 = process.EcalAnomalousEventFilter.clone()
+# process.BE1214.limitDeadCellToChannelStatusEB = cms.vint32(12,14)
+# process.BE1214.limitDeadCellToChannelStatusEE = cms.vint32(12,14)
+# process.load('JetMETAnalysis.ecalDeadCellTools.RA2TPfilter_cff')
+# 
+# ecalDead = cms.Sequence(process.BE1214)
 
 ### Select primary vertices
 process.load("RecoVertex.PrimaryVertexProducer.OfflinePrimaryVerticesDA_cfi")
@@ -105,13 +105,15 @@ process.metJESCorPFAK5.corrector = cms.string('ak5PFL2L3')
 
 ### ntuple producer
 process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
-  rootfilename      =    cms.untracked.string("nuTuple_Photon_Run2011A.root"),
+  rootfilename      =    cms.untracked.string("nuTuple_TEST.root"),
 
   JetTag            =    cms.untracked.InputTag("ak5PFJets"),
   GenJetTag         =    cms.untracked.InputTag("ak5GenJets"),
   METTag            =    cms.untracked.InputTag("pfMet"),
   ElectronTag       =    cms.untracked.InputTag("gsfElectrons"),
   MuonTag           =    cms.untracked.InputTag("muons"),
+  PhotonTag         =    cms.untracked.InputTag("photons"),
+  TauTag            =    cms.untracked.InputTag("shrinkingConePFTauProducer"),
   PrimaryVtxTag     =    cms.untracked.InputTag("offlinePrimaryVerticesDAWithBS"),
   electronIDMap     =    cms.InputTag("simpleEleId80relIso"),
   rhoCorrTag	     =    cms.untracked.InputTag("kt6PFJets", "rho", "ntuples"),
@@ -122,9 +124,22 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   saveTaus          =    cms.untracked.bool(False),
   savePhotons       =    cms.untracked.bool(False),
   saveMET           =    cms.untracked.bool(True),
+  saveGenJets       =    cms.untracked.bool(False),
 
   hltName           =    cms.untracked.string("HLT"),
-  triggers          =    cms.untracked.vstring("HLT_Mu8_v", "HLT_Mu15_v", "HLT_Mu8_Jet40_v", "HLT_Mu13_Mu8_v", "HLT_Mu17_Mu8_v", "HLT_DoubleMu3_v", "HLT_DoubleMu6_v", "HLT_DoubleMu7_v", "HLT_Ele8_CaloIdL_CaloIsoVL_v", "HLT_Ele17_CaloIdL_CaloIsoVL_v", "HLT_Ele8_CaloIdL_CaloIsoVL_Jet40_v", "HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL_v", "HLT_Ele17_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_Ele8_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_v")
+  triggers          =    cms.untracked.vstring("HLT_Mu8_v",
+                                               "HLT_Mu15_v",
+                                               "HLT_Mu8_Jet40_v",
+                                               "HLT_Mu13_Mu8_v",
+                                               "HLT_Mu17_Mu8_v",
+                                               "HLT_DoubleMu3_v",
+                                               "HLT_DoubleMu6_v",
+                                               "HLT_DoubleMu7_v",
+                                               "HLT_Ele8_CaloIdL_CaloIsoVL_v",
+                                               "HLT_Ele17_CaloIdL_CaloIsoVL_v",
+                                               "HLT_Ele8_CaloIdL_CaloIsoVL_Jet40_v",
+                                               "HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL_v",
+                                               "HLT_Ele17_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_Ele8_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_v")
 )
 
 ### Let it run
@@ -140,4 +155,3 @@ cmsSeq = cms.Sequence(
 		)
 
 process.p = cms.Path(cmsSeq * process.ntupleProducer)
-
