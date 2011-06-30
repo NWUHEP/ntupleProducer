@@ -17,9 +17,9 @@ private:
     TVector3 _position;
     float _nDof;
     float _chi2;
-    int _nTrks;
+    bool _isFake;
+    int _nTracks;
     float _sumPt2Trks;
-
 
 
 public:
@@ -29,14 +29,16 @@ public:
     TVector3 Position() const;
     float NDof() const;
     float Chi2() const;
-    int NTrks() const; 
+    bool IsFake() const;
+    int Ntracks() const;
     float SumPt2Trks() const;
 
     // set methods
     void SetPosition(float x, float y, float z);
     void SetNDof(float n);
     void SetChi2(float chi2);
-    void SetNTrks(int nTrks);
+    void SetIsFake(bool isF);
+    void SetNtracks(int nTrk);
     void SetSumPt2Trks(float sumPt2); 
 
 

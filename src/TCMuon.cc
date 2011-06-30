@@ -145,34 +145,26 @@ float TCMuon::PfRelIso(float coneSize) const {
   return relIso;
 }
 
-/*
-This is not working for some reason - check them later
 
-float TCMuon::dxy(TVector3 *primVtx)
-{
-  //Calculating track dxy parameter wrt primary vertex
-  //d0 = - dxy
-  float vx = _vtx->X(), vy = _vtx->Y();
-  float px = _p4->Px(), py = _p4->Py(), pt = _p4->Pt();
+float TCMuon::Dxy(TVector3 *primVtx) const {
+  //Calculating track dxy parameter wrt primary vertex                                                                                                       
+  //d0 = - dxy                                                                                                                                               
+  float vx = _vtx.X(), vy = _vtx.Y();
+  float px = _p4.Px(), py = _p4.Py(), pt = _p4.Pt();
   float pvx = primVtx->X(), pvy = primVtx->Y();
-  
   float ret =  (-(vx-pvx)*py + (vy-pvy)*px)/pt;
   return ret;
 }
 
-float TCMuon::dz(TVector3 *primVtx)
-{
-  //Calculating track dz parameter wrt primary vertex
-  float vx = _vtx->X(), vy = _vtx->Y(), vz = _vtx->Z();
-  float px = _p4->Px(), py = _p4->Py();
-  float pz = _p4->Pz(), pt = _p4->Pt();
+float TCMuon::Dz(TVector3 *primVtx) const {
+  //Calculating track dz parameter wrt primary vertex                                                                                                        
+  float vx = _vtx.X(), vy = _vtx.Y(), vz = _vtx.Z();
+  float px = _p4.Px(), py = _p4.Py();
+  float pz = _p4.Pz(), pt = _p4.Pt();
   float pvx = primVtx->X(), pvy = primVtx->Y(), pvz = primVtx->Z();
-  
   float ret =  (vz-pvz)-((vx-pvx)*px +(vy-pvy)*py)/pt*(pz/pt);
-
   return ret;
 }
-*/
 
 // "set" methods ---------------------------------------------
 

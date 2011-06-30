@@ -76,8 +76,8 @@ public:
     float PfEGamma(float coneSize) const;
     float PfENeutral(float coneSize) const;
 
-  // float dxy(TVector3 *primVtx) const;
-  // float dz(TVector3 *primVtx) const;
+    float Dxy(TVector3 *primVtx) const;
+    float Dz(TVector3 *primVtx) const;
 
    // "set" methods ---------
     void SetP4(TLorentzVector p4);

@@ -98,8 +98,8 @@ public:
     int NumberOfLostTrackerHits() const;
 
     int CutLevel(int lvl) const;
-    // float dxy(TVector3 *primVtx) const;
-    // float dz(TVector3 *primVtx) const;
+    float Dxy(TVector3 *primVtx) const;
+    float Dz(TVector3 *primVtx) const;
 
     //--------------------------
     // "set" methods ---------

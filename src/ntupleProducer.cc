@@ -1,4 +1,4 @@
-// $Id: ntupleProducer.cc,v 1.7 2011/07/29 14:21:01 andrey Exp $
+// $Id: ntupleProducer.cc,v 1.8 2011/06/30 10:25:42 andrey Exp $
 
 #include "ntupleProducer.h"
 
@@ -76,7 +76,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 		vtxCon->SetPosition(myVtx.x(), myVtx.y(), myVtx.z());
 		vtxCon->SetNDof(myVtx.ndof());
 		vtxCon->SetChi2(myVtx.chi2());
-		vtxCon->SetNTrks(myVtx.tracksSize()); 
+		vtxCon->SetIsFake(myVtx.isFake());
+		vtxCon->SetNtracks(myVtx.nTracks()); //0 is the minWeight, default is 0.5
+		//if (myVtx.nTracks(0)!=myVtx.tracksSize()) LogWarning(" Vertex nTracks: ")<<"is something wrong here?";
 		vtxCon->SetSumPt2Trks(sumPtSquared(myVtx));
 		if(vtxCount == 0) primaryVertexZ = myVtx.z();
 		++vtxCount;

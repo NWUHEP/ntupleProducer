@@ -24,8 +24,13 @@ float TCPrimaryVtx::NDof() const {
 float TCPrimaryVtx::Chi2() const {
    return _chi2;
 }
-int TCPrimaryVtx::NTrks() const {
-  return _nTrks;
+
+bool TCPrimaryVtx::IsFake() const {
+   return _isFake;
+}
+
+int TCPrimaryVtx::Ntracks() const {
+   return _nTracks;
 }
 
 float TCPrimaryVtx::SumPt2Trks() const {
@@ -46,8 +51,12 @@ void TCPrimaryVtx::SetChi2(float chi2) {
    _chi2 = chi2;
 }
 
-void TCPrimaryVtx::SetNTrks(int nTrks) {
-  _nTrks = nTrks;
+void TCPrimaryVtx::SetIsFake(bool isF) {
+   _isFake = isF;
+}
+
+void TCPrimaryVtx::SetNtracks(int nTrk) {
+   _nTracks = nTrk;
 }
 
 void TCPrimaryVtx::SetSumPt2Trks(float sumPt2) {
