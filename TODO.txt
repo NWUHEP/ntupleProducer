@@ -1,0 +1,9 @@
+Jun 30
+
+* Split trigger ints for different data streams
+* Include TClonesArray of TVector3 for simVertex
+* genJet flavor matching
+* pfIsolation for muons and electrons
+* save MET as TCMet not TClonesArray
+* Modify trigger path specification
+* ...
