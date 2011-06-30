@@ -22,11 +22,11 @@ TVector2 TCMuon::P2() const {
   return v2;
 }
 
-float TCMuon::pt() const {
+float TCMuon::Pt() const {
    return _p4.Pt();
 }
 
-float TCMuon::ptError() const {
+float TCMuon::PtError() const {
    return _ptError;
 }
 
@@ -34,11 +34,11 @@ float TCMuon::Et() const {
   return _p4.Et();
 }
 
-float TCMuon::eta() const {
+float TCMuon::Eta() const {
   return _p4.Eta();
 }
 
-float TCMuon::phi() const {
+float TCMuon::Phi() const {
   return _p4.Phi();
 }
 
@@ -46,71 +46,71 @@ TVector3 TCMuon::Vtx() const {
    return _vtx;
 }
 
-int TCMuon::charge() const {
+int TCMuon::Charge() const {
    return _charge;
 }
 
-bool TCMuon::isTRK() const {
+bool TCMuon::IsTRK() const {
    return _isTRK;
 }
 
-bool TCMuon::isGLB() const {
+bool TCMuon::IsGLB() const {
    return _isGLB;
 }
 
-int TCMuon::numberOfValidPixelHits() const {
+int TCMuon::NumberOfValidPixelHits() const {
   return _numberOfValidPixelHits;
 }
 
-int TCMuon::numberOfValidTrackerHits() const {
+int TCMuon::NumberOfValidTrackerHits() const {
   return _numberOfValidTrackerHits;
 }
 
-int TCMuon::numberOfValidMuonHits() const {
+int TCMuon::NumberOfValidMuonHits() const {
   return _numberOfValidMuonHits;
 }
 
-int TCMuon::numberOfLostPixelHits() const {
+int TCMuon::NumberOfLostPixelHits() const {
   return _numberOfLostPixelHits;
 }
 
-int TCMuon::numberOfLostTrackerHits() const {
+int TCMuon::NumberOfLostTrackerHits() const {
   return _numberOfLostTrackerHits;
 }
 
-float TCMuon::normalizedChi2() const {
+float TCMuon::NormalizedChi2() const {
   return _normalizedChi2;
 }
 
-int TCMuon::numberOfMatches() const {
+int TCMuon::NumberOfMatches() const {
    return _numberOfMatches;
 }
 
-float TCMuon::caloComp() const {
+float TCMuon::CaloComp() const {
    return _caloComp;
 }
 
-float TCMuon::segComp() const {
+float TCMuon::SegComp() const {
    return _segComp;
 }
 
-float TCMuon::emIso() const {
+float TCMuon::EmIso() const {
    return _emIso;
 }
 
-float TCMuon::hadIso() const {
+float TCMuon::HadIso() const {
    return _hadIso;
 }
 
-float TCMuon::trkIso() const {
+float TCMuon::TrkIso() const {
    return _trkIso;
 }
 
-int TCMuon::nTracks() const {
+int TCMuon::Ntracks() const {
    return _nTracks;
 }
 
-float TCMuon::pfSumPt(float coneSize) const {
+float TCMuon::PfSumPt(float coneSize) const {
   float sumPt = 0;
   if (fabs(coneSize - 0.3) < 0.01) sumPt = _pfIso_Pt03;
   if (fabs(coneSize - 0.4) < 0.01) sumPt = _pfIso_Pt04;
@@ -118,7 +118,7 @@ float TCMuon::pfSumPt(float coneSize) const {
   return sumPt;
 }
 
-float TCMuon::pfENeutral(float coneSize) const {
+float TCMuon::PfENeutral(float coneSize) const {
   float neutral = 0;
   if (fabs(coneSize - 0.3) < 0.01) neutral = _pfIso_Neutral03;
   if (fabs(coneSize - 0.4) < 0.01) neutral = _pfIso_Neutral04;
@@ -126,7 +126,7 @@ float TCMuon::pfENeutral(float coneSize) const {
   return neutral;
 }
 
-float TCMuon::pfEGamma(float coneSize) const {
+float TCMuon::PfEGamma(float coneSize) const {
   float gamma = 0;
   if (fabs(coneSize - 0.3) < 0.01) gamma = _pfIso_Gamma03;
   if (fabs(coneSize - 0.4) < 0.01) gamma = _pfIso_Gamma04;
@@ -134,7 +134,7 @@ float TCMuon::pfEGamma(float coneSize) const {
   return gamma;
 }
 
-float TCMuon::pfRelIso(float coneSize) const {
+float TCMuon::PfRelIso(float coneSize) const {
   float relIso = 0;
   if (fabs(coneSize - 0.3) < 0.01)
     relIso = (_pfIso_Pt03 + _pfIso_Gamma03 + _pfIso_Neutral03) / _p4.Pt();
@@ -190,46 +190,46 @@ void TCMuon::SetVtx(float vx, float vy, float vz) {
    _vtx = v3;
 }
 
-void TCMuon::SetptError(float er){
+void TCMuon::SetPtError(float er){
    _ptError = er;
 }
 void TCMuon::SetCharge(int c){
    _charge = c;
 }
 
-void TCMuon::SetisGLB(bool t){
+void TCMuon::SetIsGLB(bool t){
    _isGLB = t;
 }
 
-void TCMuon::SetisTRK(bool t){
+void TCMuon::SetIsTRK(bool t){
    _isTRK = t;
 }
 
-void TCMuon::SetnumberOfValidMuonHits(int n) {
+void TCMuon::SetNumberOfValidMuonHits(int n) {
   _numberOfValidMuonHits = n;
 }
 
-void TCMuon::SetnumberOfValidPixelHits(int n) {
+void TCMuon::SetNumberOfValidPixelHits(int n) {
   _numberOfValidPixelHits = n;
 }
 
-void TCMuon::SetnumberOfValidTrackerHits(int n) {
+void TCMuon::SetNumberOfValidTrackerHits(int n) {
   _numberOfValidTrackerHits = n;
 }
 
-void TCMuon::SetnumberOfLostPixelHits(int n) {
+void TCMuon::SetNumberOfLostPixelHits(int n) {
   _numberOfLostPixelHits = n;
 }
 
-void TCMuon::SetnumberOfLostTrackerHits(int n) {
+void TCMuon::SetNumberOfLostTrackerHits(int n) {
   _numberOfLostTrackerHits = n;
 }
 
-void TCMuon::SetnormalizedChi2(float n) {
+void TCMuon::SetNormalizedChi2(float n) {
   _normalizedChi2 = n;
 }
 
-void TCMuon::SetnumberOfMatches(int n) {
+void TCMuon::SetNumberOfMatches(int n) {
   _numberOfMatches = n;
 }
 
@@ -254,22 +254,22 @@ void TCMuon::SetTRKIso(float t){
    _trkIso = t;
 }
 
-void TCMuon::SetnTracks(int n){
+void TCMuon::SetNtracks(int n){
    _nTracks = n;
 }
-void TCMuon::SetPFSumPt(float coneSize, float f) {
+void TCMuon::SetPfSumPt(float coneSize, float f) {
   if(fabs(coneSize - 0.3) < 0.01) _pfIso_Pt03 = f;
   if(fabs(coneSize - 0.4) < 0.01) _pfIso_Pt04 = f;
   if(fabs(coneSize - 0.5) < 0.01) _pfIso_Pt05 = f;
 }
 
-void TCMuon::SetPFEGamma(float coneSize, float f) {
+void TCMuon::SetPfEGamma(float coneSize, float f) {
   if(fabs(coneSize - 0.3) < 0.01) _pfIso_Gamma03 = f;
   if(fabs(coneSize - 0.4) < 0.01) _pfIso_Gamma04 = f;
   if(fabs(coneSize - 0.5) < 0.01) _pfIso_Gamma05 = f;
 }
 
-void TCMuon::SetPFENeutral(float coneSize, float f) {
+void TCMuon::SetPfENeutral(float coneSize, float f) {
   if(fabs(coneSize - 0.3) < 0.01) _pfIso_Neutral03 = f;
   if(fabs(coneSize - 0.4) < 0.01) _pfIso_Neutral04 = f;
   if(fabs(coneSize - 0.5) < 0.01) _pfIso_Neutral05 = f;

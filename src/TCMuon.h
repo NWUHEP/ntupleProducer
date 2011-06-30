@@ -47,34 +47,34 @@ public:
 
     TLorentzVector P4() const;
     TVector2 P2() const;
-    float pt() const;
-    float ptError() const;
+    float Pt() const;
+    float PtError() const;
     TVector3 Vtx() const;
     float Et() const;
-    float eta() const;
-    float phi() const;
-    int charge() const;
-    bool isGLB() const;
-    bool isTRK() const;
-    float caloComp() const;
-    float segComp() const;
-    float emIso() const;
-    float hadIso() const;
-    float trkIso() const;
+    float Eta() const;
+    float Phi() const;
+    int Charge() const;
+    bool IsGLB() const;
+    bool IsTRK() const;
+    float CaloComp() const;
+    float SegComp() const;
+    float EmIso() const;
+    float HadIso() const;
+    float TrkIso() const;
 
-    int nTracks() const;
-    int numberOfValidPixelHits() const;
-    int numberOfValidTrackerHits() const;
-    int numberOfLostPixelHits() const;
-    int numberOfLostTrackerHits() const;
-    int numberOfValidMuonHits() const;
-    float normalizedChi2() const;
-    int numberOfMatches() const;
+    int Ntracks() const;
+    int NumberOfValidPixelHits() const;
+    int NumberOfValidTrackerHits() const;
+    int NumberOfLostPixelHits() const;
+    int NumberOfLostTrackerHits() const;
+    int NumberOfValidMuonHits() const;
+    float NormalizedChi2() const;
+    int NumberOfMatches() const;
 
-    float pfRelIso(float coneSize) const;
-    float pfSumPt(float coneSize) const;
-    float pfEGamma(float coneSize) const;
-    float pfENeutral(float coneSize) const;
+    float PfRelIso(float coneSize) const;
+    float PfSumPt(float coneSize) const;
+    float PfEGamma(float coneSize) const;
+    float PfENeutral(float coneSize) const;
 
   // float dxy(TVector3 *primVtx) const;
   // float dz(TVector3 *primVtx) const;
@@ -82,29 +82,29 @@ public:
    // "set" methods ---------
     void SetP4(TLorentzVector p4);
     void SetP4(float px, float py, float pz, float e);
-    void SetptError(float er);
+    void SetPtError(float er);
     void SetVtx(float vx, float vy, float vz);
 
-    void SetnTracks(int n);
+    void SetNtracks(int n);
     void SetCharge(int c);
-    void SetisGLB(bool t);
-    void SetisTRK(bool t);
+    void SetIsGLB(bool t);
+    void SetIsTRK(bool t);
     void SetCaloComp(float c);
     void SetSegComp(float s);
     void SetEMIso(float e);
     void SetHADIso(float h);
     void SetTRKIso(float t);
-    void SetnumberOfMatches(int n);
-    void SetnumberOfValidPixelHits(int n);
-    void SetnumberOfValidTrackerHits(int n);
-    void SetnumberOfValidMuonHits(int n);
-    void SetnumberOfLostPixelHits(int n);
-    void SetnumberOfLostTrackerHits(int n);
-    void SetnormalizedChi2(float n);
+    void SetNumberOfMatches(int n);
+    void SetNumberOfValidPixelHits(int n);
+    void SetNumberOfValidTrackerHits(int n);
+    void SetNumberOfValidMuonHits(int n);
+    void SetNumberOfLostPixelHits(int n);
+    void SetNumberOfLostTrackerHits(int n);
+    void SetNormalizedChi2(float n);
 
-    void SetPFSumPt(float coneSize, float f); 
-    void SetPFEGamma(float coneSize, float f);
-    void SetPFENeutral(float coneSize, float f);
+    void SetPfSumPt(float coneSize, float f); 
+    void SetPfEGamma(float coneSize, float f);
+    void SetPfENeutral(float coneSize, float f);
 
     ClassDef(TCMuon, 1);
 

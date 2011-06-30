@@ -1,3 +1,4 @@
+// $Id: ntupleProducer.h,v 1.6 2011/07/29 14:21:01 andrey Exp $                                                                                             
 // system include files
 #include <memory>
 #include <string>

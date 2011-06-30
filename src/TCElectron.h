@@ -60,42 +60,42 @@ public:
 
     TLorentzVector P4() const;
     TVector2 P2() const;
-    float pt() const;
-    float ptError() const;
+    float Pt() const;
+    float PtError() const;
     TVector3 Vtx() const;
     float Et() const;
-    float eta() const;
-    float phi() const;
-    int charge() const;
-    float emIso() const;
-    float hadIso() const;
-    float trkIso() const;
-    float hadOverEm() const;
-    float dPhiSuperCluster() const;
-    float dEtaSuperCluster() const;
-    float sigmaIetaIeta() const;
+    float Eta() const;
+    float Phi() const;
+    int Charge() const;
+    float EmIso() const;
+    float HadIso() const;
+    float TrkIso() const;
+    float HadOverEm() const;
+    float DphiSuperCluster() const;
+    float DetaSuperCluster() const;
+    float SigmaIetaIeta() const;
 
-    float normalizedChi2() const;
+    float NormalizedChi2() const;
 
-    float pfRelIso(float coneSize) const;
-    float pfSumPt(float coneSize) const;
-    float pfEGamma(float coneSize) const;
-    float pfENeutral(float coneSize) const;
+    float PfRelIso(float coneSize) const;
+    float PfSumPt(float coneSize) const;
+    float PfEGamma(float coneSize) const;
+    float PfENeutral(float coneSize) const;
 
 
-    int conversionFlag() const;
-    float conversionDist() const;
-    float conversionDcot() const;
-    float conversionRad() const;
+    int ConversionFlag() const;
+    float ConversionDist() const;
+    float ConversionDcot() const;
+    float ConversionRad() const;
 
-    bool isEB() const;
-    bool isEE() const;
-    bool isInGap() const;
+    bool IsEB() const;
+    bool IsEE() const;
+    bool IsInGap() const;
 
-    int numberOfValidPixelHits() const;
-    int numberOfValidTrackerHits() const;
-    int numberOfLostPixelHits() const;
-    int numberOfLostTrackerHits() const;
+    int NumberOfValidPixelHits() const;
+    int NumberOfValidTrackerHits() const;
+    int NumberOfLostPixelHits() const;
+    int NumberOfLostTrackerHits() const;
 
     int CutLevel(int lvl) const;
     // float dxy(TVector3 *primVtx) const;
@@ -115,27 +115,27 @@ public:
     void SetTRKIso(float t);
  
     void SetHadOverEm(float h);
-    void SetDPhiSuperCluster(float dp);
-    void SetDEtaSuperCluster(float de);
+    void SetDphiSuperCluster(float dp);
+    void SetDetaSuperCluster(float de);
     void SetSigmaIetaIeta(float sieie);
     void SetConversionDist(float d);
     void SetConversionDcot(float d);
     void SetConversionRad(float r);
     void SetConversionFlag(int f);
 
-    void SetnumberOfValidPixelHits(int n);
-    void SetnumberOfValidTrackerHits(int n);
-    void SetnumberOfLostPixelHits(int n);
-    void SetnumberOfLostTrackerHits(int n);
-    void SetnormalizedChi2(float n);
+    void SetNumberOfValidPixelHits(int n);
+    void SetNumberOfValidTrackerHits(int n);
+    void SetNumberOfLostPixelHits(int n);
+    void SetNumberOfLostTrackerHits(int n);
+    void SetNormalizedChi2(float n);
 
-    void SetPFSumPt(float coneSize, float f); 
-    void SetPFEGamma(float coneSize, float f);
-    void SetPFENeutral(float coneSize, float f);
+    void SetPfSumPt(float coneSize, float f); 
+    void SetPfEGamma(float coneSize, float f);
+    void SetPfENeutral(float coneSize, float f);
 
-    void SetisEB(bool b);
-    void SetisEE(bool b);
-    void SetisInGap(bool b);
+    void SetIsEB(bool b);
+    void SetIsEE(bool b);
+    void SetIsInGap(bool b);
 
     void SetCutLevel(int cut, int lvl);
 

@@ -20,7 +20,7 @@ TVector2 TCElectron::P2() const {
   return v2;
 }
 
-float TCElectron::pt() const {
+float TCElectron::Pt() const {
    return _p4.Pt();
 }
 
@@ -28,7 +28,7 @@ TVector3 TCElectron::Vtx() const {
    return _vtx;
 }
 
-float TCElectron::ptError() const {
+float TCElectron::PtError() const {
   return _ptError;
 }
 
@@ -37,52 +37,52 @@ float TCElectron::Et() const {
 }
 
 
-float TCElectron::eta() const {
+float TCElectron::Eta() const {
  return _p4.Eta();
 }
 
-float TCElectron::phi() const {
+float TCElectron::Phi() const {
   return _p4.Phi();
 }
 
-int TCElectron::charge() const {
+int TCElectron::Charge() const {
    return _charge;
 }
 
-int TCElectron::numberOfValidPixelHits() const {
+int TCElectron::NumberOfValidPixelHits() const {
   return _numberOfValidPixelHits;
 }
 
-int TCElectron::numberOfValidTrackerHits() const {
+int TCElectron::NumberOfValidTrackerHits() const {
   return _numberOfValidTrackerHits;
 }
 
-int TCElectron::numberOfLostPixelHits() const {
+int TCElectron::NumberOfLostPixelHits() const {
   return _numberOfLostPixelHits;
 }
 
-int TCElectron::numberOfLostTrackerHits() const {
+int TCElectron::NumberOfLostTrackerHits() const {
   return _numberOfLostTrackerHits;
 }
 
-float TCElectron::normalizedChi2() const {
+float TCElectron::NormalizedChi2() const {
   return _normalizedChi2;
 }
 
 
-float TCElectron::emIso() const {
+float TCElectron::EmIso() const {
    return _emIso;
 }
 
-float TCElectron::hadIso() const {
+float TCElectron::HadIso() const {
    return _hadIso;
 }
 
-float TCElectron::trkIso() const {
+float TCElectron::TrkIso() const {
    return _trkIso;
 }
 
-float TCElectron::pfRelIso(float coneSize) const {
+float TCElectron::PfRelIso(float coneSize) const {
   float relIso = 0;
   if (fabs(coneSize - 0.3) < 0.01)
     relIso = (_pfIso_Pt03 + _pfIso_Gamma03 + _pfIso_Neutral03) / _p4.Pt();
@@ -93,7 +93,7 @@ float TCElectron::pfRelIso(float coneSize) const {
   return relIso;
 }
 
-float TCElectron::pfSumPt(float coneSize) const {
+float TCElectron::PfSumPt(float coneSize) const {
   float sumPt = 0;
   if (fabs(coneSize - 0.3) < 0.01) sumPt = _pfIso_Pt03;
   if (fabs(coneSize - 0.4) < 0.01) sumPt = _pfIso_Pt04;
@@ -101,7 +101,7 @@ float TCElectron::pfSumPt(float coneSize) const {
   return sumPt;
 }
 
-float TCElectron::pfENeutral(float coneSize) const {
+float TCElectron::PfENeutral(float coneSize) const {
   float neutral = 0;
   if (fabs(coneSize - 0.3) < 0.01) neutral = _pfIso_Neutral03;
   if (fabs(coneSize - 0.4) < 0.01) neutral = _pfIso_Neutral04;
@@ -109,7 +109,7 @@ float TCElectron::pfENeutral(float coneSize) const {
   return neutral;
 }
 
-float TCElectron::pfEGamma(float coneSize) const {
+float TCElectron::PfEGamma(float coneSize) const {
   float gamma = 0;
   if (fabs(coneSize - 0.3) < 0.01) gamma = _pfIso_Gamma03;
   if (fabs(coneSize - 0.4) < 0.01) gamma = _pfIso_Gamma04;
@@ -117,45 +117,45 @@ float TCElectron::pfEGamma(float coneSize) const {
   return gamma;
 }
 
-bool TCElectron::isEB() const {
+bool TCElectron::IsEB() const {
   return _isEB;
 }
 
-bool TCElectron::isEE() const {
+bool TCElectron::IsEE() const {
   return _isEE;
 }
 
-bool TCElectron::isInGap() const {
+bool TCElectron::IsInGap() const {
   return _isInGap;
 }
 
 
-float TCElectron::hadOverEm() const {
+float TCElectron::HadOverEm() const {
   return _hadOverEm;
 }
-float TCElectron::dPhiSuperCluster() const {
+float TCElectron::DphiSuperCluster() const {
   return _dPhiSuperCluster;
 }
-float TCElectron::dEtaSuperCluster() const {
+float TCElectron::DetaSuperCluster() const {
   return _dEtaSuperCluster;
 }
-float TCElectron::sigmaIetaIeta() const {
+float TCElectron::SigmaIetaIeta() const {
   return _sigmaIetaIeta;
 }
 
-int TCElectron::conversionFlag() const {
+int TCElectron::ConversionFlag() const {
   return _convFlag;
 }
 
-float TCElectron::conversionDist() const {
+float TCElectron::ConversionDist() const {
   return _convDist;
 }
 
-float TCElectron::conversionDcot() const {
+float TCElectron::ConversionDcot() const {
   return _convDcot;
 }
 
-float TCElectron::conversionRad() const {
+float TCElectron::ConversionRad() const {
   return _convRad;
 }
 
@@ -200,23 +200,23 @@ void TCElectron::SetCharge(int c){
   _charge = c;
 }
 
-void TCElectron::SetnumberOfValidPixelHits(int n) {
+void TCElectron::SetNumberOfValidPixelHits(int n) {
   _numberOfValidPixelHits = n;
 }
 
-void TCElectron::SetnumberOfValidTrackerHits(int n) {
+void TCElectron::SetNumberOfValidTrackerHits(int n) {
   _numberOfValidTrackerHits = n;
 }
 
-void TCElectron::SetnumberOfLostPixelHits(int n) {
+void TCElectron::SetNumberOfLostPixelHits(int n) {
   _numberOfLostPixelHits = n;
 }
 
-void TCElectron::SetnumberOfLostTrackerHits(int n) {
+void TCElectron::SetNumberOfLostTrackerHits(int n) {
   _numberOfLostTrackerHits = n;
 }
 
-void TCElectron::SetnormalizedChi2(float n) {
+void TCElectron::SetNormalizedChi2(float n) {
   _normalizedChi2 = n;
 }
 
@@ -233,10 +233,10 @@ void TCElectron::SetTRKIso(float t){
 void TCElectron::SetHadOverEm(float he){
   _hadOverEm = he;
 }
-void TCElectron::SetDPhiSuperCluster(float dp){
+void TCElectron::SetDphiSuperCluster(float dp){
   _dPhiSuperCluster = dp;
 }
-void TCElectron::SetDEtaSuperCluster(float de){
+void TCElectron::SetDetaSuperCluster(float de){
   _dEtaSuperCluster = de;
 }
 void TCElectron::SetSigmaIetaIeta(float sieie){
@@ -259,33 +259,33 @@ void TCElectron::SetConversionFlag(int f){
   _convFlag = f;
 }
 
-void TCElectron::SetPFSumPt(float coneSize, float f) {
+void TCElectron::SetPfSumPt(float coneSize, float f) {
   if(fabs(coneSize - 0.3) < 0.01) _pfIso_Pt03 = f;
   if(fabs(coneSize - 0.4) < 0.01) _pfIso_Pt04 = f;
   if(fabs(coneSize - 0.5) < 0.01) _pfIso_Pt05 = f;
 }
 
-void TCElectron::SetPFEGamma(float coneSize, float f) {
+void TCElectron::SetPfEGamma(float coneSize, float f) {
   if(fabs(coneSize - 0.3) < 0.01) _pfIso_Gamma03 = f;
   if(fabs(coneSize - 0.4) < 0.01) _pfIso_Gamma04 = f;
   if(fabs(coneSize - 0.5) < 0.01) _pfIso_Gamma05 = f;
 }
 
-void TCElectron::SetPFENeutral(float coneSize, float f) {
+void TCElectron::SetPfENeutral(float coneSize, float f) {
   if(fabs(coneSize - 0.3) < 0.01) _pfIso_Neutral03 = f;
   if(fabs(coneSize - 0.4) < 0.01) _pfIso_Neutral04 = f;
   if(fabs(coneSize - 0.5) < 0.01) _pfIso_Neutral05 = f;
 }
 
-void TCElectron::SetisEB(bool b) {
+void TCElectron::SetIsEB(bool b) {
   _isEB = b;
 }
 
-void TCElectron::SetisEE(bool b) {
+void TCElectron::SetIsEE(bool b) {
   _isEE = b;
 }
 
-void TCElectron::SetisInGap(bool b) {
+void TCElectron::SetIsInGap(bool b) {
   _isInGap = b;
 }
 
