@@ -71,6 +71,7 @@ public:
     float Eta() const;
     float Phi() const;
     int Charge() const;
+
     float EmIso() const;
     float HadIso() const;
     float TrkIso() const;
@@ -108,6 +109,10 @@ public:
     int NumberOfLostTrackerHits() const;
 
     int CutLevel(int lvl) const;
+    bool PassID(int lvl) const;
+    bool PassConversion(int lvl) const;
+    bool PassIsolation(int lvl) const;
+
     float Dxy(TVector3 *primVtx) const;
     float Dz(TVector3 *primVtx) const;
 

@@ -194,6 +194,28 @@ int TCElectron::CutLevel(int lvl) const{
   }
 }
 
+bool TCElectron::PassID(int lvl) const { 
+  int c = CutLevel(lvl);
+  if(c < 0) return false;
+  if( (c == 1) || (c == 3) || (c == 5) || (c == 7)) return true;
+  return false;
+}   
+
+bool TCElectron::PassConversion(int lvl) const {
+  int c = CutLevel(lvl);
+  if(c < 0) return false;
+  if( (c == 4) || (c == 5) || (c == 6) || (c == 7)) return true;
+  return false;
+}
+
+bool TCElectron::PassIsolation(int lvl) const {
+  int c = CutLevel(lvl);
+  if(c < 0) return false;
+  if( (c == 2) || (c == 3) || (c == 6) || (c == 7)) return true;
+  return false;
+}
+
+
 
 float TCElectron::Dxy(TVector3 *primVtx) const {
   //Calculating track dxy parameter wrt primary vertex
