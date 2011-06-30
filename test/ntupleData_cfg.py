@@ -7,7 +7,7 @@ process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.threshold = 'ERROR'
 
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(100)
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100))
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000))
 
 process.load("Configuration.StandardSequences.Services_cff")
 process.load('Configuration.StandardSequences.GeometryExtended_cff')
@@ -90,8 +90,18 @@ process.ak5JetExtender.jets = cms.InputTag("ak5PFJetsL1FastL2L3")
 
 ### eleID map:
 process.load("ElectroWeakAnalysis.WENu.simpleCutBasedElectronIDSpring10_cfi")
+process.simpleEleId60relIso = process.simpleCutBasedElectronID.clone()
+process.simpleEleId60relIso.electronQuality = "60relIso"
+process.simpleEleId70relIso = process.simpleCutBasedElectronID.clone()
+process.simpleEleId70relIso.electronQuality = "70relIso"
 process.simpleEleId80relIso = process.simpleCutBasedElectronID.clone()
 process.simpleEleId80relIso.electronQuality = "80relIso"
+process.simpleEleId85relIso = process.simpleCutBasedElectronID.clone()
+process.simpleEleId85relIso.electronQuality = "85relIso"
+process.simpleEleId90relIso = process.simpleCutBasedElectronID.clone()
+process.simpleEleId90relIso.electronQuality = "90relIso"
+process.simpleEleId95relIso = process.simpleCutBasedElectronID.clone()
+process.simpleEleId95relIso.electronQuality = "95relIso"
 
 ### MET corrections
 from JetMETCorrections.Type1MET.MetType1Corrections_cff import metJESCorAK5PFJet
@@ -115,16 +125,15 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   PhotonTag         =    cms.untracked.InputTag("photons"),
   TauTag            =    cms.untracked.InputTag("shrinkingConePFTauProducer"),
   PrimaryVtxTag     =    cms.untracked.InputTag("offlinePrimaryVerticesDAWithBS"),
-  electronIDMap     =    cms.InputTag("simpleEleId80relIso"),
   rhoCorrTag	     =    cms.untracked.InputTag("kt6PFJets", "rho", "ntuples"),
 
   saveJets          =    cms.untracked.bool(True),
   saveElectrons     =    cms.untracked.bool(True),
   saveMuons         =    cms.untracked.bool(True),
   saveTaus          =    cms.untracked.bool(False),
-  savePhotons       =    cms.untracked.bool(False),
+  savePhotons       =    cms.untracked.bool(True),
   saveMET           =    cms.untracked.bool(True),
-  saveGenJets       =    cms.untracked.bool(False),
+  saveGenJets       =    cms.untracked.bool(True),
 
   hltName           =    cms.untracked.string("HLT"),
   triggers          =    cms.untracked.vstring("HLT_Mu8_v",
@@ -145,7 +154,12 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 ### Let it run
 cmsSeq = cms.Sequence(
 		process.offlinePrimaryVerticesDAWithBS 
+      * process.simpleEleId60relIso
+      * process.simpleEleId70relIso
       * process.simpleEleId80relIso
+      * process.simpleEleId85relIso
+      * process.simpleEleId90relIso
+      * process.simpleEleId95relIso
       * process.kt6PFJets
 		* process.ak5PFJets
 		* process.ak5PFJetsL1FastL2L3
