@@ -9,13 +9,17 @@ private:
     TLorentzVector _p4;
     TVector3 _vtx;
     int _charge;
-    float _emIso;
-    float _hadIso;
-    float _trkIso;
     float _hadOverEm;
     float _dPhiSuperCluster;
     float _dEtaSuperCluster;
     float _sigmaIetaIeta;
+
+    float _emIso03;
+    float _hadIso03;
+    float _trkIso03;
+    float _emIso04;
+    float _hadIso04;
+    float _trkIso04;
 
     float _ptError;
 
@@ -70,6 +74,12 @@ public:
     float EmIso() const;
     float HadIso() const;
     float TrkIso() const;
+    float EmIso03() const;
+    float HadIso03() const;
+    float TrkIso03() const;
+    float EmIso04() const;
+    float HadIso04() const;
+    float TrkIso04() const;
     float HadOverEm() const;
     float DphiSuperCluster() const;
     float DetaSuperCluster() const;
@@ -110,9 +120,13 @@ public:
     void SetVtx(float vx, float vy, float vz);
 
     void SetCharge(int c);
-    void SetEMIso(float e);
-    void SetHADIso(float h);
-    void SetTRKIso(float t);
+
+    void SetEmIso03(float e);
+    void SetHadIso03(float h);
+    void SetTrkIso03(float t);
+    void SetEmIso04(float e);
+    void SetHadIso04(float h);
+    void SetTrkIso04(float t);
  
     void SetHadOverEm(float h);
     void SetDphiSuperCluster(float dp);

@@ -1,4 +1,4 @@
-// $Id: ntupleProducer.cc,v 1.8 2011/06/30 10:25:42 andrey Exp $
+// $Id: ntupleProducer.cc,v 1.9 2011/06/30 12:44:45 andrey Exp $
 
 #include "ntupleProducer.h"
 
@@ -309,12 +309,18 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 			muCon->SetNumberOfLostTrackerHits(mu->globalTrack()->hitPattern().numberOfLostTrackerHits());
 			muCon->SetNormalizedChi2(mu->globalTrack()->normalizedChi2());
 			
-			muCon->SetNtracks(mu->isolationR03().nTracks);
 			muCon->SetCaloComp(mu->caloCompatibility());
 			muCon->SetSegComp(muon::segmentCompatibility(*mu));
-			muCon->SetEMIso(mu->isolationR03().emEt);
-			muCon->SetHADIso(mu->isolationR03().hadEt);
-			muCon->SetTRKIso(mu->isolationR03().sumPt);
+
+			muCon->SetNtracks03(mu->isolationR03().nTracks);
+			muCon->SetEmIso03(mu->isolationR03().emEt);
+			muCon->SetHadIso03(mu->isolationR03().hadEt);
+			muCon->SetTrkIso03(mu->isolationR03().sumPt);
+			
+			muCon->SetNtracks05(mu->isolationR05().nTracks);
+			muCon->SetEmIso05(mu->isolationR05().emEt);
+			muCon->SetHadIso05(mu->isolationR05().hadEt);
+			muCon->SetTrkIso05(mu->isolationR05().sumPt);
 			
 
 			float sumPt3 = 0;
@@ -336,10 +342,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 			muCon->SetPfENeutral(0.5, neutral5);
 			muCon->SetPfENeutral(0.4, neutral4);
 			muCon->SetPfENeutral(0.3, neutral3);
-   
-			//muCon->SetDxy(myMuon.innerTrack()->dxy(BSPoint));
-			//muCon->SetDz(myMuon.innerTrack()->dz(BSPoint));
-
+			
 			muCount++;
 		}
 	}
@@ -401,7 +404,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 	    eleCon->SetP4(electronRef->px(),electronRef->py(),electronRef->pz(),electronRef->p());
 	    eleCon->SetVtx(electronRef->gsfTrack()->vx(),electronRef->gsfTrack()->vy(),electronRef->gsfTrack()->vz());
 	    eleCon->SetCharge(electronRef->charge());
-	    //eleCon->Setdxy(electronRef->gsfTrack()->dxy(vertexBeamSpot.position()));
 	    
 	    eleCon->SetNumberOfValidPixelHits(electronRef->gsfTrack()->hitPattern().numberOfValidPixelHits());
 	    eleCon->SetNumberOfValidTrackerHits(electronRef->gsfTrack()->hitPattern().numberOfValidTrackerHits());
@@ -412,9 +414,13 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 	    eleCon->SetIsEE(electronRef->isEE());
 	    eleCon->SetIsInGap(electronRef->isGap());
 
-	    eleCon->SetEMIso(electronRef->dr03EcalRecHitSumEt());
-	    eleCon->SetHADIso(electronRef->dr03HcalTowerSumEt());
-	    eleCon->SetTRKIso(electronRef->dr03TkSumPt());
+	    eleCon->SetEmIso03( electronRef->dr03EcalRecHitSumEt());
+	    eleCon->SetHadIso03(electronRef->dr03HcalTowerSumEt());
+	    eleCon->SetTrkIso03(electronRef->dr03TkSumPt());
+	    eleCon->SetEmIso04( electronRef->dr04EcalRecHitSumEt());
+	    eleCon->SetHadIso04(electronRef->dr04HcalTowerSumEt());
+	    eleCon->SetTrkIso04(electronRef->dr04TkSumPt());
+
 	    eleCon->SetHadOverEm(electronRef->hadronicOverEm());
 	    eleCon->SetDphiSuperCluster(electronRef->deltaPhiSuperClusterTrackAtVtx());
 	    eleCon->SetDetaSuperCluster(electronRef->deltaEtaSuperClusterTrackAtVtx());

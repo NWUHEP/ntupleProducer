@@ -36,7 +36,6 @@ float TCElectron::Et() const {
   return _p4.Et();
 }
 
-
 float TCElectron::Eta() const {
  return _p4.Eta();
 }
@@ -71,15 +70,33 @@ float TCElectron::NormalizedChi2() const {
 
 
 float TCElectron::EmIso() const {
-   return _emIso;
+   return _emIso03;
 }
-
 float TCElectron::HadIso() const {
-   return _hadIso;
+   return _hadIso03;
+}
+float TCElectron::TrkIso() const {
+   return _trkIso03;
 }
 
-float TCElectron::TrkIso() const {
-   return _trkIso;
+float TCElectron::EmIso03() const {
+   return _emIso03;
+}
+float TCElectron::HadIso03() const {
+   return _hadIso03;
+}
+float TCElectron::TrkIso03() const {
+   return _trkIso03;
+}
+
+float TCElectron::EmIso04() const {
+   return _emIso04;
+}
+float TCElectron::HadIso04() const {
+   return _hadIso04;
+}
+float TCElectron::TrkIso04() const {
+   return _trkIso04;
 }
 
 float TCElectron::PfRelIso(float coneSize) const {
@@ -242,15 +259,25 @@ void TCElectron::SetNormalizedChi2(float n) {
 }
 
 
-void TCElectron::SetEMIso(float e){
-  _emIso = e;
+void TCElectron::SetEmIso03(float e){
+  _emIso03 = e;
 }
-void TCElectron::SetHADIso(float h){
-  _hadIso = h;
+void TCElectron::SetHadIso03(float h){
+  _hadIso03 = h;
 }
-void TCElectron::SetTRKIso(float t){
-  _trkIso = t;
+void TCElectron::SetTrkIso03(float t){
+  _trkIso03 = t;
 }
+void TCElectron::SetEmIso04(float e){
+  _emIso04 = e;
+}
+void TCElectron::SetHadIso04(float h){
+  _hadIso04 = h;
+}
+void TCElectron::SetTrkIso04(float t){
+  _trkIso04 = t;
+}
+
 void TCElectron::SetHadOverEm(float he){
   _hadOverEm = he;
 }

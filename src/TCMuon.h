@@ -15,13 +15,18 @@ private:
     bool _isGLB;
     float _caloComp;
     float _segComp;
-    float _emIso;
-    float _hadIso;
-    float _trkIso;
+    float _emIso03;
+    float _hadIso03;
+    float _trkIso03;
+    float _emIso05;
+    float _hadIso05;
+    float _trkIso05;
+    int _nTracks03;
+    int _nTracks05;
+
     float _ptError; 
 
     int _numberOfMatches;
-    int _nTracks;
     int _numberOfValidPixelHits;
     int _numberOfValidTrackerHits;
     int _numberOfLostPixelHits;
@@ -62,7 +67,18 @@ public:
     float HadIso() const;
     float TrkIso() const;
 
+    float EmIso03() const;
+    float HadIso03() const;
+    float TrkIso03() const;
+
+    float EmIso05() const;
+    float HadIso05() const;
+    float TrkIso05() const;
+
     int Ntracks() const;
+    int Ntracks03() const;
+    int Ntracks05() const;
+
     int NumberOfValidPixelHits() const;
     int NumberOfValidTrackerHits() const;
     int NumberOfLostPixelHits() const;
@@ -85,15 +101,19 @@ public:
     void SetPtError(float er);
     void SetVtx(float vx, float vy, float vz);
 
-    void SetNtracks(int n);
-    void SetCharge(int c);
+     void SetCharge(int c);
     void SetIsGLB(bool t);
     void SetIsTRK(bool t);
     void SetCaloComp(float c);
     void SetSegComp(float s);
-    void SetEMIso(float e);
-    void SetHADIso(float h);
-    void SetTRKIso(float t);
+    void SetEmIso03(float e);
+    void SetHadIso03(float h);
+    void SetTrkIso03(float t);
+    void SetEmIso05(float e);
+    void SetHadIso05(float h);
+    void SetTrkIso05(float t);
+    void SetNtracks03(int n);
+    void SetNtracks05(int n);
     void SetNumberOfMatches(int n);
     void SetNumberOfValidPixelHits(int n);
     void SetNumberOfValidTrackerHits(int n);

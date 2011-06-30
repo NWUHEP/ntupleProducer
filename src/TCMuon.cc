@@ -2,13 +2,9 @@
 #include<iostream>
 
 TCMuon::TCMuon() {
-
 }
-
 TCMuon::~TCMuon() {
-
 }
-
 
 
 // "get" methods -------------------------------------
@@ -94,20 +90,45 @@ float TCMuon::SegComp() const {
    return _segComp;
 }
 
+float TCMuon::EmIso03() const {
+   return _emIso03;
+}
+float TCMuon::HadIso03() const {
+   return _hadIso03;
+}
+float TCMuon::TrkIso03() const {
+   return _trkIso03;
+}
+
+
 float TCMuon::EmIso() const {
-   return _emIso;
+   return _emIso03;
 }
-
 float TCMuon::HadIso() const {
-   return _hadIso;
+   return _hadIso03;
+}
+float TCMuon::TrkIso() const {
+   return _trkIso03;
+}
+float TCMuon::EmIso05() const {
+   return _emIso05;
+}
+float TCMuon::HadIso05() const {
+   return _hadIso05;
+}
+float TCMuon::TrkIso05() const {
+   return _trkIso05;
 }
 
-float TCMuon::TrkIso() const {
-   return _trkIso;
-}
 
 int TCMuon::Ntracks() const {
-   return _nTracks;
+   return _nTracks03;
+}
+int TCMuon::Ntracks03() const {
+   return _nTracks03;
+}
+int TCMuon::Ntracks05() const {
+   return _nTracks05;
 }
 
 float TCMuon::PfSumPt(float coneSize) const {
@@ -233,22 +254,34 @@ void TCMuon::SetSegComp(float s){
    _segComp = s;
 }
 
-void TCMuon::SetEMIso(float e){
-   _emIso = e;
+
+void TCMuon::SetEmIso03(float e){
+   _emIso03 = e;
+}
+void TCMuon::SetHadIso03(float h){
+   _hadIso03 = h;
+}
+void TCMuon::SetTrkIso03(float t){
+   _trkIso03 = t;
+}
+void TCMuon::SetNtracks03(int n){
+   _nTracks03 = n;
 }
 
 
-void TCMuon::SetHADIso(float h){
-   _hadIso = h;
+void TCMuon::SetEmIso05(float e){
+   _emIso05 = e;
+}
+void TCMuon::SetHadIso05(float h){
+   _hadIso05 = h;
+}
+void TCMuon::SetTrkIso05(float t){
+   _trkIso05 = t;
+}
+void TCMuon::SetNtracks05(int n){
+   _nTracks05 = n;
 }
 
-void TCMuon::SetTRKIso(float t){
-   _trkIso = t;
-}
-
-void TCMuon::SetNtracks(int n){
-   _nTracks = n;
-}
 void TCMuon::SetPfSumPt(float coneSize, float f) {
   if(fabs(coneSize - 0.3) < 0.01) _pfIso_Pt03 = f;
   if(fabs(coneSize - 0.4) < 0.01) _pfIso_Pt04 = f;
