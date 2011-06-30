@@ -1,4 +1,3 @@
-// $Id: ntupleProducer.h,v 1.6 2011/07/29 14:21:01 andrey Exp $                                                                                             
 // system include files
 #include <memory>
 #include <string>
@@ -120,8 +119,9 @@ class ntupleProducer : public edm::EDAnalyzer {
 		virtual void endRun(const edm::Run&, const edm::EventSetup&);
 		virtual void endJob() ;
 
-		bool triggerDecision(edm::Handle<edm::TriggerResults>& hltR, int iTrigger);
-		float sumPtSquared(const Vertex& v);
+		virtual bool  triggerDecision(edm::Handle<edm::TriggerResults>& hltR, int iTrigger);
+		virtual float sumPtSquared(const Vertex& v);
+		virtual void  associateJetToVertex(reco::PFJet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet *outJet);   
 
 		// ----------member data ---------------------------
 
@@ -143,16 +143,7 @@ class ntupleProducer : public edm::EDAnalyzer {
 		edm::InputTag tauTag_;
 		edm::InputTag primaryVtxTag_;
 		edm::InputTag triggerResultsTag_;
-		edm::InputTag electronIDMap_;
 		edm::InputTag rhoCorrTag_;
-
-		edm::InputTag electronIDMap95_;
-		edm::InputTag electronIDMap90_;
-		edm::InputTag electronIDMap85_;
-		edm::InputTag electronIDMap80_;
-		edm::InputTag electronIDMap70_;
-		edm::InputTag electronIDMap60_;
-
 
 		bool saveJets_;
 		bool saveElectrons_;
@@ -184,7 +175,7 @@ class ntupleProducer : public edm::EDAnalyzer {
 		HLTConfigProvider hltConfig_;
 		vector<string>  hlNames;
 		vector<string>  triggerPaths_;
-		unsigned int triggerStatus;
+		long unsigned int triggerStatus;
 		unsigned int hltPrescale[64];
 
 		//Histograms
