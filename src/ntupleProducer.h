@@ -90,6 +90,7 @@
 #include "TProfile.h"
 #include "TFile.h"
 #include "TTree.h"
+#include "TBranch.h"
 #include "TString.h"
 #include "TObject.h"
 #include "TObjArray.h"
@@ -157,13 +158,14 @@ class ntupleProducer : public edm::EDAnalyzer {
 
 		//Physics object containers
 		TClonesArray* recoJets;
-		TClonesArray* recoMET;
 		TClonesArray* recoMuons;
 		TClonesArray* recoElectrons;
 		TClonesArray* recoTaus;
 		TClonesArray* recoPhotons;
 		TClonesArray* genJets;
 		TClonesArray* primaryVtx;
+		TCMET*        recoMET;
+		TVector3*     beamSpot;
 
 		//GenParticles
 		TClonesArray* hardPartonP4;

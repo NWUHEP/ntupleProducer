@@ -47,6 +47,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 	iEvent.getByLabel("offlineBeamSpot", beamSpotHandle);
 	reco::BeamSpot vertexBeamSpot = *beamSpotHandle;
 
+	//beamSpot->SetXYZ(vertexBeamSpot.x0(), vertexBeamSpot.y0(), vertexBeamSpot.z0());
+
 	int vtxCount, jetCount, metCount, muCount, eleCount, genCount, eleFakeCount, muFakeCount, partonCount;
 	vtxCount = jetCount = metCount = muCount = eleCount = genCount = eleFakeCount = muFakeCount = partonCount = 0;
 	float primaryVertexZ = -999;
@@ -178,18 +180,16 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 		PFMETCollection::const_iterator pfMET = MET->begin();
 
 		if (MET.isValid()) {
-			TCMET* metCon = new ((*recoMET)[metCount]) TCMET;
-			metCon->SetSumEt(pfMET->sumEt());
-			metCon->SetMet(pfMET->et());
-			metCon->SetPhi(pfMET->phi());
-			metCon->SetPhotonEtFraction(pfMET->photonEtFraction());
-			metCon->SetElectronEtFraction(pfMET->electronEtFraction());
-			metCon->SetMuonEtFraction(pfMET->muonEtFraction());
-			metCon->SetNeutralHadronEtFraction(pfMET->neutralHadronEtFraction());
-			metCon->SetChargedHadronEtFraction(pfMET->chargedHadronEtFraction());
-			metCon->SetHFHadronEtFraction(pfMET->HFHadronEtFraction());
-			metCon->SetHFEMEtFraction(pfMET->HFEMEtFraction());
-			++metCount;
+			recoMET->SetSumEt(pfMET->sumEt());
+			recoMET->SetMet(pfMET->et());
+			recoMET->SetPhi(pfMET->phi());
+			recoMET->SetPhotonEtFraction(pfMET->photonEtFraction());
+			recoMET->SetElectronEtFraction(pfMET->electronEtFraction());
+			recoMET->SetMuonEtFraction(pfMET->muonEtFraction());
+			recoMET->SetNeutralHadronEtFraction(pfMET->neutralHadronEtFraction());
+			recoMET->SetChargedHadronEtFraction(pfMET->chargedHadronEtFraction());
+			recoMET->SetHFHadronEtFraction(pfMET->HFHadronEtFraction());
+			recoMET->SetHFEMEtFraction(pfMET->HFEMEtFraction());
 		}
 	}
 
@@ -332,13 +332,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 	    eleCon->SetDetaSuperCluster(electronRef->deltaEtaSuperClusterTrackAtVtx());
 	    eleCon->SetSigmaIetaIeta(electronRef->sigmaIetaIeta());
 		 
-		 eleCon->SetEmIso03( electronRef->dr03EcalRecHitSumEt());
-		 eleCon->SetHadIso03(electronRef->dr03HcalTowerSumEt());
-		 eleCon->SetTrkIso03(electronRef->dr03TkSumPt());
-		 eleCon->SetEmIso04( electronRef->dr04EcalRecHitSumEt());
-		 eleCon->SetHadIso04(electronRef->dr04HcalTowerSumEt());
-		 eleCon->SetTrkIso04(electronRef->dr04TkSumPt());
-	    
 	    eleCon->SetConversionFlag(electronRef->convFlags());
 	    eleCon->SetConversionDist(electronRef->convDist());
 	    eleCon->SetConversionDcot(electronRef->convDcot());
@@ -435,6 +428,25 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 			//evtWeight    = GenEventInfoHandle->weight();
 		}
 
+
+		////////////////////
+		// PU information //
+		////////////////////
+
+
+		Handle<std::vector< PileupSummaryInfo > >  PUInfo;
+		iEvent.getByLabel(edm::InputTag("addPileupInfo"), PUInfo);
+
+		//std::vector<PileupSummaryInfo>::const_iterator PVI;
+		//int puCount = 0
+		//for(I = PUInfo->begin(); PVI != PUInfo->end(); ++PVI) {
+		//	int BX = PVI->getBunchCrossing();
+		//	if(BX == 0) {
+		//		npv = PVI->getPU_NumInteractions();
+		//		break;
+		//	}
+		//}
+
 		//////////////////////
 		// Get genParticles //
 		//////////////////////
@@ -505,10 +517,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 	primaryVtx->Clear("C");
 	recoJets->Clear("C");
-	genJets->Clear("C");
-	recoMET->Clear("C");
-	recoElectrons->Clear("C");
 	recoMuons->Clear("C");
+	recoElectrons->Clear("C");
+	recoTaus->Clear("C");
+	recoPhotons->Clear("C");
+	genJets->Clear("C");
 	hardPartonP4->Clear("C");
 }
 
@@ -521,13 +534,14 @@ void  ntupleProducer::beginJob()
 
 	primaryVtx               = new TClonesArray("TCPrimaryVtx");
 	recoJets                 = new TClonesArray("TCJet");
-	recoMET                  = new TClonesArray("TCMET");
 	recoElectrons            = new TClonesArray("TCElectron");
 	recoMuons                = new TClonesArray("TCMuon");
 	recoTaus                 = new TClonesArray("TCTau");
 	recoPhotons              = new TClonesArray("TCPhoton");
 	genJets                  = new TClonesArray("TCGenJet");
 	hardPartonP4             = new TClonesArray("TLorentzVector");
+	recoMET                  = 0;
+	beamSpot                 = 0;
 
 	eventTree->Branch("primaryVtx",&primaryVtx, 6400, 0);
 	eventTree->Branch("recoJets",&recoJets, 6400, 0);
@@ -535,25 +549,26 @@ void  ntupleProducer::beginJob()
 	eventTree->Branch("recoMuons",&recoMuons, 6400, 0);
 	eventTree->Branch("recoTaus",&recoTaus, 6400, 0);
 	eventTree->Branch("recoPhotons",&recoPhotons, 6400, 0);
-	eventTree->Branch("recoMET",&recoMET, 6400, 0);
 	eventTree->Branch("genJets",&genJets, 6400, 0);
+	eventTree->Branch("recoMET", &recoMET, 6400, 0);
+	eventTree->Branch("beamSpot", &beamSpot, 6400, 0);
 
 	eventTree->Branch("eventNumber",&eventNumber, "eventNumber/I");
 	eventTree->Branch("runNumber",&runNumber, "runNumber/I");
 	eventTree->Branch("lumiSection",&lumiSection, "lumiSection/I");
 	eventTree->Branch("triggerStatus",&triggerStatus, "triggerStatus/i");
-	eventTree->Branch("isRealData",&isRealData, "isRealData/i");
+	eventTree->Branch("isRealData",&isRealData, "isRealData/O");
 	eventTree->Branch("bunchCross",&bunchCross, "bunchCross/i");
-	eventTree->Branch("ptHat",&ptHat, "ptHat/f");
-	eventTree->Branch("qScale", &qScale, "qScale/f");
-	eventTree->Branch("evtWeight", &evtWeight, "evtWeight/f");
+	eventTree->Branch("ptHat",&ptHat, "ptHat/F");
+	eventTree->Branch("qScale", &qScale, "qScale/F");
+	eventTree->Branch("evtWeight", &evtWeight, "evtWeight/F");
 	eventTree->Branch("rhoFactor",&rhoFactor, "rhoFactor/F");
 	eventTree->Branch("hltPrescale",hltPrescale, "hltPrescale[64]/i");
 
-	runTree->Branch("deliveredLumi",&deliveredLumi, "deliveredLumi/f");
-	runTree->Branch("recordedLumi",&recordedLumi, "recordedLumi/f");
-	runTree->Branch("lumiDeadTime",&lumiDeadTime, "lumiDeadTime/f");
-	runTree->Branch("runNumber",&runNumber, "runNumber/f");
+	runTree->Branch("deliveredLumi",&deliveredLumi, "deliveredLumi/F");
+	runTree->Branch("recordedLumi",&recordedLumi, "recordedLumi/F");
+	runTree->Branch("lumiDeadTime",&lumiDeadTime, "lumiDeadTime/F");
+	runTree->Branch("runNumber",&runNumber, "runNumber/i");
 	
 	// Initialize HLT prescales //
 	
