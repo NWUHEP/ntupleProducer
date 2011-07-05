@@ -1,9 +1,15 @@
 Jun 30
 
 * Split trigger ints for different data streams
-* Include TClonesArray of TVector3 for simVertex
+* Include TClonesArray of TVector3 for simVertex (Just save z position of simVertex; x = y = 0)
 * genJet flavor matching
 * pfIsolation for muons and electrons
-* save MET as TCMet not TClonesArray
+* save MET as TCMet not TClonesArray (DONE)
 * Modify trigger path specification
 * ...
+
+July 5
+
+* Still need to address triggers, pfIsolation, and genJet flavor
+* I added number of in-time PU vertices; I suggest we add a class to store out-of-time PU by BX and the z positions.
+* 
