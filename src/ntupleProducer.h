@@ -68,6 +68,15 @@
 #include "CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h"
 #include "CondFormats/JetMETObjects/interface/JetCorrectorParameters.h"
 
+#include "FWCore/ServiceRegistry/interface/Service.h"
+#include "CommonTools/UtilAlgos/interface/TFileService.h"
+
+#include "JetMETCorrections/Type1MET/interface/Type1MET.h"
+#include "JetMETCorrections/Type1MET/interface/Type1METAlgo.h"
+
+#include "DataFormats/AnomalousEcalDataFormats/interface/AnomalousECALVariables.h"
+#include "DataFormats/METReco/interface/BeamHaloSummary.h"
+
 // ntuple storage classes
 #include "TCPrimaryVtx.h"
 #include "TCJet.h"
@@ -123,7 +132,7 @@ class ntupleProducer : public edm::EDAnalyzer {
 		virtual bool  triggerDecision(edm::Handle<edm::TriggerResults>& hltR, int iTrigger);
 		virtual float sumPtSquared(const Vertex& v);
 		virtual void  associateJetToVertex(reco::PFJet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet *outJet);   
-
+		virtual	bool isFilteredOutScraping(const edm::Event& iEvent, const edm::EventSetup& iSetup, int numtrack=10, double thresh=0.25);
 		// ----------member data ---------------------------
 
 
@@ -132,7 +141,8 @@ class ntupleProducer : public edm::EDAnalyzer {
 		float deliveredLumi, recordedLumi, lumiDeadTime;
 		float rhoFactor;
 
-		TFile* ntupleFile;
+		//TFile* ntupleFile;
+		edm::Service<TFileService> fs;
 		TTree* eventTree;
 		TTree* runTree;
 		edm::InputTag jetTag_;
@@ -145,6 +155,8 @@ class ntupleProducer : public edm::EDAnalyzer {
 		edm::InputTag primaryVtxTag_;
 		edm::InputTag triggerResultsTag_;
 		edm::InputTag rhoCorrTag_;
+		edm::InputTag ecalAnomalousFilterTag_;
+		edm::InputTag hcalFilterTag_;
 
 		bool saveJets_;
 		bool saveElectrons_;
@@ -183,6 +195,13 @@ class ntupleProducer : public edm::EDAnalyzer {
 		vector<string>    triggerPaths_;
 		long unsigned int triggerStatus;
 		unsigned int      hltPrescale[64];
+
+		//Filters 
+		Bool_t isNoiseHcal, isDeadEcalCluster;
+		Bool_t isCSCTightHalo, isCSCLooseHalo, isHcalTightHalo, isHcalLooseHalo, isEcalTightHalo, isEcalLooseHalo;
+		Bool_t isGlobalTightHalo, isGlobalLooseHalo;
+		Bool_t isScraping;
+
 
 		//Histograms
 		TH1D * h1_ptHat;
