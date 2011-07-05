@@ -163,22 +163,26 @@ class ntupleProducer : public edm::EDAnalyzer {
 		TClonesArray* recoTaus;
 		TClonesArray* recoPhotons;
 		TClonesArray* genJets;
-		TClonesArray* primaryVtx;
 		TCMET*        recoMET;
+
+		//Vertex info
+		TClonesArray* primaryVtx;
 		TVector3*     beamSpot;
+		int           nPUVertices;
 
 		//GenParticles
 		TClonesArray* hardPartonP4;
-		int partonPdgId[4];
+		int           partonPdgId[4];
+		
 
 		//Triggers
-		string hlTriggerResults_, hltProcess_, triggerName_;
-		TriggerNames triggerNames;
 		HLTConfigProvider hltConfig_;
-		vector<string>  hlNames;
-		vector<string>  triggerPaths_;
+		string            hlTriggerResults_, hltProcess_, triggerName_;
+		TriggerNames      triggerNames;
+		vector<string>    hlNames;
+		vector<string>    triggerPaths_;
 		long unsigned int triggerStatus;
-		unsigned int hltPrescale[64];
+		unsigned int      hltPrescale[64];
 
 		//Histograms
 		TH1D * h1_ptHat;

@@ -47,7 +47,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 	iEvent.getByLabel("offlineBeamSpot", beamSpotHandle);
 	reco::BeamSpot vertexBeamSpot = *beamSpotHandle;
 
-	//beamSpot->SetXYZ(vertexBeamSpot.x0(), vertexBeamSpot.y0(), vertexBeamSpot.z0());
+	if (vertexBeamSpot.type() != -1) beamSpot->SetXYZ(vertexBeamSpot.x0(), vertexBeamSpot.y0(), vertexBeamSpot.z0());
 
 	int vtxCount, jetCount, metCount, muCount, eleCount, genCount, eleFakeCount, muFakeCount, partonCount;
 	vtxCount = jetCount = metCount = muCount = eleCount = genCount = eleFakeCount = muFakeCount = partonCount = 0;
@@ -436,16 +436,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 		Handle<std::vector< PileupSummaryInfo > >  PUInfo;
 		iEvent.getByLabel(edm::InputTag("addPileupInfo"), PUInfo);
+		std::vector<PileupSummaryInfo>::const_iterator iPV;
 
-		//std::vector<PileupSummaryInfo>::const_iterator PVI;
-		//int puCount = 0
-		//for(I = PUInfo->begin(); PVI != PUInfo->end(); ++PVI) {
-		//	int BX = PVI->getBunchCrossing();
-		//	if(BX == 0) {
-		//		npv = PVI->getPU_NumInteractions();
-		//		break;
-		//	}
-		//}
+		for(iPV = PUInfo->begin(); iPV != PUInfo->end(); ++iPV) if (iPV->getBunchCrossing() == 0) nPUVertices = iPV->getPU_NumInteractions();
 
 		//////////////////////
 		// Get genParticles //
@@ -508,7 +501,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 				pair<int, int> preScales;
 				preScales = hltConfig_.prescaleValues(iEvent, iSetup, hlNames[i]); 
 				hltPrescale[j] = preScales.first*preScales.second;
-				cout<<hlNames[i]<<"\t"<<hltPrescale[j]<<endl;
+				//cout<<hlNames[i]<<"\t"<<hltPrescale[j]<<endl;
 			}
 		}
 	} 
@@ -543,7 +536,6 @@ void  ntupleProducer::beginJob()
 	recoMET                  = 0;
 	beamSpot                 = 0;
 
-	eventTree->Branch("primaryVtx",&primaryVtx, 6400, 0);
 	eventTree->Branch("recoJets",&recoJets, 6400, 0);
 	eventTree->Branch("recoElectrons",&recoElectrons, 6400, 0);
 	eventTree->Branch("recoMuons",&recoMuons, 6400, 0);
@@ -551,10 +543,13 @@ void  ntupleProducer::beginJob()
 	eventTree->Branch("recoPhotons",&recoPhotons, 6400, 0);
 	eventTree->Branch("genJets",&genJets, 6400, 0);
 	eventTree->Branch("recoMET", &recoMET, 6400, 0);
-	eventTree->Branch("beamSpot", &beamSpot, 6400, 0);
 
-	eventTree->Branch("eventNumber",&eventNumber, "eventNumber/I");
+	eventTree->Branch("primaryVtx",&primaryVtx, 6400, 0);
+	eventTree->Branch("beamSpot", &beamSpot, 6400, 0);
+	eventTree->Branch("nPUVertices", &nPUVertices, "nPUVertices/I");
+
 	eventTree->Branch("runNumber",&runNumber, "runNumber/I");
+	eventTree->Branch("eventNumber",&eventNumber, "eventNumber/I");
 	eventTree->Branch("lumiSection",&lumiSection, "lumiSection/I");
 	eventTree->Branch("triggerStatus",&triggerStatus, "triggerStatus/i");
 	eventTree->Branch("isRealData",&isRealData, "isRealData/O");
@@ -567,7 +562,6 @@ void  ntupleProducer::beginJob()
 
 	runTree->Branch("deliveredLumi",&deliveredLumi, "deliveredLumi/F");
 	runTree->Branch("recordedLumi",&recordedLumi, "recordedLumi/F");
-	runTree->Branch("lumiDeadTime",&lumiDeadTime, "lumiDeadTime/F");
 	runTree->Branch("runNumber",&runNumber, "runNumber/i");
 	
 	// Initialize HLT prescales //
@@ -581,7 +575,6 @@ void ntupleProducer::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetu
 	hltConfig_.init(iRun, iSetup, hltProcess_, changed);
 	deliveredLumi = 0;
 	recordedLumi  = 0;
-	lumiDeadTime  = 0;
 }
 
 void ntupleProducer::endLuminosityBlock(const edm::LuminosityBlock& iLumi, const edm::EventSetup& iSetup)
@@ -589,15 +582,8 @@ void ntupleProducer::endLuminosityBlock(const edm::LuminosityBlock& iLumi, const
 	edm::Handle<LumiSummary> lumiSummary;
 	iLumi.getByLabel("lumiProducer", lumiSummary);
 
-	lumiDeadTime   += lumiSummary->deadcount()*93.244;
 	deliveredLumi  += lumiSummary->avgInsDelLumi()*93.244;
-	recordedLumi   += lumiSummary->avgInsDelLumi()*lumiSummary->liveFrac()*93.244;
-
-	//cout<<iLumi.id().luminosityBlock()<<endl;
-	//cout<<"\t Dead Count = "<<lumiSummary->deadcount()<<endl;
-	//cout<<"\t Fraction of dead time = "<<1 - lumiSummary->liveFrac()<<endl;
-	//cout<<"\t Integrated luminosity = "<<lumiSummary->avgInsDelLumi()*93.244<<endl;
-	//cout<<"\t Dead time corrected luminosity = "<<lumiSummary->avgInsDelLumi()*lumiSummary->liveFrac()*93.244<<endl;
+	recordedLumi   += deliveredLumi*lumiSummary->liveFrac();
 }
 
 void ntupleProducer::endRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
