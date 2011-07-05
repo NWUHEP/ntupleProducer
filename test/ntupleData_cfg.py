@@ -7,7 +7,7 @@ process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.threshold = 'ERROR'
 
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(100)
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000))
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(500))
 
 process.load("Configuration.StandardSequences.Services_cff")
 process.load('Configuration.StandardSequences.GeometryExtended_cff')
@@ -23,7 +23,7 @@ process.GlobalTag.globaltag = 'GR_R_42_V14::All'
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-        'file:/tmp/naodell/FEB6499E-8C7B-E011-98DA-0018F3D09702.root'
+        'file:/tmp/naodell/62CCADC4-EC7B-E011-AC6F-0015178C4994.root'
 #       '/store/data/Run2010A/JetMET/RECO/Sep17ReReco_v2/0026/FE9C387C-24C8-DF11-8CAA-003048679274.root'
 )
 )
@@ -115,7 +115,7 @@ process.metJESCorPFAK5.corrector = cms.string('ak5PFL2L3')
 
 ### ntuple producer
 process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
-  rootfilename      =    cms.untracked.string("nuTuple_TEST.root"),
+  rootfilename      =    cms.untracked.string("nuTuple_Photon_Run2011A.root"),
 
   JetTag            =    cms.untracked.InputTag("ak5PFJets"),
   GenJetTag         =    cms.untracked.InputTag("ak5GenJets"),
@@ -136,7 +136,8 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   saveGenJets       =    cms.untracked.bool(True),
 
   hltName           =    cms.untracked.string("HLT"),
-  triggers          =    cms.untracked.vstring("HLT_Mu8_v",
+  triggers          =    cms.untracked.vstring(
+                                               "HLT_Mu8_v",
                                                "HLT_Mu15_v",
                                                "HLT_Mu8_Jet40_v",
                                                "HLT_Mu13_Mu8_v",
@@ -144,11 +145,19 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_DoubleMu3_v",
                                                "HLT_DoubleMu6_v",
                                                "HLT_DoubleMu7_v",
+
                                                "HLT_Ele8_CaloIdL_CaloIsoVL_v",
                                                "HLT_Ele17_CaloIdL_CaloIsoVL_v",
                                                "HLT_Ele8_CaloIdL_CaloIsoVL_Jet40_v",
                                                "HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL_v",
-                                               "HLT_Ele17_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_Ele8_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_v")
+                                               "HLT_Ele17_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_Ele8_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_v",
+
+                                               "HLT_Photon20_CaloIdL_CaloIsoVL_v",
+                                               "HLT_Photon30_CaloIdL_CaloIsoVL_v",
+                                               "HLT_Photon50_CaloIdL_CaloIsoVL_v",
+                                               "HLT_Photon75_CaloIdL_CaloIsoVL_v",
+                                               "HLT_Photon90_CaloIdL_CaloIsoVL_v"
+)
 )
 
 ### Let it run
