@@ -464,6 +464,13 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 		if (saveGenJets_) {
 
+   FlavourMap flavours;
+   for (reco::JetFlavourMatchingCollection::const_iterator iter = jetMC->begin();
+       iter != jetMC->end(); iter++) {
+     unsigned int fl = std::abs(iter->second.getFlavour());
+     flavours.insert(FlavourMap::value_type(iter->first, fl));
+   }
+
 			for (GenJetCollection::const_iterator jet_iter = GenJets->begin(); jet_iter!= GenJets->end(); ++jet_iter) {
 				reco::GenJet myJet = reco::GenJet(*jet_iter);      
 				if (myJet.pt() > 10) { 
@@ -475,7 +482,23 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 					jetCon->SetInvEnergy(myJet.invisibleEnergy());
 					jetCon->SetAuxEnergy(myJet.auxiliaryEnergy());
 					jetCon->SetNumConstit(myJet.getGenConstituents().size());
+   edm::Handle<reco::JetTagCollection> bTagHandle;
+   iEvent.getByLabel("trackCountingHighEffBJetTags", bTagHandle);
+   const reco::JetTagCollection & bTags = *(bTagHandle.product());
 
+      for (unsigned int i = 0; i != bTags.size(); ++i) {
+         unsigned int myFlavour=0;
+         RefToBase<reco::Jet> aJet;
+         TLorentzVector thisJetForMatching(aJet.px(),aJet.py(),aJet.pz(),aJet.energy());
+         if(jetCon->P4().DeltaR(thisJetForMatching) < 0.1) {
+            aJet = bTags[i].first; // fill it from the collection you want to probe!
+            if (flavours.find (aJet) == flavours.end()) {
+//            std::cout <<" Cannot access flavour for this jet - not in the Map"<<std::endl;
+            } else {
+               jetCon->SetJetFlavor(flavours[aJet]);
+            }
+         }
+      }
 					++genCount;	
 				}
 			}
