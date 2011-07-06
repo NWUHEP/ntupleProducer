@@ -88,7 +88,7 @@ process.load('RecoJets.JetAssociationProducers.ak5JTA_cff')
 process.ak5JetTracksAssociatorAtVertex.jets = cms.InputTag("ak5PFJetsL1FastL2L3")
 process.ak5JetTracksAssociatorAtCaloFace.jets = cms.InputTag("ak5PFJetsL1FastL2L3")
 process.ak5JetExtender.jets = cms.InputTag("ak5PFJetsL1FastL2L3")
-
+process.load("PhysicsTools.JetMCAlgos.CaloJetsMCFlavour_cfi")
 ### eleID map:
 process.load("ElectroWeakAnalysis.WENu.simpleCutBasedElectronIDSpring10_cfi")
 process.simpleEleId60relIso = process.simpleCutBasedElectronID.clone()
@@ -164,6 +164,9 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 ### Let it run
 cmsSeq = cms.Sequence(
 		process.offlinePrimaryVerticesDAWithBS 
+      * process.PFTau                    
+      * process.myPartons
+      * process.AK5Flavour 
       * process.simpleEleId60relIso
       * process.simpleEleId70relIso
       * process.simpleEleId80relIso
