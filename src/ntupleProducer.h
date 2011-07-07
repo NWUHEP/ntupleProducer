@@ -59,6 +59,10 @@
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenRunInfoProduct.h"
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
+#include "SimDataFormats/JetMatching/interface/JetFlavour.h"
+#include "SimDataFormats/JetMatching/interface/JetFlavourMatching.h"
+#include "SimDataFormats/JetMatching/interface/MatchedPartons.h"
+#include "SimDataFormats/JetMatching/interface/JetMatchedPartons.h"
 
 //#include "RecoVertex/PrimaryVertexProducer/interface/VertexHigherPtSquared.h"
 
@@ -132,16 +136,24 @@ class ntupleProducer : public edm::EDAnalyzer {
 		virtual bool  triggerDecision(edm::Handle<edm::TriggerResults>& hltR, int iTrigger);
 		virtual float sumPtSquared(const Vertex& v);
 		virtual void  associateJetToVertex(reco::PFJet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet *outJet);   
-		virtual	bool isFilteredOutScraping(const edm::Event& iEvent, const edm::EventSetup& iSetup, int numtrack=10, double thresh=0.25);
+		virtual bool isFilteredOutScraping(const edm::Event& iEvent, const edm::EventSetup& iSetup, int numtrack=10, double thresh=0.25);
 		// ----------member data ---------------------------
 
+		struct JetRefCompare :
+			public std::binary_function<edm::RefToBase<reco::Jet>, edm::RefToBase<reco::Jet>, bool> {
+				inline bool operator () (const edm::RefToBase<reco::Jet> &j1, const edm::RefToBase<reco::Jet> &j2) const {
+					return j1.id() < j2.id() || (j1.id() == j2.id() && j1.key() < j2.key()); 
+				}
+			};
 
+		typedef std::map<edm::RefToBase<reco::Jet>, unsigned int, JetRefCompare> FlavourMap;
+
+		//Standard event info
 		int eventNumber, runNumber, lumiSection, bunchCross;
 		float ptHat, qScale, evtWeight;
 		float deliveredLumi, recordedLumi, lumiDeadTime;
 		float rhoFactor;
 
-		//TFile* ntupleFile;
 		edm::Service<TFileService> fs;
 		TTree* eventTree;
 		TTree* runTree;
@@ -155,7 +167,7 @@ class ntupleProducer : public edm::EDAnalyzer {
 		edm::InputTag primaryVtxTag_;
 		edm::InputTag triggerResultsTag_;
 		edm::InputTag rhoCorrTag_;
-		edm::InputTag ecalAnomalousFilterTag_;
+		edm::InputTag ecalFilterTag_;
 		edm::InputTag hcalFilterTag_;
 
 		bool saveJets_;
@@ -166,7 +178,6 @@ class ntupleProducer : public edm::EDAnalyzer {
 		bool saveMET_;
 		bool saveGenJets_;
 		bool isRealData;
-		string rootfilename;
 
 		//Physics object containers
 		TClonesArray* recoJets;
@@ -185,7 +196,6 @@ class ntupleProducer : public edm::EDAnalyzer {
 		//GenParticles
 		TClonesArray* hardPartonP4;
 		int           partonPdgId[4];
-		
 
 		//Triggers
 		HLTConfigProvider hltConfig_;
@@ -201,7 +211,6 @@ class ntupleProducer : public edm::EDAnalyzer {
 		Bool_t isCSCTightHalo, isCSCLooseHalo, isHcalTightHalo, isHcalLooseHalo, isEcalTightHalo, isEcalLooseHalo;
 		Bool_t isGlobalTightHalo, isGlobalLooseHalo;
 		Bool_t isScraping;
-
 
 		//Histograms
 		TH1D * h1_ptHat;
