@@ -12,4 +12,9 @@ July 5
 
 * Still need to address triggers, pfIsolation, and genJet flavor
 * I added number of in-time PU vertices; I suggest we add a class to store out-of-time PU by BX and the z positions.
-* 
+ 
+July 12
+
+* Same as before
+* Possibly save trigger objects or do some matching in ntupler
+* Include MET corrections. 
