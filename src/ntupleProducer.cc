@@ -91,15 +91,15 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 		const reco::JetTagCollection & bTags1 = *(bTagHandle1.product());
 		reco::JetTagCollection::const_iterator jet_it_1;
 
-		//edm::ESHandle<JetCorrectorParametersCollection> JetCorParColl;
-		//iSetup.get<JetCorrectionsRecord>().get("AK5PF",JetCorParColl);
-		//JetCorrectorParameters const & JetCorPar = (*JetCorParColl)["Uncertainty"];
-		//JetCorrectionUncertainty *jecUnc = new JetCorrectionUncertainty(JetCorPar);
+		edm::ESHandle<JetCorrectorParametersCollection> JetCorParColl;
+		iSetup.get<JetCorrectionsRecord>().get("AK5PF",JetCorParColl);
+		JetCorrectorParameters const & JetCorPar = (*JetCorParColl)["Uncertainty"];
+		JetCorrectionUncertainty *jecUnc = new JetCorrectionUncertainty(JetCorPar);
 
 		const JetCorrector* correctorL1  = JetCorrector::getJetCorrector("ak5PFL1Fastjet",iSetup);
 		const JetCorrector* correctorL2  = JetCorrector::getJetCorrector("ak5PFL2Relative",iSetup);
 		const JetCorrector* correctorL3  = JetCorrector::getJetCorrector("ak5PFL3Absolute",iSetup);
-		//const JetCorrector* correctorRes = JetCorrector::getJetCorrector("ak5PFResidual", iSetup);
+		const JetCorrector* correctorRes = JetCorrector::getJetCorrector("ak5PFResidual", iSetup);
 
 		Handle<reco::PFJetCollection> PFJets;
 		iEvent.getByLabel(jetTag_, PFJets);
@@ -143,14 +143,14 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 			jetCon->SetJetCorr(2, scale2);
 			jetCon->SetJetCorr(3, scale3);
 
-			//if (isRealData) {
-			//	float scaleRes = correctorRes->correction(corJet);
-			//	jetCon->SetJetCorr(4, scaleRes);
-			//}
+			if (isRealData) {
+				float scaleRes = correctorRes->correction(corJet);
+				jetCon->SetJetCorr(4, scaleRes);
+			}
 
-			//jecUnc->setJetEta(corJet.eta());
-			//jecUnc->setJetPt(corJet.pt());
-			//jetCon->SetUncertaintyJES(jecUnc->getUncertainty(true)); 
+			jecUnc->setJetEta(corJet.eta());
+			jecUnc->setJetPt(corJet.pt());
+			jetCon->SetUncertaintyJES(jecUnc->getUncertainty(true)); 
 
 			/////////////////////////
 			//get associated tracks//
