@@ -17,8 +17,8 @@ private:
     TVector3 _position;
     float _nDof;
     float _chi2;
-    bool _isFake;
-    int _nTracks;
+    bool  _isFake;
+    int   _nTracks;
     float _sumPt2Trks;
 
 
@@ -29,8 +29,8 @@ public:
     TVector3 Position() const;
     float NDof() const;
     float Chi2() const;
-    bool IsFake() const;
-    int Ntracks() const;
+    bool  IsFake() const;
+    int   Ntracks() const;
     float SumPt2Trks() const;
 
     // set methods
