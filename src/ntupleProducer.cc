@@ -543,7 +543,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 		}
 	} 
 
-	if (triggerStatus != 0x0) eventTree -> Fill(); // possibly specify a cut in configuration
+	if (eleCount > 0 || muCount > 0) eventTree -> Fill(); // possibly specify a cut in configuration
 
 	primaryVtx->Clear("C");
 	recoJets->Clear("C");
