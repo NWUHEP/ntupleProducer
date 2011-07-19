@@ -154,10 +154,12 @@ class ntupleProducer : public edm::EDAnalyzer {
 		float ptHat, qScale, evtWeight;
 		float deliveredLumi, recordedLumi, lumiDeadTime;
 		float rhoFactor;
+		string  savedTriggerNames[64];
 
 		edm::Service<TFileService> fs;
 		TTree* eventTree;
 		TTree* runTree;
+		TTree* jobTree;
 		edm::InputTag jetTag_;
 		edm::InputTag metTag_;
 		edm::InputTag genJetTag_;

@@ -162,7 +162,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 			jetCon->SetUncertaintyJES(jecUnc->getUncertainty(true)); 
 
 			/////////////////////////
-			//get associated tracks//
+			// Associate to vertex //
 			/////////////////////////
 
 			if(fabs(myJet.eta()) < 2.5){
@@ -224,7 +224,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 		for (MuonCollection::const_iterator mu = muons->begin(); mu != muons->end(); ++mu) {
 			if (!(mu->isGlobalMuon() && mu->isTrackerMuon()) || mu->pt() < 10.) continue;
 			TCMuon* muCon = new ((*recoMuons)[muCount]) TCMuon;
-			
+
 			muCon->SetP4(mu->px(), mu->py(), mu->pz(), mu->energy());
 			muCon->SetVtx(mu->globalTrack()->vx(),mu->globalTrack()->vy(),mu->globalTrack()->vz());
 			muCon->SetPtError(mu->globalTrack()->ptError());
@@ -238,7 +238,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 			muCon->SetNumberOfLostPixelHits(mu->globalTrack()->hitPattern().numberOfLostPixelHits());
 			muCon->SetNumberOfLostTrackerHits(mu->globalTrack()->hitPattern().numberOfLostTrackerHits());
 			muCon->SetNormalizedChi2(mu->globalTrack()->normalizedChi2());
-			
+
 			muCon->SetCaloComp(mu->caloCompatibility());
 			muCon->SetSegComp(muon::segmentCompatibility(*mu));
 
@@ -283,108 +283,108 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 	if (saveElectrons_) {
 
-	  Handle<GsfElectronCollection> electrons;
-	  iEvent.getByLabel(electronTag_, electrons);
-	  
-	  edm::Handle<edm::ValueMap<float> > eIDValueMap95;
-	  iEvent.getByLabel( "simpleEleId95relIso" , eIDValueMap95 );
-	  const edm::ValueMap<float> & eIDmap95 = * eIDValueMap95 ;
+		Handle<GsfElectronCollection> electrons;
+		iEvent.getByLabel(electronTag_, electrons);
 
-	  edm::Handle<edm::ValueMap<float> > eIDValueMap90;
-	  iEvent.getByLabel( "simpleEleId90relIso" , eIDValueMap90 );
-	  const edm::ValueMap<float> & eIDmap90 = * eIDValueMap90 ;
-	  
-	  edm::Handle<edm::ValueMap<float> > eIDValueMap85;
-	  iEvent.getByLabel( "simpleEleId85relIso" , eIDValueMap85 );
-	  const edm::ValueMap<float> & eIDmap85 = * eIDValueMap85 ;
-	  
-	  edm::Handle<edm::ValueMap<float> > eIDValueMap80;
-	  iEvent.getByLabel( "simpleEleId80relIso" , eIDValueMap80 );
-	  const edm::ValueMap<float> & eIDmap80 = * eIDValueMap80 ;
-	  
-	  edm::Handle<edm::ValueMap<float> > eIDValueMap70;
-	  iEvent.getByLabel( "simpleEleId70relIso" , eIDValueMap70 );
-	  const edm::ValueMap<float> & eIDmap70 = * eIDValueMap70 ;
-	  
-	  edm::Handle<edm::ValueMap<float> > eIDValueMap60;
-	  iEvent.getByLabel( "simpleEleId60relIso" , eIDValueMap60 );
-	  const edm::ValueMap<float> & eIDmap60 = * eIDValueMap60 ;
-	  
-	  
-	  for (unsigned int i = 0; i < electrons->size(); i++){
-	    edm::Ref<reco::GsfElectronCollection> electronRef(electrons,i);
-	    
-	    if (electronRef->pt() < 10) continue;
-	    
-	    int cuts95 = eIDmap95[electronRef];
-	    int cuts90 = eIDmap90[electronRef];
-	    int cuts85 = eIDmap85[electronRef];
-	    int cuts80 = eIDmap80[electronRef];
-	    int cuts70 = eIDmap70[electronRef];
-	    int cuts60 = eIDmap60[electronRef];
-	    
-	    TCElectron* eleCon = new ((*recoElectrons)[eleCount]) TCElectron;
-	    
-	    eleCon->SetP4(electronRef->px(),electronRef->py(),electronRef->pz(),electronRef->p());
-	    eleCon->SetVtx(electronRef->gsfTrack()->vx(),electronRef->gsfTrack()->vy(),electronRef->gsfTrack()->vz());
-	    eleCon->SetCharge(electronRef->charge());
-	    
-	    eleCon->SetNumberOfValidPixelHits(electronRef->gsfTrack()->hitPattern().numberOfValidPixelHits());
-	    eleCon->SetNumberOfValidTrackerHits(electronRef->gsfTrack()->hitPattern().numberOfValidTrackerHits());
-	    eleCon->SetNumberOfLostPixelHits(electronRef->gsfTrack()->hitPattern().numberOfLostPixelHits());
-	    eleCon->SetNumberOfLostTrackerHits(electronRef->gsfTrack()->hitPattern().numberOfLostTrackerHits());
+		edm::Handle<edm::ValueMap<float> > eIDValueMap95;
+		iEvent.getByLabel( "simpleEleId95relIso" , eIDValueMap95 );
+		const edm::ValueMap<float> & eIDmap95 = * eIDValueMap95 ;
 
-	    eleCon->SetIsEB(electronRef->isEB());
-	    eleCon->SetIsEE(electronRef->isEE());
-	    eleCon->SetIsInGap(electronRef->isGap());
+		edm::Handle<edm::ValueMap<float> > eIDValueMap90;
+		iEvent.getByLabel( "simpleEleId90relIso" , eIDValueMap90 );
+		const edm::ValueMap<float> & eIDmap90 = * eIDValueMap90 ;
 
-		 eleCon->SetEmIso03( electronRef->dr03EcalRecHitSumEt());
-		 eleCon->SetHadIso03(electronRef->dr03HcalTowerSumEt());
-		 eleCon->SetTrkIso03(electronRef->dr03TkSumPt());
-		 eleCon->SetEmIso04( electronRef->dr04EcalRecHitSumEt());
-		 eleCon->SetHadIso04(electronRef->dr04HcalTowerSumEt());
-		 eleCon->SetTrkIso04(electronRef->dr04TkSumPt());
+		edm::Handle<edm::ValueMap<float> > eIDValueMap85;
+		iEvent.getByLabel( "simpleEleId85relIso" , eIDValueMap85 );
+		const edm::ValueMap<float> & eIDmap85 = * eIDValueMap85 ;
 
-	    eleCon->SetHadOverEm(electronRef->hadronicOverEm());
-	    eleCon->SetDphiSuperCluster(electronRef->deltaPhiSuperClusterTrackAtVtx());
-	    eleCon->SetDetaSuperCluster(electronRef->deltaEtaSuperClusterTrackAtVtx());
-	    eleCon->SetSigmaIetaIeta(electronRef->sigmaIetaIeta());
-		 
-	    eleCon->SetConversionFlag(electronRef->convFlags());
-	    eleCon->SetConversionDist(electronRef->convDist());
-	    eleCon->SetConversionDcot(electronRef->convDcot());
-	    eleCon->SetConversionRad(electronRef->convRadius());
-	    
-	    eleCon->SetCutLevel(cuts95, 95);
-	    eleCon->SetCutLevel(cuts90, 90);
-	    eleCon->SetCutLevel(cuts85, 85);
-	    eleCon->SetCutLevel(cuts80, 80);
-	    eleCon->SetCutLevel(cuts70, 70);
-	    eleCon->SetCutLevel(cuts60, 60);
-	    
-	    //float sumPt3 = 0;
-	    //float gamma3 = 0;
-	    //float neutral3 = 0;
-	    //float sumPt4 = 0;
-	    //float gamma4 = 0;
-	    //float neutral4 = 0;
-	    //float sumPt5 = 0;
-	    //float gamma5 = 0;
-	    //float neutral5 = 0;
-	    //eleCon->SetPfSumPt(0.5, sumPt5);
-	    //eleCon->SetPfEGamma(0.5, gamma5);
-	    //eleCon->SetPfSumPt(0.4, sumPt4);
-	    //eleCon->SetPfEGamma(0.4, gamma4);
-	    //eleCon->SetPfENeutral(0.5, neutral5);
-	    //eleCon->SetPfENeutral(0.4, neutral4);
-	    eleCon->SetPfEGamma(0.3, electronRef->pfIsolationVariables().photonIso);
-	    eleCon->SetPfSumPt(0.3, electronRef->pfIsolationVariables().chargedHadronIso);
-	    eleCon->SetPfENeutral(0.3, electronRef->pfIsolationVariables().neutralHadronIso);
-	    
-	    eleCount++;
-	  }
+		edm::Handle<edm::ValueMap<float> > eIDValueMap80;
+		iEvent.getByLabel( "simpleEleId80relIso" , eIDValueMap80 );
+		const edm::ValueMap<float> & eIDmap80 = * eIDValueMap80 ;
+
+		edm::Handle<edm::ValueMap<float> > eIDValueMap70;
+		iEvent.getByLabel( "simpleEleId70relIso" , eIDValueMap70 );
+		const edm::ValueMap<float> & eIDmap70 = * eIDValueMap70 ;
+
+		edm::Handle<edm::ValueMap<float> > eIDValueMap60;
+		iEvent.getByLabel( "simpleEleId60relIso" , eIDValueMap60 );
+		const edm::ValueMap<float> & eIDmap60 = * eIDValueMap60 ;
+
+
+		for (unsigned int i = 0; i < electrons->size(); i++){
+			edm::Ref<reco::GsfElectronCollection> electronRef(electrons,i);
+
+			if (electronRef->pt() < 10) continue;
+
+			int cuts95 = eIDmap95[electronRef];
+			int cuts90 = eIDmap90[electronRef];
+			int cuts85 = eIDmap85[electronRef];
+			int cuts80 = eIDmap80[electronRef];
+			int cuts70 = eIDmap70[electronRef];
+			int cuts60 = eIDmap60[electronRef];
+
+			TCElectron* eleCon = new ((*recoElectrons)[eleCount]) TCElectron;
+
+			eleCon->SetP4(electronRef->px(),electronRef->py(),electronRef->pz(),electronRef->p());
+			eleCon->SetVtx(electronRef->gsfTrack()->vx(),electronRef->gsfTrack()->vy(),electronRef->gsfTrack()->vz());
+			eleCon->SetCharge(electronRef->charge());
+
+			eleCon->SetNumberOfValidPixelHits(electronRef->gsfTrack()->hitPattern().numberOfValidPixelHits());
+			eleCon->SetNumberOfValidTrackerHits(electronRef->gsfTrack()->hitPattern().numberOfValidTrackerHits());
+			eleCon->SetNumberOfLostPixelHits(electronRef->gsfTrack()->hitPattern().numberOfLostPixelHits());
+			eleCon->SetNumberOfLostTrackerHits(electronRef->gsfTrack()->hitPattern().numberOfLostTrackerHits());
+
+			eleCon->SetIsEB(electronRef->isEB());
+			eleCon->SetIsEE(electronRef->isEE());
+			eleCon->SetIsInGap(electronRef->isGap());
+
+			eleCon->SetEmIso03( electronRef->dr03EcalRecHitSumEt());
+			eleCon->SetHadIso03(electronRef->dr03HcalTowerSumEt());
+			eleCon->SetTrkIso03(electronRef->dr03TkSumPt());
+			eleCon->SetEmIso04( electronRef->dr04EcalRecHitSumEt());
+			eleCon->SetHadIso04(electronRef->dr04HcalTowerSumEt());
+			eleCon->SetTrkIso04(electronRef->dr04TkSumPt());
+
+			eleCon->SetHadOverEm(electronRef->hadronicOverEm());
+			eleCon->SetDphiSuperCluster(electronRef->deltaPhiSuperClusterTrackAtVtx());
+			eleCon->SetDetaSuperCluster(electronRef->deltaEtaSuperClusterTrackAtVtx());
+			eleCon->SetSigmaIetaIeta(electronRef->sigmaIetaIeta());
+
+			eleCon->SetConversionFlag(electronRef->convFlags());
+			eleCon->SetConversionDist(electronRef->convDist());
+			eleCon->SetConversionDcot(electronRef->convDcot());
+			eleCon->SetConversionRad(electronRef->convRadius());
+
+			eleCon->SetCutLevel(cuts95, 95);
+			eleCon->SetCutLevel(cuts90, 90);
+			eleCon->SetCutLevel(cuts85, 85);
+			eleCon->SetCutLevel(cuts80, 80);
+			eleCon->SetCutLevel(cuts70, 70);
+			eleCon->SetCutLevel(cuts60, 60);
+
+			//float sumPt3 = 0;
+			//float gamma3 = 0;
+			//float neutral3 = 0;
+			//float sumPt4 = 0;
+			//float gamma4 = 0;
+			//float neutral4 = 0;
+			//float sumPt5 = 0;
+			//float gamma5 = 0;
+			//float neutral5 = 0;
+			//eleCon->SetPfSumPt(0.5, sumPt5);
+			//eleCon->SetPfEGamma(0.5, gamma5);
+			//eleCon->SetPfSumPt(0.4, sumPt4);
+			//eleCon->SetPfEGamma(0.4, gamma4);
+			//eleCon->SetPfENeutral(0.5, neutral5);
+			//eleCon->SetPfENeutral(0.4, neutral4);
+			eleCon->SetPfEGamma(0.3, electronRef->pfIsolationVariables().photonIso);
+			eleCon->SetPfSumPt(0.3, electronRef->pfIsolationVariables().chargedHadronIso);
+			eleCon->SetPfENeutral(0.3, electronRef->pfIsolationVariables().neutralHadronIso);
+
+			eleCount++;
+		}
 	}
-	
+
 	/////////////////
 	// Get photons //
 	/////////////////
@@ -512,17 +512,17 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 	Handle<bool> hcalNoiseFilterHandle;
 	iEvent.getByLabel(hcalFilterTag_, hcalNoiseFilterHandle);
 	if (hcalNoiseFilterHandle.isValid())  isNoiseHcal = !(Bool_t)(*hcalNoiseFilterHandle);
-	
+
 	isDeadEcalCluster = kFALSE;
 	Handle<AnomalousECALVariables> anomalousECALvarsHandle;
 	iEvent.getByLabel(ecalFilterTag_, anomalousECALvarsHandle);
 	AnomalousECALVariables anomalousECALvars;
 
 	if (anomalousECALvarsHandle.isValid()) {
-	  anomalousECALvars = *anomalousECALvarsHandle;
-	  isDeadEcalCluster = anomalousECALvars.isDeadEcalCluster();
+		anomalousECALvars = *anomalousECALvarsHandle;
+		isDeadEcalCluster = anomalousECALvars.isDeadEcalCluster();
 	}
-	
+
 	edm::Handle<BeamHaloSummary> TheBeamHaloSummary;
 	iEvent.getByLabel("BeamHaloSummary",TheBeamHaloSummary);
 	const BeamHaloSummary TheSummary = (*TheBeamHaloSummary.product() );
@@ -554,7 +554,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 				pair<int, int> preScales;
 				preScales = hltConfig_.prescaleValues(iEvent, iSetup, hlNames[i]); 
 				hltPrescale[j] = preScales.first*preScales.second;
-				//cout<<hlNames[i]<<"\t"<<hltPrescale[j]<<endl;
 			}
 		}
 	} 
@@ -574,19 +573,20 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 // ------------ method called once each job just before starting event loop  ------------
 void  ntupleProducer::beginJob()
 {  
-  eventTree      = fs->make<TTree>("eventTree","eventTree");
-  runTree        = fs->make<TTree>("runTree","runTree, tree for jets");
-  
-  primaryVtx     = new TClonesArray("TCPrimaryVtx");
-  recoJets       = new TClonesArray("TCJet");
-  recoElectrons  = new TClonesArray("TCElectron");
-  recoMuons      = new TClonesArray("TCMuon");
-  recoTaus       = new TClonesArray("TCTau");
-  recoPhotons    = new TClonesArray("TCPhoton");
-  genJets        = new TClonesArray("TCGenJet");
-  hardPartonP4   = new TClonesArray("TLorentzVector");
-  recoMET        = 0;
-  beamSpot       = new TVector3();
+	eventTree      = fs->make<TTree>("eventTree","eventTree");
+	runTree        = fs->make<TTree>("runTree","runTree");
+	jobTree        = fs->make<TTree>("jobTree", "jobTree");
+
+	primaryVtx     = new TClonesArray("TCPrimaryVtx");
+	recoJets       = new TClonesArray("TCJet");
+	recoElectrons  = new TClonesArray("TCElectron");
+	recoMuons      = new TClonesArray("TCMuon");
+	recoTaus       = new TClonesArray("TCTau");
+	recoPhotons    = new TClonesArray("TCPhoton");
+	genJets        = new TClonesArray("TCGenJet");
+	hardPartonP4   = new TClonesArray("TLorentzVector");
+	recoMET        = 0;
+	beamSpot       = new TVector3();
 
 	eventTree->Branch("recoJets",&recoJets, 6400, 0);
 	eventTree->Branch("recoElectrons",&recoElectrons, 6400, 0);
@@ -615,9 +615,11 @@ void  ntupleProducer::beginJob()
 	runTree->Branch("deliveredLumi",&deliveredLumi, "deliveredLumi/F");
 	runTree->Branch("recordedLumi",&recordedLumi, "recordedLumi/F");
 	runTree->Branch("runNumber",&runNumber, "runNumber/i");
-	
+
+	jobTree->Branch("savedTriggerNames",savedTriggerNames, "savedTriggerNames[64]/C");
+
 	// Initialize HLT prescales //
-	
+
 	for (int i = 0; i < (int)(sizeof(hltPrescale)/sizeof(int)); ++i) hltPrescale[i] = 1;
 }
 
@@ -646,6 +648,7 @@ void ntupleProducer::endRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
 
 void ntupleProducer::endJob() 
 {
+	for (int i =0; i < (int)triggerPaths_.size(); ++i) savedTriggerNames[i] = triggerPaths_[i];
 }
 
 bool ntupleProducer::triggerDecision(edm::Handle<edm::TriggerResults> &hltR, int iTrigger)
@@ -747,41 +750,41 @@ void ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::Vertex
 bool ntupleProducer::isFilteredOutScraping( const edm::Event& iEvent, const edm::EventSetup& iSetup, int numtrack, double thresh)
 {
 
-  bool accepted = false;
-  float fraction = 0;  
-  // get GeneralTracks collection
+	bool accepted = false;
+	float fraction = 0;  
+	// get GeneralTracks collection
 
-  edm::Handle<reco::TrackCollection> tkRef;
-  iEvent.getByLabel("generalTracks",tkRef);    
-  const reco::TrackCollection* tkColl = tkRef.product();
- 
-  int numhighpurity=0;
-  reco::TrackBase::TrackQuality _trackQuality = reco::TrackBase::qualityByName("highPurity");
+	edm::Handle<reco::TrackCollection> tkRef;
+	iEvent.getByLabel("generalTracks",tkRef);    
+	const reco::TrackCollection* tkColl = tkRef.product();
 
-  if(tkColl->size()>(UInt_t)numtrack){ 
-    reco::TrackCollection::const_iterator itk = tkColl->begin();
-    reco::TrackCollection::const_iterator itk_e = tkColl->end();
-    for(;itk!=itk_e;++itk){
-      if(itk->quality(_trackQuality)) numhighpurity++;
-    }
-    fraction = (float)numhighpurity/(float)tkColl->size();
-    if(fraction>thresh) accepted=true;
-  } else {
-    //if less than 10 Tracks accept the event anyway    
-    accepted= true;
-  }
-    
-  /*
-  if (debugOn) {
-    int ievt = iEvent.id().event();
-    int irun = iEvent.id().run();
-    int ils = iEvent.luminosityBlock();
-    int bx = iEvent.bunchCrossing();
-    
-    std::cout << "FilterOutScraping_debug: Run " << irun << " Event " << ievt << " Lumi Block " << ils << " Bunch Crossing " << bx << " Fraction " << fraction << " NTracks " << tkColl->size() << " Accepted " << accepted << std::endl;
-  }
-  */
-  return !accepted;  //if filtered out it's not accepted.
+	int numhighpurity=0;
+	reco::TrackBase::TrackQuality _trackQuality = reco::TrackBase::qualityByName("highPurity");
+
+	if(tkColl->size()>(UInt_t)numtrack){ 
+		reco::TrackCollection::const_iterator itk = tkColl->begin();
+		reco::TrackCollection::const_iterator itk_e = tkColl->end();
+		for(;itk!=itk_e;++itk){
+			if(itk->quality(_trackQuality)) numhighpurity++;
+		}
+		fraction = (float)numhighpurity/(float)tkColl->size();
+		if(fraction>thresh) accepted=true;
+	} else {
+		//if less than 10 Tracks accept the event anyway    
+		accepted= true;
+	}
+
+	/*
+		if (debugOn) {
+		int ievt = iEvent.id().event();
+		int irun = iEvent.id().run();
+		int ils = iEvent.luminosityBlock();
+		int bx = iEvent.bunchCrossing();
+
+		std::cout << "FilterOutScraping_debug: Run " << irun << " Event " << ievt << " Lumi Block " << ils << " Bunch Crossing " << bx << " Fraction " << fraction << " NTracks " << tkColl->size() << " Accepted " << accepted << std::endl;
+		}
+	 */
+	return !accepted;  //if filtered out it's not accepted.
 }
 
 //define this as a plug-in
