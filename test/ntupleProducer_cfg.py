@@ -16,7 +16,7 @@ process.load("Configuration.StandardSequences.Reconstruction_cff")
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 
 ### Conditions tags
-process.GlobalTag.globaltag = 'GR_R_42_V14::All' 
+process.GlobalTag.globaltag = 'GR_R_42_V19::All' 
 #process.GlobalTag.globaltag = 'START42_V12::All' 
 
 ### Input files
@@ -24,7 +24,7 @@ process.GlobalTag.globaltag = 'GR_R_42_V14::All'
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-#        'file:/tmp/naodell/62CCADC4-EC7B-E011-AC6F-0015178C4994.root'
+#        'file:/tmp/naodell/FEB6499E-8C7B-E011-98DA-0018F3D09702.root'
          '/store/data/Run2011A/DoubleMu/RECO/PromptReco-v4/000/165/121/1A873C93-A381-E011-902F-0030487CD710.root'
 )
 )
@@ -96,13 +96,13 @@ process.simpleEleId95relIso.electronQuality = "95relIso"
 
 ### MET corrections
 from JetMETCorrections.Type1MET.MetType1Corrections_cff import metJESCorAK5PFJet
-process.metJESCorPFAK5 = metJESCorAK5PFJet.clone()
-process.metJESCorPFAK5.inputUncorJetsLabel = "ak5PFJets"
-process.metJESCorPFAK5.metType = "PFMET"
-process.metJESCorPFAK5.inputUncorMetLabel = "pfMet"
-process.metJESCorPFAK5.useTypeII = False
-process.metJESCorPFAK5.jetPTthreshold = cms.double(10.0)
-process.metJESCorPFAK5.corrector = cms.string('ak5PFL2L3')
+process.metJESCorAK5PF = metJESCorAK5PFJet.clone()
+process.metJESCorAK5PF.inputUncorJetsLabel = "ak5PFJets"
+process.metJESCorAK5PF.metType = "PFMET"
+process.metJESCorAK5PF.inputUncorMetLabel = "pfMet"
+process.metJESCorAK5PF.useTypeII = False
+process.metJESCorAK5PF.jetPTthreshold = cms.double(10.0)
+process.metJESCorAK5PF.corrector = cms.string('ak5PFL1FastL2L3')
 
 ### Specify default triggers
 #from UserCode.ntupleProducer.triggerTest_cfi import *
@@ -116,7 +116,7 @@ process.goodVertices = cms.EDFilter("VertexSelector",
 
 ### TFile service!
 process.TFileService = cms.Service("TFileService",
-                                   fileName = cms.string('out_higgs.root')
+                                   fileName = cms.string('nuTuple_DoubleMu_Run2011A.root')
                                    )
 
 ### ntuple producer
@@ -173,8 +173,8 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 cmsSeq = cms.Sequence(
         process.goodVertices
       * process.PFTau                    
-      * process.myPartons
-      * process.AK5Flavour 
+      #* process.myPartons <-- Only in MC
+      #* process.AK5Flavour 
       * process.simpleEleId60relIso
       * process.simpleEleId70relIso
       * process.simpleEleId80relIso
@@ -185,8 +185,8 @@ cmsSeq = cms.Sequence(
       * process.kt6PFJetsIso
 		* process.ak5PFJets
 		* process.ak5PFJetsL1FastL2L3
+      * process.metJESCorAK5PF  
 		* process.ak5JetTracksAssociatorAtVertex 
-      * process.metJESCorPFAK5  
 		* process.btagging
       * process.HBHENoiseFilterResultProducer
 		)
