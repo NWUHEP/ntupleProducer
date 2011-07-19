@@ -17,4 +17,10 @@ July 12
 
 * Same as before
 * Possibly save trigger objects or do some matching in ntupler
-* Include MET corrections. 
+* Include MET corrections. (DONE)
+
+July 19
+
+* Still need to split trigger object
+* pfIsolation
+* genJet flavor
