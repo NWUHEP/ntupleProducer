@@ -25,6 +25,17 @@ float TCMET::Met() const {
 float TCMET::Phi() const {
   return _phi;
 }
+float TCMET::CorrectedSumEt() const {
+  return _corSumEt;
+}
+
+float TCMET::CorrectedMet() const {
+  return _corMet;
+}
+
+float TCMET::CorrectedPhi() const {
+  return _corPhi;
+}
 float TCMET::PhotonEtFraction() const {
   return _photonEtFraction;
 }
@@ -67,6 +78,17 @@ void TCMET::SetPhi(float n) {
   _phi = n;
 }
 
+void TCMET::SetCorrectedSumEt(float n) {
+  _corSumEt = n;
+}
+
+void TCMET::SetCorrectedMet(float n) {
+  _corMet = n;
+}
+
+void TCMET::SetCorrectedPhi(float n) {
+  _corPhi = n;
+}
 void TCMET::SetPhotonEtFraction(float n) {
   _photonEtFraction = n;
 }

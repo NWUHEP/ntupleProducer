@@ -18,6 +18,9 @@ private:
     float _sumEt;
     float _met;
     float _phi;
+    float _corSumEt;
+    float _corMet;
+    float _corPhi;
     float _photonEtFraction;
     float _electronEtFraction;
     float _muonEtFraction;
@@ -35,6 +38,9 @@ public:
     float SumEt() const;
     float Met() const;
     float Phi() const;
+    float CorrectedSumEt() const;
+    float CorrectedMet() const;
+    float CorrectedPhi() const;
     float PhotonEtFraction() const;
     float ElectronEtFraction() const;
     float MuonEtFraction() const;
@@ -48,6 +54,9 @@ public:
     void SetSumEt(float n);
     void SetMet(float n);
     void SetPhi(float n);
+    void SetCorrectedSumEt(float n);
+    void SetCorrectedMet(float n);
+    void SetCorrectedPhi(float n);
     void SetPhotonEtFraction(float n);
     void SetElectronEtFraction(float n);
     void SetMuonEtFraction(float n);
