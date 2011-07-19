@@ -424,9 +424,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 	if (!isRealData) {
 
-		Handle<HepMCProduct > genEvtHandle;
-		iEvent.getByLabel( "generator", genEvtHandle) ;
-		const HepMC::GenEvent* Evt = genEvtHandle->GetEvent();
+		//Handle<HepMCProduct > genEvtHandle;
+		//iEvent.getByLabel( "generator", genEvtHandle) ;
+		//const HepMC::GenEvent* Evt = genEvtHandle->GetEvent();
 
 		Handle<GenEventInfoProduct> GenEventInfoHandle;
 		iEvent.getByLabel("generator", GenEventInfoHandle);
@@ -458,16 +458,16 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 		// Get genParticles //
 		//////////////////////
 
-		vector<HepMC::GenParticle*> genPartons;
+		//vector<HepMC::GenParticle*> genPartons;
 
-		for (HepMC::GenEvent::particle_const_iterator iGenParticle = Evt->particles_begin(); iGenParticle != Evt->particles_end(); ++iGenParticle) {
-			HepMC::GenParticle *myGenPart = *iGenParticle;
-			if (myGenPart->status() == 23) {
-				new ((*hardPartonP4)[partonCount]) TLorentzVector(myGenPart->momentum().px(), myGenPart->momentum().py(), myGenPart->momentum().pz(), myGenPart->momentum().e());
-				partonPdgId[partonCount] = myGenPart->pdg_id();
-				++partonCount;
-			}
-		}
+		//for (HepMC::GenEvent::particle_const_iterator iGenParticle = Evt->particles_begin(); iGenParticle != Evt->particles_end(); ++iGenParticle) {
+		//	HepMC::GenParticle *myGenPart = *iGenParticle;
+		//	if (myGenPart->status() == 23) {
+		//		new ((*hardPartonP4)[partonCount]) TLorentzVector(myGenPart->momentum().px(), myGenPart->momentum().py(), myGenPart->momentum().pz(), myGenPart->momentum().e());
+		//		partonPdgId[partonCount] = myGenPart->pdg_id();
+		//		++partonCount;
+		//	}
+		//}
 
 		/////////////////
 		// Get genJets //
@@ -475,13 +475,13 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 		if (saveGenJets_) {
 
-			edm::Handle<reco::JetFlavourMatchingCollection> jetFlavourMC;
-			iEvent.getByLabel("AK5byValAlgo", jetFlavourMC);
-			FlavourMap flavours;
+			//edm::Handle<reco::JetFlavourMatchingCollection> jetFlavourMC;
+			//iEvent.getByLabel("AK5byValAlgo", jetFlavourMC);
+			//FlavourMap flavours;
 
-			for (reco::JetFlavourMatchingCollection::const_iterator iFlavor = jetFlavourMC->begin(); iFlavor != jetFlavourMC->end(); iFlavor++) {
-				flavours.insert(FlavourMap::value_type(iFlavor->first, abs(iFlavor->second.getFlavour())));
-			}
+			//for (reco::JetFlavourMatchingCollection::const_iterator iFlavor = jetFlavourMC->begin(); iFlavor != jetFlavourMC->end(); iFlavor++) {
+			//	flavours.insert(FlavourMap::value_type(iFlavor->first, abs(iFlavor->second.getFlavour())));
+			//}
 
 			for (GenJetCollection::const_iterator jet_iter = GenJets->begin(); jet_iter!= GenJets->end(); ++jet_iter) {
 				reco::GenJet myJet = reco::GenJet(*jet_iter);      
