@@ -86,10 +86,14 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 	if(saveJets_){
 
-		edm::Handle<reco::JetTagCollection> bTagHandle1;
-		iEvent.getByLabel("trackCountingHighEffBJetTags", bTagHandle1);
-		const reco::JetTagCollection & bTags1 = *(bTagHandle1.product());
-		reco::JetTagCollection::const_iterator jet_it_1;
+		edm::Handle<reco::JetTagCollection> bTagCollectionTCHE;
+		iEvent.getByLabel("trackCountingHighEffBJetTags", bTagCollectionTCHE);
+		const reco::JetTagCollection & bTagsTCHE = *(bTagCollectionTCHE.product());
+
+		edm::Handle<reco::JetTagCollection> bTagCollectionSSV;
+		iEvent.getByLabel("simpleSecondaryVertexHighEffBJetTags", bTagCollectionSSV);
+		const reco::JetTagCollection & bTagsSSV = *(bTagCollectionSSV.product());
+		typedef reco::JetTagCollection::const_iterator tag_iter;
 
 		edm::ESHandle<JetCorrectorParametersCollection> JetCorParColl;
 		iSetup.get<JetCorrectionsRecord>().get("AK5PF",JetCorParColl);
@@ -133,9 +137,14 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 			jetCon->SetNumChPart(myJet.chargedMultiplicity());
 
 			// Get b-tag information
-			for (jet_it_1 = bTags1.begin(); jet_it_1 != bTags1.end(); jet_it_1++) {
-				if (sqrt(pow(jet_it_1->first->eta() - corJet.eta(), 2) + pow(deltaPhi(jet_it_1->first->phi(),corJet.phi()), 2)) == 0.) {
-					jetCon->SetBDiscrTrkCountHiEff(jet_it_1->second);
+			for (tag_iter iTag = bTagsTCHE.begin(); iTag != bTagsTCHE.end(); iTag++) {
+				if (sqrt(pow(iTag->first->eta() - corJet.eta(), 2) + pow(deltaPhi(iTag->first->phi(),corJet.phi()), 2)) == 0.) {
+					jetCon->SetBDiscrTrkCountHiEff(iTag->second);
+				}
+			}
+			for (tag_iter iTag = bTagsSSV.begin(); iTag != bTagsSSV.end(); iTag++) {
+				if (sqrt(pow(iTag->first->eta() - corJet.eta(), 2) + pow(deltaPhi(iTag->first->phi(),corJet.phi()), 2)) == 0.) {
+					jetCon->SetBDiscrSecVtxSimple(iTag->second);
 				}
 			}
 
@@ -192,6 +201,14 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 			recoMET->SetChargedHadronEtFraction(pfMET->chargedHadronEtFraction());
 			recoMET->SetHFHadronEtFraction(pfMET->HFHadronEtFraction());
 			recoMET->SetHFEMEtFraction(pfMET->HFEMEtFraction());
+
+
+			Handle<PFMETCollection> corMET;
+			iEvent.getByLabel("metJESCorAK5PF", corMET);
+			reco::PFMET iMET = corMET->front();
+			recoMET->SetCorrectedSumEt(iMET.sumEt());
+			recoMET->SetCorrectedMet(iMET.et());
+			recoMET->SetCorrectedPhi(iMET.phi());
 		}
 	}
 
@@ -207,7 +224,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 		for (MuonCollection::const_iterator mu = muons->begin(); mu != muons->end(); ++mu) {
 			if (!(mu->isGlobalMuon() && mu->isTrackerMuon()) || mu->pt() < 10.) continue;
 			TCMuon* muCon = new ((*recoMuons)[muCount]) TCMuon;
-
 			
 			muCon->SetP4(mu->px(), mu->py(), mu->pz(), mu->energy());
 			muCon->SetVtx(mu->globalTrack()->vx(),mu->globalTrack()->vy(),mu->globalTrack()->vz());
