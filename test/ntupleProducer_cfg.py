@@ -37,20 +37,20 @@ process.HBHENoiseFilterResultProducer.minIsolatedNoiseSumE = cms.double(9999)
 process.HBHENoiseFilterResultProducer.minIsolatedNoiseSumEt = cms.double(9999)
 
 ### Ecal noise filter
-# process.load('PhysicsTools/EcalAnomalousEventFilter/ecalanomalouseventfilter_cfi')
-# process.EcalAnomalousEventFilter.FilterAlgo= cms.untracked.string("TuningMode")
-# process.EcalAnomalousEventFilter.cutBoundEnergyDeadCellsEB=cms.untracked.double(10)
-# process.EcalAnomalousEventFilter.cutBoundEnergyDeadCellsEE=cms.untracked.double(10)
-# process.EcalAnomalousEventFilter.cutBoundEnergyGapEB=cms.untracked.double(100)
-# process.EcalAnomalousEventFilter.cutBoundEnergyGapEE=cms.untracked.double(100)
-# process.EcalAnomalousEventFilter.enableGap=cms.untracked.bool(False)
-# 
-# process.BE1214 = process.EcalAnomalousEventFilter.clone()
-# process.BE1214.limitDeadCellToChannelStatusEB = cms.vint32(12,14)
-# process.BE1214.limitDeadCellToChannelStatusEE = cms.vint32(12,14)
-# process.load('JetMETAnalysis.ecalDeadCellTools.RA2TPfilter_cff')
-# 
-# ecalDead = cms.Sequence(process.BE1214)
+process.load('PhysicsTools/EcalAnomalousEventFilter/ecalanomalouseventfilter_cfi')
+process.EcalAnomalousEventFilter.FilterAlgo= cms.untracked.string("TuningMode")
+process.EcalAnomalousEventFilter.cutBoundEnergyDeadCellsEB=cms.untracked.double(10)
+process.EcalAnomalousEventFilter.cutBoundEnergyDeadCellsEE=cms.untracked.double(10)
+process.EcalAnomalousEventFilter.cutBoundEnergyGapEB=cms.untracked.double(100)
+process.EcalAnomalousEventFilter.cutBoundEnergyGapEE=cms.untracked.double(100)
+process.EcalAnomalousEventFilter.enableGap=cms.untracked.bool(False)
+
+process.BE1214 = process.EcalAnomalousEventFilter.clone()
+process.BE1214.limitDeadCellToChannelStatusEB = cms.vint32(12,14)
+process.BE1214.limitDeadCellToChannelStatusEE = cms.vint32(12,14)
+process.load('JetMETAnalysis.ecalDeadCellTools.RA2TPfilter_cff')
+
+ecalDead = cms.Sequence(process.BE1214)
 
 
 ### Jet correction services
@@ -161,11 +161,16 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL_v",
                                                "HLT_Ele17_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_Ele8_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_v",
 
-                                               "HLT_Photon20_CaloIdL_CaloIsoVL_v",
-                                               "HLT_Photon30_CaloIdL_CaloIsoVL_v",
-                                               "HLT_Photon50_CaloIdL_CaloIsoVL_v",
-                                               "HLT_Photon75_CaloIdL_CaloIsoVL_v",
-                                               "HLT_Photon90_CaloIdL_CaloIsoVL_v"
+                                               "HLT_Photon20_CaloIdVL_IsoL_v",
+                                               "HLT_Photon20_CaloIdVL_v",
+                                               "HLT_Photon30_CaloIdVL_IsoL_v",
+                                               "HLT_Photon30_CaloIdVL_v",
+                                               "HLT_Photon50_CaloIdVL_IsoL_v",
+                                               "HLT_Photon50_CaloIdVL_v",
+                                               "HLT_Photon75_CaloIdVL_IsoL_v",
+                                               "HLT_Photon75_CaloIdVL_v",
+                                               "HLT_Photon90_CaloIdVL_IsoL_v"
+                                               "HLT_Photon90_CaloIdVL_v"
 )
 )
 
