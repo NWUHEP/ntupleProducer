@@ -16,16 +16,16 @@ process.load("Configuration.StandardSequences.Reconstruction_cff")
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 
 ### Conditions tags
-process.GlobalTag.globaltag = 'GR_R_42_V19::All' 
-#process.GlobalTag.globaltag = 'START42_V12::All' 
+#process.GlobalTag.globaltag = 'GR_R_42_V19::All' 
+process.GlobalTag.globaltag = 'START42_V13::All' 
 
 ### Input files
 #process.load("Jet")
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-#        'file:/tmp/naodell/FEB6499E-8C7B-E011-98DA-0018F3D09702.root'
-         '/store/data/Run2011A/DoubleMu/RECO/PromptReco-v4/000/165/121/1A873C93-A381-E011-902F-0030487CD710.root'
+#         '/store/data/Run2011A/DoubleMu/RECO/PromptReco-v4/000/165/121/1A873C93-A381-E011-902F-0030487CD710.root'
+         '/store/mc/Summer11/DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia/AODSIM/PU_S4_START42_V11-v1/0001/AC9DFDE2-7CA8-E011-B14E-002590200948.root'
 )
 )
 
@@ -116,7 +116,7 @@ process.goodVertices = cms.EDFilter("VertexSelector",
 
 ### TFile service!
 process.TFileService = cms.Service("TFileService",
-                                   fileName = cms.string('nuTuple_DoubleMu_Run2011A.root')
+                                   fileName = cms.string('nuTuple.root')
                                    )
 
 ### ntuple producer
@@ -178,8 +178,8 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 cmsSeq = cms.Sequence(
         process.goodVertices
       * process.PFTau                    
-      #* process.myPartons <-- Only in MC
-      #* process.AK5Flavour 
+      #* process.myPartons <-- For genJet flavors, only in MC
+      #* process.AK5Flavour <-- 
       * process.simpleEleId60relIso
       * process.simpleEleId70relIso
       * process.simpleEleId80relIso
