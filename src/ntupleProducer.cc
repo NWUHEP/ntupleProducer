@@ -51,8 +51,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 	beamSpot->SetXYZ(vertexBeamSpot.x0(), vertexBeamSpot.y0(), vertexBeamSpot.z0());
 
-	int vtxCount, jetCount, metCount, muCount, eleCount, genCount, eleFakeCount, muFakeCount, partonCount;
-	vtxCount = jetCount = metCount = muCount = eleCount = genCount = eleFakeCount = muFakeCount = partonCount = 0;
+	int vtxCount, jetCount, metCount, muCount, eleCount, photonCount, tauCount, genCount;
+	vtxCount = jetCount = metCount = muCount = eleCount = photonCount = tauCount = genCount = 0;
 	float primaryVertexZ = -999;
 
 	//////////////////////////
@@ -393,7 +393,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 		edm::Handle<reco::PhotonCollection> photons;
 		iEvent.getByLabel(photonTag_, photons);
 
-		int photonCount = 0;
 		for (reco::PhotonCollection::const_iterator iPhoton = photons->begin(); iPhoton != photons->end() ; ++iPhoton)
 		{
 			TCPhoton* myPhoton = new ((*recoPhotons)[photonCount]) TCPhoton;
