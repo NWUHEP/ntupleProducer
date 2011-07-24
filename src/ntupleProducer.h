@@ -150,7 +150,7 @@ class ntupleProducer : public edm::EDAnalyzer {
 		typedef std::map<edm::RefToBase<reco::Jet>, unsigned int, JetRefCompare> FlavourMap;
 
 		//Standard event info
-		int eventNumber, runNumber, lumiSection, bunchCross;
+		int eventNumber, runNumber, lumiSection, bunchCross, nEvents;
 		float ptHat, qScale, evtWeight;
 		float deliveredLumi, recordedLumi, lumiDeadTime;
 		float rhoFactor;

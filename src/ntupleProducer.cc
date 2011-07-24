@@ -557,6 +557,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 		}
 	} 
 
+	++nEvents;
+
 	if (eleCount > 0 || muCount > 0) eventTree -> Fill(); // possibly specify a cut in configuration
 
 	primaryVtx->Clear("C");
@@ -616,10 +618,14 @@ void  ntupleProducer::beginJob()
 	runTree->Branch("runNumber",&runNumber, "runNumber/i");
 
 	jobTree->Branch("savedTriggerNames",savedTriggerNames, "savedTriggerNames[64]/C");
+	jobTree->Branch("nEvents",&nEvents, "nEvents/i");
 
 	// Initialize HLT prescales //
 
 	for (int i = 0; i < (int)(sizeof(hltPrescale)/sizeof(int)); ++i) hltPrescale[i] = 1;
+
+	// Start counting number of events per job //
+	nEvents = 0;
 }
 
 void ntupleProducer::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
@@ -641,13 +647,15 @@ void ntupleProducer::endLuminosityBlock(const edm::LuminosityBlock& iLumi, const
 
 void ntupleProducer::endRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
 {
-	cout<<"\t Integrated luminosity = "<<deliveredLumi<<endl;
+	//cout<<"\t Integrated luminosity = "<<deliveredLumi<<endl;
 	runTree->Fill();
 }
 
 void ntupleProducer::endJob() 
 {
 	for (int i =0; i < (int)triggerPaths_.size(); ++i) savedTriggerNames[i] = triggerPaths_[i];
+	cout<<nEvents<<endl;
+	jobTree->Fill();
 }
 
 bool ntupleProducer::triggerDecision(edm::Handle<edm::TriggerResults> &hltR, int iTrigger)
