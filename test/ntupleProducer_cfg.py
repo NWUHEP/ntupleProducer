@@ -170,7 +170,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_Photon50_CaloIdVL_v",
                                                "HLT_Photon75_CaloIdVL_IsoL_v",
                                                "HLT_Photon75_CaloIdVL_v",
-                                               "HLT_Photon90_CaloIdVL_IsoL_v"
+                                               "HLT_Photon90_CaloIdVL_IsoL_v",
                                                "HLT_Photon90_CaloIdVL_v"
 )
 )
