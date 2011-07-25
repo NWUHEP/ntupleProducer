@@ -601,16 +601,23 @@ void  ntupleProducer::beginJob()
 	eventTree->Branch("beamSpot", &beamSpot, 6400, 0);
 	eventTree->Branch("nPUVertices", &nPUVertices, "nPUVertices/I");
 
+	eventTree->Branch("isRealData",&isRealData, "isRealData/O");
 	eventTree->Branch("runNumber",&runNumber, "runNumber/I");
 	eventTree->Branch("eventNumber",&eventNumber, "eventNumber/I");
 	eventTree->Branch("lumiSection",&lumiSection, "lumiSection/I");
-	eventTree->Branch("triggerStatus",&triggerStatus, "triggerStatus/i");
-	eventTree->Branch("isRealData",&isRealData, "isRealData/O");
 	eventTree->Branch("bunchCross",&bunchCross, "bunchCross/i");
+
+	eventTree->Branch("isScraping",&isScraping, "isScraping/O");
+	eventTree->Branch("isNoiseHcal",&isNoiseHcal, "isNoiseHcal/O");
+	eventTree->Branch("isDeadEcalCluster",&isDeadEcalCluster, "isDeadEcalCluster/O");
+	eventTree->Branch("isCSCTightHalo",&isCSCTightHalo, "isCSCTightHalo/O");
+	eventTree->Branch("isCSCLooseHalo",&isCSCLooseHalo, "isCSCLooseHalo/O");
+
 	eventTree->Branch("ptHat",&ptHat, "ptHat/F");
 	eventTree->Branch("qScale", &qScale, "qScale/F");
 	eventTree->Branch("evtWeight", &evtWeight, "evtWeight/F");
 	eventTree->Branch("rhoFactor",&rhoFactor, "rhoFactor/F");
+	eventTree->Branch("triggerStatus",&triggerStatus, "triggerStatus/i");
 	eventTree->Branch("hltPrescale",hltPrescale, "hltPrescale[64]/i");
 
 	runTree->Branch("deliveredLumi",&deliveredLumi, "deliveredLumi/F");
