@@ -6,28 +6,19 @@ process.load("FWCore.MessageService.MessageLogger_cfi")
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.threshold = 'ERROR'
 
-process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(100)
+process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(10000000)
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(500))
 
 process.load("Configuration.StandardSequences.Services_cff")
 process.load('Configuration.StandardSequences.GeometryExtended_cff')
 process.load('Configuration.StandardSequences.MagneticField_38T_cff')
-process.load("Configuration.StandardSequences.Reconstruction_cff")
-process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
+process.load('Configuration.StandardSequences.Reconstruction_cff')
+process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 ### Conditions tags
 #process.GlobalTag.globaltag = 'GR_R_42_V19::All' 
 process.GlobalTag.globaltag = 'START42_V13::All' 
 
-### Input files
-#process.load("Jet")
-
-process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring(
-#         '/store/data/Run2011A/DoubleMu/RECO/PromptReco-v4/000/165/121/1A873C93-A381-E011-902F-0030487CD710.root'
-         '/store/mc/Summer11/DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia/AODSIM/PU_S4_START42_V11-v1/0001/AC9DFDE2-7CA8-E011-B14E-002590200948.root'
-)
-)
 
 ### HCAL noise filter
 # Hcal Noise filter
@@ -114,23 +105,33 @@ process.goodVertices = cms.EDFilter("VertexSelector",
   filter = cms.bool(True)
 )
 
+### Input files
+#process.load('H135toZG')
+
+process.source = cms.Source("PoolSource",
+    fileNames = cms.untracked.vstring(
+#         '/store/data/Run2011A/DoubleMu/RECO/PromptReco-v4/000/165/121/1A873C93-A381-E011-902F-0030487CD710.root'
+         '/store/mc/Summer11/DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia/AODSIM/PU_S4_START42_V11-v1/0001/AC9DFDE2-7CA8-E011-B14E-002590200948.root'
+)
+)
+
 ### TFile service!
-process.TFileService = cms.Service("TFileService",
+process.TFileService = cms.Service('TFileService',
                                    fileName = cms.string('nuTuple.root')
                                    )
 
 ### ntuple producer
 process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
-  JetTag            =    cms.untracked.InputTag("ak5PFJets"),
-  GenJetTag         =    cms.untracked.InputTag("ak5GenJets"),
-  METTag            =    cms.untracked.InputTag("pfMet"),
-  ElectronTag       =    cms.untracked.InputTag("gsfElectrons"),
-  MuonTag           =    cms.untracked.InputTag("muons"),
-  PhotonTag         =    cms.untracked.InputTag("photons"),
-  TauTag            =    cms.untracked.InputTag("shrinkingConePFTauProducer"),
-  PrimaryVtxTag     =    cms.untracked.InputTag("offlinePrimaryVertices"),
-  rhoCorrTag	     =    cms.untracked.InputTag("kt6PFJetsIso", "rho", "ntuples"),
+  JetTag            =    cms.untracked.InputTag('ak5PFJets'),
+  GenJetTag         =    cms.untracked.InputTag('ak5GenJets'),
+  METTag            =    cms.untracked.InputTag('pfMet'),
+  ElectronTag       =    cms.untracked.InputTag('gsfElectrons'),
+  MuonTag           =    cms.untracked.InputTag('muons'),
+  PhotonTag         =    cms.untracked.InputTag('photons'),
+  TauTag            =    cms.untracked.InputTag('shrinkingConePFTauProducer'),
+  PrimaryVtxTag     =    cms.untracked.InputTag('offlinePrimaryVertices'),
+  rhoCorrTag	     =    cms.untracked.InputTag('kt6PFJetsIso', 'rho', 'ntuples'),
 
   saveJets          =    cms.untracked.bool(True),
   saveElectrons     =    cms.untracked.bool(True),
