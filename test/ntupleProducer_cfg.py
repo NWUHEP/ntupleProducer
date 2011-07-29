@@ -106,7 +106,7 @@ process.goodVertices = cms.EDFilter("VertexSelector",
 )
 
 ### Input files
-#process.load('H135toZG')
+#process.load('H145toZG')
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
@@ -117,6 +117,7 @@ process.source = cms.Source("PoolSource",
 
 ### TFile service!
 process.TFileService = cms.Service('TFileService',
+#                                   fileName = cms.string('/uscms/home/naodell/nobackup/MC/H145ToZG/nuTuple_3.root')
                                    fileName = cms.string('nuTuple.root')
                                    )
 
@@ -179,8 +180,8 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 cmsSeq = cms.Sequence(
         process.goodVertices
       * process.PFTau                    
-      #* process.myPartons <-- For genJet flavors, only in MC
-      #* process.AK5Flavour <-- 
+      * process.myPartons #<-- For genJet flavors, only in MC
+      * process.AK5Flavour
       * process.simpleEleId60relIso
       * process.simpleEleId70relIso
       * process.simpleEleId80relIso

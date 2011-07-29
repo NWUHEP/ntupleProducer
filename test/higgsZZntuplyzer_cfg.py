@@ -64,7 +64,7 @@ process.offlinePrimaryVerticesDA.TkClusParameters.TkDAClusParameters.vertexSize=
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 process.load("CondCore.DBCommon.CondDBCommon_cfi")
 
-### Producing the pho values for isolation (as from Jacub's email)
+### Extra jet collection for L1FastJet corrections
 process.load("RecoJets.Configuration.RecoPFJets_cff")
 process.kt6PFJets.doRhoFastjet = True
 process.kt6PFJets.Rho_EtaMax = cms.double(4.4)
@@ -112,7 +112,6 @@ process.metJESCorPFAK5.corrector = cms.string('ak5PFL2L3')
 
 ### ntuple producer
 process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
-#  rootfilename      =    cms.untracked.string("nuTuple_Photon_Run2011A.root"),
 
   JetTag            =    cms.untracked.InputTag("ak5PFJets"),
   GenJetTag         =    cms.untracked.InputTag("ak5GenJets"),
@@ -131,8 +130,8 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   saveMET           =    cms.untracked.bool(True),
   saveGenJets       =    cms.untracked.bool(True),
                                           
-  ecalAnomalousFilterTag = cms.untracked.InputTag("BE1214","anomalousECALVariables"),
-  hcalFilterTag          = cms.untracked.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResult"),
+  ecalFilterTag     =    cms.untracked.InputTag("BE1214","anomalousECALVariables"),
+  hcalFilterTag     =    cms.untracked.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResult"),
 
   hltName           =    cms.untracked.string("HLT"),
   triggers          =    cms.untracked.vstring(
