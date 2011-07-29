@@ -98,7 +98,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 		edm::ESHandle<JetCorrectorParametersCollection> JetCorParColl;
 		iSetup.get<JetCorrectionsRecord>().get("AK5PF",JetCorParColl);
 		JetCorrectorParameters const & JetCorPar = (*JetCorParColl)["Uncertainty"];
-		JetCorrectionUncertainty *jecUnc = new JetCorrectionUncertainty(JetCorPar);
+		JetCorrectionUncertainty *jecUncertainty = new JetCorrectionUncertainty(JetCorPar);
 
 		const JetCorrector* correctorL1  = JetCorrector::getJetCorrector("ak5PFL1Fastjet",iSetup);
 		const JetCorrector* correctorL2  = JetCorrector::getJetCorrector("ak5PFL2Relative",iSetup);
@@ -157,9 +157,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 				jetCon->SetJetCorr(4, scaleRes);
 			}
 
-			jecUnc->setJetEta(corJet.eta());
-			jecUnc->setJetPt(corJet.pt());
-			jetCon->SetUncertaintyJES(jecUnc->getUncertainty(true)); 
+			jecUncertainty->setJetEta(corJet.eta());
+			jecUncertainty->setJetPt(corJet.pt());
+			jetCon->SetUncertaintyJES(jecUncertainty->getUncertainty(true)); 
 
 			/////////////////////////
 			// Associate to vertex //
@@ -176,6 +176,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 			}
 			++jetCount;
 		}   
+		delete jecUncertainty;
 	}
 
 
@@ -201,7 +202,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 			recoMET->SetChargedHadronEtFraction(pfMET->chargedHadronEtFraction());
 			recoMET->SetHFHadronEtFraction(pfMET->HFHadronEtFraction());
 			recoMET->SetHFEMEtFraction(pfMET->HFEMEtFraction());
-
 
 			Handle<PFMETCollection> corMET;
 			iEvent.getByLabel("metJESCorAK5PF", corMET);
@@ -474,13 +474,13 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 		if (saveGenJets_) {
 
-			//edm::Handle<reco::JetFlavourMatchingCollection> jetFlavourMC;
-			//iEvent.getByLabel("AK5byValAlgo", jetFlavourMC);
-			//FlavourMap flavours;
+			edm::Handle<reco::JetFlavourMatchingCollection> jetFlavourMC;
+			iEvent.getByLabel("AK5byValAlgo", jetFlavourMC);
+			FlavourMap flavours;
 
-			//for (reco::JetFlavourMatchingCollection::const_iterator iFlavor = jetFlavourMC->begin(); iFlavor != jetFlavourMC->end(); iFlavor++) {
-			//	flavours.insert(FlavourMap::value_type(iFlavor->first, abs(iFlavor->second.getFlavour())));
-			//}
+			for (reco::JetFlavourMatchingCollection::const_iterator iFlavor = jetFlavourMC->begin(); iFlavor != jetFlavourMC->end(); iFlavor++) {
+				flavours.insert(FlavourMap::value_type(iFlavor->first, abs(iFlavor->second.getFlavour())));
+			}
 
 			for (GenJetCollection::const_iterator jet_iter = GenJets->begin(); jet_iter!= GenJets->end(); ++jet_iter) {
 				reco::GenJet myJet = reco::GenJet(*jet_iter);      
@@ -553,6 +553,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 				pair<int, int> preScales;
 				preScales = hltConfig_.prescaleValues(iEvent, iSetup, hlNames[i]); 
 				hltPrescale[j] = preScales.first*preScales.second;
+				//if (triggerPaths_[j] == "HLT_DoubleMu3_v") cout <<preScales.first<<"\t"<<preScales.second<<endl;
 			}
 		}
 	} 
