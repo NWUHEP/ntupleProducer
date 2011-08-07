@@ -91,6 +91,7 @@
 #include "TCTau.h"
 #include "TCPhoton.h"
 #include "TCGenJet.h"
+#include "TCGenParticle.h"
 
 // Need for HLT trigger info:
 #include "FWCore/Common/interface/TriggerNames.h"
@@ -140,14 +141,14 @@ class ntupleProducer : public edm::EDAnalyzer {
 		virtual bool isFilteredOutScraping(const edm::Event& iEvent, const edm::EventSetup& iSetup, int numtrack=10, double thresh=0.25);
 		// ----------member data ---------------------------
 
-		struct JetRefCompare :
-			public std::binary_function<edm::RefToBase<reco::Jet>, edm::RefToBase<reco::Jet>, bool> {
-				inline bool operator () (const edm::RefToBase<reco::Jet> &j1, const edm::RefToBase<reco::Jet> &j2) const {
-					return j1.id() < j2.id() || (j1.id() == j2.id() && j1.key() < j2.key()); 
-				}
-			};
+        struct JetCompare :
+            public std::binary_function<reco::Jet, reco::Jet, bool> {
+                inline bool operator () (const reco::Jet &j1,
+                        const reco::Jet &j2) const
+                { return (j1.p4().Pt() > j2.p4().Pt()); }
+            };
 
-		typedef std::map<edm::RefToBase<reco::Jet>, unsigned int, JetRefCompare> FlavourMap;
+        typedef std::map<reco::Jet, unsigned int, JetCompare> flavourMap;
 
 		//Standard event info
 		int eventNumber, runNumber, lumiSection, bunchCross, nEvents;
@@ -180,6 +181,7 @@ class ntupleProducer : public edm::EDAnalyzer {
 		bool saveTaus_;
 		bool saveMET_;
 		bool saveGenJets_;
+		bool saveGenParticles_;
 		bool isRealData;
 
 		//Physics object containers
@@ -189,16 +191,13 @@ class ntupleProducer : public edm::EDAnalyzer {
 		TClonesArray* recoTaus;
 		TClonesArray* recoPhotons;
 		TClonesArray* genJets;
+		TClonesArray* genParticles;
 		TCMET*        recoMET;
 
 		//Vertex info
 		TClonesArray* primaryVtx;
 		TVector3*     beamSpot;
 		int           nPUVertices;
-
-		//GenParticles
-		TClonesArray* hardPartonP4;
-		int           partonPdgId[4];
 
 		//Triggers
 		HLTConfigProvider hltConfig_;

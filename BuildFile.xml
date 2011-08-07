@@ -20,8 +20,10 @@
 <use   name="DataFormats/GsfTrackReco"/>
 <use   name="DataFormats/BeamSpot"/>
 <use   name="DataFormats/Luminosity"/>
+<use   name="PhysicsTools/JetMCAlgos"/>
 <use   name="SimDataFormats/GeneratorProducts"/>
 <use   name="SimDataFormats/PileupSummaryInfo"/>
+<use   name="SimDataFormats/JetMatching"/>
 <use   name="JetMETCorrections/Objects"/>
 <use   name="CondFormats/JetMETObjects"/>
 <use   name="HLTrigger/HLTcore"/>

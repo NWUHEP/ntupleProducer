@@ -62,6 +62,9 @@ float TCPhoton::DEtaSuperCluster() const {
 float TCPhoton::SigmaIEtaIEta() const {
   return _sigmaIEtaIEta;
 }
+float TCPhoton::R9() const {
+  return _r9;
+}
 float TCPhoton::SigmaIPhiIPhi() const {
 	return _sigmaIPhiIPhi;
 }
@@ -119,6 +122,9 @@ void TCPhoton::SetDEtaSuperCluster(float d){
 }
 void TCPhoton::SetSigmaIEtaIEta(float s){
   _sigmaIEtaIEta = s;
+}
+void TCPhoton::SetR9(float r){
+  _r9 = r;
 }
 void TCPhoton::SetSigmaIPhiIPhi(float s) {
 	_sigmaIPhiIPhi = s;

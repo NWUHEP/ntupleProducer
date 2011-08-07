@@ -17,9 +17,10 @@ private:
     float _dPhiSuperCluster;
     float _dEtaSuperCluster;
     float _sigmaIEtaIEta; // 
+    float _r9;
     float _sigmaIPhiIPhi; 
-	 float _e2OverE9;
-	 float _etaSupercluster;
+	float _e2OverE9;
+	float _etaSupercluster;
     bool  _trackVeto;
 
 public:
@@ -43,6 +44,7 @@ public:
     float DEtaSuperCluster() const;
     float SigmaIEtaIEta() const;
     float SigmaIPhiIPhi() const;
+    float R9() const; 
     float E2OverE9() const; 
     float EtaSupercluster() const;
     bool  TrackVeto() const;
@@ -65,6 +67,7 @@ public:
     void SetDPhiSuperCluster(float d);
     void SetDEtaSuperCluster(float d);
     void SetSigmaIEtaIEta(float s);
+    void SetR9(float r);
     void SetSigmaIPhiIPhi(float s);
     void Sete2OverE9(float e);
     void SetEtaSupercluster(float e);

@@ -70,7 +70,27 @@ process.ak5JetExtender.jets = cms.InputTag("ak5PFJetsL1FastL2L3")
 ### GenJet flavor matching
 process.load("PhysicsTools.JetMCAlgos.CaloJetsMCFlavour_cfi")
 
-### eleID map:
+# Flavour byReference 
+process.GenJetbyRef = cms.EDProducer("JetPartonMatcher", 
+                                     jets = cms.InputTag("ak5GenJets"), 
+                                     coneSizeToAssociate = cms.double(0.3), 
+                                     partons = cms.InputTag("myPartons") 
+                                     ) 
+# Flavour byValue PhysDef 
+process.GenJetbyValPhys = cms.EDProducer("JetFlavourIdentifier", 
+                                         srcByReference = cms.InputTag("GenJetbyRef"), 
+                                         physicsDefinition = cms.bool(True), 
+                                         leptonInfo = cms.bool(True) 
+                                         ) 
+# Flavour byValue AlgoDef 
+process.GenJetbyValAlgo = cms.EDProducer("JetFlavourIdentifier", 
+                                         srcByReference = cms.InputTag("GenJetbyRef"), 
+                                         physicsDefinition = cms.bool(False), 
+                                         leptonInfo = cms.bool(True) 
+                                         ) 
+process.GenJetFlavour = cms.Sequence(process.GenJetbyRef*process.GenJetbyValPhys*process.GenJetbyValAlgo)
+
+## eleID map:
 process.load("ElectroWeakAnalysis.WENu.simpleCutBasedElectronIDSpring10_cfi")
 process.simpleEleId60relIso = process.simpleCutBasedElectronID.clone()
 process.simpleEleId60relIso.electronQuality = "60relIso"
@@ -117,7 +137,7 @@ process.source = cms.Source("PoolSource",
 
 ### TFile service!
 process.TFileService = cms.Service('TFileService',
-#                                   fileName = cms.string('/uscms/home/naodell/nobackup/MC/H145ToZG/nuTuple_3.root')
+#                                   fileName = cms.string('/uscms/home/naodell/nobackup/MC/H145ToZG/nuTuple_2.root')
                                    fileName = cms.string('nuTuple.root')
                                    )
 
@@ -137,7 +157,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   saveJets          =    cms.untracked.bool(True),
   saveElectrons     =    cms.untracked.bool(True),
   saveMuons         =    cms.untracked.bool(True),
-  saveTaus          =    cms.untracked.bool(False),
+  saveTaus          =    cms.untracked.bool(True),
   savePhotons       =    cms.untracked.bool(True),
   saveMET           =    cms.untracked.bool(True),
   saveGenJets       =    cms.untracked.bool(True),
@@ -181,7 +201,7 @@ cmsSeq = cms.Sequence(
         process.goodVertices
       * process.PFTau                    
       * process.myPartons #<-- For genJet flavors, only in MC
-      * process.AK5Flavour
+      * process.GenJetFlavour
       * process.simpleEleId60relIso
       * process.simpleEleId70relIso
       * process.simpleEleId80relIso

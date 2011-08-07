@@ -51,9 +51,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 	beamSpot->SetXYZ(vertexBeamSpot.x0(), vertexBeamSpot.y0(), vertexBeamSpot.z0());
 
-	int vtxCount, jetCount, metCount, muCount, eleCount, photonCount, tauCount, genCount;
-	vtxCount = jetCount = metCount = muCount = eleCount = photonCount = tauCount = genCount = 0;
+	int vtxCount, jetCount, metCount, muCount, eleCount, photonCount, tauCount, genCount, genPartCount;
+	vtxCount = jetCount = metCount = muCount = eleCount = photonCount = tauCount = genCount = genPartCount = 0;
 	float primaryVertexZ = -999;
+
+
 
 	//////////////////////////
 	//Get vertex information//
@@ -123,12 +125,12 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 			float scale3 = correctorL3->correction(corJet);
 			corJet.scaleEnergy(scale3);
 
-			if (myJet.pt() < 10.) continue;
+			if (corJet.pt() < 10.) continue;
 
 			TCJet* jetCon = new ((*recoJets)[jetCount]) TCJet;
 
 			jetCon->SetP4(myJet.px(), myJet.py(), myJet.pz(), myJet.energy());
-			jetCon->SetVtx(-999.0, -999.0, -999.0);
+			jetCon->SetVtx(0., 0., 0.);
 			jetCon->SetChHadFrac(myJet.chargedHadronEnergyFraction());
 			jetCon->SetNeuHadFrac(myJet.neutralHadronEnergyFraction());
 			jetCon->SetChEmFrac(myJet.chargedEmEnergyFraction());
@@ -308,10 +310,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 		edm::Handle<edm::ValueMap<float> > eIDValueMap60;
 		iEvent.getByLabel( "simpleEleId60relIso" , eIDValueMap60 );
-		const edm::ValueMap<float> & eIDmap60 = * eIDValueMap60 ;
+		const edm::ValueMap<float> & eIDmap60 = * eIDValueMap60;
 
-
-		for (unsigned int i = 0; i < electrons->size(); i++){
+		for (unsigned int i = 0; i < electrons->size(); i++) {
 			edm::Ref<reco::GsfElectronCollection> electronRef(electrons,i);
 
 			if (electronRef->pt() < 10) continue;
@@ -395,6 +396,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 		for (reco::PhotonCollection::const_iterator iPhoton = photons->begin(); iPhoton != photons->end() ; ++iPhoton)
 		{
+            
 			TCPhoton* myPhoton = new ((*recoPhotons)[photonCount]) TCPhoton;
 			myPhoton->SetP4(iPhoton->px(), iPhoton->py(), iPhoton->pz(), iPhoton->p());
 			myPhoton->SetEMIso(iPhoton->ecalRecHitSumEtConeDR04());
@@ -402,12 +404,13 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 			myPhoton->SetTRKIso(iPhoton->trkSumPtHollowConeDR04());
 			myPhoton->SetHadOverEm(iPhoton->hadronicOverEm());
 			myPhoton->SetSigmaIEtaIEta(iPhoton->sigmaIetaIeta());
+            myPhoton->SetR9(iPhoton->r9());
 			//myPhoton->SetSigmaIphiIphi();
 			//myPhoton->SetE2OverE9();
 			myPhoton->SetEtaSupercluster(iPhoton->superCluster()->eta());
 			myPhoton->SetTrackVeto(iPhoton->hasPixelSeed());
 
-			photonCount++;
+			++photonCount;
 		}
 	}
 
@@ -423,15 +426,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 	if (!isRealData) {
 
-		//Handle<HepMCProduct > genEvtHandle;
-		//iEvent.getByLabel( "generator", genEvtHandle) ;
-		//const HepMC::GenEvent* Evt = genEvtHandle->GetEvent();
-
 		Handle<GenEventInfoProduct> GenEventInfoHandle;
 		iEvent.getByLabel("generator", GenEventInfoHandle);
-
-		Handle<reco::GenJetCollection> GenJets;
-		iEvent.getByLabel(genJetTag_, GenJets);
 
 		evtWeight = ptHat = qScale = -1;
 
@@ -453,20 +449,34 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 		for(iPV = PUInfo->begin(); iPV != PUInfo->end(); ++iPV) if (iPV->getBunchCrossing() == 0) nPUVertices = iPV->getPU_NumInteractions();
 
+
 		//////////////////////
 		// Get genParticles //
 		//////////////////////
 
-		//vector<HepMC::GenParticle*> genPartons;
+        Handle<GenParticleCollection> genParticleColl;
+        iEvent.getByLabel("genParticles", genParticleColl);
 
-		//for (HepMC::GenEvent::particle_const_iterator iGenParticle = Evt->particles_begin(); iGenParticle != Evt->particles_end(); ++iGenParticle) {
-		//	HepMC::GenParticle *myGenPart = *iGenParticle;
-		//	if (myGenPart->status() == 23) {
-		//		new ((*hardPartonP4)[partonCount]) TLorentzVector(myGenPart->momentum().px(), myGenPart->momentum().py(), myGenPart->momentum().pz(), myGenPart->momentum().e());
-		//		partonPdgId[partonCount] = myGenPart->pdg_id();
-		//		++partonCount;
-		//	}
-		//}
+        for (GenParticleCollection::const_iterator iGenPart = genParticleColl->begin(); iGenPart != genParticleColl->end(); ++iGenPart) {
+            const reco::GenParticle myParticle = reco::GenParticle(*iGenPart);
+
+            if (myParticle.status() == 3 && (abs(myParticle.pdgId()) == 6 || abs(myParticle.pdgId()) == 23 || abs(myParticle.pdgId()) == 24)) {
+                for (size_t i = 0; i < myParticle.numberOfDaughters(); ++i) {
+                    const reco::Candidate *myDaughter = myParticle.daughter(i);
+                    if (abs(myDaughter->pdgId()) == 5 || (abs(myDaughter->pdgId()) >= 11 && abs(myDaughter->pdgId()) <= 16)) {
+                        TCGenParticle* genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
+
+                        genCon->SetPosition(myDaughter->vx(), myDaughter->vy(), myDaughter->vz() );
+                        genCon->SetP4(myDaughter->px(), myDaughter->py(), myDaughter->pz(), myDaughter->energy() );
+                        genCon->SetCharge(myDaughter->charge());
+                        genCon->SetPDGId(myDaughter->pdgId());
+                        genCon->SetMother(myParticle.pdgId());
+                        ++genPartCount;
+                    }
+                }
+            }
+        }
+
 
 		/////////////////
 		// Get genJets //
@@ -474,12 +484,16 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 		if (saveGenJets_) {
 
+            Handle<reco::GenJetCollection> GenJets;
+            iEvent.getByLabel(genJetTag_, GenJets);
+
 			edm::Handle<reco::JetFlavourMatchingCollection> jetFlavourMC;
-			iEvent.getByLabel("AK5byValAlgo", jetFlavourMC);
-			FlavourMap flavours;
+			iEvent.getByLabel("GenJetbyValAlgo", jetFlavourMC);
+
+            flavourMap flavours;
 
 			for (reco::JetFlavourMatchingCollection::const_iterator iFlavor = jetFlavourMC->begin(); iFlavor != jetFlavourMC->end(); iFlavor++) {
-				flavours.insert(FlavourMap::value_type(iFlavor->first, abs(iFlavor->second.getFlavour())));
+                flavours.insert(flavourMap::value_type(*((iFlavor->first).get()), abs(iFlavor->second.getFlavour())));
 			}
 
 			for (GenJetCollection::const_iterator jet_iter = GenJets->begin(); jet_iter!= GenJets->end(); ++jet_iter) {
@@ -494,8 +508,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 					jetCon->SetAuxEnergy(myJet.auxiliaryEnergy());
 					jetCon->SetNumConstit(myJet.getGenConstituents().size());
 
-					//RefToBase<reco::Jet> refJet;
-					//if (flavours.find(refJet) != flavours.end()) jetCon->SetJetFlavor(flavours[refJet]);
+                    reco::Jet refJet(myJet.p4(),myJet.vertex());
+                    if (flavours.find(refJet) != flavours.end()) jetCon->SetJetFlavor(flavours[refJet]);
+
 				}
 				++genCount;	
 			}
@@ -507,30 +522,31 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 	// Noise filters //
 	///////////////////
 
+    if (isRealData) {
 
-	Handle<bool> hcalNoiseFilterHandle;
-	iEvent.getByLabel(hcalFilterTag_, hcalNoiseFilterHandle);
-	if (hcalNoiseFilterHandle.isValid())  isNoiseHcal = !(Bool_t)(*hcalNoiseFilterHandle);
+        Handle<bool> hcalNoiseFilterHandle;
+        iEvent.getByLabel(hcalFilterTag_, hcalNoiseFilterHandle);
+        if (hcalNoiseFilterHandle.isValid())  isNoiseHcal = !(Bool_t)(*hcalNoiseFilterHandle);
 
-	isDeadEcalCluster = kFALSE;
-	Handle<AnomalousECALVariables> anomalousECALvarsHandle;
-	iEvent.getByLabel(ecalFilterTag_, anomalousECALvarsHandle);
-	AnomalousECALVariables anomalousECALvars;
+        isDeadEcalCluster = kFALSE;
+        Handle<AnomalousECALVariables> anomalousECALvarsHandle;
+        iEvent.getByLabel(ecalFilterTag_, anomalousECALvarsHandle);
+        AnomalousECALVariables anomalousECALvars;
 
-	if (anomalousECALvarsHandle.isValid()) {
-		anomalousECALvars = *anomalousECALvarsHandle;
-		isDeadEcalCluster = anomalousECALvars.isDeadEcalCluster();
-	}
+        if (anomalousECALvarsHandle.isValid()) {
+            anomalousECALvars = *anomalousECALvarsHandle;
+            isDeadEcalCluster = anomalousECALvars.isDeadEcalCluster();
+        }
 
-	edm::Handle<BeamHaloSummary> TheBeamHaloSummary;
-	iEvent.getByLabel("BeamHaloSummary",TheBeamHaloSummary);
-	const BeamHaloSummary TheSummary = (*TheBeamHaloSummary.product() );
+        edm::Handle<BeamHaloSummary> TheBeamHaloSummary;
+        iEvent.getByLabel("BeamHaloSummary",TheBeamHaloSummary);
+        const BeamHaloSummary TheSummary = (*TheBeamHaloSummary.product() );
 
-	isCSCTightHalo = TheSummary.CSCTightHaloId();
-	isCSCLooseHalo = TheSummary.CSCLooseHaloId();
+        isCSCTightHalo = TheSummary.CSCTightHaloId();
+        isCSCLooseHalo = TheSummary.CSCLooseHaloId();
 
-	isScraping = isFilteredOutScraping(iEvent, iSetup, 10, 0.25); 
-
+        isScraping = isFilteredOutScraping(iEvent, iSetup, 10, 0.25); 
+    }
 
 	////////////////////////////  
 	// get trigger information//
@@ -569,7 +585,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 	recoTaus->Clear("C");
 	recoPhotons->Clear("C");
 	genJets->Clear("C");
-	hardPartonP4->Clear("C");
+	genParticles->Clear("C");
 }
 
 // ------------ method called once each job just before starting event loop  ------------
@@ -586,17 +602,18 @@ void  ntupleProducer::beginJob()
 	recoTaus       = new TClonesArray("TCTau");
 	recoPhotons    = new TClonesArray("TCPhoton");
 	genJets        = new TClonesArray("TCGenJet");
-	hardPartonP4   = new TClonesArray("TLorentzVector");
-	recoMET        = 0;
+    genParticles   = new TClonesArray("TCGenParticle");
 	beamSpot       = new TVector3();
+	recoMET        = 0;
 
 	eventTree->Branch("recoJets",&recoJets, 6400, 0);
 	eventTree->Branch("recoElectrons",&recoElectrons, 6400, 0);
 	eventTree->Branch("recoMuons",&recoMuons, 6400, 0);
 	eventTree->Branch("recoTaus",&recoTaus, 6400, 0);
 	eventTree->Branch("recoPhotons",&recoPhotons, 6400, 0);
-	eventTree->Branch("genJets",&genJets, 6400, 0);
 	eventTree->Branch("recoMET", &recoMET, 6400, 0);
+	eventTree->Branch("genJets",&genJets, 6400, 0);
+	eventTree->Branch("genParticles",&genParticles, 6400, 0);
 
 	eventTree->Branch("primaryVtx",&primaryVtx, 6400, 0);
 	eventTree->Branch("beamSpot", &beamSpot, 6400, 0);
@@ -695,7 +712,7 @@ void ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::Vertex
 	const reco::TrackRefVector &tracks = inJet.getTrackRefs();
 
 	vector<float>  associatedTrackSumPt;
-	vector<const reco::Track*> jetTrackAddresses;
+	vector<const reco::Track*> jetTracks;
 	float sumTrackX, sumTrackY, sumTrackZ, sumTrackPt;
 	int   nJetTracks, nVertexTracks, nAssociatedTracks;
 	int   vCount = 0;
@@ -704,24 +721,27 @@ void ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::Vertex
 	sumTrackX = sumTrackY = sumTrackZ  = sumTrackPt = 0;
 
 	for (TrackRefVector::const_iterator iTrack = tracks.begin(); iTrack != tracks.end(); ++iTrack) {
-		const reco::Track &inJetTrack = **iTrack;
+		const reco::Track &jetTrack = **iTrack;
 
-		sumTrackPt += inJetTrack.pt();
-		sumTrackX  += inJetTrack.vx();
-		sumTrackY  += inJetTrack.vy();            
-		sumTrackZ  += inJetTrack.vz();
-		jetTrackAddresses.push_back(&inJetTrack);
-		++nJetTracks;
+		sumTrackPt += jetTrack.pt();
+		sumTrackX  += jetTrack.vx();
+		sumTrackY  += jetTrack.vy();            
+		sumTrackZ  += jetTrack.vz();
+		jetTracks.push_back(&jetTrack);
+        ++nJetTracks;
 	}
 
-	if (nJetTracks > 0) {
-		outJet->SetVtx(sumTrackX/nJetTracks, sumTrackY/nJetTracks, sumTrackZ/nJetTracks);      	
-	}
-
-	if(jetTrackAddresses.size() > 0){
+	if(jetTracks.size() == 0){
+		outJet->SetVtxSumPtFrac(-1);
+		outJet->SetVtxSumPt(0);
+		outJet->SetVtxTrackFrac(-1);
+		outJet->SetVtxNTracks(0);
+		outJet->SetVtxIndex(0);
+		outJet->SetVtx(0., 0., 0.);      	
+    } else {
+        outJet->SetVtx(sumTrackX/nJetTracks, sumTrackY/nJetTracks, sumTrackZ/nJetTracks);       
 		for (VertexCollection::const_iterator iVtx = vtxCollection->begin(); iVtx!= vtxCollection->end(); ++iVtx) {	      
 			reco::Vertex myVtx = reco::Vertex(*iVtx); 
-
 			if(!myVtx.isValid() || myVtx.isFake()) continue;
 			associatedTrackSumPt.push_back(0);            
 
@@ -731,8 +751,8 @@ void ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::Vertex
 				if(myTrackRef.isAvailable()){
 					const reco::Track &myVertexTrack = *myTrackRef.get();		
 
-					for(vector<const reco::Track*>::const_iterator iTrackAddress = jetTrackAddresses.begin(); iTrackAddress != jetTrackAddresses.end(); ++iTrackAddress){
-						if (*iTrackAddress == &myVertexTrack) {
+					for(vector<const reco::Track*>::const_iterator iTrack = jetTracks.begin(); iTrack != jetTracks.end(); ++iTrack){
+						if (*iTrack == &myVertexTrack) {
 							associatedTrackSumPt.at(vCount) += myVertexTrack.pt()/sumTrackPt; 
 							++nAssociatedTracks;
 						}
@@ -743,6 +763,7 @@ void ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::Vertex
 		}
 
 		float maxSumPtFraction = 0;
+		float maxCountFraction = 0;
 		int   vertexIndex = 0;
 		vCount = 0;
 
@@ -788,17 +809,6 @@ bool ntupleProducer::isFilteredOutScraping( const edm::Event& iEvent, const edm:
 		//if less than 10 Tracks accept the event anyway    
 		accepted= true;
 	}
-
-	/*
-		if (debugOn) {
-		int ievt = iEvent.id().event();
-		int irun = iEvent.id().run();
-		int ils = iEvent.luminosityBlock();
-		int bx = iEvent.bunchCrossing();
-
-		std::cout << "FilterOutScraping_debug: Run " << irun << " Event " << ievt << " Lumi Block " << ils << " Bunch Crossing " << bx << " Fraction " << fraction << " NTracks " << tkColl->size() << " Accepted " << accepted << std::endl;
-		}
-	 */
 	return !accepted;  //if filtered out it's not accepted.
 }
 
