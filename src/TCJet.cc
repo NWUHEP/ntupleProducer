@@ -126,14 +126,13 @@ int TCJet::VtxNTracks() const {
    return _vtxNTracks;
 }  
 
-
-unsigned int TCJet::VtxIndex() const {
-   return _vtxIndex;
+unsigned int TCJet::VtxSumPtIndex() const {
+   return _vtxSumPtIndex;
 }
 
-//TVector3 TCJet::AssocVtx() {
-//   return _assocPV;
-//}
+unsigned int TCJet::VtxCountIndex() const {
+   return _vtxCountIndex;
+}
 
 bool TCJet::JetCorrIsSet(unsigned int lvl) const {
    return _jetCorrIsSet[lvl];
@@ -203,29 +202,29 @@ void TCJet::SetVtx(float vx, float vy, float vz) {
    _vtx = v3;
 }
 
-void TCJet::SetVtxSumPtFrac(float vtxSumPtFrac){
-   _vtxSumPtFrac = vtxSumPtFrac;
+void TCJet::SetVtxSumPtFrac(float f){
+   _vtxSumPtFrac = f;
 }  
 
-void TCJet::SetVtxSumPt(float vtxSumPt){
-   _vtxSumPt = vtxSumPt;
+void TCJet::SetVtxSumPt(float p){
+   _vtxSumPt = p;
 }  
 
-void TCJet::SetVtxTrackFrac(float vtxTrackFrac){
-   _vtxTrackFrac = vtxTrackFrac;
+void TCJet::SetVtxTrackFrac(float f){
+   _vtxTrackFrac = f;
 }  
 
-void TCJet::SetVtxNTracks(int vtxNTracks){
-   _vtxNTracks = vtxNTracks;
+void TCJet::SetVtxNTracks(int n){
+   _vtxNTracks = n;
 }  
 
-void TCJet::SetVtxIndex(unsigned int vtxIndex){
-   _vtxIndex = vtxIndex;
+void TCJet::SetVtxSumPtIndex(unsigned int i){
+   _vtxSumPtIndex = i;
 } 
-//void TCJet::SetAssocVtx(float vx, float vy, float vz) {
-//   TVector3 v3(vx, vy, vz);
-//   _assocPV = v3;
-//}
+
+void TCJet::SetVtxCountIndex(unsigned int i){
+   _vtxCountIndex = i;
+} 
 
 void TCJet::SetChHadFrac(float c) {
    _chHadFrac = c;

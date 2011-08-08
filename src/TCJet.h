@@ -21,9 +21,10 @@ private:
     float _vtxSumPt;
     float _vtxTrackFrac;
     float _vtxNTracks;
-    unsigned int _vtxIndex;
+    unsigned int _vtxSumPtIndex;
+    unsigned int _vtxCountIndex;
 
-	 float _jesUncertainty;
+	float _jesUncertainty;
     float _jetCorr[8];
     bool  _jetCorrIsSet[8];
 
@@ -82,11 +83,12 @@ public:
     float VtxSumPt() const;
     float VtxTrackFrac() const;
     int   VtxNTracks() const;
-    unsigned int VtxIndex() const;
+    unsigned int VtxSumPtIndex() const;
+    unsigned int VtxCountIndex() const;
     //    TVector3 AssocVtx() const;
     bool  JetCorrIsSet(unsigned int lvl) const;
     float JetCorr(unsigned int lvl) const;
-	 float UncertaintyJES() const;
+	float UncertaintyJES() const;
 
     // b tagging discriminators
     float BDiscrTrkCountHiPure() const;
@@ -99,11 +101,12 @@ public:
     void SetP4(TLorentzVector p4);
     void SetP4(float px, float py, float pz, float e);
     void SetVtx(float vx, float vy, float vz);    
-    void SetVtxSumPtFrac(float vtxSumPtFrac);
-    void SetVtxSumPt(float vtxSumPt);
-    void SetVtxTrackFrac(float vtxTrackFrac);
-    void SetVtxNTracks(int vtxNTracks);
-    void SetVtxIndex(unsigned int vtxIndex);
+    void SetVtxSumPtFrac(float f);
+    void SetVtxSumPt(float p);
+    void SetVtxTrackFrac(float f);
+    void SetVtxNTracks(int n);
+    void SetVtxSumPtIndex(unsigned int i);
+    void SetVtxCountIndex(unsigned int i);
 
     void SetChHadFrac(float c);
     void SetNeuHadFrac(float n);
@@ -112,7 +115,7 @@ public:
     void SetNumConstit(unsigned int n);
     void SetNumChPart(unsigned int n);
     void SetJetCorr(unsigned int lvl, float corr);
-	 void SetUncertaintyJES(float u);
+	void SetUncertaintyJES(float u);
 
     // b tagging discriminators
     // see the corresponding class members for description

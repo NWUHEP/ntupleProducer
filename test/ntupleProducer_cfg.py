@@ -192,7 +192,13 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_Photon75_CaloIdVL_IsoL_v",
                                                "HLT_Photon75_CaloIdVL_v",
                                                "HLT_Photon90_CaloIdVL_IsoL_v",
-                                               "HLT_Photon90_CaloIdVL_v"
+                                               "HLT_Photon90_CaloIdVL_v",
+
+                                               "HLT_Mu17_Ele8_CaloIdL_v",
+                                               "HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v",
+                                               "HLT_Mu3_Ele8_CaloIdT_CaloIsoVL_v",
+                                               "HLT_Mu8_Ele17_CaloIdL_v",
+                                               "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v"
 )
 )
 

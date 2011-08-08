@@ -174,7 +174,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 				jetCon->SetVtxSumPt(-1);
 				jetCon->SetVtxTrackFrac(-1);
 				jetCon->SetVtxNTracks(-1);
-				jetCon->SetVtxIndex(0);
+				jetCon->SetVtxSumPtIndex(0);
+				jetCon->SetVtxCountIndex(0);
 			}
 			++jetCount;
 		}   
@@ -712,12 +713,12 @@ void ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::Vertex
 	const reco::TrackRefVector &tracks = inJet.getTrackRefs();
 
 	vector<float>  associatedTrackSumPt;
+	vector<float>  associatedTrackCount;
 	vector<const reco::Track*> jetTracks;
 	float sumTrackX, sumTrackY, sumTrackZ, sumTrackPt;
-	int   nJetTracks, nVertexTracks, nAssociatedTracks;
+	int   nJetTracks = 0;
 	int   vCount = 0;
 
-	nJetTracks = nVertexTracks = nAssociatedTracks = 0;
 	sumTrackX = sumTrackY = sumTrackZ  = sumTrackPt = 0;
 
 	for (TrackRefVector::const_iterator iTrack = tracks.begin(); iTrack != tracks.end(); ++iTrack) {
@@ -736,7 +737,8 @@ void ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::Vertex
 		outJet->SetVtxSumPt(0);
 		outJet->SetVtxTrackFrac(-1);
 		outJet->SetVtxNTracks(0);
-		outJet->SetVtxIndex(0);
+		outJet->SetVtxSumPtIndex(0);
+		outJet->SetVtxCountIndex(0);
 		outJet->SetVtx(0., 0., 0.);      	
     } else {
         outJet->SetVtx(sumTrackX/nJetTracks, sumTrackY/nJetTracks, sumTrackZ/nJetTracks);       
@@ -744,6 +746,7 @@ void ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::Vertex
 			reco::Vertex myVtx = reco::Vertex(*iVtx); 
 			if(!myVtx.isValid() || myVtx.isFake()) continue;
 			associatedTrackSumPt.push_back(0);            
+			associatedTrackCount.push_back(0);            
 
 			for(Vertex::trackRef_iterator iTrackRef = myVtx.tracks_begin(); iTrackRef != myVtx.tracks_end(); ++iTrackRef){
 				const edm::RefToBase<reco::Track> &myTrackRef = *iTrackRef; 
@@ -754,7 +757,7 @@ void ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::Vertex
 					for(vector<const reco::Track*>::const_iterator iTrack = jetTracks.begin(); iTrack != jetTracks.end(); ++iTrack){
 						if (*iTrack == &myVertexTrack) {
 							associatedTrackSumPt.at(vCount) += myVertexTrack.pt()/sumTrackPt; 
-							++nAssociatedTracks;
+							associatedTrackCount.at(vCount) += 1/nJetTracks; 
 						}
 					}
 				}
@@ -762,23 +765,27 @@ void ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::Vertex
 			++vCount;  
 		}
 
-		float maxSumPtFraction = 0;
-		float maxCountFraction = 0;
-		int   vertexIndex = 0;
-		vCount = 0;
+		float maxSumPtFraction = 0; float maxCountFraction = 0;
+		int   vtxSumPtIndex = 0; int vtxCountIndex = 0;
+		int count = 0;
 
-		for (vector<float>::const_iterator iTrackSumPt = associatedTrackSumPt.begin(); iTrackSumPt != associatedTrackSumPt.end(); ++iTrackSumPt) {
-			if (*iTrackSumPt > maxSumPtFraction) {
-				maxSumPtFraction = *iTrackSumPt;   
-				vertexIndex      = vCount + 1;
+		for (int i = 0; i < vCount; ++i) {
+			if (associatedTrackSumPt.at(i) > maxSumPtFraction) {
+				maxSumPtFraction = associatedTrackSumPt.at(i);   
+				vtxSumPtIndex = count + 1;
 			}
-			++vCount;
+			if (associatedTrackCount.at(i) > maxCountFraction) {
+				maxCountFraction = associatedTrackCount.at(i);   
+				vtxCountIndex = count + 1;
+			}
+			++count;
 		}
 		outJet->SetVtxSumPtFrac(maxSumPtFraction);
 		outJet->SetVtxSumPt(sumTrackPt);
-		outJet->SetVtxTrackFrac((float)nAssociatedTracks/(float)nJetTracks);
+		outJet->SetVtxTrackFrac(maxCountFraction);
 		outJet->SetVtxNTracks(nJetTracks);
-		outJet->SetVtxIndex(vertexIndex);
+		outJet->SetVtxSumPtIndex(vtxSumPtIndex);
+		outJet->SetVtxCountIndex(vtxCountIndex);
 	}
 }
 
@@ -786,7 +793,7 @@ void ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::Vertex
 bool ntupleProducer::isFilteredOutScraping( const edm::Event& iEvent, const edm::EventSetup& iSetup, int numtrack, double thresh)
 {
 
-	bool accepted = false;
+	bool  accepted = false;
 	float fraction = 0;  
 	// get GeneralTracks collection
 
