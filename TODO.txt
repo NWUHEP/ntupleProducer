@@ -23,4 +23,4 @@ July 19
 
 * Still need to split trigger object
 * pfIsolation
-* genJet flavor
+* genJet flavor (DONE)
