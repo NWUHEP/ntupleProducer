@@ -157,7 +157,6 @@ process.source = cms.Source("PoolSource",
 
 ### TFile service!
 process.TFileService = cms.Service('TFileService',
-#                                   fileName = cms.string('/uscms/home/naodell/nobackup/MC/H145ToZG/nuTuple_2.root')
                                    fileName = cms.string('nuTuple.root')
                                    )
 
@@ -224,8 +223,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
 ### Let it run
 cmsSeq = cms.Sequence(
-        process.goodVertices
-      * process.PFTau                    
+        process.PFTau                    
       * process.myPartons #<-- For genJet flavors, only in MC
       * process.GenJetFlavour
       * process.JetFlavour
