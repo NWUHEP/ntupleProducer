@@ -92,9 +92,29 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 		iEvent.getByLabel("trackCountingHighEffBJetTags", bTagCollectionTCHE);
 		const reco::JetTagCollection & bTagsTCHE = *(bTagCollectionTCHE.product());
 
-		edm::Handle<reco::JetTagCollection> bTagCollectionSSV;
-		iEvent.getByLabel("simpleSecondaryVertexHighEffBJetTags", bTagCollectionSSV);
-		const reco::JetTagCollection & bTagsSSV = *(bTagCollectionSSV.product());
+		edm::Handle<reco::JetTagCollection> bTagCollectionTCHP;
+		iEvent.getByLabel("trackCountingHighPurBJetTags", bTagCollectionTCHP);
+		const reco::JetTagCollection & bTagsTCHP = *(bTagCollectionTCHP.product());
+        
+		edm::Handle<reco::JetTagCollection> bTagCollectionSSVHE;
+		iEvent.getByLabel("simpleSecondaryVertexHighEffBJetTags", bTagCollectionSSVHE);
+		const reco::JetTagCollection & bTagsSSVHE = *(bTagCollectionSSVHE.product());
+
+		edm::Handle<reco::JetTagCollection> bTagCollectionSSVHP;
+		iEvent.getByLabel("simpleSecondaryVertexHighPurBJetTags", bTagCollectionSSVHP);
+		const reco::JetTagCollection & bTagsSSVHP = *(bTagCollectionSSVHP.product());
+
+		edm::Handle<reco::JetTagCollection> bTagCollectionJP;
+		iEvent.getByLabel("jetProbabilityBJetTags", bTagCollectionJP);
+		const reco::JetTagCollection & bTagsJP = *(bTagCollectionJP.product());
+
+		edm::Handle<reco::JetTagCollection> bTagCollectionJBP;
+		iEvent.getByLabel("jetBProbabilityBJetTags", bTagCollectionJBP);
+		const reco::JetTagCollection & bTagsJBP = *(bTagCollectionJBP.product());
+
+		edm::Handle<reco::JetTagCollection> bTagCollectionCSV;
+		iEvent.getByLabel("combinedSecondaryVertexBJetTags", bTagCollectionCSV);
+		const reco::JetTagCollection & bTagsCSV = *(bTagCollectionCSV.product());
 		typedef reco::JetTagCollection::const_iterator tag_iter;
 
 		edm::ESHandle<JetCorrectorParametersCollection> JetCorParColl;
@@ -106,9 +126,19 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 		const JetCorrector* correctorL2  = JetCorrector::getJetCorrector("ak5PFL2Relative",iSetup);
 		const JetCorrector* correctorL3  = JetCorrector::getJetCorrector("ak5PFL3Absolute",iSetup);
 		const JetCorrector* correctorRes = JetCorrector::getJetCorrector("ak5PFResidual", iSetup);
+        
+        edm::Handle<reco::JetFlavourMatchingCollection> bJetFlavourMC;
+        flavourMap flavours;
+        if (!isRealData) {
+            iEvent.getByLabel("JetbyValAlgo", bJetFlavourMC);
+			for (reco::JetFlavourMatchingCollection::const_iterator iFlavor = bJetFlavourMC->begin(); iFlavor != bJetFlavourMC->end(); iFlavor++) {
+                flavours.insert(flavourMap::value_type(*((iFlavor->first).get()), abs(iFlavor->second.getFlavour())));
+			}
+        }
 
 		Handle<reco::PFJetCollection> PFJets;
 		iEvent.getByLabel(jetTag_, PFJets);
+
 
 		for (PFJetCollection::const_iterator jet_iter = PFJets->begin(); jet_iter!= PFJets->end(); ++jet_iter) {
 
@@ -138,15 +168,53 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 			jetCon->SetNumConstit(myJet.chargedMultiplicity() + myJet.neutralMultiplicity());
 			jetCon->SetNumChPart(myJet.chargedMultiplicity());
 
-			// Get b-tag information
+            if (!isRealData) {
+                reco::Jet refJet(myJet.p4(),myJet.vertex());
+                if (flavours.find(refJet) != flavours.end()) jetCon->SetJetFlavor(flavours[refJet]);
+            }
+
+			// Get b-tag information.  Fix this when time permits so we don't loop over the jets everytime.
+
 			for (tag_iter iTag = bTagsTCHE.begin(); iTag != bTagsTCHE.end(); iTag++) {
 				if (sqrt(pow(iTag->first->eta() - corJet.eta(), 2) + pow(deltaPhi(iTag->first->phi(),corJet.phi()), 2)) == 0.) {
-					jetCon->SetBDiscrTrkCountHiEff(iTag->second);
+					jetCon->SetBDiscrTCHE(iTag->second);
+                    break;
 				}
 			}
-			for (tag_iter iTag = bTagsSSV.begin(); iTag != bTagsSSV.end(); iTag++) {
+			for (tag_iter iTag = bTagsTCHP.begin(); iTag != bTagsTCHP.end(); iTag++) {
 				if (sqrt(pow(iTag->first->eta() - corJet.eta(), 2) + pow(deltaPhi(iTag->first->phi(),corJet.phi()), 2)) == 0.) {
-					jetCon->SetBDiscrSecVtxSimple(iTag->second);
+					jetCon->SetBDiscrTCHP(iTag->second);
+                    break;
+				}
+			}
+			for (tag_iter iTag = bTagsSSVHE.begin(); iTag != bTagsSSVHE.end(); iTag++) {
+				if (sqrt(pow(iTag->first->eta() - corJet.eta(), 2) + pow(deltaPhi(iTag->first->phi(),corJet.phi()), 2)) == 0.) {
+					jetCon->SetBDiscrSSVHE(iTag->second);
+                    break;
+				}
+			}
+			for (tag_iter iTag = bTagsSSVHP.begin(); iTag != bTagsSSVHP.end(); iTag++) {
+				if (sqrt(pow(iTag->first->eta() - corJet.eta(), 2) + pow(deltaPhi(iTag->first->phi(),corJet.phi()), 2)) == 0.) {
+					jetCon->SetBDiscrSSVHP(iTag->second);
+                    break;
+				}
+			}
+			for (tag_iter iTag = bTagsJBP.begin(); iTag != bTagsJBP.end(); iTag++) {
+				if (sqrt(pow(iTag->first->eta() - corJet.eta(), 2) + pow(deltaPhi(iTag->first->phi(),corJet.phi()), 2)) == 0.) {
+					jetCon->SetBDiscrJBP(iTag->second);
+                    break;
+				}
+			}
+			for (tag_iter iTag = bTagsJP.begin(); iTag != bTagsJP.end(); iTag++) {
+				if (sqrt(pow(iTag->first->eta() - corJet.eta(), 2) + pow(deltaPhi(iTag->first->phi(),corJet.phi()), 2)) == 0.) {
+					jetCon->SetBDiscrJP(iTag->second);
+                    break;
+				}
+			}
+			for (tag_iter iTag = bTagsCSV.begin(); iTag != bTagsCSV.end(); iTag++) {
+				if (sqrt(pow(iTag->first->eta() - corJet.eta(), 2) + pow(deltaPhi(iTag->first->phi(),corJet.phi()), 2)) == 0.) {
+					jetCon->SetBDiscrCSV(iTag->second);
+                    break;
 				}
 			}
 
@@ -157,7 +225,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 			if (isRealData) {
 				float scaleRes = correctorRes->correction(corJet);
 				jetCon->SetJetCorr(4, scaleRes);
-			}
+			} else {
+                jetCon->SetJetCorr(4, 1.);
+            }
 
 			jecUncertainty->setJetEta(corJet.eta());
 			jecUncertainty->setJetPt(corJet.pt());
@@ -255,25 +325,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 			muCon->SetHadIso05(mu->isolationR05().hadEt);
 			muCon->SetTrkIso05(mu->isolationR05().sumPt);
 
-			float sumPt3 = 0;
-			float gamma3 = 0;
-			float neutral3 = 0;
-			float sumPt4 = 0;
-			float gamma4 = 0;
-			float neutral4 = 0;
-			float sumPt5 = 0;
-			float gamma5 = 0;
-			float neutral5 = 0;
-
-			muCon->SetPfSumPt(0.5, sumPt5);
-			muCon->SetPfSumPt(0.4, sumPt4);
-			muCon->SetPfSumPt(0.3, sumPt3);
-			muCon->SetPfEGamma(0.5, gamma5);
-			muCon->SetPfEGamma(0.4, gamma4);
-			muCon->SetPfEGamma(0.3, gamma3);
-			muCon->SetPfENeutral(0.5, neutral5);
-			muCon->SetPfENeutral(0.4, neutral4);
-			muCon->SetPfENeutral(0.3, neutral3);
+			//muCon->SetPfSumPt(0.3, mu->pfIsolationR03().sumChargedParticlePt);
+			//muCon->SetPfEGamma(0.3, mu->pfIsolationR03().sumPhotonEt);
+			//muCon->SetPfENeutral(0.3, mu->pfIsolationR03().sumNeutralHadronEt);
 
 			muCount++;
 		}
@@ -364,21 +418,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 			eleCon->SetCutLevel(cuts70, 70);
 			eleCon->SetCutLevel(cuts60, 60);
 
-			//float sumPt3 = 0;
-			//float gamma3 = 0;
-			//float neutral3 = 0;
-			//float sumPt4 = 0;
-			//float gamma4 = 0;
-			//float neutral4 = 0;
-			//float sumPt5 = 0;
-			//float gamma5 = 0;
-			//float neutral5 = 0;
-			//eleCon->SetPfSumPt(0.5, sumPt5);
-			//eleCon->SetPfEGamma(0.5, gamma5);
-			//eleCon->SetPfSumPt(0.4, sumPt4);
-			//eleCon->SetPfEGamma(0.4, gamma4);
-			//eleCon->SetPfENeutral(0.5, neutral5);
-			//eleCon->SetPfENeutral(0.4, neutral4);
 			eleCon->SetPfEGamma(0.3, electronRef->pfIsolationVariables().photonIso);
 			eleCon->SetPfSumPt(0.3, electronRef->pfIsolationVariables().chargedHadronIso);
 			eleCon->SetPfENeutral(0.3, electronRef->pfIsolationVariables().neutralHadronIso);
@@ -406,8 +445,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 			myPhoton->SetHadOverEm(iPhoton->hadronicOverEm());
 			myPhoton->SetSigmaIEtaIEta(iPhoton->sigmaIetaIeta());
             myPhoton->SetR9(iPhoton->r9());
-			//myPhoton->SetSigmaIphiIphi();
-			//myPhoton->SetE2OverE9();
 			myPhoton->SetEtaSupercluster(iPhoton->superCluster()->eta());
 			myPhoton->SetTrackVeto(iPhoton->hasPixelSeed());
 
@@ -575,6 +612,18 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 		}
 	} 
 
+    edm::Handle<trigger::TriggerEvent> triggerEvents;
+    iEvent.getByLabel("hltTriggerSummaryAOD",triggerEvents);
+    trigger::TriggerObjectCollection triggerObjCol = triggerEvents->getObjects();
+    int triggerCount = 0;
+
+    for(trigger::TriggerObjectCollection::const_iterator iTrigObj = triggerObjCol.begin(); iTrigObj != triggerObjCol.end(); ++iTrigObj) { 
+        TCTriggerObject * thisTrig = new ((*triggerObjects)[triggerCount]) TCTriggerObject;
+        thisTrig->setId(iTrigObj->id());
+        thisTrig->setP4(iTrigObj->px(), iTrigObj->py(), iTrigObj->pz(), iTrigObj->energy());
+        ++triggerCount;
+    }
+
 	++nEvents;
 
 	if (eleCount > 0 || muCount > 0) eventTree -> Fill(); // possibly specify a cut in configuration
@@ -585,6 +634,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 	recoElectrons->Clear("C");
 	recoTaus->Clear("C");
 	recoPhotons->Clear("C");
+    triggerObjects->Clear("C");
 	genJets->Clear("C");
 	genParticles->Clear("C");
 }
@@ -602,6 +652,7 @@ void  ntupleProducer::beginJob()
 	recoMuons      = new TClonesArray("TCMuon");
 	recoTaus       = new TClonesArray("TCTau");
 	recoPhotons    = new TClonesArray("TCPhoton");
+	triggerObjects = new TClonesArray("TCTriggerObject");
 	genJets        = new TClonesArray("TCGenJet");
     genParticles   = new TClonesArray("TCGenParticle");
 	beamSpot       = new TVector3();
@@ -613,6 +664,7 @@ void  ntupleProducer::beginJob()
 	eventTree->Branch("recoTaus",&recoTaus, 6400, 0);
 	eventTree->Branch("recoPhotons",&recoPhotons, 6400, 0);
 	eventTree->Branch("recoMET", &recoMET, 6400, 0);
+	eventTree->Branch("triggerObjects", &triggerObjects, 6400, 0);
 	eventTree->Branch("genJets",&genJets, 6400, 0);
 	eventTree->Branch("genParticles",&genParticles, 6400, 0);
 

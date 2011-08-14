@@ -90,6 +90,26 @@ process.GenJetbyValAlgo = cms.EDProducer("JetFlavourIdentifier",
                                          ) 
 process.GenJetFlavour = cms.Sequence(process.GenJetbyRef*process.GenJetbyValPhys*process.GenJetbyValAlgo)
 
+
+process.JetbyRef = cms.EDProducer("JetPartonMatcher",
+                                  jets = cms.InputTag("ak5PFJets"),
+                                  coneSizeToAssociate = cms.double(0.3),
+                                  partons = cms.InputTag("myPartons")
+                                  )
+# Flavour byValue PhysDef
+process.JetbyValPhys = cms.EDProducer("JetFlavourIdentifier",
+                                      srcByReference = cms.InputTag("JetbyRef"),
+                                      physicsDefinition = cms.bool(True),
+                                      leptonInfo = cms.bool(True)
+                                      )
+# Flavour byValue AlgoDef
+process.JetbyValAlgo = cms.EDProducer("JetFlavourIdentifier",
+                                      srcByReference = cms.InputTag("JetbyRef"),
+                                      physicsDefinition = cms.bool(False),
+                                      leptonInfo = cms.bool(True)
+                                      )
+process.JetFlavour = cms.Sequence(process.JetbyRef*process.JetbyValPhys*process.JetbyValAlgo)
+
 ## eleID map:
 process.load("ElectroWeakAnalysis.WENu.simpleCutBasedElectronIDSpring10_cfi")
 process.simpleEleId60relIso = process.simpleCutBasedElectronID.clone()
@@ -208,6 +228,7 @@ cmsSeq = cms.Sequence(
       * process.PFTau                    
       * process.myPartons #<-- For genJet flavors, only in MC
       * process.GenJetFlavour
+      * process.JetFlavour
       * process.simpleEleId60relIso
       * process.simpleEleId70relIso
       * process.simpleEleId80relIso

@@ -157,34 +157,41 @@ float TCJet::UncertaintyJES() const {
 // b tagging discriminators
 //Track counting tag with N = 3: trackCountingHighPurBJetTags
 
-float TCJet::BDiscrTrkCountHiPure() const {
-   return _bDiscrTrkCountHiPure;
+float TCJet::BDiscrTCHP() const {
+   return _bDiscrTCHP;
 }
 
 //Track counting tag with N = 2: trackCountingHighEffBJetTags
 
-float TCJet::BDiscrTrkCountHiEff() const {
-   return _bDiscrTrkCountHiEff;
+float TCJet::BDiscrTCHE() const {
+   return _bDiscrTCHE;
 }
 
 //Simple secondary vertex b tag: simpleSecondaryVertexBJetTags
 
-float TCJet::BDiscrSecVtxSimple() const {
-   return _bDiscrSecVtxSimple;
+float TCJet::BDiscrSSVHE() const {
+   return _bDiscrSSVHE;
 }
 
-//Combined SV b tag using likelihood ratios: combinedSVBJetTags
-
-float TCJet::BDiscrSecVtxL() const {
-   return _bDiscrSecVtxL;
+float TCJet::BDiscrSSVHP() const {
+   return _bDiscrSSVHP;
 }
 
-//Combined SV b tag using MVA: combinedSVMVABJetTags
-
-float TCJet::BDiscrSecVtxMVA() const {
-   return _bDiscrSecVtxMVA;
+float TCJet::BDiscrJP() const {
+   return _bDiscrJP;
 }
 
+float TCJet::BDiscrJBP() const {
+   return _bDiscrJBP;
+}
+
+float TCJet::BDiscrCSV() const {
+   return _bDiscrCSV;
+}
+
+int TCJet::JetFlavor() const {
+    return _jetFlavor;
+}
 
 // "set" methods ---------------------------------------------
 
@@ -267,22 +274,34 @@ void TCJet::SetUncertaintyJES(float u) {
 }
 // b tagging discriminators
 
-void TCJet::SetBDiscrTrkCountHiPure(float d) {
-   _bDiscrTrkCountHiPure = d;
+void TCJet::SetBDiscrTCHE(float d) {
+   _bDiscrTCHE = d;
 }
 
-void TCJet::SetBDiscrTrkCountHiEff(float d) {
-   _bDiscrTrkCountHiEff = d;
+void TCJet::SetBDiscrTCHP(float d) {
+   _bDiscrTCHP = d;
 }
 
-void TCJet::SetBDiscrSecVtxSimple(float d) {
-   _bDiscrSecVtxSimple = d;
+void TCJet::SetBDiscrSSVHE(float d) {
+   _bDiscrSSVHE = d;
 }
 
-void TCJet::SetBDiscrSecVtxL(float d) {
-   _bDiscrSecVtxL = d;
+void TCJet::SetBDiscrSSVHP(float d) {
+   _bDiscrSSVHP = d;
 }
 
-void TCJet::SetBDiscrSecVtxMVA(float d) {
-   _bDiscrSecVtxMVA = d;
+void TCJet::SetBDiscrJP(float d) {
+   _bDiscrJP = d;
+}
+
+void TCJet::SetBDiscrJBP(float d) {
+   _bDiscrJBP = d;
+}
+
+void TCJet::SetBDiscrCSV(float d) {
+   _bDiscrCSV = d;
+}
+
+void TCJet::SetJetFlavor(float f) {
+    _jetFlavor = f;
 }

@@ -90,6 +90,7 @@
 #include "TCElectron.h"
 #include "TCTau.h"
 #include "TCPhoton.h"
+#include "TCTriggerObject.h"
 #include "TCGenJet.h"
 #include "TCGenParticle.h"
 
@@ -97,6 +98,8 @@
 #include "FWCore/Common/interface/TriggerNames.h"
 #include "DataFormats/Common/interface/TriggerResults.h"
 #include "HLTrigger/HLTcore/interface/HLTConfigProvider.h"
+#include "DataFormats/HLTReco/interface/TriggerObject.h"
+#include "DataFormats/HLTReco/interface/TriggerEvent.h"
 
 //Root  stuff
 #include "TROOT.h"
@@ -138,7 +141,7 @@ class ntupleProducer : public edm::EDAnalyzer {
 		virtual bool  triggerDecision(edm::Handle<edm::TriggerResults>& hltR, int iTrigger);
 		virtual float sumPtSquared(const Vertex& v);
 		virtual void  associateJetToVertex(reco::PFJet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet *outJet);   
-		virtual bool isFilteredOutScraping(const edm::Event& iEvent, const edm::EventSetup& iSetup, int numtrack=10, double thresh=0.25);
+		virtual bool  isFilteredOutScraping(const edm::Event& iEvent, const edm::EventSetup& iSetup, int numtrack=10, double thresh=0.25);
 		// ----------member data ---------------------------
 
         struct JetCompare :
@@ -151,7 +154,7 @@ class ntupleProducer : public edm::EDAnalyzer {
         typedef std::map<reco::Jet, unsigned int, JetCompare> flavourMap;
 
 		//Standard event info
-		int eventNumber, runNumber, lumiSection, bunchCross, nEvents;
+		int   eventNumber, runNumber, lumiSection, bunchCross, nEvents;
 		float ptHat, qScale, evtWeight;
 		float deliveredLumi, recordedLumi, lumiDeadTime;
 		float rhoFactor;
@@ -190,6 +193,7 @@ class ntupleProducer : public edm::EDAnalyzer {
 		TClonesArray* recoElectrons;
 		TClonesArray* recoTaus;
 		TClonesArray* recoPhotons;
+		TClonesArray* triggerObjects;
 		TClonesArray* genJets;
 		TClonesArray* genParticles;
 		TCMET*        recoMET;

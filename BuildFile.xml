@@ -18,6 +18,7 @@
 <use   name="DataFormats/BTauReco"/>
 <use   name="DataFormats/TrackReco"/>
 <use   name="DataFormats/GsfTrackReco"/>
+<use   name="DataFormats/HLTReco"/>
 <use   name="DataFormats/BeamSpot"/>
 <use   name="DataFormats/Luminosity"/>
 <use   name="PhysicsTools/JetMCAlgos"/>

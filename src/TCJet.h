@@ -37,16 +37,14 @@ private:
     unsigned int _numChPart;
 
     // b tagging discriminators
-    //Track counting tag with N = 3: trackCountingHighPurBJetTags
-    float _bDiscrTrkCountHiPure;
-    //Track counting tag with N = 2: trackCountingHighEffBJetTags
-    float _bDiscrTrkCountHiEff;
-    //Simple secondary vertex b tag: simpleSecondaryVertexBJetTags
-    float _bDiscrSecVtxSimple;
-    //Combined SV b tag using likelihood ratios: combinedSVBJetTags
-    float _bDiscrSecVtxL;
-    //Combined SV b tag using MVA: combinedSVMVABJetTags
-    float _bDiscrSecVtxMVA;
+    float _bDiscrTCHP;
+    float _bDiscrTCHE;
+    float _bDiscrSSVHE;
+    float _bDiscrSSVHP;
+    float _bDiscrJP;
+    float _bDiscrJBP;
+    float _bDiscrCSV;
+    int   _jetFlavor;
 
 public:
     TCJet();
@@ -91,11 +89,14 @@ public:
 	float UncertaintyJES() const;
 
     // b tagging discriminators
-    float BDiscrTrkCountHiPure() const;
-    float BDiscrTrkCountHiEff() const;
-    float BDiscrSecVtxSimple() const;
-    float BDiscrSecVtxL() const;
-    float BDiscrSecVtxMVA() const;
+    float BDiscrTCHP() const;
+    float BDiscrTCHE() const;
+    float BDiscrSSVHE() const;
+    float BDiscrSSVHP() const;
+    float BDiscrJP() const;
+    float BDiscrJBP() const;
+    float BDiscrCSV() const;
+    int   JetFlavor() const;
 
     // "set" methods ---------
     void SetP4(TLorentzVector p4);
@@ -119,12 +120,15 @@ public:
 
     // b tagging discriminators
     // see the corresponding class members for description
-    void SetBDiscrTrkCountHiPure(float d);
-    void SetBDiscrTrkCountHiEff(float d);
-    void SetBDiscrSecVtxSimple(float d);
-    void SetBDiscrSecVtxL(float d);
-    void SetBDiscrSecVtxMVA(float d);
+    void SetBDiscrTCHE(float d);
+    void SetBDiscrTCHP(float d);
+    void SetBDiscrSSVHE(float d);
+    void SetBDiscrSSVHP(float d);
+    void SetBDiscrJP(float d);
+    void SetBDiscrJBP(float d);
+    void SetBDiscrCSV(float d);
 
+    void SetJetFlavor(float f);
 
     ClassDef(TCJet, 1);
 

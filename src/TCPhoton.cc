@@ -50,6 +50,18 @@ float TCPhoton::TrkIso() const {
    return _trkIso;
 }
 
+float TCPhoton::PFIsoNeutral() const {
+   return _pfIsoNeutral;
+}
+
+float TCPhoton::PFIsoCharged() const {
+   return _pfIsoCharged;
+}
+
+float TCPhoton::PFIsoPhoton() const {
+   return _pfIsoPhoton;
+}
+
 float TCPhoton::HadOverEm() const {
   return _hadOverEm;
 }
@@ -109,8 +121,19 @@ void TCPhoton::SetHADIso(float h){
   _hadIso = h;
 }
 void TCPhoton::SetTRKIso(float t){
-  _trkIso = t;
+    _trkIso = t;
 }
+
+void TCPhoton::SetPFIsoNeutral(float n){
+    _pfIsoNeutral = n;
+}
+void TCPhoton::SetPFIsoCharged(float c){
+    _pfIsoCharged = c;
+}
+void TCPhoton::SetPFIsoPhoton(float p){
+    _pfIsoPhoton = p;
+}
+
 void TCPhoton::SetHadOverEm(float h){
   _hadOverEm = h;
 }

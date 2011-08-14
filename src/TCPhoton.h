@@ -13,6 +13,9 @@ private:
     float _emIso; // 
     float _hadIso; // 
     float _trkIso; // 
+    float _pfIsoNeutral;
+    float _pfIsoCharged;
+    float _pfIsoPhoton;
     float _hadOverEm; // 
     float _dPhiSuperCluster;
     float _dEtaSuperCluster;
@@ -39,6 +42,9 @@ public:
     float EmIso() const;
     float HadIso() const;
     float TrkIso() const;
+    float PFIsoNeutral() const;
+    float PFIsoCharged() const;
+    float PFIsoPhoton() const;
     float HadOverEm() const;
     float DPhiSuperCluster() const;
     float DEtaSuperCluster() const;
@@ -55,13 +61,15 @@ public:
     void SetP4(TLorentzVector p4);
     void SetP4(float px, float py, float pz, float e);
     void SetVtx(float vx, float vy, float vz);
-    //  void SetAssocVtx(float vx, float vy, float vz);
 
     void SetCharge(int c);
     void SetNormChi2(float c);
     void SetEMIso(float e);
     void SetHADIso(float h);
     void SetTRKIso(float t);
+    void SetPFIsoNeutral(float n);
+    void SetPFIsoCharged(float c);
+    void SetPFIsoPhoton(float p);
  
     void SetHadOverEm(float h);
     void SetDPhiSuperCluster(float d);
@@ -74,7 +82,6 @@ public:
     void SetTrackVeto(bool t);
 
     ClassDef(TCPhoton, 1);
-
 };
 
 #endif
