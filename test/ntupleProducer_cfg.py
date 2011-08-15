@@ -235,11 +235,11 @@ cmsSeq = cms.Sequence(
       * process.simpleEleId95relIso
       * process.kt6PFJets
       * process.kt6PFJetsIso
-		* process.ak5PFJets
-		* process.ak5PFJetsL1FastL2L3
+      * process.ak5PFJets
+      * process.ak5PFJetsL1FastL2L3
       * process.metJESCorAK5PF  
-		* process.ak5JetTracksAssociatorAtVertex 
-		* process.btagging
+      * process.ak5JetTracksAssociatorAtVertex 
+      * process.btagging
       * process.HBHENoiseFilterResultProducer
 		)
 

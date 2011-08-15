@@ -434,11 +434,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 		edm::Handle<reco::PhotonCollection> photons;
 		iEvent.getByLabel(photonTag_, photons);
 
-		for (reco::PhotonCollection::const_iterator iPhoton = photons->begin(); iPhoton != photons->end() ; ++iPhoton)
-		{
+		for (reco::PhotonCollection::const_iterator iPhoton = photons->begin(); iPhoton != photons->end() ; ++iPhoton) {
             
 			TCPhoton* myPhoton = new ((*recoPhotons)[photonCount]) TCPhoton;
 			myPhoton->SetP4(iPhoton->px(), iPhoton->py(), iPhoton->pz(), iPhoton->p());
+            myPhoton->SetVtx(iPhoton->vx(), iPhoton->vy(), iPhoton->vz());
 			myPhoton->SetEMIso(iPhoton->ecalRecHitSumEtConeDR04());
 			myPhoton->SetHADIso(iPhoton->hcalTowerSumEtConeDR04());
 			myPhoton->SetTRKIso(iPhoton->trkSumPtHollowConeDR04());
@@ -447,6 +447,18 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             myPhoton->SetR9(iPhoton->r9());
 			myPhoton->SetEtaSupercluster(iPhoton->superCluster()->eta());
 			myPhoton->SetTrackVeto(iPhoton->hasPixelSeed());
+
+            //Conversion info
+            //int conversionCount = 0;
+            //float avgConversionDz  = 0;
+            //float avgConversionDxy = 0;
+            //for (reco::ConversionRefVector::const_iterator iConversion = iPhoton->conversions().begin(); iConversion != iPhoton->conversions().end(); ++iConversion) {
+            //    const reco::Conversion &conversions = **iConversion;
+            //    //avgConversionDz  += iConversion.dz();
+            //    //avgConversionDxy += iConversion.dxy();
+            //    ++conversionCount;
+            //}
+            //cout<<conversionCount<<endl;
 
 			++photonCount;
 		}

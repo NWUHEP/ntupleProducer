@@ -9,6 +9,7 @@ private:
     TLorentzVector _p4;
     TVector3 _vtx;
     int   _charge;
+
     float _normChi2;
     float _emIso; // 
     float _hadIso; // 
@@ -25,6 +26,11 @@ private:
 	float _e2OverE9;
 	float _etaSupercluster;
     bool  _trackVeto;
+
+    //conversion info
+    int _nConversions; //
+    float _avgConversionDz; //
+    float _avgConversionDxy; //
 
 public:
     TCPhoton();
@@ -55,6 +61,10 @@ public:
     float EtaSupercluster() const;
     bool  TrackVeto() const;
 
+    int   NumberOfConversions() const;
+    float  ConversionDz() const;
+    float  ConversionDxy() const;
+
     //    TVector3 AssocVtx() const;
 
     // "set" methods ---------
@@ -80,6 +90,10 @@ public:
     void Sete2OverE9(float e);
     void SetEtaSupercluster(float e);
     void SetTrackVeto(bool t);
+
+    void SetNumberOfConversions(int n);
+    void SetConversionDz(float d);
+    void SetConversionDxy(float d);
 
     ClassDef(TCPhoton, 1);
 };

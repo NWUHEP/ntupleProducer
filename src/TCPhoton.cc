@@ -90,6 +90,17 @@ bool  TCPhoton::TrackVeto() const {
 	return _trackVeto;
 }
 
+int  TCPhoton::NumberOfConversions() const {
+	return _nConversions;
+}
+
+float  TCPhoton::ConversionDz() const {
+	return _avgConversionDz;
+}
+
+float  TCPhoton::ConversionDxy() const {
+	return _avgConversionDxy;
+}
 
 // "set" methods ---------------------------------------------
 
@@ -162,3 +173,14 @@ void TCPhoton::SetTrackVeto(bool t) {
 	_trackVeto = t;
 }
 
+void TCPhoton::SetNumberOfConversions(int n) {
+	_nConversions = n;
+}
+
+void TCPhoton::SetConversionDz(float d) {
+	_avgConversionDz = d;
+}
+
+void TCPhoton::SetConversionDxy(float d) {
+	_avgConversionDxy = d;
+}
