@@ -7,6 +7,7 @@
 class TCPhoton : public TObject {
 private:
     TLorentzVector _p4;
+    std::pair<TLorentzVector, TLorentzVector> _convP4;
     TVector3 _vtx;
     int   _charge;
 
@@ -28,9 +29,9 @@ private:
     bool  _trackVeto;
 
     //conversion info
-    int _nConversions; //
-    float _avgConversionDz; //
-    float _avgConversionDxy; //
+    int   _nConversions; //
+    float _conversionDz; //
+    float _conversionDxy; //
 
 public:
     TCPhoton();
@@ -61,9 +62,10 @@ public:
     float EtaSupercluster() const;
     bool  TrackVeto() const;
 
-    int   NumberOfConversions() const;
+    int    NumberOfConversions() const;
     float  ConversionDz() const;
     float  ConversionDxy() const;
+    std::pair<TLorentzVector, TLorentzVector>  ConversionPairP4() const;
 
     //    TVector3 AssocVtx() const;
 
@@ -94,6 +96,7 @@ public:
     void SetNumberOfConversions(int n);
     void SetConversionDz(float d);
     void SetConversionDxy(float d);
+    void SetConversionPairP4(TLorentzVector p1, TLorentzVector p2);
 
     ClassDef(TCPhoton, 1);
 };

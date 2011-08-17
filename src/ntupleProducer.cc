@@ -449,17 +449,24 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 			myPhoton->SetTrackVeto(iPhoton->hasPixelSeed());
 
             //Conversion info
-            //int conversionCount = 0;
-            //float avgConversionDz  = 0;
-            //float avgConversionDxy = 0;
-            //for (reco::ConversionRefVector::const_iterator iConversion = iPhoton->conversions().begin(); iConversion != iPhoton->conversions().end(); ++iConversion) {
-            //    const reco::Conversion &conversions = **iConversion;
-            //    //avgConversionDz  += iConversion.dz();
-            //    //avgConversionDxy += iConversion.dxy();
-            //    ++conversionCount;
-            //}
-            //cout<<conversionCount<<endl;
+            reco::ConversionRefVector conversions = iPhoton->conversions();
+            int   conversionCount = 0;
+            float avgConversionDz  = 0;
+            float avgConversionDxy = 0;
 
+            for (reco::ConversionRefVector::const_iterator iConversion = conversions.begin(); iConversion != conversions.end(); ++iConversion) {
+                const reco::ConversionRef myConversion = *iConversion;
+                if (conversionCount == 0 && myConversion->nTracks() == 2) {
+                    std::vector<edm::RefToBase<reco::Track> > conversionTracks = myConversion->tracks();
+                    TLorentzVector convTrack1 = TLorentzVector(conversionTracks[0]->px(), conversionTracks[0]->py(), conversionTracks[0]->pz(), conversionTracks[0]->p());
+                    TLorentzVector convTrack2 = TLorentzVector(conversionTracks[1]->px(), conversionTracks[1]->py(), conversionTracks[1]->pz(), conversionTracks[1]->p());
+                    myPhoton->SetConversionPairP4(convTrack1, convTrack2);
+                    myPhoton->SetConversionDxy(myConversion->dxy());
+                    myPhoton->SetConversionDz(myConversion->dz());
+                }
+                ++conversionCount;
+            }
+            myPhoton->SetNumberOfConversions(conversionCount);
 			++photonCount;
 		}
 	}
@@ -619,7 +626,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 				pair<int, int> preScales;
 				preScales = hltConfig_.prescaleValues(iEvent, iSetup, hlNames[i]); 
 				hltPrescale[j] = preScales.first*preScales.second;
-				//if (triggerPaths_[j] == "HLT_DoubleMu3_v") cout <<preScales.first<<"\t"<<preScales.second<<endl;
+				if (triggerPaths_[j] == "HLT_DoubleMu6_v") cout <<preScales.first<<"\t"<<preScales.second<<endl;
 			}
 		}
 	} 

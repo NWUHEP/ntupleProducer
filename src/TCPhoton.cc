@@ -95,11 +95,15 @@ int  TCPhoton::NumberOfConversions() const {
 }
 
 float  TCPhoton::ConversionDz() const {
-	return _avgConversionDz;
+	return _conversionDz;
 }
 
 float  TCPhoton::ConversionDxy() const {
-	return _avgConversionDxy;
+	return _conversionDxy;
+}
+
+std::pair<TLorentzVector, TLorentzVector> TCPhoton::ConversionPairP4() const {
+    return _convP4;
 }
 
 // "set" methods ---------------------------------------------
@@ -169,6 +173,7 @@ void TCPhoton::Sete2OverE9(float e) {
 void TCPhoton::SetEtaSupercluster(float e) {
 	_etaSupercluster = e;
 }
+
 void TCPhoton::SetTrackVeto(bool t) {
 	_trackVeto = t;
 }
@@ -178,9 +183,14 @@ void TCPhoton::SetNumberOfConversions(int n) {
 }
 
 void TCPhoton::SetConversionDz(float d) {
-	_avgConversionDz = d;
+	_conversionDz = d;
 }
 
 void TCPhoton::SetConversionDxy(float d) {
-	_avgConversionDxy = d;
+	_conversionDxy = d;
+}
+
+void TCPhoton::SetConversionPairP4(TLorentzVector p1, TLorentzVector p2) {
+    _convP4.first = p1;
+    _convP4.second = p2;
 }
