@@ -16,7 +16,7 @@ process.load('Configuration.StandardSequences.Reconstruction_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 ### Conditions tags
-process.GlobalTag.globaltag = 'GR_R_42_V19::All' 
+process.GlobalTag.globaltag = 'GR_R_42_V20::All' 
 #process.GlobalTag.globaltag = 'START42_V13::All' 
 
 
