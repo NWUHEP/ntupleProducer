@@ -1,3 +1,6 @@
+Aug 30 
+* Prepare Z skimming (aka HZZ) and produce skimmed ntuples
+
 Jun 30
 
 * Split trigger ints for different data streams
