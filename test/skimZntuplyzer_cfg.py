@@ -2,12 +2,13 @@ import FWCore.ParameterSet.Config as cms
 
 process = cms.Process("ntuples") 
 
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(500))
+
 process.load("FWCore.MessageService.MessageLogger_cfi")
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
-process.MessageLogger.cerr.threshold = 'ERROR'
+process.MessageLogger.cerr.threshold = 'ERROR' #comment out if want summary at the end
 
-process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(10000000)
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(500))
+process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(500)
 
 process.load("Configuration.StandardSequences.Services_cff")
 process.load('Configuration.StandardSequences.GeometryExtended_cff')
@@ -17,7 +18,7 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 ### Conditions tags
 process.GlobalTag.globaltag = 'GR_R_42_V20::All' 
-#process.GlobalTag.globaltag = 'START42_V13::All' 
+#process.GlobalTag.globaltag = 'START42_V14A::All' 
 
 
 ### HCAL noise filter
@@ -173,13 +174,13 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   PrimaryVtxTag     =    cms.untracked.InputTag('offlinePrimaryVertices'),
   rhoCorrTag	     =    cms.untracked.InputTag('kt6PFJetsIso', 'rho', 'ntuples'),
 
+  saveMET           =    cms.untracked.bool(True),
   saveJets          =    cms.untracked.bool(True),
   saveElectrons     =    cms.untracked.bool(True),
   saveMuons         =    cms.untracked.bool(True),
-  saveTaus          =    cms.untracked.bool(True),
-  savePhotons       =    cms.untracked.bool(True),
-  saveMET           =    cms.untracked.bool(True),
-  saveGenJets       =    cms.untracked.bool(True),
+  saveTaus          =    cms.untracked.bool(False),
+  savePhotons       =    cms.untracked.bool(False),
+  saveGenJets       =    cms.untracked.bool(False),
 
   ecalFilterTag     =    cms.untracked.InputTag("BE1214","anomalousECALVariables"),
   hcalFilterTag     =    cms.untracked.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResult"),
@@ -221,12 +222,26 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 )
 )
 
+process.load("NWU/ntupleProducer/hzzSkim_cff")
+
+process.demo0 = cms.EDAnalyzer('Dummy',)
+process.demo1 = process.demo0.clone()
+process.demo2 = process.demo0.clone()
+process.demo3 = process.demo0.clone()
+
+process.options = cms.untracked.PSet(  wantSummary = cms.untracked.bool(True)    )
+
+#process.TimerService = cms.Service("TimerService", useCPUtime = cms.untracked.bool(True))
+#process.pts = cms.EDFilter("PathTimerInserter")
+#process.PathTimerService = cms.Service("PathTimerService")
+
+
 ### Let it run
 cmsSeq = cms.Sequence(
         process.PFTau                    
-      #* process.myPartons #<-- For genJet flavors, only in MC
-      #* process.GenJetFlavour
-      #* process.JetFlavour
+#      * process.myPartons #<-- For genJet flavors, only in MC
+#      * process.GenJetFlavour
+#      * process.JetFlavour
       * process.simpleEleId60relIso
       * process.simpleEleId70relIso
       * process.simpleEleId80relIso
@@ -241,7 +256,16 @@ cmsSeq = cms.Sequence(
       * process.ak5JetTracksAssociatorAtVertex 
       * process.btagging
       * process.HBHENoiseFilterResultProducer
-      * ecalDead
+      * ecalDead # disable for MC
 		)
 
-process.p = cms.Path(cmsSeq * process.ntupleProducer)
+
+process.diSequence = cms.Path(process.demo0
+                                                            *(process.goodHzzMuons + process.goodHzzElectrons)
+                                                            *(process.diHzzMuons + process.diHzzElectrons + process.crossHzzLeptons ) )
+
+process.diMuonFilter     = cms.Path(process.diHzzMuonsFilter      *process.demo1* cmsSeq *process.ntupleProducer)
+process.diElectronFilter = cms.Path(process.diHzzElectronsFilter  *process.demo2* cmsSeq *process.ntupleProducer)
+process.EleMuFilter      = cms.Path(process.crossHzzLeptonsFilter *process.demo3* cmsSeq *process.ntupleProducer)
+
+#process.p = cms.Path(cmsSeq * process.ntupleProducer)

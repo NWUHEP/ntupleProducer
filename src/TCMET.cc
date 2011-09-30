@@ -64,6 +64,11 @@ float TCMET::HFHadronEtFraction() const {
   return _hfHadronEtFraction;
 }
 
+float TCMET::Significance() const {
+  if (_sumEt!=0) return _met/_sumEt;
+  else return -1;
+}
+
     // "set" methods ---------
 
 void TCMET::SetSumEt(float n) {

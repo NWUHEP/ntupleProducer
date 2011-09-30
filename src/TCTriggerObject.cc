@@ -6,19 +6,19 @@ TCTriggerObject::TCTriggerObject() {
 TCTriggerObject::~TCTriggerObject() {
 }
 
-void TCTriggerObject::setId(int i) {
-       id = i;
+void TCTriggerObject::SetId(int i) {
+  _id = i;
 }
 
-void TCTriggerObject::setP4(double px, double py, double pz, double energy) {
-       TLorentzVector blah(px, py, pz, energy);
-          p4 = blah;
+void TCTriggerObject::SetP4(double px, double py, double pz, double energy) {
+  TLorentzVector blah(px, py, pz, energy);
+  _p4 = blah;
 }
 
 TLorentzVector TCTriggerObject::P4() {
-       return p4;
+  return _p4;
 }
 
-int TCTriggerObject::getId() {
-       return id;
+int TCTriggerObject::Id() {
+  return _id;
 }

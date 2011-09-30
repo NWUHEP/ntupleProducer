@@ -1,8 +1,10 @@
+Sep 30
+* Trigger Objects
+
 Aug 30 
-* Prepare Z skimming (aka HZZ) and produce skimmed ntuples
+* Prepare Z skimming (aka HZZ) and produce skimmed ntuples (DONE)
 
 Jun 30
-
 * Split trigger ints for different data streams
 * Include TClonesArray of TVector3 for simVertex (Just save z position of simVertex; x = y = 0)
 * genJet flavor matching
