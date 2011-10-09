@@ -5,22 +5,21 @@
 #include "TLorentzVector.h"
 
 class TCTriggerObject : public TObject {
- private:
-  TLorentzVector _p4;
-  int _id;
-  
- public:
-  TCTriggerObject();
-  virtual ~TCTriggerObject();
-  
-  void SetId(int i);
-  void SetP4(double px, double py, double pz, double energy);
-  
-  TLorentzVector P4();
-  int Id();
-  
-  ClassDef(TCTriggerObject, 1);
+    private:
+        TLorentzVector p4;
+        int id;
+
+    public:
+        TCTriggerObject();
+        virtual ~TCTriggerObject();
+
+        void setId(int i);
+        void setP4(double px, double py, double pz, double energy);
+
+        TLorentzVector P4();
+        int getId();
+
+        ClassDef(TCTriggerObject, 1);
 };
 
-#endif  /* _TCTriggerObject_H  */
-
+#endif

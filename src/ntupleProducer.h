@@ -21,7 +21,6 @@
 #include "DataFormats/Math/interface/Vector3D.h"
 #include "DataFormats/Math/interface/LorentzVector.h"
 #include "DataFormats/Math/interface/deltaPhi.h"
-#include "DataFormats/Math/interface/deltaR.h"
 
 // Libraries for objects
 #include "DataFormats/ParticleFlowCandidate/interface/PFCandidate.h"

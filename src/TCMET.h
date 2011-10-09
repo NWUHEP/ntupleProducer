@@ -48,7 +48,6 @@ public:
     float ChargedHadronEtFraction() const;
     float HFEMEtFraction() const;
     float HFHadronEtFraction() const;
-    float Significance() const;
 
     // "set" methods ---------
 

@@ -43,7 +43,6 @@ process.load('JetMETAnalysis.ecalDeadCellTools.RA2TPfilter_cff')
 
 ecalDead = cms.Sequence(process.BE1214)
 
-
 ### Jet correction services
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 process.load("CondCore.DBCommon.CondDBCommon_cfi")
@@ -51,15 +50,14 @@ process.load("CondCore.DBCommon.CondDBCommon_cfi")
 ### Extra jet collection for L1FastJet corrections
 process.load("RecoJets.Configuration.RecoPFJets_cff")
 process.kt6PFJets.doRhoFastjet = True
-process.kt6PFJets.Rho_EtaMax = cms.double(4.4)
-process.kt6PFJets.rParam = cms.double(0.6)
+process.kt6PFJets.Rho_EtaMax   = cms.double(4.4)
+process.kt6PFJets.rParam       = cms.double(0.6)
 
 process.kt6PFJetsIso = process.kt6PFJets.clone()
 process.kt6PFJetsIso.doRhoFastjet = True
-process.kt6PFJetsIso.Rho_EtaMax = cms.double(2.5) 
-
-process.ak5PFJets.doAreaFastjet = True
-process.ak5PFJets.Rho_EtaMax = cms.double(4.4)
+process.kt6PFJetsIso.Rho_EtaMax   = cms.double(2.5) 
+process.ak5PFJets.doAreaFastjet   = True
+process.ak5PFJets.Rho_EtaMax      = cms.double(4.4)
 
 ### To get b-tags from ak5PFJets
 process.load('RecoJets.JetAssociationProducers.ak5JTA_cff')
@@ -126,14 +124,9 @@ process.simpleEleId95relIso = process.simpleCutBasedElectronID.clone()
 process.simpleEleId95relIso.electronQuality = "95relIso"
 
 ### MET corrections
-from JetMETCorrections.Type1MET.MetType1Corrections_cff import metJESCorAK5PFJet
-process.metJESCorAK5PF = metJESCorAK5PFJet.clone()
-process.metJESCorAK5PF.inputUncorJetsLabel = "ak5PFJets"
-process.metJESCorAK5PF.metType = "PFMET"
-process.metJESCorAK5PF.inputUncorMetLabel = "pfMet"
-process.metJESCorAK5PF.useTypeII = False
-process.metJESCorAK5PF.jetPTthreshold = cms.double(10.0)
-process.metJESCorAK5PF.corrector = cms.string('ak5PFL1FastL2L3')
+process.load("JetMETCorrections.Type1MET.pfMETCorrections_cff")
+#process.pfJetMETcorr.jetCorrLabel = cms.string("ak5PFL1FastL2L3Residual")
+process.metAnalysisSequence=cms.Sequence(process.producePFMETCorrections)
 
 ### Specify default triggers
 #from UserCode.ntupleProducer.triggerTest_cfi import *
@@ -171,7 +164,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   PhotonTag         =    cms.untracked.InputTag('photons'),
   TauTag            =    cms.untracked.InputTag('shrinkingConePFTauProducer'),
   PrimaryVtxTag     =    cms.untracked.InputTag('offlinePrimaryVertices'),
-  rhoCorrTag	     =    cms.untracked.InputTag('kt6PFJetsIso', 'rho', 'ntuples'),
+  rhoCorrTag        =    cms.untracked.InputTag('kt6PFJetsIso', 'rho', 'ntuples'),
 
   saveJets          =    cms.untracked.bool(True),
   saveElectrons     =    cms.untracked.bool(True),
@@ -179,7 +172,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   saveTaus          =    cms.untracked.bool(True),
   savePhotons       =    cms.untracked.bool(True),
   saveMET           =    cms.untracked.bool(True),
-  saveGenJets       =    cms.untracked.bool(True),
+  saveGenJets       =    cms.untracked.bool(False),
 
   ecalFilterTag     =    cms.untracked.InputTag("BE1214","anomalousECALVariables"),
   hcalFilterTag     =    cms.untracked.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResult"),
@@ -237,11 +230,10 @@ cmsSeq = cms.Sequence(
       * process.kt6PFJetsIso
       * process.ak5PFJets
       * process.ak5PFJetsL1FastL2L3
-      * process.metJESCorAK5PF  
+      * process.metAnalysisSequence  
       * process.ak5JetTracksAssociatorAtVertex 
       * process.btagging
       * process.HBHENoiseFilterResultProducer
-      * ecalDead
 		)
 
 process.p = cms.Path(cmsSeq * process.ntupleProducer)
