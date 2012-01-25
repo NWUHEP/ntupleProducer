@@ -439,19 +439,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             Handle<reco::GenJetCollection> GenJets;
             iEvent.getByLabel(genJetTag_, GenJets);
 
-            edm::Handle<reco::JetFlavourMatchingCollection> jetFlavourMC;
-            iEvent.getByLabel("GenJetbyValAlgo", jetFlavourMC);
-
-            flavourMap flavours;
-
-            for (reco::JetFlavourMatchingCollection::const_iterator iFlavor = jetFlavourMC->begin(); iFlavor != jetFlavourMC->end(); iFlavor++) {
-                flavours.insert(flavourMap::value_type(*((iFlavor->first).get()), abs(iFlavor->second.getFlavour())));
-            }
-
             for (GenJetCollection::const_iterator iJet = GenJets->begin(); iJet!= GenJets->end(); ++iJet) {
                 reco::GenJet myJet = reco::GenJet(*iJet);      
                 if (myJet.pt() > 10) { 
-
                     TCGenJet* jetCon = new ((*genJets)[genCount]) TCGenJet;
                     jetCon->SetP4(myJet.px(), myJet.py(), myJet.pz(), myJet.energy());
                     jetCon->SetHadEnergy(myJet.hadEnergy());
@@ -459,10 +449,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     jetCon->SetInvEnergy(myJet.invisibleEnergy());
                     jetCon->SetAuxEnergy(myJet.auxiliaryEnergy());
                     jetCon->SetNumConstit(myJet.getGenConstituents().size());
-
-                    reco::Jet refJet(myJet.p4(),myJet.vertex());
-                    if (flavours.find(refJet) != flavours.end()) jetCon->SetJetFlavor(flavours[refJet]);
-
                 }
                 ++genCount;	
             }
