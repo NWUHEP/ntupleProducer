@@ -1,5 +1,5 @@
-#include "TCPhoton.h"
-#include<iostream>
+#include "Higgs/ntupleProducer/interface/TCPhoton.h"
+#include <iostream>
 
 TCPhoton::TCPhoton() {
 }
@@ -102,9 +102,9 @@ float  TCPhoton::ConversionDxy() const {
 	return _conversionDxy;
 }
 
-std::pair<TLorentzVector, TLorentzVector> TCPhoton::ConversionPairP4() const {
-    return _convP4;
-}
+//std::pair<TLorentzVector, TLorentzVector> TCPhoton::ConversionPairP4() const {
+//    return _convP4;
+//}
 
 // "set" methods ---------------------------------------------
 
@@ -190,7 +190,7 @@ void TCPhoton::SetConversionDxy(float d) {
 	_conversionDxy = d;
 }
 
-void TCPhoton::SetConversionPairP4(TLorentzVector p1, TLorentzVector p2) {
-    _convP4.first = p1;
-    _convP4.second = p2;
-}
+//void TCPhoton::SetConversionPairP4(TLorentzVector p1, TLorentzVector p2) {
+//    _convP4.first = p1;
+//    _convP4.second = p2;
+//}

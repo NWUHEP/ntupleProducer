@@ -1,4 +1,4 @@
-#include "TCGenParticle.h"
+#include "Higgs/ntupleProducer/interface/TCGenParticle.h"
 #ifdef __CINT__
 #pragma link C++ class TCGenParticle;
 #endif

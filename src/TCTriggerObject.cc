@@ -1,4 +1,4 @@
-#include "TCTriggerObject.h"
+#include "Higgs/ntupleProducer/interface/TCTriggerObject.h"
 
 TCTriggerObject::TCTriggerObject() {
 }

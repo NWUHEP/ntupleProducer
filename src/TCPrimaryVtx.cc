@@ -5,7 +5,7 @@
  * Created on May 21, 2010, 11:16 AM
  */
 
-#include "TCPrimaryVtx.h"
+#include "Higgs/ntupleProducer/interface/TCPrimaryVtx.h"
 
 TCPrimaryVtx::TCPrimaryVtx() {
 }

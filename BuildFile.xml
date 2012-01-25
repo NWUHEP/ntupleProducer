@@ -21,6 +21,7 @@
 <use   name="DataFormats/HLTReco"/>
 <use   name="DataFormats/BeamSpot"/>
 <use   name="DataFormats/Luminosity"/>
+<use   name="DataFormats/PatCandidates"/>
 <use   name="PhysicsTools/JetMCAlgos"/>
 <use   name="SimDataFormats/GeneratorProducts"/>
 <use   name="SimDataFormats/PileupSummaryInfo"/>

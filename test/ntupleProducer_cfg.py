@@ -16,8 +16,8 @@ process.load('Configuration.StandardSequences.Reconstruction_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 ### Conditions tags
-process.GlobalTag.globaltag = 'GR_R_42_V19::All' 
-#process.GlobalTag.globaltag = 'START42_V13::All' 
+#process.GlobalTag.globaltag = 'GR_R_44_V7::All' 
+process.GlobalTag.globaltag = 'START44_V7::All' 
 
 
 ### HCAL noise filter
@@ -144,8 +144,11 @@ process.goodVertices = cms.EDFilter("VertexSelector",
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
          #'/store/data/Run2011A/DoubleMu/RECO/PromptReco-v4/000/165/121/1A873C93-A381-E011-902F-0030487CD710.root'
-         #'/store/mc/Summer11/DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia/AODSIM/PU_S4_START42_V11-v1/0001/AC9DFDE2-7CA8-E011-B14E-002590200948.root'
-         '/store/data/Run2011B/DoubleMu/AOD/PromptReco-v1/000/178/871/1412D359-9CFB-E011-9BFD-003048D2BED6.root'
+         #'/store/mc/Fall11/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/AODSIM/PU_S6_START42_V14B-v1/0001/A6A53A52-4EF6-E011-8524-90E6BA0D09AD.root'
+         #'/store/data/Run2011B/DoubleMu/AOD/PromptReco-v1/000/178/871/1412D359-9CFB-E011-9BFD-003048D2BED6.root'
+         '/store/mc/Fall11/DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia/AODSIM/PU_S6-START44_V5-v1/0000/0011F495-A8FC-E011-8AF3-002590200AD0.root'
+         #'/store/user/stoyan/MC/H135toZG_500k/RECO_v1/H135toZG_7TeV_START44_V5_RAW2DIGI_RECO_PU_file9J_1_1_xse.root'
+
 )
 )
 
@@ -220,9 +223,9 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 ### Let it run
 cmsSeq = cms.Sequence(
         process.PFTau                    
-      #* process.myPartons #<-- For genJet flavors, only in MC
-      #* process.GenJetFlavour
-      #* process.JetFlavour
+      * process.myPartons #<-- For genJet flavors, only in MC
+      * process.GenJetFlavour
+      * process.JetFlavour
       * process.simpleEleId60relIso
       * process.simpleEleId70relIso
       * process.simpleEleId80relIso

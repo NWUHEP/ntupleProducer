@@ -1,8 +1,16 @@
+
+*2011*
+----------------------------------------------------------------------------------------
+
 Sep 30
 * Trigger Objects
 
+----------------------------------------------------------------------------------------
+
 Aug 30 
 * Prepare Z skimming (aka HZZ) and produce skimmed ntuples (DONE)
+
+----------------------------------------------------------------------------------------
 
 Jun 30
 * Split trigger ints for different data streams
@@ -13,19 +21,37 @@ Jun 30
 * Modify trigger path specification
 * ...
 
+----------------------------------------------------------------------------------------
+
 July 5
 
 * Still need to address triggers, pfIsolation, and genJet flavor
 * I added number of in-time PU vertices; I suggest we add a class to store out-of-time PU by BX and the z positions.
- 
+
+----------------------------------------------------------------------------------------
+
 July 12
 
 * Same as before
 * Possibly save trigger objects or do some matching in ntupler
 * Include MET corrections. (DONE)
 
+----------------------------------------------------------------------------------------
+
 July 19
 
 * Still need to split trigger object
 * pfIsolation
 * genJet flavor (DONE)
+
+----------------------------------------------------------------------------------------
+
+*2012* !!!
+
+----------------------------------------------------------------------------------------
+
+January 25
+
+* Port to PAT.  Ntuples are to be filled from PAT objects, rather than reco (in progress).
+
+
