@@ -11,46 +11,58 @@ class TCTau : public TObject {
 		TVector3 _positionFromLeadTrack;
 		TLorentzVector _p4;
 
-		std::vector<TLorentzVector> pftau_ch;
-		std::vector<TLorentzVector> pftau_h0;
-		std::vector<TLorentzVector> pftau_em;
-		int pftau_charge;
-		int ntracks;
-		int nconst;
+		int tauCharge;
+		int nChHad;
+		int nGamma;
+		int nNeutrHad;
+		int decayMode;
 
+		TLorentzVector leadChHadP4;
+		TLorentzVector leadNeutrP4;
+
+		float isoGammaEtSum;
+		float isoChHadPtSum;
+
+
+		// Discriminators - names as used in CMSSW
+		// For the most part the discriminators are binary
+
+		// HPS discriminators ---------
+		//
+		// against e,mu misidentification
 		float hpsPFTauDiscriminationAgainstElectronLoose;        
 		float hpsPFTauDiscriminationAgainstMuonLoose;        
 		float hpsPFTauDiscriminationAgainstElectronMedium;        
 		float hpsPFTauDiscriminationAgainstMuonMedium;        
 		float hpsPFTauDiscriminationAgainstElectronTight;        
 		float hpsPFTauDiscriminationAgainstMuonTight;        
-		float hpsPFTauDiscriminationByDecayModeFinding;        
+		
+		// by decay mode 
+		float hpsPFTauDiscriminationByDecayModeFinding;
+
+		// by charged isolation
+		float hpsPFTauDiscriminationByVLooseIsolation;
 		float hpsPFTauDiscriminationByLooseIsolation;        
 		float hpsPFTauDiscriminationByMediumIsolation;        
-		float hpsPFTauDiscriminationByTightIsolation;        
-		float shrinkingConePFTauDecayModeIndexProducer;        
-		float shrinkingConePFTauDiscriminationAgainstElectron;        
-		float shrinkingConePFTauDiscriminationAgainstMuon;        
-		float shrinkingConePFTauDiscriminationByECALIsolation;        
-		float shrinkingConePFTauDiscriminationByECALIsolationUsingLeadingPion;        
-		float shrinkingConePFTauDiscriminationByIsolation;        
-		float shrinkingConePFTauDiscriminationByIsolationUsingLeadingPion;        
-		float shrinkingConePFTauDiscriminationByLeadingPionPtCut;        
-		float shrinkingConePFTauDiscriminationByLeadingTrackFinding;        
-		float shrinkingConePFTauDiscriminationByLeadingTrackPtCut;        
-		float shrinkingConePFTauDiscriminationByTaNC;        
-		float shrinkingConePFTauDiscriminationByTaNCfrHalfPercent;        
-		float shrinkingConePFTauDiscriminationByTaNCfrOnePercent;        
-		float shrinkingConePFTauDiscriminationByTaNCfrQuarterPercent;        
-		float shrinkingConePFTauDiscriminationByTaNCfrTenthPercent;        
-		float shrinkingConePFTauDiscriminationByTrackIsolation;        
-		float shrinkingConePFTauDiscriminationByTrackIsolationUsingLeadingPion;        
+		float hpsPFTauDiscriminationByTightIsolation;
+		
+		// with iso corrections
+		float hpsPFTauDiscriminationByVLooseIsolationDBSumPtCorr;
+		float hpsPFTauDiscriminationByLooseIsolationDBSumPtCorr;
+		float hpsPFTauDiscriminationByMediumIsolationDBSumPtCorr;
+		float hpsPFTauDiscriminationByTightIsolationDBSumPtCorr;
 
-		int DecayMode;
-		float leadPFCharged;
-		float leadPFNeutral;
+		// by combined isolation with iso corrections
+		float hpsPFTauDiscriminationByVLooseCombinedIsolationDBSumPtCorr;
+		float hpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr;
+		float hpsPFTauDiscriminationByMediumCombinedIsolationDBSumPtCorr;
+		float hpsPFTauDiscriminationByTightCombinedIsolationDBSumPtCorr;
 
-		int TauAlgorithm;
+
+ 
+    
+
+
 
 	public:
 		TCTau();
@@ -58,98 +70,181 @@ class TCTau : public TObject {
 
 		TVector3 PositionFromTrack() const;
 		TVector3 PositionFromTau() const;
+
 		TLorentzVector P4() const;
 		TVector2 P2() const;
 		float Et() const;
 		float Pt() const;
-		int GetAlgorithm() const;
 
-		float GethpsPFTauDiscriminationAgainstElectronLoose();
-		float GethpsPFTauDiscriminationAgainstMuonLoose();
-		float GethpsPFTauDiscriminationAgainstElectronMedium();
-		float GethpsPFTauDiscriminationAgainstMuonMedium();
-		float GethpsPFTauDiscriminationAgainstElectronTight();
-		float GethpsPFTauDiscriminationAgainstMuonTight();
-		float GethpsPFTauDiscriminationByDecayModeFinding();
-		float GethpsPFTauDiscriminationByLooseIsolation();
-		float GethpsPFTauDiscriminationByMediumIsolation();
-		float GethpsPFTauDiscriminationByTightIsolation();
-		float GetshrinkingConePFTauDecayModeIndexProducer();
-		float GetshrinkingConePFTauDiscriminationAgainstElectron();
-		float GetshrinkingConePFTauDiscriminationAgainstMuon();
-		float GetshrinkingConePFTauDiscriminationByECALIsolation();
-		float GetshrinkingConePFTauDiscriminationByECALIsolationUsingLeadingPion();
-		float GetshrinkingConePFTauDiscriminationByIsolation();
-		float GetshrinkingConePFTauDiscriminationByIsolationUsingLeadingPion();
-		float GetshrinkingConePFTauDiscriminationByLeadingPionPtCut();
-		float GetshrinkingConePFTauDiscriminationByLeadingTrackFinding();
-		float GetshrinkingConePFTauDiscriminationByLeadingTrackPtCut();
-		float GetshrinkingConePFTauDiscriminationByTaNC();
-		float GetshrinkingConePFTauDiscriminationByTaNCfrHalfPercent();
-		float GetshrinkingConePFTauDiscriminationByTaNCfrOnePercent();
-		float GetshrinkingConePFTauDiscriminationByTaNCfrQuarterPercent();
-		float GetshrinkingConePFTauDiscriminationByTaNCfrTenthPercent();
-		float GetshrinkingConePFTauDiscriminationByTrackIsolation();
-		float GetshrinkingConePFTauDiscriminationByTrackIsolationUsingLeadingPion();
+		int DecayMode() const { return decayMode; }
+		int Charge() const {return tauCharge; }
+		int NChHad() const  {return nChHad; }
+		int NGamma() const {return nGamma; }
+		int NNeutrHad() const {return nNeutrHad; }
 
-		std::vector<TLorentzVector> GetChargedTracks();
-		std::vector<TLorentzVector> GetH0Tracks();
-		std::vector<TLorentzVector> GetEMTracks();
-		int GetDecayMode();
-		float leadPFChargedPt();
-		float leadPFNeutralPt();
-		float leadPFAnyPt();
+		TLorentzVector LeadChHadP4() const { return leadChHadP4; }
+		TLorentzVector LeadNeutrP4() const { return leadNeutrP4; }
 
-		int GetCharge();
-		int GetNTracks();
-		int GetNConst();
+		float IsoGammaEtSum() { return isoGammaEtSum; }
+		float IsoChHadPtSum() { return isoChHadPtSum; }
 
-		void AddChargedTrack(TLorentzVector v);
-		void AddEMTrack(TLorentzVector v);
-		void AddH0Track(TLorentzVector v);
 
-		void SethpsPFTauDiscriminationAgainstElectronLoose(float f);
-		void SethpsPFTauDiscriminationAgainstMuonLoose(float f);
-		void SethpsPFTauDiscriminationAgainstElectronMedium(float f);
-		void SethpsPFTauDiscriminationAgainstMuonMedium(float f);
-		void SethpsPFTauDiscriminationAgainstElectronTight(float f);
-		void SethpsPFTauDiscriminationAgainstMuonTight(float f);
-		void SethpsPFTauDiscriminationByDecayModeFinding(float f);
-		void SethpsPFTauDiscriminationByLooseIsolation(float f);
-		void SethpsPFTauDiscriminationByMediumIsolation(float f);
-		void SethpsPFTauDiscriminationByTightIsolation(float f);
-		void SetshrinkingConePFTauDecayModeIndexProducer(float f);
-		void SetshrinkingConePFTauDiscriminationAgainstElectron(float f);
-		void SetshrinkingConePFTauDiscriminationAgainstMuon(float f);
-		void SetshrinkingConePFTauDiscriminationByECALIsolation(float f);
-		void SetshrinkingConePFTauDiscriminationByECALIsolationUsingLeadingPion(float f);
-		void SetshrinkingConePFTauDiscriminationByIsolation(float f);
-		void SetshrinkingConePFTauDiscriminationByIsolationUsingLeadingPion(float f);
-		void SetshrinkingConePFTauDiscriminationByLeadingPionPtCut(float f);
-		void SetshrinkingConePFTauDiscriminationByLeadingTrackFinding(float f);
-		void SetshrinkingConePFTauDiscriminationByLeadingTrackPtCut(float f);
-		void SetshrinkingConePFTauDiscriminationByTaNC(float f);
-		void SetshrinkingConePFTauDiscriminationByTaNCfrHalfPercent(float f);
-		void SetshrinkingConePFTauDiscriminationByTaNCfrOnePercent(float f);
-		void SetshrinkingConePFTauDiscriminationByTaNCfrQuarterPercent(float f);
-		void SetshrinkingConePFTauDiscriminationByTaNCfrTenthPercent(float f);
-		void SetshrinkingConePFTauDiscriminationByTrackIsolation(float f);
-		void SetshrinkingConePFTauDiscriminationByTrackIsolationUsingLeadingPion(float f);
 
-		void SetleadPFChargedPt(float p);
-		void SetleadPFNeutralPt(float p);
-		void SetDecayMode(int d);
-		void SetCharge(int c);
-		void SetNTracks(int n);
-		void SetNConst(int n);
+		void SetDecayMode(int d) {decayMode = d; } 
+		void SetCharge(int c) { tauCharge = c; }
+		void SetNChHad(int n) { nChHad = n; }
+		void SetNGamma(int n) { nGamma = n; }
+		void SetNNeutrHad(int n) { nNeutrHad = n; }
 
 		void SetPositionFromTau(float x, float y, float z);
 		void SetPositionFromTrack(float x, float y, float z);
 		void SetP4(TLorentzVector p4);
 		void SetP4(float px, float py, float pz, float e);
-		void SetAlgorithm(int i);
 
-		ClassDef(TCTau, 4);
+
+		void SetLeadChHadP4(TLorentzVector p4) { leadChHadP4 = p4; }
+		void SetLeadNeutrP4(TLorentzVector p4) { leadNeutrP4 = p4; }
+
+		void SetLeadChHadP4(float x, float y, float z, float e) { leadChHadP4.SetPxPyPzE(x,y,z,e); }
+		void SetLeadNeutrP4(float x, float y, float z, float e) { leadNeutrP4.SetPxPyPzE(x,y,z,e); }
+
+
+		void SetIsoGammaEtSum(float i) { isoGammaEtSum = i; }
+		void SetIsoChHadPtSum(float i) { isoChHadPtSum = i; }
+
+
+		// Discriminators: for now only for HPS
+
+		// HPS
+		float GetHpsPFTauDiscriminationAgainstElectronLoose() {
+		  return hpsPFTauDiscriminationAgainstElectronLoose;
+		}
+		float GetHpsPFTauDiscriminationAgainstMuonLoose() {
+		  return hpsPFTauDiscriminationAgainstMuonLoose;
+		}
+		float GetHpsPFTauDiscriminationAgainstElectronMedium() {
+		  return hpsPFTauDiscriminationAgainstElectronMedium;
+		}
+		float GetHpsPFTauDiscriminationAgainstMuonMedium() {
+		  return hpsPFTauDiscriminationAgainstMuonMedium;
+		}
+		float GetHpsPFTauDiscriminationAgainstElectronTight() {
+		  return hpsPFTauDiscriminationAgainstElectronTight;
+		}
+		float GetHpsPFTauDiscriminationAgainstMuonTight() {
+		  return hpsPFTauDiscriminationAgainstMuonTight;
+		}
+		float GetHpsPFTauDiscriminationByDecayModeFinding() {
+		  return hpsPFTauDiscriminationByDecayModeFinding;
+		}
+		float GetHpsPFTauDiscriminationByVLooseIsolation() {
+		  return hpsPFTauDiscriminationByVLooseIsolation;
+		}
+		float GetHpsPFTauDiscriminationByLooseIsolation() {
+		  return hpsPFTauDiscriminationByLooseIsolation;
+		}
+		float GetHpsPFTauDiscriminationByMediumIsolation() {
+		  return hpsPFTauDiscriminationByMediumIsolation;
+		}
+		float GetHpsPFTauDiscriminationByTightIsolation() {
+		  return hpsPFTauDiscriminationByTightIsolation;
+		}
+		
+
+
+		float GetHpsPFTauDiscriminationByVLooseIsolationDBSumPtCorr() {
+		  return hpsPFTauDiscriminationByVLooseIsolationDBSumPtCorr;
+		}
+		float GetHpsPFTauDiscriminationByLooseIsolationDBSumPtCorr() {
+		  return hpsPFTauDiscriminationByLooseIsolationDBSumPtCorr;
+		}
+		float GetHpsPFTauDiscriminationByMediumIsolationDBSumPtCorr() {
+		  return hpsPFTauDiscriminationByMediumIsolationDBSumPtCorr;
+		}
+		float GetHpsPFTauDiscriminationByTightIsolationDBSumPtCorr() {
+		  return hpsPFTauDiscriminationByTightIsolationDBSumPtCorr;
+		}
+
+
+		float GetHpsPFTauDiscriminationByVLooseCombinedIsolationDBSumPtCorr() {
+		  return hpsPFTauDiscriminationByVLooseCombinedIsolationDBSumPtCorr;
+		}
+		float GetHpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr() {
+		  return hpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr;
+		}
+		float GetHpsPFTauDiscriminationByMediumCombinedIsolationDBSumPtCorr() {
+		  return hpsPFTauDiscriminationByMediumCombinedIsolationDBSumPtCorr;
+		}
+		float GetHpsPFTauDiscriminationByTightCombinedIsolationDBSumPtCorr() {
+		  return hpsPFTauDiscriminationByTightCombinedIsolationDBSumPtCorr;
+		}
+
+
+
+		// HPS discriminator setters
+		void SetHpsPFTauDiscriminationAgainstElectronLoose(float f) {
+		  hpsPFTauDiscriminationAgainstElectronLoose = f;
+		}
+		void SetHpsPFTauDiscriminationAgainstMuonLoose(float f) {
+		  hpsPFTauDiscriminationAgainstMuonLoose = f;
+		}
+		void SetHpsPFTauDiscriminationAgainstElectronMedium(float f) {
+		  hpsPFTauDiscriminationAgainstElectronMedium = f;
+		}
+		void SetHpsPFTauDiscriminationAgainstMuonMedium(float f) {
+		  hpsPFTauDiscriminationAgainstMuonMedium = f;
+		}
+		void SetHpsPFTauDiscriminationAgainstElectronTight(float f) {
+		  hpsPFTauDiscriminationAgainstElectronTight = f;
+		}
+		void SetHpsPFTauDiscriminationAgainstMuonTight(float f) {
+		  hpsPFTauDiscriminationAgainstMuonTight = f;
+		}
+		void SetHpsPFTauDiscriminationByDecayModeFinding(float f) {
+		  hpsPFTauDiscriminationByDecayModeFinding = f;
+		}
+		void SetHpsPFTauDiscriminationByVLooseIsolation(float f) {
+		  hpsPFTauDiscriminationByVLooseIsolation = f;
+		}
+		void SetHpsPFTauDiscriminationByLooseIsolation(float f) {
+		  hpsPFTauDiscriminationByLooseIsolation = f;
+		}
+		void SetHpsPFTauDiscriminationByMediumIsolation(float f) {
+		  hpsPFTauDiscriminationByMediumIsolation = f;
+		}
+		void SetHpsPFTauDiscriminationByTightIsolation(float f) {
+		  hpsPFTauDiscriminationByTightIsolation = f;
+		}
+
+		void SetHpsPFTauDiscriminationByVLooseIsolationDBSumPtCorr(float f) {
+		  hpsPFTauDiscriminationByVLooseCombinedIsolationDBSumPtCorr = f;
+		}
+		void SetHpsPFTauDiscriminationByLooseIsolationDBSumPtCorr(float f) {
+		  hpsPFTauDiscriminationByLooseIsolationDBSumPtCorr = f;
+		}
+		void SetHpsPFTauDiscriminationByMediumIsolationDBSumPtCorr(float f) {
+		  hpsPFTauDiscriminationByMediumIsolationDBSumPtCorr = f;
+		}
+		void SetHpsPFTauDiscriminationByTightIsolationDBSumPtCorr(float f) {
+		  hpsPFTauDiscriminationByTightIsolationDBSumPtCorr = f;
+		}
+
+
+		void SetHpsPFTauDiscriminationByVLooseCombinedIsolationDBSumPtCorr(float f) {
+		  hpsPFTauDiscriminationByVLooseCombinedIsolationDBSumPtCorr = f;
+		}
+		void SetHpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr(float f) {
+		  hpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr = f;
+		}
+		void SetHpsPFTauDiscriminationByMediumCombinedIsolationDBSumPtCorr(float f) {
+		  hpsPFTauDiscriminationByMediumCombinedIsolationDBSumPtCorr = f;
+		}
+		void SetHpsPFTauDiscriminationByTightCombinedIsolationDBSumPtCorr(float f) {
+		  hpsPFTauDiscriminationByTightCombinedIsolationDBSumPtCorr = f;
+		}
+
+
+		ClassDef(TCTau, 5);
 
 };
 

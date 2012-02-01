@@ -166,7 +166,10 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   ElectronTag       =    cms.untracked.InputTag('gsfElectrons'),
   MuonTag           =    cms.untracked.InputTag('muons'),
   PhotonTag         =    cms.untracked.InputTag('photons'),
-  TauTag            =    cms.untracked.InputTag('shrinkingConePFTauProducer'),
+  
+###TauTag            =    cms.untracked.InputTag('shrinkingConePFTauProducer'),
+  TauTag            =    cms.untracked.InputTag('hpsPFTauProducer'),  
+
   PrimaryVtxTag     =    cms.untracked.InputTag('offlinePrimaryVertices'),
   rhoCorrTag        =    cms.untracked.InputTag('kt6PFJetsIso', 'rho', 'ntuples'),
 

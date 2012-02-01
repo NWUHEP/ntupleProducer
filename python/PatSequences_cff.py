@@ -5,7 +5,43 @@ from RecoJets.Configuration.RecoPFJets_cff import kt6PFJets
 from CommonTools.ParticleFlow.Tools.enablePileUpCorrection import enablePileUpCorrection
 from PhysicsTools.PatAlgos.tools.trackTools import *
 from PhysicsTools.PatAlgos.tools.metTools import *
-    
+
+
+
+# redefine the selection for hps (AA) - subject to change
+def myAdaptPFTaus(process,tauType = 'hpsPFTau', postfix = ""):
+    # Set up the collection used as a preselection to use this tau type
+    if tauType != 'hpsPFTau' :
+        reconfigurePF2PATTaus(process, tauType, postfix=postfix)
+    else:
+#default selections
+#        reconfigurePF2PATTaus(process, tauType,
+#                              ["DiscriminationByLooseChargedIsolation","DiscriminationByLooseIsolation"],
+#                              ["DiscriminationByDecayModeFinding"],
+#                              postfix=postfix)
+        reconfigurePF2PATTaus(process, tauType,
+                              [],
+                              ["DiscriminationByDecayModeFinding"],
+                              postfix=postfix)
+
+
+    applyPostfix(process,"patTaus", postfix).tauSource = cms.InputTag("pfTaus"+postfix)
+
+    redoPFTauDiscriminators(process,
+                            cms.InputTag(tauType+'Producer'),
+                            applyPostfix(process,"patTaus", postfix).tauSource,
+                            tauType, postfix=postfix)
+
+    switchToPFTauByType(process, pfTauType=tauType,
+                        pfTauLabelNew=applyPostfix(process,"patTaus", postfix).tauSource,
+                        pfTauLabelOld=cms.InputTag(tauType+'Producer'),
+                        postfix=postfix)
+
+    applyPostfix(process,"makePatTaus", postfix).remove(
+        applyPostfix(process,"patPFCandidateIsoDepositSelection", postfix)
+        )
+
+
 ##
 ## add trigger matching for the leptons
 ##
@@ -176,6 +212,18 @@ def addPatSequence(process, runOnMC, addPhotons=True) :
             process.hzzmetSequence
             )
         
+        
+    # tau algoithm selection
+    # override the default set in pfTaools.py
+    # the definition of myAdaptPFTaus is at the beginning of the file
+    myAdaptPFTaus( process, tauType='hpsPFTau', postfix=postfix )
+    
+#    this is defined in pfTools.py but has some discriminators applied
+#    adaptPFTaus( process, tauType='hpsPFTau', postfix=postfix )
+
+
+
+
 
     print " *** PAT path has been defined"
     

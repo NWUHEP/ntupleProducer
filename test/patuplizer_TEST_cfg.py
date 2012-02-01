@@ -1,5 +1,7 @@
 from PhysicsTools.PatAlgos.patTemplate_cfg import *
 
+process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
+
 # real data or MC?
 isRealData = False
 
@@ -23,12 +25,20 @@ process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
          '/store/mc/Fall11/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/AODSIM/PU_S6_START42_V14B-v1/0001/A6A53A52-4EF6-E011-8524-90E6BA0D09AD.root'
+
 )
 )
 
 # pat sequences
 from Higgs.ntupleProducer.PatSequences_cff import addPatSequence
 addPatSequence(process, isRealData, addPhotons = True)
+
+##------------------------------------------------------------------
+## see PhysicsTools/PatExamples/test/analyzePatTau_fromAOD_cfg.py
+## switch the tau algorithm (AA))
+#from PhysicsTools.PatAlgos.tools.tauTools import *
+#switchToPFTauHPS(process)
+
 
 # event counters
 process.startCounter = cms.EDProducer("EventCountProducer")
@@ -57,14 +67,16 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   ElectronTag       =    cms.untracked.InputTag('selectedPatElectronsPFlow'),
   MuonTag           =    cms.untracked.InputTag('selectedPatMuonsPFlow'),
   PhotonTag         =    cms.untracked.InputTag('patPhotons'),
-  TauTag            =    cms.untracked.InputTag('shrinkingConePFTauProducer'),
+#####  TauTag            =    cms.untracked.InputTag('shrinkingConePFTauProducer'),
+# only the one below is in PAT -> check selections
+  TauTag            =    cms.untracked.InputTag('selectedPatTausPFlow'),
   PrimaryVtxTag     =    cms.untracked.InputTag('offlinePrimaryVertices'),
   rhoCorrTag        =    cms.untracked.InputTag('kt6PFJetsIso', 'rho', 'ntuples'),
 
   saveJets          =    cms.untracked.bool(True),
   saveElectrons     =    cms.untracked.bool(True),
   saveMuons         =    cms.untracked.bool(True),
-  saveTaus          =    cms.untracked.bool(False),
+  saveTaus          =    cms.untracked.bool(True),
   savePhotons       =    cms.untracked.bool(True),
   saveMET           =    cms.untracked.bool(True),
   saveGenJets       =    cms.untracked.bool(True),
@@ -111,4 +123,5 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 )
 )
 
-process.ntuplePath = cms.Path(process.patDefaultSequence * process.ntupleProducer)
+#process.ntuplePath = cms.Path(process.PFTau * process.PFTauprocess.patDefaultSequence * process.ntupleProducer)
+process.ntuplePath = cms.Path(process.PFTau * process.patDefaultSequence * process.ntupleProducer)

@@ -358,6 +358,111 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     // Get taus //
     //////////////
 
+    if (saveTaus_) {
+        Handle<vector<pat::Tau> > taus;
+	////        Handle<pat::TauCollection> taus;
+        
+        iEvent.getByLabel(tauTag_, taus);
+
+        for (vector<pat::Tau>::const_iterator iTau = taus->begin(); iTau != taus->end(); ++iTau) {            
+	  ////           for ( pat::TauCollection::const_iterator iTau = taus->begin();  iTau != taus->end(); ++iTau ) {
+
+	  if (! (iTau->isPFTau()) ) continue;
+
+            
+	  // reject taus with no charged track at the beginning of the loop
+	  if (iTau->signalPFChargedHadrCands().size() < 1) continue;
+
+	  if (iTau->pt() < 10) continue;
+
+	  TCTau* tauCon = new ((*recoTaus)[tauCount]) TCTau;
+	  
+	  tauCon->SetNChHad(iTau->signalPFChargedHadrCands().size());
+	  tauCon->SetNGamma (iTau->signalPFGammaCands().size());
+	  tauCon->SetNNeutrHad (iTau->signalPFNeutrHadrCands().size());
+	  tauCon->SetCharge(iTau->charge());
+	  tauCon->SetDecayMode(iTau->decayMode());
+
+
+	  
+	  tauCon->SetP4(iTau->px(),iTau->py(),iTau->pz(),iTau->energy());
+	  tauCon->SetCharge(iTau->charge());
+	  
+	  if (iTau->leadPFChargedHadrCand()->trackRef().isNonnull()) {
+	    tauCon->SetLeadChHadP4(iTau->leadPFChargedHadrCand()->px(),
+				   iTau->leadPFChargedHadrCand()->py(),
+				   iTau->leadPFChargedHadrCand()->pz(),
+				   iTau->leadPFChargedHadrCand()->energy());
+	    
+	    tauCon->SetPositionFromTrack(iTau->leadPFChargedHadrCand()->trackRef()->vx(),
+					 iTau->leadPFChargedHadrCand()->trackRef()->vy(),
+					 iTau->leadPFChargedHadrCand()->trackRef()->vz());
+	  }
+
+
+	  if (iTau->signalPFGammaCands().size()+iTau->signalPFNeutrHadrCands().size()>0) 
+	    tauCon->SetLeadNeutrP4(iTau->leadPFNeutralCand()->px(),
+				   iTau->leadPFNeutralCand()->py(),
+				   iTau->leadPFNeutralCand()->pz(),
+				   iTau->leadPFNeutralCand()->energy());
+  
+	  tauCon->SetPositionFromTau(iTau->vx(),iTau->vy(), iTau->vz());
+	  
+	  tauCon->SetIsoGammaEtSum(iTau->isolationPFGammaCandsEtSum());
+	  tauCon->SetIsoChHadPtSum(iTau->isolationPFChargedHadrCandsPtSum());
+	  
+	  
+	  
+	  // set the discriminators
+	  // note that the strings for PAT and RECO are different. The names of the TCTau accessors are set following the RECO names
+	  // the "mapping" is taken from  tauTools.py 
+	  
+	  tauCon->SetHpsPFTauDiscriminationByDecayModeFinding(iTau->tauID("decayModeFinding"));  // "DiscriminationByDecayModeFinding"
+	  
+	  // isolation
+	  //
+	  tauCon->SetHpsPFTauDiscriminationByVLooseIsolation(iTau->tauID("byVLooseIsolation")); // "DiscriminationByVLooseIsolation"
+	  tauCon->SetHpsPFTauDiscriminationByLooseIsolation (iTau->tauID("byLooseIsolation"));  // "DiscriminationByLooseIsolation"
+	  tauCon->SetHpsPFTauDiscriminationByMediumIsolation(iTau->tauID("byMediumIsolation")); // "DiscriminationByMediumIsolation"  
+	  tauCon->SetHpsPFTauDiscriminationByTightIsolation (iTau->tauID("byTightIsolation"));  // "DiscriminationByTightIsolation"
+	  // isolation with corrections
+	  tauCon->SetHpsPFTauDiscriminationByVLooseIsolationDBSumPtCorr	     
+	    (iTau->tauID("byVLooseIsolationDeltaBetaCorr")); // "DiscriminationByVLooseIsolationDBSumPtCorr"
+	  tauCon->SetHpsPFTauDiscriminationByLooseIsolationDBSumPtCorr	     
+	    (iTau->tauID("byLooseIsolationDeltaBetaCorr")); // "DiscriminationByLooseIsolationDBSumPtCorr"
+	  tauCon->SetHpsPFTauDiscriminationByMediumIsolationDBSumPtCorr
+	    (iTau->tauID("byMediumIsolationDeltaBetaCorr")); // "DiscriminationByMediumIsolationDBSumPtCorr"
+	  tauCon->SetHpsPFTauDiscriminationByTightIsolationDBSumPtCorr
+	    (iTau->tauID("byTightIsolationDeltaBetaCorr")); // "DiscriminationByTightIsolationDBSumPtCorr"
+	  // combined isolation with corrections
+	  tauCon->SetHpsPFTauDiscriminationByVLooseCombinedIsolationDBSumPtCorr
+	    (iTau->tauID("byVLooseCombinedIsolationDeltaBetaCorr")); // "DiscriminationByVLooseCombinedIsolationDBSumPtCorr"
+	  tauCon->SetHpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr
+	    (iTau->tauID("byLooseCombinedIsolationDeltaBetaCorr")); // "DiscriminationByLooseCombinedIsolationDBSumPtCorr"
+	  tauCon->SetHpsPFTauDiscriminationByMediumCombinedIsolationDBSumPtCorr
+	    (iTau->tauID("byMediumCombinedIsolationDeltaBetaCorr")); // "DiscriminationByMediumCombinedIsolationDBSumPtCorr"
+	  tauCon->SetHpsPFTauDiscriminationByTightCombinedIsolationDBSumPtCorr 
+	    (iTau->tauID("byTightCombinedIsolationDeltaBetaCorr")); // "DiscriminationByTightCombinedIsolationDBSumPtCorr"
+	  
+	  // anti e/mu discriminators
+	  tauCon->SetHpsPFTauDiscriminationAgainstElectronLoose (iTau->tauID("againstElectronLoose")); // "DiscriminationByLooseElectronRejection"
+	  tauCon->SetHpsPFTauDiscriminationAgainstElectronMedium(iTau->tauID("againstElectronMedium")); // "DiscriminationByMediumElectronRejection"
+	  tauCon->SetHpsPFTauDiscriminationAgainstElectronTight (iTau->tauID("againstElectronTight")); // "DiscriminationByTightElectronRejection"
+	  
+    tauCon->SetHpsPFTauDiscriminationAgainstMuonLoose  (iTau->tauID("againstMuonLoose")); // "DiscriminationByLooseMuonRejection")
+//	  tauCon->SetHpsPFTauDiscriminationAgainstMuonMediumt(iTau->tauID("againstMuonMedium")); // "DiscriminationByMediumMuonRejection" <- not in python
+	  tauCon->SetHpsPFTauDiscriminationAgainstMuonTight  (iTau->tauID("againstMuonTight")); // "DiscriminationByTightMuonRejection"
+
+
+
+            tauCount++;
+
+
+	} // loop over taus
+
+    } // if save taus
+
+
 
     ////////////////////////
     // Get gen-level info //

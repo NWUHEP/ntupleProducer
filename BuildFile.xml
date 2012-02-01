@@ -16,6 +16,7 @@
 <use   name="DataFormats/VertexReco"/>
 <use   name="DataFormats/METReco"/>
 <use   name="DataFormats/BTauReco"/>
+<use   name="DataFormats/TauReco"/>
 <use   name="DataFormats/TrackReco"/>
 <use   name="DataFormats/GsfTrackReco"/>
 <use   name="DataFormats/HLTReco"/>

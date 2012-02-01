@@ -43,6 +43,12 @@
 #include "DataFormats/MuonReco/interface/MuonSelectors.h"
 #include "DataFormats/EgammaCandidates/interface/GsfElectron.h"
 #include "DataFormats/EgammaCandidates/interface/GsfElectronFwd.h"
+
+
+
+#include "DataFormats/PatCandidates/interface/Tau.h"
+
+
 #include "DataFormats/EgammaCandidates/interface/Photon.h"
 #include "DataFormats/EgammaCandidates/interface/PhotonFwd.h"
 #include "DataFormats/EgammaCandidates/interface/Conversion.h"
@@ -64,6 +70,7 @@
 #include "SimDataFormats/JetMatching/interface/JetFlavourMatching.h"
 #include "SimDataFormats/JetMatching/interface/MatchedPartons.h"
 #include "SimDataFormats/JetMatching/interface/JetMatchedPartons.h"
+
 
 //#include "RecoVertex/PrimaryVertexProducer/interface/VertexHigherPtSquared.h"
 

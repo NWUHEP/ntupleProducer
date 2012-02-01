@@ -71,6 +71,7 @@
 #include "DataFormats/PatCandidates/interface/Photon.h"
 #include "DataFormats/PatCandidates/interface/MET.h"
 #include "DataFormats/PatCandidates/interface/Jet.h"
+#include "DataFormats/PatCandidates/interface/Tau.h"
 
 //#include "RecoVertex/PrimaryVertexProducer/interface/VertexHigherPtSquared.h"
 
