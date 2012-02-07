@@ -8,7 +8,7 @@ isRealData = False
 # global tag
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
-if ( isRealData ):
+if (isRealData):
     process.GlobalTag.globaltag = 'GR_R_42_V20::All' 
 else:
     process.GlobalTag.globaltag = 'START44_V12::All'
@@ -49,7 +49,7 @@ process.endCounter = process.startCounter.clone()
 # configure output
 from Higgs.ntupleProducer.OutputConfiguration_cff import configureOutput
 configureOutput(process)
-process.out.fileName = cms.untracked.string('test.root')
+#process.out.fileName = cms.untracked.string('test.root')
 
 print '\n\nNow run the ntuplizer...\n\n'
 
