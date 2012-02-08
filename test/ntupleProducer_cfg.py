@@ -148,7 +148,6 @@ process.source = cms.Source("PoolSource",
          #'/store/data/Run2011B/DoubleMu/AOD/PromptReco-v1/000/178/871/1412D359-9CFB-E011-9BFD-003048D2BED6.root'
          '/store/mc/Fall11/DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia/AODSIM/PU_S6-START44_V5-v1/0000/0011F495-A8FC-E011-8AF3-002590200AD0.root'
          #'/store/user/stoyan/MC/H135toZG_500k/RECO_v1/H135toZG_7TeV_START44_V5_RAW2DIGI_RECO_PU_file9J_1_1_xse.root'
-
 )
 )
 
