@@ -24,8 +24,8 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 5000
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-         #'/store/mc/Fall11/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/AODSIM/PU_S6_START42_V14B-v1/0001/A6A53A52-4EF6-E011-8524-90E6BA0D09AD.root'
-         '/store/user/stoyan/MC/H135toZG_500k/RECO_v1/H135toZG_7TeV_START44_V5_RAW2DIGI_RECO_PU_file9J_1_1_xse.root'
+         '/store/mc/Fall11/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/AODSIM/PU_S6_START42_V14B-v1/0001/A6A53A52-4EF6-E011-8524-90E6BA0D09AD.root'
+         #'/store/user/stoyan/MC/H135toZG_500k/RECO_v1/H135toZG_7TeV_START44_V5_RAW2DIGI_RECO_PU_file9J_1_1_xse.root'
 )
 )
 
@@ -85,7 +85,6 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   hcalFilterTag     =    cms.untracked.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResult"),
 
   hltName           =    cms.untracked.string("HLT"),
-  #triggers          =    testTriggers
   triggers          =    cms.untracked.vstring(
                                                "HLT_Mu8_v",
                                                "HLT_Mu15_v",
@@ -95,14 +94,12 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_DoubleMu3_v",
                                                "HLT_DoubleMu6_v",
                                                "HLT_DoubleMu7_v",
-
                                                "HLT_Ele8_CaloIdL_CaloIsoVL_v",
                                                "HLT_Ele17_CaloIdL_CaloIsoVL_v",
                                                "HLT_Ele8_CaloIdL_CaloIsoVL_Jet40_v",
                                                "HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL_v",
                                                "HLT_Ele17_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_Ele8_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_v",
                                                "HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
-
                                                "HLT_Photon20_CaloIdVL_IsoL_v",
                                                "HLT_Photon20_CaloIdVL_v",
                                                "HLT_Photon30_CaloIdVL_IsoL_v",
@@ -114,12 +111,19 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_Photon90_CaloIdVL_IsoL_v",
                                                "HLT_Photon90_CaloIdVL_v",
                                                "HLT_Photon135_v",
-
                                                "HLT_Mu17_Ele8_CaloIdL_v",
                                                "HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v",
                                                "HLT_Mu3_Ele8_CaloIdT_CaloIsoVL_v",
                                                "HLT_Mu8_Ele17_CaloIdL_v",
-                                               "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v"
+                                               "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v",
+                                               "HLT_Ele18_CaloIdVT_TrkIdT_MediumIsoPFTau20_v",
+                                               "HLT_Ele20_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_MediumIsoPFTau20_v",
+                                               "HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_MediumIsoPFTau25_v",
+                                               "HLT_HT400_DoubleIsoPFTau10_Trk3_PFMHT50_v",
+                                               "HLT_IsoMu15_eta2p1_LooseIsoPFTau20_v", 
+                                               "HLT_IsoMu15_eta2p1_MediumIsoPFTau20_v", 
+                                               "HLT_IsoMu15_eta2p1_TightIsoPFTau20_v", 
+                                               "HLT_Mu15_LooseIsoPFTau15_v"
 )
 )
 

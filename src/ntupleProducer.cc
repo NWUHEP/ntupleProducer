@@ -87,34 +87,20 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     if(saveJets_){
 
-        //edm::ESHandle<JetCorrectorParametersCollection> JetCorParColl;
-        //iSetup.get<JetCorrectionsRecord>().get("AK5PF",JetCorParColl);
-        //JetCorrectorParameters const & JetCorPar = (*JetCorParColl)["Uncertainty"];
-        //JetCorrectionUncertainty *jecUncertainty = new JetCorrectionUncertainty(JetCorPar);
-
-        //const JetCorrector* correctorL1  = JetCorrector::getJetCorrector("ak5PFL1Fastjet",iSetup);
-        //const JetCorrector* correctorL2  = JetCorrector::getJetCorrector("ak5PFL2Relative",iSetup);
-        //const JetCorrector* correctorL3  = JetCorrector::getJetCorrector("ak5PFL3Absolute",iSetup);
-        //const JetCorrector* correctorRes = JetCorrector::getJetCorrector("ak5PFResidual", iSetup);
-
         Handle<vector<pat::Jet> > jets;
         iEvent.getByLabel(jetTag_, jets);
 
         for (vector<pat::Jet>::const_iterator iJet = jets->begin(); iJet!= jets->end(); ++iJet) {
 
-            //int index = iJet - jets->begin();
-            //edm::RefToBase<reco::Jet> jetRef(edm::Ref<reco::PFJetCollection>(jets,index));
-
-            //float scale1 = correctorL1->correction(corJet, iEvent, iSetup);
-            //corJet.scaleEnergy(scale1);
-            //float scale2 = correctorL2->correction(corJet);
-            //corJet.scaleEnergy(scale2);
-            //float scale3 = correctorL3->correction(corJet);
-            //corJet.scaleEnergy(scale3);
-
             if (iJet->pt() < 10.) continue;
 
             TCJet* jetCon = new ((*recoJets)[jetCount]) TCJet;
+
+
+            cout << "Uncorrected jet pt: " << iJet->correctedJet(0).pt() 
+                << ", corrected jet pt: " << iJet->correctedJet(3).pt() 
+                << ", default patJet pt: " << iJet->pt() 
+                << endl; 
 
             jetCon->SetP4(iJet->px(), iJet->py(), iJet->pz(), iJet->energy());
             jetCon->SetVtx(0., 0., 0.);
@@ -130,20 +116,17 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             jetCon->SetBDiscrSSVHE(iJet->bDiscriminator("simpleSecondaryVertexHighEffBJetTags"));
             jetCon->SetBDiscrJBP(iJet->bDiscriminator("jetProbabilityBJetTags"));
 
-            //jetCon->SetJetCorr(1, scale1);
-            //jetCon->SetJetCorr(2, scale2);
-            //jetCon->SetJetCorr(3, scale3);
+            jetCon->SetJetCorr(1, iJet->jecFactor(1));
+            jetCon->SetJetCorr(2, iJet->jecFactor(2));
+            jetCon->SetJetCorr(3, iJet->jecFactor(3));
 
-            //if (isRealData) {
-            //    float scaleRes = correctorRes->correction(corJet, jetRef, iEvent, iSetup);
-            //    jetCon->SetJetCorr(4, scaleRes);
-            //} else {
-            //    jetCon->SetJetCorr(4, 1.);
-            //}
+            if (isRealData) {
+                jetCon->SetJetCorr(4, iJet->jecFactor(4));
+            } else {
+                jetCon->SetJetCorr(4, 1.);
 
-            //jecUncertainty->setJetEta(corJet.eta());
-            //jecUncertainty->setJetPt(corJet.pt());
-            //jetCon->SetUncertaintyJES(jecUncertainty->getUncertainty(true)); 
+                jetCon->SetJetFlavor(iJet->partonFlavour());
+            }
 
             /////////////////////////
             // Associate to vertex //
@@ -161,7 +144,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             }
             ++jetCount;
         }   
-        //delete jecUncertainty;
     }
 
     /////////////

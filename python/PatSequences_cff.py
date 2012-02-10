@@ -83,7 +83,7 @@ def addTriggerMatchingForLeptons(process, postfix='') :
 ## adds pat sequence ##
 ##                   ##
 
-def addPatSequence(process, runOnMC, addPhotons=True) :
+def addPatSequence(process, runOnData, addPhotons=True) :
 
     #PF2PAT
     postfix = "PFlow"
@@ -96,12 +96,12 @@ def addPatSequence(process, runOnMC, addPhotons=True) :
     jetAlgo='AK5'
     jecSetPF = jetAlgo+'PFchs'
     jecLevels=['L1FastJet','L2Relative','L3Absolute']
-    if(not runOnMC) : jecLevels.append( 'L2L3Residual' )
+    if(runOnData) : jecLevels.append( 'L2L3Residual' )
 
     #start PF2PAT
     usePF2PAT(process,
               runPF2PAT=True,
-              runOnMC=runOnMC,
+              runOnMC= not runOnData,
               jetAlgo=jetAlgo,
               postfix=postfix,
               jetCorrections=(jecSetPF, jecLevels)
