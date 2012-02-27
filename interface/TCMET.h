@@ -15,19 +15,19 @@
 class TCMET : public TObject {
 private:
 
+    TVector2 _genMET;
+
     float _sumEt;
     float _met;
     float _phi;
     float _corSumEt;
     float _corMet;
     float _corPhi;
-    float _photonEtFraction;
-    float _electronEtFraction;
-    float _muonEtFraction;
-    float _neutralHadronEtFraction;
-    float _chargedHadronEtFraction;
-    float _hfEMEtFraction;
-    float _hfHadronEtFraction;
+    float _muonFraction;
+    float _neutralHadronFraction;
+    float _neutralEMFraction;
+    float _chargedHadronFraction;
+    float _chargedEMFraction;
 
 public:
     TCMET();
@@ -41,13 +41,11 @@ public:
     float CorrectedSumEt() const;
     float CorrectedMet() const;
     float CorrectedPhi() const;
-    float PhotonEtFraction() const;
-    float ElectronEtFraction() const;
-    float MuonEtFraction() const;
-    float NeutralHadronEtFraction() const;
-    float ChargedHadronEtFraction() const;
-    float HFEMEtFraction() const;
-    float HFHadronEtFraction() const;
+    float MuonFraction() const;
+    float NeutralHadronFraction() const;
+    float NeutralEMFraction() const;
+    float ChargedHadronFraction() const;
+    float ChargedEMFraction() const;
 
     // "set" methods ---------
 
@@ -57,13 +55,11 @@ public:
     void SetCorrectedSumEt(float n);
     void SetCorrectedMet(float n);
     void SetCorrectedPhi(float n);
-    void SetPhotonEtFraction(float n);
-    void SetElectronEtFraction(float n);
-    void SetMuonEtFraction(float n);
-    void SetNeutralHadronEtFraction(float n);
-    void SetChargedHadronEtFraction(float n);
-    void SetHFEMEtFraction(float n);
-    void SetHFHadronEtFraction(float n);
+    void SetMuonFraction(float n);
+    void SetNeutralHadronFraction(float n);
+    void SetNeutralEMFraction(float n);
+    void SetChargedHadronFraction(float n);
+    void SetChargedEMFraction(float n);
 
     ClassDef(TCMET, 1);
 
