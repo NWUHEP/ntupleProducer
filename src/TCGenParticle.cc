@@ -38,6 +38,10 @@ int TCGenParticle::Mother() {
 	   return mother;
 }
 
+int TCGenParticle::Grandmother() {
+	   return grandmother;
+}
+
 int TCGenParticle::GetPDGId() {
 	   return PDGID;
 }
@@ -72,6 +76,10 @@ void TCGenParticle::SetCharge(int c) {
 
 void TCGenParticle::SetMother(int m) {
 	   mother = m;
+}
+
+void TCGenParticle::SetGrandmother(int g) {
+	   grandmother = g;
 }
 
 void TCGenParticle::SetPDGId(int pdg_id) {

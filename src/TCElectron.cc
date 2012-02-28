@@ -195,10 +195,13 @@ int TCElectron::CutLevel(int lvl) const{
 }
 
 bool TCElectron::PassID(int lvl) const { 
-  int c = CutLevel(lvl);
-  if(c < 0) return false;
-  if( (c == 1) || (c == 3) || (c == 5) || (c == 7)) return true;
-  return false;
+  unsigned c = CutLevel(lvl);
+
+  if (c & 0x01) return true;
+  else return false;
+
+  //if( (c == 1) || (c == 3) || (c == 5) || (c == 7)) return true;
+  //return false;
 }   
 
 bool TCElectron::PassConversion(int lvl) const {

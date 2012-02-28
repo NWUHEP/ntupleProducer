@@ -14,13 +14,20 @@ private:
 
     int   _charge;
     float _normChi2;
-    float _emIso; // 
-    float _hadIso; // 
-    float _trkIso; // 
+
+    float _emIsoDR04; 
+    float _hadIsoDR04; 
+    float _trkIsoDR04; 
+    std::vector<float> _trkIsoVtxDR04;
+    float _emIsoDR03; 
+    float _hadIsoDR03; 
+    float _trkIsoDR03; 
+    std::vector<float> _trkIsoVtxDR03;
     float _pfIsoNeutral;
     float _pfIsoCharged;
     float _pfIsoPhoton;
-    float _hadOverEm; // 
+
+    float _hadOverEm;  
     float _dPhiSuperCluster;
     float _dEtaSuperCluster;
     float _sigmaIEtaIEta; // 

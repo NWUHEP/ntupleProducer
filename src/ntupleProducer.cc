@@ -296,6 +296,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             eleCon->SetCutLevel(iElectron->electronID("eidVBTF70"), 70);
             eleCon->SetCutLevel(iElectron->electronID("eidVBTF60"), 60);
 
+            cout << iElectron->electronID("eidVBTF90") << endl;
+
             eleCon->SetPfEGamma(0.3, iElectron->pfIsolationVariables().photonIso);
             eleCon->SetPfSumPt(0.3, iElectron->pfIsolationVariables().chargedHadronIso);
             eleCon->SetPfENeutral(0.3, iElectron->pfIsolationVariables().neutralHadronIso);
@@ -336,8 +338,26 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 const reco::ConversionRef myConversion = *iConversion;
                 ++conversionCount;
             }
-
             myPhoton->SetNumberOfConversions(conversionCount);
+
+            PhotonIsolationCalculator* photonIsolationCalculator = new PhotonIsolationCalculator();
+            edm::ParameterSet isolationSumsCalculatorSet = conf_.getParameter<edm::ParameterSet>("isolationSumsCalculatorSet");
+            photonIsolationCalculator->setup(isolationSumsCalculatorSet);
+            reco::Photon::FiducialFlags fiducialFlags;
+            reco::Photon::IsolationVariables isolVarR03, isolVarR04;
+            int vtxPhoCounter = 0;
+
+            for(VertexCollection::const_iterator iVtx = primaryVtcs->begin(); iVtx!= primaryVtcs->end(); ++iVtx){
+                float *isoVtxAB;
+                reco::Vertex myVtx = reco::Vertex(*iVtx);
+                if(!myVtx.isValid() || myVtx.isFake()) continue;
+                // Calculate fiducial flags and isolation variable. Blocked are filled from the isolationCalculator
+                isoVtxAB = photonIsolationCalculator->calculateVtx( &(*iPhoton),iEvent,iSetup,fiducialFlags,isolVarR03, isolVarR04, myVtx);
+                myPhoton->SetTRKIsoVtxDR03(isoVtxAB[1]);
+                myPhoton->SetTRKIsoVtxDR04(isoVtxAB[0]);
+                vtxPhoCounter++;
+
+            }
             ++photonCount;
         }
     }
@@ -491,6 +511,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 genCon->SetCharge(myParticle.charge());
                 genCon->SetPDGId(myParticle.pdgId());
                 genCon->SetMother(myParticle.mother()->pdgId());
+                //if (myParticle.pdgId() == 21) genCon->SetGrandMother(myParticle.mother()->mother()->pdgId());
                 ++genPartCount;
             }
 

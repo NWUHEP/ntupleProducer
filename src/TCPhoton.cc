@@ -43,18 +43,6 @@ float TCPhoton::NormChi2() const {
    return _normChi2;
 }
 
-float TCPhoton::EmIso() const {
-   return _emIso;
-}
-
-float TCPhoton::HadIso() const {
-   return _hadIso;
-}
-
-float TCPhoton::TrkIso() const {
-   return _trkIso;
-}
-
 float TCPhoton::PFIsoNeutral() const {
    return _pfIsoNeutral;
 }
@@ -137,15 +125,6 @@ void TCPhoton::SetCharge(int c){
 
 void TCPhoton::SetNormChi2(float c){
   _normChi2 = c;
-}
-void TCPhoton::SetEMIso(float e){
-  _emIso = e;
-}
-void TCPhoton::SetHADIso(float h){
-  _hadIso = h;
-}
-void TCPhoton::SetTRKIso(float t){
-    _trkIso = t;
 }
 
 void TCPhoton::SetPFIsoNeutral(float n){
