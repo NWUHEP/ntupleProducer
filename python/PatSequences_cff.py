@@ -6,8 +6,6 @@ from CommonTools.ParticleFlow.Tools.enablePileUpCorrection import enablePileUpCo
 from PhysicsTools.PatAlgos.tools.trackTools import *
 from PhysicsTools.PatAlgos.tools.metTools import *
 
-
-
 # redefine the selection for hps (AA) - subject to change
 def myAdaptPFTaus(process,tauType = 'hpsPFTau', postfix = ""):
     # Set up the collection used as a preselection to use this tau type
@@ -89,14 +87,15 @@ def addPatSequence(process, runOnData, addPhotons=True) :
     postfix = "PFlow"
     
     process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
-
-    #jet energy corrections
-    # cf. https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookJetEnergyCorrections#JetEnCor2011V2
-    # cf. https://twiki.cern.ch/twiki/bin/viewauth/CMS/JECDataMC
     jetAlgo='AK5'
     jecSetPF = jetAlgo+'PFchs'
     jecLevels=['L1FastJet','L2Relative','L3Absolute']
     if(runOnData) : jecLevels.append( 'L2L3Residual' )
+
+    #rho computed up to 2.5
+    process.load('RecoJets.Configuration.RecoPFJets_cff')
+    process.kt6PFJets25 = process.kt6PFJets.clone(doRhoFastjet = True)
+    process.kt6PFJets25.Rho_EtaMax = cms.double(2.5)
 
     #start PF2PAT
     usePF2PAT(process,
@@ -104,9 +103,11 @@ def addPatSequence(process, runOnData, addPhotons=True) :
               runOnMC= not runOnData,
               jetAlgo=jetAlgo,
               postfix=postfix,
-              jetCorrections=(jecSetPF, jecLevels)
+              jetCorrections=(jecSetPF, jecLevels),
+              typeIMetCorrections=False
               )
-    enablePileUpCorrection( process, postfix=postfix )
+
+    enablePileUpCorrection(process, postfix=postfix)
 
     #disable mc matching for photons
     removeMCMatching(process,names=['Photons'],postfix=postfix)
@@ -121,16 +122,6 @@ def addPatSequence(process, runOnData, addPhotons=True) :
     getattr(process,"pfNoTau"+postfix).enable = False
     getattr(process,"pfNoJet"+postfix).enable = False
 
-    #fix isolation to use a cone of 0.3 for both electrons and muons
-    #applyPostfix(process,"isoValMuonWithNeutral",postfix).deposits[0].deltaR = cms.double(0.3)
-    #applyPostfix(process,"isoValMuonWithCharged",postfix).deposits[0].deltaR = cms.double(0.3)
-    #applyPostfix(process,"isoValMuonWithPhotons",postfix).deposits[0].deltaR = cms.double(0.3)
-    #applyPostfix(process,"pfIsolatedMuons",postfix).combinedIsolationCut = cms.double(9999.)
-    #applyPostfix(process,"isoValElectronWithNeutral",postfix).deposits[0].deltaR = cms.double(0.3)
-    #applyPostfix(process,"isoValElectronWithCharged",postfix).deposits[0].deltaR = cms.double(0.3)
-    #applyPostfix(process,"isoValElectronWithPhotons",postfix).deposits[0].deltaR = cms.double(0.3)
-    #applyPostfix(process,"pfIsolatedElectrons",postfix).combinedIsolationCut = cms.double(9999.)
-    
     #electron ID
     process.load("ElectroWeakAnalysis.WENu.simpleEleIdSequence_cff")
     process.load("RecoEgamma.ElectronIdentification.cutsInCategoriesElectronIdentificationV06_DataTuning_cfi")
@@ -200,10 +191,11 @@ def addPatSequence(process, runOnData, addPhotons=True) :
 
         #create the path
         process.patDefaultSequence = cms.Sequence(
-            process.electronIDSequence*
-            getattr(process,"patPF2PATSequence"+postfix)*
-            process.hzzmetSequence*
-            process.patPhotons
+            process.electronIDSequence
+            * process.kt6PFJets25
+            * getattr(process,"patPF2PATSequence"+postfix)
+            * process.hzzmetSequence
+            * process.patPhotons
             )
     else :
         process.patDefaultSequence = cms.Sequence(
@@ -218,12 +210,8 @@ def addPatSequence(process, runOnData, addPhotons=True) :
     # the definition of myAdaptPFTaus is at the beginning of the file
     myAdaptPFTaus( process, tauType='hpsPFTau', postfix=postfix )
     
-#    this is defined in pfTools.py but has some discriminators applied
-#    adaptPFTaus( process, tauType='hpsPFTau', postfix=postfix )
-
-
-
-
+    # this is defined in pfTools.py but has some discriminators applied
+    # adaptPFTaus( process, tauType='hpsPFTau', postfix=postfix )
 
     print " *** PAT path has been defined"
     

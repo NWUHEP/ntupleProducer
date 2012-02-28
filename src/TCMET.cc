@@ -36,32 +36,25 @@ float TCMET::CorrectedMet() const {
 float TCMET::CorrectedPhi() const {
   return _corPhi;
 }
-float TCMET::PhotonEtFraction() const {
-  return _photonEtFraction;
+
+float TCMET::MuonFraction() const {
+  return _muonFraction;
 }
 
-float TCMET::ElectronEtFraction() const {
-  return _electronEtFraction;
+float TCMET::NeutralHadronFraction() const {
+  return _neutralHadronFraction;
 }
 
-float TCMET::MuonEtFraction() const {
-  return _muonEtFraction;
+float TCMET::NeutralEMFraction() const {
+  return _neutralEMFraction;
 }
 
-float TCMET::NeutralHadronEtFraction() const {
-  return _neutralHadronEtFraction;
+float TCMET::ChargedHadronFraction() const {
+  return _chargedHadronFraction;
 }
 
-float TCMET::ChargedHadronEtFraction() const {
-  return _chargedHadronEtFraction;
-}
-
-float TCMET::HFEMEtFraction() const {
-  return _hfEMEtFraction;
-}
-
-float TCMET::HFHadronEtFraction() const {
-  return _hfHadronEtFraction;
+float TCMET::ChargedEMFraction() const {
+  return _chargedEMFraction;
 }
 
     // "set" methods ---------
@@ -89,33 +82,24 @@ void TCMET::SetCorrectedMet(float n) {
 void TCMET::SetCorrectedPhi(float n) {
   _corPhi = n;
 }
-void TCMET::SetPhotonEtFraction(float n) {
-  _photonEtFraction = n;
+
+void TCMET::SetMuonFraction(float n) {
+  _muonFraction = n;
 }
 
-void TCMET::SetElectronEtFraction(float n) {
-  _electronEtFraction = n;
+void TCMET::SetNeutralHadronFraction(float n) {
+  _neutralHadronFraction = n;
 }
 
-void TCMET::SetMuonEtFraction(float n) {
-  _muonEtFraction = n;
+void TCMET::SetNeutralEMFraction(float n) {
+  _neutralEMFraction = n;
 }
 
-void TCMET::SetNeutralHadronEtFraction(float n) {
-  _neutralHadronEtFraction = n;
+void TCMET::SetChargedHadronFraction(float n) {
+  _chargedHadronFraction = n;
 }
 
-void TCMET::SetChargedHadronEtFraction(float n) {
-  _chargedHadronEtFraction = n;
+void TCMET::SetChargedEMFraction(float n) {
+  _chargedEMFraction = n;
 }
-
-void TCMET::SetHFEMEtFraction(float n) {
-  _hfEMEtFraction = n;
-}
-
-void TCMET::SetHFHadronEtFraction(float n) {
-  _hfHadronEtFraction = n;
-}
-
-
 

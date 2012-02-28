@@ -1,155 +1,66 @@
-import FWCore.ParameterSet.Config as cms
+from PhysicsTools.PatAlgos.patTemplate_cfg import *
 
-process = cms.Process("ntuples") 
+#import FWCore.ParameterSet.Config as cms
+#
+#process = cms.Process("PAT")
 
-process.load("FWCore.MessageService.MessageLogger_cfi")
-process.load("FWCore.MessageLogger.MessageLogger_cfi")
-process.MessageLogger.cerr.threshold = 'ERROR'
+# real data or MC?
+isRealData = False
 
-process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(10000000)
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(500))
-
-process.load("Configuration.StandardSequences.Services_cff")
-process.load('Configuration.StandardSequences.GeometryExtended_cff')
-process.load('Configuration.StandardSequences.MagneticField_38T_cff')
-process.load('Configuration.StandardSequences.Reconstruction_cff')
+# global tag
+process.load("Configuration.StandardSequences.Geometry_cff")
+process.load("Configuration.StandardSequences.MagneticField_cff")
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
-### Conditions tags
-#process.GlobalTag.globaltag = 'GR_R_44_V7::All' 
-process.GlobalTag.globaltag = 'START44_V7::All' 
+if (isRealData):
+    process.GlobalTag.globaltag = 'GR_R_44_V14::All' 
+else:
+    process.GlobalTag.globaltag = 'START44_V13::All'
 
+# tau reconstruction configuration
+process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
 
-### HCAL noise filter
-# Hcal Noise filter
-process.load('CommonTools/RecoAlgos/HBHENoiseFilterResultProducer_cfi')
-process.HBHENoiseFilterResultProducer.minNumIsolatedNoiseChannels = cms.int32(9999)
-process.HBHENoiseFilterResultProducer.minIsolatedNoiseSumE = cms.double(9999)
-process.HBHENoiseFilterResultProducer.minIsolatedNoiseSumEt = cms.double(9999)
-
-### Ecal noise filter
-process.load('PhysicsTools/EcalAnomalousEventFilter/ecalanomalouseventfilter_cfi')
-process.EcalAnomalousEventFilter.FilterAlgo= cms.untracked.string("TuningMode")
-process.EcalAnomalousEventFilter.cutBoundEnergyDeadCellsEB=cms.untracked.double(10)
-process.EcalAnomalousEventFilter.cutBoundEnergyDeadCellsEE=cms.untracked.double(10)
-process.EcalAnomalousEventFilter.cutBoundEnergyGapEB=cms.untracked.double(100)
-process.EcalAnomalousEventFilter.cutBoundEnergyGapEE=cms.untracked.double(100)
-process.EcalAnomalousEventFilter.enableGap=cms.untracked.bool(False)
-
-process.BE1214 = process.EcalAnomalousEventFilter.clone()
-process.BE1214.limitDeadCellToChannelStatusEB = cms.vint32(12,14)
-process.BE1214.limitDeadCellToChannelStatusEE = cms.vint32(12,14)
-process.load('JetMETAnalysis.ecalDeadCellTools.RA2TPfilter_cff')
-
-ecalDead = cms.Sequence(process.BE1214)
-
-### Jet correction services
+# jet energy corrections
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
-process.load("CondCore.DBCommon.CondDBCommon_cfi")
 
-### Extra jet collection for L1FastJet corrections
-process.load("RecoJets.Configuration.RecoPFJets_cff")
-process.kt6PFJets.doRhoFastjet = True
-process.kt6PFJets.Rho_EtaMax   = cms.double(4.4)
-process.kt6PFJets.rParam       = cms.double(0.6)
+# global options
+process.load("FWCore.MessageLogger.MessageLogger_cfi")
+process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False), SkipEvent = cms.untracked.vstring('ProductNotFound'))
+process.MessageLogger.cerr.FwkReport.reportEvery = 5000
 
-process.kt6PFJetsIso = process.kt6PFJets.clone()
-process.kt6PFJetsIso.doRhoFastjet = True
-process.kt6PFJetsIso.Rho_EtaMax   = cms.double(2.5) 
-process.ak5PFJets.doAreaFastjet   = True
-process.ak5PFJets.Rho_EtaMax      = cms.double(4.4)
-
-### To get b-tags from ak5PFJets
-process.load('RecoJets.JetAssociationProducers.ak5JTA_cff')
-process.ak5JetTracksAssociatorAtVertex.jets = cms.InputTag("ak5PFJetsL1FastL2L3")
-process.ak5JetTracksAssociatorAtCaloFace.jets = cms.InputTag("ak5PFJetsL1FastL2L3")
-process.ak5JetExtender.jets = cms.InputTag("ak5PFJetsL1FastL2L3")
-
-### GenJet flavor matching
-process.load("PhysicsTools.JetMCAlgos.CaloJetsMCFlavour_cfi")
-
-# Flavour byReference 
-process.GenJetbyRef = cms.EDProducer("JetPartonMatcher", 
-                                     jets = cms.InputTag("ak5GenJets"), 
-                                     coneSizeToAssociate = cms.double(0.3), 
-                                     partons = cms.InputTag("myPartons") 
-                                     ) 
-# Flavour byValue PhysDef 
-process.GenJetbyValPhys = cms.EDProducer("JetFlavourIdentifier", 
-                                         srcByReference = cms.InputTag("GenJetbyRef"), 
-                                         physicsDefinition = cms.bool(True), 
-                                         leptonInfo = cms.bool(True) 
-                                         ) 
-# Flavour byValue AlgoDef 
-process.GenJetbyValAlgo = cms.EDProducer("JetFlavourIdentifier", 
-                                         srcByReference = cms.InputTag("GenJetbyRef"), 
-                                         physicsDefinition = cms.bool(False), 
-                                         leptonInfo = cms.bool(True) 
-                                         ) 
-process.GenJetFlavour = cms.Sequence(process.GenJetbyRef*process.GenJetbyValPhys*process.GenJetbyValAlgo)
-
-
-process.JetbyRef = cms.EDProducer("JetPartonMatcher",
-                                  jets = cms.InputTag("ak5PFJets"),
-                                  coneSizeToAssociate = cms.double(0.3),
-                                  partons = cms.InputTag("myPartons")
-                                  )
-# Flavour byValue PhysDef
-process.JetbyValPhys = cms.EDProducer("JetFlavourIdentifier",
-                                      srcByReference = cms.InputTag("JetbyRef"),
-                                      physicsDefinition = cms.bool(True),
-                                      leptonInfo = cms.bool(True)
-                                      )
-# Flavour byValue AlgoDef
-process.JetbyValAlgo = cms.EDProducer("JetFlavourIdentifier",
-                                      srcByReference = cms.InputTag("JetbyRef"),
-                                      physicsDefinition = cms.bool(False),
-                                      leptonInfo = cms.bool(True)
-                                      )
-process.JetFlavour = cms.Sequence(process.JetbyRef*process.JetbyValPhys*process.JetbyValAlgo)
-
-## eleID map:
-process.load("ElectroWeakAnalysis.WENu.simpleCutBasedElectronIDSpring10_cfi")
-process.simpleEleId60relIso = process.simpleCutBasedElectronID.clone()
-process.simpleEleId60relIso.electronQuality = "60relIso"
-process.simpleEleId70relIso = process.simpleCutBasedElectronID.clone()
-process.simpleEleId70relIso.electronQuality = "70relIso"
-process.simpleEleId80relIso = process.simpleCutBasedElectronID.clone()
-process.simpleEleId80relIso.electronQuality = "80relIso"
-process.simpleEleId85relIso = process.simpleCutBasedElectronID.clone()
-process.simpleEleId85relIso.electronQuality = "85relIso"
-process.simpleEleId90relIso = process.simpleCutBasedElectronID.clone()
-process.simpleEleId90relIso.electronQuality = "90relIso"
-process.simpleEleId95relIso = process.simpleCutBasedElectronID.clone()
-process.simpleEleId95relIso.electronQuality = "95relIso"
-
-### MET corrections
-process.load("JetMETCorrections.Type1MET.pfMETCorrections_cff")
-process.pfJetMETcorr.jetCorrLabel = cms.string("ak5PFL1FastL2L3Residual")
-process.metAnalysisSequence=cms.Sequence(process.producePFMETCorrections)
-
-### Specify default triggers
-#from UserCode.ntupleProducer.triggerTest_cfi import *
-
-### Filter by primary vertices
-process.goodVertices = cms.EDFilter("VertexSelector",
-  src = cms.InputTag('offlinePrimaryVertices'),
-  cut = cms.string('!isFake && isValid && ndof >= 4.0 &&	position.Rho < 2.0 && abs(z) < 24'),
-  filter = cms.bool(True)
-)
-
-### Input files
-#process.load('H145toZG')
-
+# event source  
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-         #'/store/data/Run2011A/DoubleMu/RECO/PromptReco-v4/000/165/121/1A873C93-A381-E011-902F-0030487CD710.root'
-         #'/store/mc/Fall11/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/AODSIM/PU_S6_START42_V14B-v1/0001/A6A53A52-4EF6-E011-8524-90E6BA0D09AD.root'
-         #'/store/data/Run2011B/DoubleMu/AOD/PromptReco-v1/000/178/871/1412D359-9CFB-E011-9BFD-003048D2BED6.root'
-         '/store/mc/Fall11/DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia/AODSIM/PU_S6-START44_V5-v1/0000/0011F495-A8FC-E011-8AF3-002590200AD0.root'
+         '/store/mc/Fall11/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/AODSIM/PU_S6_START42_V14B-v1/0001/A6A53A52-4EF6-E011-8524-90E6BA0D09AD.root'
+         #'/store/data/Run2011B/DoubleMu/AOD/16Jan2012-v1/0000/A0914A57-C344-E111-8687-001A928116D0.root'
          #'/store/user/stoyan/MC/H135toZG_500k/RECO_v1/H135toZG_7TeV_START44_V5_RAW2DIGI_RECO_PU_file9J_1_1_xse.root'
 )
 )
+
+# pat sequences
+process.load("PhysicsTools.PatAlgos.patSequences_cff")
+from Higgs.ntupleProducer.PatSequences_cff import addPatSequence
+addPatSequence(process, isRealData, addPhotons = True)
+
+##------------------------------------------------------------------
+## see PhysicsTools/PatExamples/test/analyzePatTau_fromAOD_cfg.py
+## switch the tau algorithm (AA))
+#from PhysicsTools.PatAlgos.tools.tauTools import *
+#switchToPFTauHPS(process)
+
+
+# event counters
+process.startCounter = cms.EDProducer("EventCountProducer")
+process.endCounter = process.startCounter.clone()
+
+#process.ntuplePath = cms.Path(process.startCounter * process.patDefaultSequence * process.endCounter)
+
+# configure output
+from Higgs.ntupleProducer.OutputConfiguration_cff import configureOutput
+configureOutput(process)
+
+print '\n\nNow run the ntuplizer...\n\n'
 
 ### TFile service!
 process.TFileService = cms.Service('TFileService',
@@ -159,16 +70,14 @@ process.TFileService = cms.Service('TFileService',
 ### ntuple producer
 process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
-  JetTag            =    cms.untracked.InputTag('ak5PFJets'),
+  JetTag            =    cms.untracked.InputTag('selectedPatJetsPFlow'),
   GenJetTag         =    cms.untracked.InputTag('ak5GenJets'),
-  METTag            =    cms.untracked.InputTag('pfMet'),
-  ElectronTag       =    cms.untracked.InputTag('gsfElectrons'),
-  MuonTag           =    cms.untracked.InputTag('muons'),
-  PhotonTag         =    cms.untracked.InputTag('photons'),
-  
-###TauTag            =    cms.untracked.InputTag('shrinkingConePFTauProducer'),
-  TauTag            =    cms.untracked.InputTag('hpsPFTauProducer'),  
-
+  METTag            =    cms.untracked.InputTag('patMETsPFlow'),
+  METNoPUTag        =    cms.untracked.InputTag('patMETsPFlowNoPileup'),
+  ElectronTag       =    cms.untracked.InputTag('selectedPatElectronsPFlow'),
+  MuonTag           =    cms.untracked.InputTag('selectedPatMuonsPFlow'),
+  PhotonTag         =    cms.untracked.InputTag('patPhotons'),
+  TauTag            =    cms.untracked.InputTag('selectedPatTausPFlow'),
   PrimaryVtxTag     =    cms.untracked.InputTag('offlinePrimaryVertices'),
   rhoCorrTag        =    cms.untracked.InputTag('kt6PFJetsIso', 'rho', 'ntuples'),
 
@@ -178,13 +87,12 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   saveTaus          =    cms.untracked.bool(True),
   savePhotons       =    cms.untracked.bool(True),
   saveMET           =    cms.untracked.bool(True),
-  saveGenJets       =    cms.untracked.bool(False),
+  saveGenJets       =    cms.untracked.bool(True),
 
   ecalFilterTag     =    cms.untracked.InputTag("BE1214","anomalousECALVariables"),
   hcalFilterTag     =    cms.untracked.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResult"),
 
   hltName           =    cms.untracked.string("HLT"),
-  #triggers          =    testTriggers
   triggers          =    cms.untracked.vstring(
                                                "HLT_Mu8_v",
                                                "HLT_Mu15_v",
@@ -194,14 +102,20 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_DoubleMu3_v",
                                                "HLT_DoubleMu6_v",
                                                "HLT_DoubleMu7_v",
-
+                                               "",
+                                               "",
+                                               "",
+                                               "",
                                                "HLT_Ele8_CaloIdL_CaloIsoVL_v",
                                                "HLT_Ele17_CaloIdL_CaloIsoVL_v",
                                                "HLT_Ele8_CaloIdL_CaloIsoVL_Jet40_v",
                                                "HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL_v",
                                                "HLT_Ele17_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_Ele8_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_v",
                                                "HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
-
+                                               "",
+                                               "",
+                                               "",
+                                               "",
                                                "HLT_Photon20_CaloIdVL_IsoL_v",
                                                "HLT_Photon20_CaloIdVL_v",
                                                "HLT_Photon30_CaloIdVL_IsoL_v",
@@ -213,35 +127,32 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_Photon90_CaloIdVL_IsoL_v",
                                                "HLT_Photon90_CaloIdVL_v",
                                                "HLT_Photon135_v",
-
+                                               "",
+                                               "",
+                                               "",
+                                               "",
                                                "HLT_Mu17_Ele8_CaloIdL_v",
                                                "HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v",
                                                "HLT_Mu3_Ele8_CaloIdT_CaloIsoVL_v",
                                                "HLT_Mu8_Ele17_CaloIdL_v",
-                                               "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v"
+                                               "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v",
+                                               "",
+                                               "",
+                                               "",
+                                               "",
+                                               "HLT_Ele18_CaloIdVT_TrkIdT_MediumIsoPFTau20_v",
+                                               "HLT_Ele20_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_MediumIsoPFTau20_v",
+                                               "HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_MediumIsoPFTau25_v",
+                                               "HLT_HT400_DoubleIsoPFTau10_Trk3_PFMHT50_v",
+                                               "HLT_IsoMu15_eta2p1_LooseIsoPFTau20_v", 
+                                               "HLT_IsoMu15_eta2p1_MediumIsoPFTau20_v", 
+                                               "HLT_IsoMu15_eta2p1_TightIsoPFTau20_v", 
+                                               "HLT_Mu15_LooseIsoPFTau15_v"
+                                               "",
+                                               "",
+                                               "",
+                                               ""
 )
 )
 
-### Let it run
-cmsSeq = cms.Sequence(
-        process.PFTau                    
-      * process.myPartons #<-- For genJet flavors, only in MC
-      * process.GenJetFlavour
-      * process.JetFlavour
-      * process.simpleEleId60relIso
-      * process.simpleEleId70relIso
-      * process.simpleEleId80relIso
-      * process.simpleEleId85relIso
-      * process.simpleEleId90relIso
-      * process.simpleEleId95relIso
-      * process.kt6PFJets
-      * process.kt6PFJetsIso
-      * process.ak5PFJets
-      * process.ak5PFJetsL1FastL2L3
-      * process.metAnalysisSequence  
-      * process.ak5JetTracksAssociatorAtVertex 
-      * process.btagging
-      * process.HBHENoiseFilterResultProducer
-		)
-
-process.p = cms.Path(cmsSeq * process.ntupleProducer)
+process.ntuplePath = cms.Path(process.PFTau * process.patDefaultSequence * process.ntupleProducer)

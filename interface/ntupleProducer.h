@@ -175,6 +175,7 @@ class ntupleProducer : public edm::EDAnalyzer {
 		TTree* jobTree;
 		edm::InputTag jetTag_;
 		edm::InputTag metTag_;
+		edm::InputTag metNoPUTag_;
 		edm::InputTag genJetTag_;
 		edm::InputTag muonTag_;
 		edm::InputTag electronTag_;
@@ -206,6 +207,7 @@ class ntupleProducer : public edm::EDAnalyzer {
 		TClonesArray* genJets;
 		TClonesArray* genParticles;
 		TCMET*        recoMET;
+		TCMET*        recoMETNoPU;
 
 		//Vertex info
 		TClonesArray* primaryVtx;

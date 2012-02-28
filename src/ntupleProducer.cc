@@ -4,6 +4,7 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
 {
     jetTag_           = iConfig.getUntrackedParameter<edm::InputTag>("JetTag");
     metTag_           = iConfig.getUntrackedParameter<edm::InputTag>("METTag");
+    metNoPUTag_       = iConfig.getUntrackedParameter<edm::InputTag>("METNoPUTag");
     muonTag_          = iConfig.getUntrackedParameter<edm::InputTag>("MuonTag");
     electronTag_      = iConfig.getUntrackedParameter<edm::InputTag>("ElectronTag");
     photonTag_        = iConfig.getUntrackedParameter<edm::InputTag>("PhotonTag");
@@ -97,12 +98,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             TCJet* jetCon = new ((*recoJets)[jetCount]) TCJet;
 
 
-            cout << "Uncorrected jet pt: " << iJet->correctedJet(0).pt() 
-                << ", corrected jet pt: " << iJet->correctedJet(3).pt() 
-                << ", default patJet pt: " << iJet->pt() 
-                << endl; 
+            //cout << "Uncorrected jet pt: " << iJet->correctedJet(0).pt() 
+            //    << ", corrected jet pt: " << iJet->correctedJet(3).pt() 
+            //    << endl; 
 
-            jetCon->SetP4(iJet->px(), iJet->py(), iJet->pz(), iJet->energy());
+            jetCon->SetP4(iJet->correctedJet(0).px(), iJet->correctedJet(0).py(), iJet->correctedJet(0).pz(), iJet->correctedJet(0).energy());
             jetCon->SetVtx(0., 0., 0.);
             jetCon->SetChHadFrac(iJet->chargedHadronEnergyFraction());
             jetCon->SetNeuHadFrac(iJet->neutralHadronEnergyFraction());
@@ -124,7 +124,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 jetCon->SetJetCorr(4, iJet->jecFactor(4));
             } else {
                 jetCon->SetJetCorr(4, 1.);
-
                 jetCon->SetJetFlavor(iJet->partonFlavour());
             }
 
@@ -152,25 +151,47 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     if (saveMET_){
 
-        Handle<pat::MET> MET;
+
+        Handle<vector<pat::MET> > MET;
         iEvent.getByLabel(metTag_, MET);
+        vector<pat::MET>::const_iterator met = MET->begin();
 
-        if (MET.isValid()) {
-            recoMET->SetSumEt(MET->sumEt());
-            recoMET->SetMet(MET->et());
-            recoMET->SetPhi(MET->phi());
-            recoMET->SetMuonEtFraction(MET->MuonEtFraction());
-            recoMET->SetNeutralHadronEtFraction(MET->NeutralHadEtFraction());
-            recoMET->SetChargedHadronEtFraction(MET->ChargedHadEtFraction());
-            //recoMET->SetHFHadronEtFraction(MET->HFHadronEtFraction());
-            //recoMET->SetHFEMEtFraction(MET->HFEMEtFraction());
+        if (MET->begin() != MET->end()) {
+            recoMET->SetSumEt(met->sumEt());
+            recoMET->SetMet(met->et());
+            recoMET->SetPhi(met->phi());
+            recoMET->SetMuonFraction(met->MuonEtFraction());
+            recoMET->SetNeutralHadronFraction(met->NeutralHadEtFraction());
+            recoMET->SetNeutralEMFraction(met->NeutralEMFraction());
+            recoMET->SetChargedHadronFraction(met->ChargedHadEtFraction());
+            recoMET->SetChargedEMFraction(met->ChargedEMEtFraction());
 
-            //Handle<PFMETCollection> corMET;
-            //iEvent.getByLabel("pfType1CorrectedMet", corMET);
-            //reco::PFMET iMET = corMET->front();
+            //cout << met->nCorrections() << endl;
+
             //recoMET->SetCorrectedSumEt(iMET.sumEt());
             //recoMET->SetCorrectedMet(iMET.et());
             //recoMET->SetCorrectedPhi(iMET.phi());
+        }
+
+        Handle<vector<pat::MET> > METNoPU;
+        iEvent.getByLabel(metNoPUTag_, METNoPU);
+        met = METNoPU->begin();
+
+        if (METNoPU->begin() != METNoPU->end()) {
+            recoMETNoPU->SetSumEt(met->sumEt());
+            recoMETNoPU->SetMet(met->et());
+            recoMETNoPU->SetPhi(met->phi());
+            recoMETNoPU->SetMuonFraction(met->MuonEtFraction());
+            recoMETNoPU->SetNeutralHadronFraction(met->NeutralHadEtFraction());
+            recoMETNoPU->SetNeutralEMFraction(met->NeutralEMFraction());
+            recoMETNoPU->SetChargedHadronFraction(met->ChargedHadEtFraction());
+            recoMETNoPU->SetChargedEMFraction(met->ChargedEMEtFraction());
+
+            //cout << met->nCorrections() << endl;
+
+            //recoMETNoPU->SetCorrectedSumEt(iMET.sumEt());
+            //recoMETNoPU->SetCorrectedMet(iMET.et());
+            //recoMETNoPU->SetCorrectedPhi(iMET.phi());
         }
     }
 
@@ -184,8 +205,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         iEvent.getByLabel(muonTag_, muons);
 
         for (vector<pat::Muon>::const_iterator iMuon = muons->begin(); iMuon != muons->end(); ++iMuon) {
-            if (!(iMuon->isGlobalMuon() && iMuon->isTrackerMuon()) 
-                    || (iMuon->pt() < 10. && muCount < 2)) continue;
+            if (!(iMuon->isGlobalMuon() && iMuon->isTrackerMuon()) || (iMuon->pt() < 10. && muCount < 2)) continue;
 
             TCMuon* muCon = new ((*recoMuons)[muCount]) TCMuon;
 
@@ -269,11 +289,12 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             eleCon->SetConversionDcot(iElectron->convDcot());
             eleCon->SetConversionRad(iElectron->convRadius());
 
-            eleCon->SetCutLevel(iElectron->electronID("eidVeryLooseMC"), 99);
-            eleCon->SetCutLevel(iElectron->electronID("eidLooseMC"), 98);
-            eleCon->SetCutLevel(iElectron->electronID("eidMediumMC"), 97);
-            eleCon->SetCutLevel(iElectron->electronID("eidTightMC"), 95);
-            eleCon->SetCutLevel(iElectron->electronID("eidSuperTightMC"), 80);
+            eleCon->SetCutLevel(iElectron->electronID("eidVBTF95"), 95);
+            eleCon->SetCutLevel(iElectron->electronID("eidVBTF90"), 90);
+            eleCon->SetCutLevel(iElectron->electronID("eidVBTF85"), 85);
+            eleCon->SetCutLevel(iElectron->electronID("eidVBTF80"), 80);
+            eleCon->SetCutLevel(iElectron->electronID("eidVBTF70"), 70);
+            eleCon->SetCutLevel(iElectron->electronID("eidVBTF60"), 60);
 
             eleCon->SetPfEGamma(0.3, iElectron->pfIsolationVariables().photonIso);
             eleCon->SetPfSumPt(0.3, iElectron->pfIsolationVariables().chargedHadronIso);
@@ -293,7 +314,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
         for (vector<pat::Photon>::const_iterator iPhoton = photons->begin(); iPhoton != photons->end() ; ++iPhoton) {
 
-            TCPhoton* myPhoton = new ((*recoPhotons)[photonCount]) TCPhoton;
+            TCPhoton* myPhoton = new ((*recoPhotons)[photonCount]) TCPhoton(vtxCount);
             myPhoton->SetP4(iPhoton->px(), iPhoton->py(), iPhoton->pz(), iPhoton->p());
             myPhoton->SetVtx(iPhoton->vx(), iPhoton->vy(), iPhoton->vz());
             myPhoton->SetEMIso(iPhoton->ecalRecHitSumEtConeDR04());
@@ -305,32 +326,17 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             myPhoton->SetEtaSupercluster(iPhoton->superCluster()->eta());
             myPhoton->SetTrackVeto(iPhoton->hasPixelSeed());
 
+            for (int i = 0; i < vtxCount; ++i) myPhoton->SetVertexIso(i, 0.5);
+
             //Conversion info
             reco::ConversionRefVector conversions = iPhoton->conversions();
             int   conversionCount = 0;
-            float avgConversionDz  = 0;
-            float avgConversionDxy = 0;
 
             for (reco::ConversionRefVector::const_iterator iConversion = conversions.begin(); iConversion != conversions.end(); ++iConversion) {
                 const reco::ConversionRef myConversion = *iConversion;
-                if (conversionCount == 0) {
-                    std::vector<edm::RefToBase<reco::Track> > conversionTracks = myConversion->tracks();
-                    TLorentzVector convTrack1, convTrack2;
-
-                    if (myConversion->nTracks() == 2) {
-                        convTrack1.SetPxPyPzE(conversionTracks[0]->px(), conversionTracks[0]->py(), conversionTracks[0]->pz(), conversionTracks[0]->p());
-                        convTrack2.SetPxPyPzE(conversionTracks[1]->px(), conversionTracks[1]->py(), conversionTracks[1]->pz(), conversionTracks[1]->p());
-                    } else if (myConversion->nTracks() == 1) {
-                        convTrack1.SetPxPyPzE(conversionTracks[0]->px(), conversionTracks[0]->py(), conversionTracks[0]->pz(), conversionTracks[0]->p());
-                        convTrack2.SetPxPyPzE(0, 0, 0, 0);
-                    }
-
-                    //myPhoton->SetConversionPairP4(convTrack1, convTrack2);
-                    myPhoton->SetConversionDxy(myConversion->dxy());
-                    myPhoton->SetConversionDz(myConversion->dz());
-                }
                 ++conversionCount;
             }
+
             myPhoton->SetNumberOfConversions(conversionCount);
             ++photonCount;
         }
@@ -477,14 +483,14 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         for (GenParticleCollection::const_iterator iGenPart = genParticleColl->begin(); iGenPart != genParticleColl->end(); ++iGenPart) {
             const reco::GenParticle myParticle = reco::GenParticle(*iGenPart);
 
-            if (myParticle.status() == 1) {
+            if (myParticle.status() == 1 && ((abs(myParticle.pdgId()) >= 11 && abs(myParticle.pdgId()) <= 16) || myParticle.pdgId() == 21)) {
                 TCGenParticle* genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
 
                 genCon->SetPosition(myParticle.vx(), myParticle.vy(), myParticle.vz() );
                 genCon->SetP4(myParticle.px(), myParticle.py(), myParticle.pz(), myParticle.energy() );
                 genCon->SetCharge(myParticle.charge());
                 genCon->SetPDGId(myParticle.pdgId());
-                genCon->SetMother(myParticle.pdgId());
+                genCon->SetMother(myParticle.mother()->pdgId());
                 ++genPartCount;
             }
 
@@ -492,7 +498,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             if (myParticle.status() == 3 && (abs(myParticle.pdgId()) == 6 || abs(myParticle.pdgId()) == 23 || abs(myParticle.pdgId()) == 24)) {
                 for (size_t i = 0; i < myParticle.numberOfDaughters(); ++i) {
                     const reco::Candidate *myDaughter = myParticle.daughter(i);
-                    if (abs(myDaughter->pdgId()) == 5 || (abs(myDaughter->pdgId()) >= 11 && abs(myDaughter->pdgId()) <= 16)) {
+                    if (myDaughter->status() != 1 && (abs(myDaughter->pdgId()) == 5 || (abs(myDaughter->pdgId()) >= 11 && abs(myDaughter->pdgId()) <= 16))) {
                         TCGenParticle* genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
 
                         genCon->SetPosition(myDaughter->vx(), myDaughter->vy(), myDaughter->vz() );
@@ -635,6 +641,7 @@ void  ntupleProducer::beginJob()
     genParticles   = new TClonesArray("TCGenParticle");
     beamSpot       = new TVector3();
     recoMET        = 0;
+    recoMETNoPU    = 0;
 
     eventTree->Branch("recoJets",&recoJets, 6400, 0);
     eventTree->Branch("recoElectrons",&recoElectrons, 6400, 0);
@@ -642,6 +649,7 @@ void  ntupleProducer::beginJob()
     eventTree->Branch("recoTaus",&recoTaus, 6400, 0);
     eventTree->Branch("recoPhotons",&recoPhotons, 6400, 0);
     eventTree->Branch("recoMET", &recoMET, 6400, 0);
+    eventTree->Branch("recoMETNoPU", &recoMETNoPU, 6400, 0);
     eventTree->Branch("triggerObjects", &triggerObjects, 6400, 0);
     eventTree->Branch("genJets",&genJets, 6400, 0);
     eventTree->Branch("genParticles",&genParticles, 6400, 0);

@@ -1,12 +1,12 @@
 import FWCore.ParameterSet.Config as cms
-from PhysicsTools.PatAlgos.patEventContent_cff import patEventContentNoCleaning, patTriggerEventContent
+from PhysicsTools.PatAlgos.patEventContent_cff import patEventContent, patEventContentNoCleaning, patTriggerEventContent
 
 ##
 ## dilepton filters
 ##
 def configureOutput(process,selPaths=['ntuplePath'],outFile='/tmp/patTuple.root'):
     process.load('Configuration.EventContent.EventContent_cff')
-    process.out.SelectEvents=cms.untracked.PSet( SelectEvents = cms.vstring(selPaths) )
+    process.out.SelectEvents=cms.untracked.PSet(SelectEvents = cms.vstring(selPaths))
     process.out.fileName = cms.untracked.string(outFile)
     outputCmds=['drop *',
                 'keep *_prunedGen_*_*',
@@ -44,7 +44,7 @@ def configureOutput(process,selPaths=['ntuplePath'],outFile='/tmp/patTuple.root'
                 'keep double*_*_rho_'+process.name_(),
                 'keep double*_*_sigma_'+process.name_(),
                 'keep recoPFCandidates_particleFlow_*_*']
-    outputCmds.extend( patEventContentNoCleaning )
-    outputCmds.extend( patTriggerEventContent )
+    outputCmds.extend(patEventContentNoCleaning)
+    outputCmds.extend(patTriggerEventContent)
     process.out.outputCommands = outputCmds
 

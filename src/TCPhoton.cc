@@ -3,6 +3,11 @@
 
 TCPhoton::TCPhoton() {
 }
+TCPhoton::TCPhoton(int size) 
+{
+    _vtxIso = TArrayF(size);
+    for (int i = 0; i < size; ++i) this->SetVertexIso(i, -1);
+}
 
 TCPhoton::~TCPhoton() {
 }
@@ -102,6 +107,10 @@ float  TCPhoton::ConversionDxy() const {
 	return _conversionDxy;
 }
 
+float TCPhoton::VertexIso(int iVtx) const {
+    return _vtxIso.GetAt(iVtx);
+}
+
 //std::pair<TLorentzVector, TLorentzVector> TCPhoton::ConversionPairP4() const {
 //    return _convP4;
 //}
@@ -190,7 +199,12 @@ void TCPhoton::SetConversionDxy(float d) {
 	_conversionDxy = d;
 }
 
-//void TCPhoton::SetConversionPairP4(TLorentzVector p1, TLorentzVector p2) {
-//    _convP4.first = p1;
-//    _convP4.second = p2;
-//}
+void TCPhoton::SetVertexIso(int iVtx, float iso)
+{
+    if (iVtx < _vtxIso.GetSize()) {
+        _vtxIso.AddAt(iso, iVtx);
+    } else {
+        std::cerr << "Position out of array range." << std::endl;
+    }
+}
+

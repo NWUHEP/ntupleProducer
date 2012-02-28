@@ -3,14 +3,16 @@
 
 #include "TObject.h"
 #include "TLorentzVector.h"
+#include "TArrayF.h"
 
-class TCPhoton : public TObject {
+class TCPhoton : public TLorentzVector {
 private:
     TLorentzVector _p4;
     //std::pair<TLorentzVector, TLorentzVector> _convP4;
     TVector3 _vtx;
-    int   _charge;
+    TArrayF  _vtxIso;
 
+    int   _charge;
     float _normChi2;
     float _emIso; // 
     float _hadIso; // 
@@ -33,8 +35,11 @@ private:
     float _conversionDz; //
     float _conversionDxy; //
 
+
+
 public:
     TCPhoton();
+    TCPhoton(int size);
     virtual ~TCPhoton();
 
     // "get" methods -----------
@@ -44,14 +49,19 @@ public:
     float Pt() const;
     float Eta() const;
     float Phi() const;
+
     int   Charge() const;
     float NormChi2() const;
+    bool  TrackVeto() const;
+
     float EmIso() const;
     float HadIso() const;
     float TrkIso() const;
     float PFIsoNeutral() const;
     float PFIsoCharged() const;
     float PFIsoPhoton() const;
+    float VertexIso(int iVtx) const;
+
     float HadOverEm() const;
     float DPhiSuperCluster() const;
     float DEtaSuperCluster() const;
@@ -60,7 +70,6 @@ public:
     float R9() const; 
     float E2OverE9() const; 
     float EtaSupercluster() const;
-    bool  TrackVeto() const;
 
     int    NumberOfConversions() const;
     float  ConversionDz() const;
@@ -97,6 +106,8 @@ public:
     void SetConversionDz(float d);
     void SetConversionDxy(float d);
     //void SetConversionPairP4(TLorentzVector p1, TLorentzVector p2);
+
+    void SetVertexIso(int iVtx, float iso);
 
     ClassDef(TCPhoton, 1);
 };
