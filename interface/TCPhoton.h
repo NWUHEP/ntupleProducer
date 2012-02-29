@@ -4,37 +4,37 @@
 #include "TObject.h"
 #include "TLorentzVector.h"
 #include "TArrayF.h"
+#include <vector>
 
-class TCPhoton : public TLorentzVector {
+using namespace std;
+
+class TCPhoton : public TObject {
 private:
     TLorentzVector _p4;
     //std::pair<TLorentzVector, TLorentzVector> _convP4;
     TVector3 _vtx;
-    TArrayF  _vtxIso;
-
     int   _charge;
-    float _normChi2;
 
-    float _emIsoDR04; 
-    float _hadIsoDR04; 
-    float _trkIsoDR04; 
-    std::vector<float> _trkIsoVtxDR04;
-    float _emIsoDR03; 
-    float _hadIsoDR03; 
-    float _trkIsoDR03; 
-    std::vector<float> _trkIsoVtxDR03;
+    float _normChi2;
+    float _emIsoDR04; // 
+    float _hadIsoDR04; // 
+    float _trkIsoDR04; // 
+    vector<float> _trkIsoVtxDR04;
+    float _emIsoDR03; // 
+    float _hadIsoDR03; // 
+    float _trkIsoDR03; // 
+    vector<float> _trkIsoVtxDR03;
     float _pfIsoNeutral;
     float _pfIsoCharged;
     float _pfIsoPhoton;
-
-    float _hadOverEm;  
+    float _hadOverEm; // 
     float _dPhiSuperCluster;
     float _dEtaSuperCluster;
     float _sigmaIEtaIEta; // 
     float _r9;
     float _sigmaIPhiIPhi; 
-	float _e2OverE9;
-	float _etaSupercluster;
+    float _e2OverE9;
+    float _etaSupercluster;
     bool  _trackVeto;
 
     //conversion info
@@ -42,11 +42,8 @@ private:
     float _conversionDz; //
     float _conversionDxy; //
 
-
-
 public:
     TCPhoton();
-    TCPhoton(int size);
     virtual ~TCPhoton();
 
     // "get" methods -----------
@@ -56,19 +53,19 @@ public:
     float Pt() const;
     float Eta() const;
     float Phi() const;
-
     int   Charge() const;
     float NormChi2() const;
-    bool  TrackVeto() const;
-
-    float EmIso() const;
-    float HadIso() const;
-    float TrkIso() const;
+    float EmIsoDR04() const;
+    float HadIsoDR04() const;
+    float TrkIsoDR04() const;
+    vector<float> TrkIsoVtxDR04() const;
+    float EmIsoDR03() const;
+    float HadIsoDR03() const;
+    float TrkIsoDR03() const;
+    vector<float> TrkIsoVtxDR03() const;
     float PFIsoNeutral() const;
     float PFIsoCharged() const;
     float PFIsoPhoton() const;
-    float VertexIso(int iVtx) const;
-
     float HadOverEm() const;
     float DPhiSuperCluster() const;
     float DEtaSuperCluster() const;
@@ -77,6 +74,7 @@ public:
     float R9() const; 
     float E2OverE9() const; 
     float EtaSupercluster() const;
+    bool  TrackVeto() const;
 
     int    NumberOfConversions() const;
     float  ConversionDz() const;
@@ -92,9 +90,14 @@ public:
 
     void SetCharge(int c);
     void SetNormChi2(float c);
-    void SetEMIso(float e);
-    void SetHADIso(float h);
-    void SetTRKIso(float t);
+    void SetEMIsoDR04(float e);
+    void SetHADIsoDR04(float h);
+    void SetTRKIsoDR04(float t);
+    void SetTRKIsoVtxDR04(float t);
+    void SetEMIsoDR03(float e);
+    void SetHADIsoDR03(float h);
+    void SetTRKIsoDR03(float t);
+    void SetTRKIsoVtxDR03(float t);
     void SetPFIsoNeutral(float n);
     void SetPFIsoCharged(float c);
     void SetPFIsoPhoton(float p);
@@ -113,8 +116,6 @@ public:
     void SetConversionDz(float d);
     void SetConversionDxy(float d);
     //void SetConversionPairP4(TLorentzVector p1, TLorentzVector p2);
-
-    void SetVertexIso(int iVtx, float iso);
 
     ClassDef(TCPhoton, 1);
 };

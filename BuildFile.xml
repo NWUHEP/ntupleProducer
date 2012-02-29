@@ -30,6 +30,7 @@
 <use   name="JetMETCorrections/Objects"/>
 <use   name="CondFormats/JetMETObjects"/>
 <use   name="HLTrigger/HLTcore"/>
+<use   name="RecoEgamma/PhotonIdentification"/>
 <flags   EDM_PLUGIN="1"/>
 <export>
   <lib   name="1"/>

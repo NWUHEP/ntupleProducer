@@ -4,7 +4,7 @@
 #include "TObject.h"
 #include "TLorentzVector.h"
 
-class TCElectron : public TObject {
+class TCElectron : public TLorentzVector {
 private:
     TLorentzVector _p4;
     TVector3 _vtx;
@@ -13,6 +13,8 @@ private:
     float _dPhiSuperCluster;
     float _dEtaSuperCluster;
     float _sigmaIetaIeta;
+    float _eOverP;
+    float _fBrem;
 
     float _emIso03;
     float _hadIso03;
@@ -81,10 +83,13 @@ public:
     float EmIso04() const;
     float HadIso04() const;
     float TrkIso04() const;
+
     float HadOverEm() const;
     float DphiSuperCluster() const;
     float DetaSuperCluster() const;
     float SigmaIetaIeta() const;
+    float FBrem() const;
+    float EOverP() const;
 
     float NormalizedChi2() const;
 
@@ -137,6 +142,9 @@ public:
     void SetDphiSuperCluster(float dp);
     void SetDetaSuperCluster(float de);
     void SetSigmaIetaIeta(float sieie);
+    void SetEOverP(float e);
+    void SetFBrem(float fb);
+
     void SetConversionDist(float d);
     void SetConversionDcot(float d);
     void SetConversionRad(float r);

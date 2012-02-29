@@ -146,7 +146,6 @@ bool TCElectron::IsInGap() const {
   return _isInGap;
 }
 
-
 float TCElectron::HadOverEm() const {
   return _hadOverEm;
 }
@@ -158,6 +157,14 @@ float TCElectron::DetaSuperCluster() const {
 }
 float TCElectron::SigmaIetaIeta() const {
   return _sigmaIetaIeta;
+}
+
+float TCElectron::EOverP() const {
+    return _eOverP;
+}
+
+float TCElectron::FBrem() const {
+    return _fBrem;
 }
 
 int TCElectron::ConversionFlag() const {
@@ -196,26 +203,20 @@ int TCElectron::CutLevel(int lvl) const{
 
 bool TCElectron::PassID(int lvl) const { 
   unsigned c = CutLevel(lvl);
-
   if (c & 0x01) return true;
   else return false;
-
-  //if( (c == 1) || (c == 3) || (c == 5) || (c == 7)) return true;
-  //return false;
 }   
 
 bool TCElectron::PassConversion(int lvl) const {
-  int c = CutLevel(lvl);
-  if(c < 0) return false;
-  if( (c == 4) || (c == 5) || (c == 6) || (c == 7)) return true;
-  return false;
+  unsigned c = CutLevel(lvl);
+  if (c & 0x02) return true;
+  else return false;
 }
 
 bool TCElectron::PassIsolation(int lvl) const {
-  int c = CutLevel(lvl);
-  if(c < 0) return false;
-  if( (c == 2) || (c == 3) || (c == 6) || (c == 7)) return true;
-  return false;
+  unsigned c = CutLevel(lvl);
+  if (c & 0x02) return true;
+  else return false;
 }
 
 
@@ -314,6 +315,16 @@ void TCElectron::SetDetaSuperCluster(float de){
 }
 void TCElectron::SetSigmaIetaIeta(float sieie){
   _sigmaIetaIeta = sieie;
+}
+
+void TCElectron::SetEOverP(float e)
+{
+    _eOverP = e;
+}
+
+void TCElectron::SetFBrem(float fb)
+{
+    _fBrem = fb;
 }
 
 void TCElectron::SetConversionDist(float d) {

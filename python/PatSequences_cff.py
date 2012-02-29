@@ -104,7 +104,7 @@ def addPatSequence(process, runOnData, addPhotons=True) :
               jetAlgo=jetAlgo,
               postfix=postfix,
               jetCorrections=(jecSetPF, jecLevels),
-              typeIMetCorrections=False
+              typeIMetCorrections=True
               )
 
     enablePileUpCorrection(process, postfix=postfix)
@@ -181,8 +181,11 @@ def addPatSequence(process, runOnData, addPhotons=True) :
 
     process.hzzmetSequence = cms.Sequence(#process.chargedMetProducer*
                                           #process.trackMetProducer*
-                                          process.pfMETPFlowNoPileup*process.patMETsPFlowNoPileup*
-                                          process.pfMETPFlowPileup*process.patMETsPFlowPileup)
+                                          process.pfMETPFlowNoPileup
+                                          * process.patMETsPFlowNoPileup
+                                          * process.pfMETPFlowPileup
+                                          * process.patMETsPFlowPileup
+                                          )
     
     if(addPhotons) :
         # temporarily use std photons (switch to PF in 43x cf. with Daniele how to do it)

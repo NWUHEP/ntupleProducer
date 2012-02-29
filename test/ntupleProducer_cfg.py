@@ -1,4 +1,5 @@
 from PhysicsTools.PatAlgos.patTemplate_cfg import *
+from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 
 #import FWCore.ParameterSet.Config as cms
 #
@@ -19,9 +20,6 @@ else:
 
 # tau reconstruction configuration
 process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
-
-# photon isolation tools
-from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 
 # jet energy corrections
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
@@ -73,7 +71,7 @@ process.TFileService = cms.Service('TFileService',
 ### ntuple producer
 process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
-  isolationSumsCalculatorSet = cms.PSet(isolationSumsCalculator),
+  photonIsoCalcTag  =    cms.PSet(isolationSumsCalculator),
 
   JetTag            =    cms.untracked.InputTag('selectedPatJetsPFlow'),
   GenJetTag         =    cms.untracked.InputTag('ak5GenJets'),

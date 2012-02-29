@@ -81,6 +81,8 @@
 #include "CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h"
 #include "CondFormats/JetMETObjects/interface/JetCorrectorParameters.h"
 
+// Photon isolation
+#include "RecoEgamma/PhotonIdentification/interface/PhotonIsolationCalculator.h"
 
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
@@ -186,6 +188,7 @@ class ntupleProducer : public edm::EDAnalyzer {
 		edm::InputTag rhoCorrTag_;
 		edm::InputTag ecalFilterTag_;
 		edm::InputTag hcalFilterTag_;
+        edm::ParameterSet photonIsoCalcTag_;
 
 		bool saveJets_;
 		bool saveElectrons_;

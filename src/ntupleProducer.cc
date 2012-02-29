@@ -26,6 +26,8 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
 
     ecalFilterTag_    = iConfig.getUntrackedParameter<edm::InputTag>("ecalFilterTag");
     hcalFilterTag_    = iConfig.getUntrackedParameter<edm::InputTag>("hcalFilterTag");
+
+    photonIsoCalcTag_ = iConfig.getParameter<edm::ParameterSet>("photonIsoCalcTag");
 }
 
 ntupleProducer::~ntupleProducer()
@@ -283,6 +285,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             eleCon->SetDphiSuperCluster(iElectron->deltaPhiSuperClusterTrackAtVtx());
             eleCon->SetDetaSuperCluster(iElectron->deltaEtaSuperClusterTrackAtVtx());
             eleCon->SetSigmaIetaIeta(iElectron->sigmaIetaIeta());
+            eleCon->SetFBrem(iElectron->fbrem());
+            eleCon->SetEOverP(iElectron->eSuperClusterOverP());
 
             eleCon->SetConversionFlag(iElectron->convFlags());
             eleCon->SetConversionDist(iElectron->convDist());
@@ -295,8 +299,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             eleCon->SetCutLevel(iElectron->electronID("eidVBTF80"), 80);
             eleCon->SetCutLevel(iElectron->electronID("eidVBTF70"), 70);
             eleCon->SetCutLevel(iElectron->electronID("eidVBTF60"), 60);
-
-            cout << iElectron->electronID("eidVBTF90") << endl;
 
             eleCon->SetPfEGamma(0.3, iElectron->pfIsolationVariables().photonIso);
             eleCon->SetPfSumPt(0.3, iElectron->pfIsolationVariables().chargedHadronIso);
@@ -316,19 +318,14 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
         for (vector<pat::Photon>::const_iterator iPhoton = photons->begin(); iPhoton != photons->end() ; ++iPhoton) {
 
-            TCPhoton* myPhoton = new ((*recoPhotons)[photonCount]) TCPhoton(vtxCount);
+            TCPhoton* myPhoton = new ((*recoPhotons)[photonCount]) TCPhoton();
             myPhoton->SetP4(iPhoton->px(), iPhoton->py(), iPhoton->pz(), iPhoton->p());
             myPhoton->SetVtx(iPhoton->vx(), iPhoton->vy(), iPhoton->vz());
-            myPhoton->SetEMIso(iPhoton->ecalRecHitSumEtConeDR04());
-            myPhoton->SetHADIso(iPhoton->hcalTowerSumEtConeDR04());
-            myPhoton->SetTRKIso(iPhoton->trkSumPtHollowConeDR04());
             myPhoton->SetHadOverEm(iPhoton->hadronicOverEm());
             myPhoton->SetSigmaIEtaIEta(iPhoton->sigmaIetaIeta());
             myPhoton->SetR9(iPhoton->r9());
             myPhoton->SetEtaSupercluster(iPhoton->superCluster()->eta());
             myPhoton->SetTrackVeto(iPhoton->hasPixelSeed());
-
-            for (int i = 0; i < vtxCount; ++i) myPhoton->SetVertexIso(i, 0.5);
 
             //Conversion info
             reco::ConversionRefVector conversions = iPhoton->conversions();
@@ -341,8 +338,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             myPhoton->SetNumberOfConversions(conversionCount);
 
             PhotonIsolationCalculator* photonIsolationCalculator = new PhotonIsolationCalculator();
-            edm::ParameterSet isolationSumsCalculatorSet = conf_.getParameter<edm::ParameterSet>("isolationSumsCalculatorSet");
-            photonIsolationCalculator->setup(isolationSumsCalculatorSet);
+            photonIsolationCalculator->setup(photonIsoCalcTag_);
             reco::Photon::FiducialFlags fiducialFlags;
             reco::Photon::IsolationVariables isolVarR03, isolVarR04;
             int vtxPhoCounter = 0;

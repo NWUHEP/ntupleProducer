@@ -8,6 +8,8 @@ def configureOutput(process,selPaths=['ntuplePath'],outFile='/tmp/patTuple.root'
     process.load('Configuration.EventContent.EventContent_cff')
     process.out.SelectEvents=cms.untracked.PSet(SelectEvents = cms.vstring(selPaths))
     process.out.fileName = cms.untracked.string(outFile)
+    outputCmds=['keep *']
+    '''
     outputCmds=['drop *',
                 'keep *_prunedGen_*_*',
                 'keep *_genMetTrue_*_*',
@@ -46,5 +48,6 @@ def configureOutput(process,selPaths=['ntuplePath'],outFile='/tmp/patTuple.root'
                 'keep recoPFCandidates_particleFlow_*_*']
     outputCmds.extend(patEventContentNoCleaning)
     outputCmds.extend(patTriggerEventContent)
+    '''
     process.out.outputCommands = outputCmds
 
