@@ -12,7 +12,7 @@
 #include "TLorentzVector.h"
 #include "TVector2.h"
 
-class TCJet : public TLorentzVector {
+class TCJet : public TObject {
 private:
     TLorentzVector _p4;
     TVector3 _vtx;    
@@ -51,6 +51,11 @@ public:
     virtual ~TCJet();
 
     // "get" methods -----------
+
+    TLorentzVector P4() const;
+    TVector2 P2() const;
+    float Et() const;
+    float Pt() const;
 
     // accessors for corrected jets (the argument is the level of correction)
     // Note: in this implementation all lower-level corrections will be
@@ -94,6 +99,8 @@ public:
     int   JetFlavor() const;
 
     // "set" methods ---------
+    void SetP4(TLorentzVector p4);
+    void SetP4(float px, float py, float pz, float e);
     void SetVtx(float vx, float vy, float vz);    
     void SetVtxSumPtFrac(float f);
     void SetVtxSumPt(float p);

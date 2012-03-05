@@ -4,7 +4,7 @@
 #include "TObject.h"
 #include "TLorentzVector.h"
 
-class TCElectron : public TLorentzVector {
+class TCElectron : public TObject {
 private:
     TLorentzVector _p4;
     TVector3 _vtx;

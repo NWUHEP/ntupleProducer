@@ -104,8 +104,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             //    << ", corrected jet pt: " << iJet->correctedJet(3).pt() 
             //    << endl; 
 
-            //jetCon->SetP4(iJet->correctedJet(0).px(), iJet->correctedJet(0).py(), iJet->correctedJet(0).pz(), iJet->correctedJet(0).energy());
-            jetCon->SetPxPyPzE(iJet->correctedJet(0).px(), iJet->correctedJet(0).py(), iJet->correctedJet(0).pz(), iJet->correctedJet(0).energy());
+            jetCon->SetP4(iJet->correctedJet(0).px(), iJet->correctedJet(0).py(), iJet->correctedJet(0).pz(), iJet->correctedJet(0).energy());
             jetCon->SetVtx(0., 0., 0.);
 
             //cout << iJet->getSpecific.Zch << endl;;

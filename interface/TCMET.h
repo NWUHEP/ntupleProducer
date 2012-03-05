@@ -12,7 +12,7 @@
 #include "TLorentzVector.h"
 #include "TVector2.h"
 
-class TCMET : public TLorentzVector {
+class TCMET : public TObject {
 private:
 
     TVector2 _genMET;
