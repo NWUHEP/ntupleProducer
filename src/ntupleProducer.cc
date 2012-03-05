@@ -512,7 +512,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 genCon->SetCharge(myParticle.charge());
                 genCon->SetPDGId(myParticle.pdgId());
                 genCon->SetMother(myParticle.mother()->pdgId());
-                if (myParticle.pdgId() == 22) genCon->SetGrandmother(myParticle.mother()->mother()->pdgId());
+                if (myParticle.pdgId() == 22 && myParticle.mother()->numberOfMothers() != 0) genCon->SetGrandmother(myParticle.mother()->mother()->pdgId());
                 ++genPartCount;
             }
 
