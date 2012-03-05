@@ -504,7 +504,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         for (GenParticleCollection::const_iterator iGenPart = genParticleColl->begin(); iGenPart != genParticleColl->end(); ++iGenPart) {
             const reco::GenParticle myParticle = reco::GenParticle(*iGenPart);
 
-            if (myParticle.status() == 1 && ((abs(myParticle.pdgId()) >= 11 && abs(myParticle.pdgId()) <= 16) || myParticle.pdgId() == 21)) {
+            if (myParticle.status() == 1 && ((abs(myParticle.pdgId()) >= 11 && abs(myParticle.pdgId()) <= 16) || myParticle.pdgId() == 22)) {
                 TCGenParticle* genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
 
                 genCon->SetPosition(myParticle.vx(), myParticle.vy(), myParticle.vz() );
@@ -512,7 +512,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 genCon->SetCharge(myParticle.charge());
                 genCon->SetPDGId(myParticle.pdgId());
                 genCon->SetMother(myParticle.mother()->pdgId());
-                if (myParticle.pdgId() == 21) genCon->SetGrandmother(myParticle.mother()->mother()->pdgId());
+                if (myParticle.pdgId() == 22) genCon->SetGrandmother(myParticle.mother()->mother()->pdgId());
                 ++genPartCount;
             }
 
