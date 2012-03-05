@@ -104,8 +104,12 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             //    << ", corrected jet pt: " << iJet->correctedJet(3).pt() 
             //    << endl; 
 
-            jetCon->SetP4(iJet->correctedJet(0).px(), iJet->correctedJet(0).py(), iJet->correctedJet(0).pz(), iJet->correctedJet(0).energy());
+            //jetCon->SetP4(iJet->correctedJet(0).px(), iJet->correctedJet(0).py(), iJet->correctedJet(0).pz(), iJet->correctedJet(0).energy());
+            jetCon->SetPxPyPzE(iJet->correctedJet(0).px(), iJet->correctedJet(0).py(), iJet->correctedJet(0).pz(), iJet->correctedJet(0).energy());
             jetCon->SetVtx(0., 0., 0.);
+
+            //cout << iJet->getSpecific.Zch << endl;;
+
             jetCon->SetChHadFrac(iJet->chargedHadronEnergyFraction());
             jetCon->SetNeuHadFrac(iJet->neutralHadronEnergyFraction());
             jetCon->SetChEmFrac(iJet->chargedEmEnergyFraction());
@@ -121,6 +125,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             jetCon->SetJetCorr(1, iJet->jecFactor(1));
             jetCon->SetJetCorr(2, iJet->jecFactor(2));
             jetCon->SetJetCorr(3, iJet->jecFactor(3));
+
 
             if (isRealData) {
                 jetCon->SetJetCorr(4, iJet->jecFactor(4));
@@ -507,7 +512,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 genCon->SetCharge(myParticle.charge());
                 genCon->SetPDGId(myParticle.pdgId());
                 genCon->SetMother(myParticle.mother()->pdgId());
-                //if (myParticle.pdgId() == 21) genCon->SetGrandMother(myParticle.mother()->mother()->pdgId());
+                if (myParticle.pdgId() == 21) genCon->SetGrandmother(myParticle.mother()->mother()->pdgId());
                 ++genPartCount;
             }
 

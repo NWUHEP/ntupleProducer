@@ -8,7 +8,7 @@
 
 using namespace std;
 
-class TCPhoton : public TObject {
+class TCPhoton : public TLorentzVector {
 private:
     TLorentzVector _p4;
     //std::pair<TLorentzVector, TLorentzVector> _convP4;

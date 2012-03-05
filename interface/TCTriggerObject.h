@@ -4,7 +4,7 @@
 #include "TObject.h"
 #include "TLorentzVector.h"
 
-class TCTriggerObject : public TObject {
+class TCTriggerObject : public TLorentzVector {
     private:
         TLorentzVector p4;
         int id;

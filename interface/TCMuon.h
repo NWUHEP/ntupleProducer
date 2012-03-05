@@ -6,7 +6,7 @@
 #include "TVector2.h"
 #include "TVector3.h"
 
-class TCMuon : public TObject {
+class TCMuon : public TLorentzVector {
 private:
     TLorentzVector _p4;
     TVector3 _vtx;

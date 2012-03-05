@@ -12,7 +12,7 @@
 #include "TLorentzVector.h"
 #include "TVector2.h"
 
-class TCGenJet : public TObject {
+class TCGenJet : public TLorentzVector {
 private:
     TLorentzVector _p4;
     TLorentzVector _progenitorP4;

@@ -5,7 +5,7 @@
 #include "TLorentzVector.h"
 #include <vector>
 
-class TCTau : public TObject {
+class TCTau : public TLorentzVector {
 	private:
 		TVector3 _positionFromTauObject;
 		TVector3 _positionFromLeadTrack;

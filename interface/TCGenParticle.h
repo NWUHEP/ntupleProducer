@@ -7,7 +7,7 @@
 #include "TVector3.h"
 #include <vector>
 
-class TCGenParticle : public TObject {
+class TCGenParticle : public TLorentzVector {
 	private:
 		TVector3 _position;
 		TLorentzVector _p4;

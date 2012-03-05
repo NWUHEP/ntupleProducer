@@ -26,27 +26,35 @@
 #include "DataFormats/ParticleFlowCandidate/interface/PFCandidate.h"
 #include "DataFormats/ParticleFlowCandidate/interface/PFCandidateFwd.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
+
 #include "DataFormats/JetReco/interface/CaloJet.h"
 #include "DataFormats/JetReco/interface/CaloJetCollection.h"
 #include "DataFormats/JetReco/interface/GenJet.h"
 #include "DataFormats/JetReco/interface/GenJetCollection.h"
 #include "DataFormats/JetReco/interface/PFJet.h"
 #include "DataFormats/JetReco/interface/PFJetCollection.h"
+#include "DataFormats/JetReco/interface/JetID.h"
+#include "DataFormats/JetReco/interface/JPTJetCollection.h"
+#include "DataFormats/JetReco/interface/JPTJet.h"
+
 #include "DataFormats/METReco/interface/PFMET.h"
 #include "DataFormats/METReco/interface/PFMETCollection.h"
 #include "DataFormats/METReco/interface/PFMETFwd.h"
 #include "DataFormats/METReco/interface/MET.h"
 #include "DataFormats/METReco/interface/METCollection.h"
 #include "DataFormats/METReco/interface/METFwd.h"
+
 #include "DataFormats/MuonReco/interface/Muon.h"
 #include "DataFormats/MuonReco/interface/MuonFwd.h"
 #include "DataFormats/MuonReco/interface/MuonSelectors.h"
+
 #include "DataFormats/EgammaCandidates/interface/GsfElectron.h"
 #include "DataFormats/EgammaCandidates/interface/GsfElectronFwd.h"
 #include "DataFormats/EgammaCandidates/interface/Photon.h"
 #include "DataFormats/EgammaCandidates/interface/PhotonFwd.h"
 #include "DataFormats/EgammaCandidates/interface/Conversion.h"
 #include "DataFormats/EgammaReco/interface/SuperCluster.h"
+
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "DataFormats/TrackReco/interface/TrackFwd.h"
 #include "DataFormats/GsfTrackReco/interface/GsfTrack.h"
@@ -56,6 +64,8 @@
 #include "DataFormats/BeamSpot/interface/BeamSpot.h"
 #include "DataFormats/Luminosity/interface/LumiSummary.h"
 #include "DataFormats/Common/interface/ValueMap.h"
+
+// Generator data formats
 #include "SimDataFormats/GeneratorProducts/interface/HepMCProduct.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenRunInfoProduct.h"
@@ -80,6 +90,10 @@
 #include "JetMETCorrections/Objects/interface/JetCorrectionsRecord.h"
 #include "CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h"
 #include "CondFormats/JetMETObjects/interface/JetCorrectorParameters.h"
+
+// Jet associators
+#include "RecoJets/JetAssociationAlgorithms/interface/JetTracksAssociationDRCalo.h"
+#include "RecoJets/JetAssociationAlgorithms/interface/JetTracksAssociationDRVertex.h"
 
 // Photon isolation
 #include "RecoEgamma/PhotonIdentification/interface/PhotonIsolationCalculator.h"
