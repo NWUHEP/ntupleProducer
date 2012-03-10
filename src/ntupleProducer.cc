@@ -610,8 +610,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 triggerStatus |= 0x01 << j;
                 if (isRealData) {
                     pair<int, int> preScales;
-                    preScales = hltConfig_.prescaleValues(iEvent, iSetup, hlNames[i]); 
-                    hltPrescale[j] = preScales.first*preScales.second;
+                    //preScales = hltConfig_.prescaleValues(iEvent, iSetup, hlNames[i]); 
+                    hltPrescale[j] = 1.;//preScales.first*preScales.second;
                 }
             }
         }
@@ -632,7 +632,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     ++nEvents;
 
     if (eleCount > 0 || muCount > 0 || photonCount > 0) eventTree -> Fill(); // possibly specify a cut in configuration
-    //eventTree->Fill();
 
     primaryVtx->Clear("C");
     recoJets->Clear("C");
@@ -717,7 +716,7 @@ void  ntupleProducer::beginJob()
 void ntupleProducer::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
 {
     bool changed = true; 
-    hltConfig_.init(iRun, iSetup, hltProcess_, changed);
+    //hltConfig_.init(iRun, iSetup, hltProcess_, changed);
     deliveredLumi = 0;
     recordedLumi  = 0;
 }
