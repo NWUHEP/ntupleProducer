@@ -1,9 +1,8 @@
-from PhysicsTools.PatAlgos.patTemplate_cfg import *
+import os
+import FWCore.ParameterSet.Config as cms
 from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 
-#import FWCore.ParameterSet.Config as cms
-#
-#process = cms.Process("PAT")
+process = cms.Process("PAT")
 
 # real data or MC?
 isRealData = True
@@ -24,18 +23,36 @@ process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
 # jet energy corrections
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 
+# pat sequences
+process.load("PhysicsTools.PatAlgos.patSequences_cff")
+
+from PhysicsTools.PatAlgos.patEventContent_cff import patEventContent
+process.out = cms.OutputModule("PoolOutputModule",
+                               fileName = cms.untracked.string('/tmp/patTuple.root'),
+                               SelectEvents   = cms.untracked.PSet( SelectEvents = cms.vstring('p') ),
+                               outputCommands = cms.untracked.vstring('drop *', *patEventContent )
+                               )
+
+from Higgs.ntupleProducer.PatSequences_cff import addPatSequence
+addPatSequence(process, isRealData, addPhotons = True)
+
+##------------------------------------------------------------------
+## see PhysicsTools/PatExamples/test/analyzePatTau_fromAOD_cfg.py
+## switch the tau algorithm (AA))
+#from PhysicsTools.PatAlgos.tools.tauTools import *
+#switchToPFTauHPS(process)
+
 # global options
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
-#process.MessageLogger.debugs.placeholder = False
-#process.MessageLogger.cout.placeholder = False
-#process.MessageLogger.errors.placeholder = False
-process.MessageLogger.cerr.FwkReport.reportEvery = 1000000
 process.MessageLogger.cerr.threshold = 'ERROR'
+process.MessageLogger.cerr.FwkReport.reportEvery = 100000000
+process.MessageLogger.categories = cms.untracked.vstring('FwkJob', 'FwkReport', 'FwkSummary', 'Root_NoDictionary', 'DataNotAvailable', 'HLTConfigData')
+process.MessageLogger.destinations = cms.untracked.vstring('myOutput')
+
 
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
                                      SkipEvent = cms.untracked.vstring('ProductNotFound')
                                     )
-
 
 # event source  
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
@@ -46,17 +63,6 @@ process.source = cms.Source("PoolSource",
          #'/store/user/stoyan/MC/H135toZG_500k/RECO_v1/H135toZG_7TeV_START44_V5_RAW2DIGI_RECO_PU_file9J_1_1_xse.root'
 )
 )
-
-# pat sequences
-process.load("PhysicsTools.PatAlgos.patSequences_cff")
-from Higgs.ntupleProducer.PatSequences_cff import addPatSequence
-addPatSequence(process, isRealData, addPhotons = True)
-
-##------------------------------------------------------------------
-## see PhysicsTools/PatExamples/test/analyzePatTau_fromAOD_cfg.py
-## switch the tau algorithm (AA))
-#from PhysicsTools.PatAlgos.tools.tauTools import *
-#switchToPFTauHPS(process)
 
 
 # event counters
@@ -73,7 +79,7 @@ print '\n\nNow run the ntuplizer...\n\n'
 
 ### TFile service!
 process.TFileService = cms.Service('TFileService',
-                                   fileName = cms.string('/tmp/nuTuple.root')
+                                   fileName = cms.string('nuTuple.root')
                                    )
 
 ### ntuple producer
@@ -82,6 +88,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   photonIsoCalcTag  =    cms.PSet(isolationSumsCalculator),
 
   JetTag            =    cms.untracked.InputTag('selectedPatJetsPFlow'),
+  JPTTag            =    cms.untracked.InputTag('JetPlusTrackZSPCorJetAntiKt5'),
   GenJetTag         =    cms.untracked.InputTag('ak5GenJets'),
   METTag            =    cms.untracked.InputTag('patMETsPFlow'),
   METNoPUTag        =    cms.untracked.InputTag('patMETsPFlowNoPileup'),
@@ -167,3 +174,5 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 )
 
 process.ntuplePath = cms.Path(process.PFTau * process.patDefaultSequence * process.ntupleProducer)
+
+process.outpath = cms.EndPath(process.out)

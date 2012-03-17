@@ -190,6 +190,7 @@ class ntupleProducer : public edm::EDAnalyzer {
 		TTree* runTree;
 		TTree* jobTree;
 		edm::InputTag jetTag_;
+		edm::InputTag jptTag_;
 		edm::InputTag metTag_;
 		edm::InputTag metNoPUTag_;
 		edm::InputTag genJetTag_;
@@ -216,6 +217,7 @@ class ntupleProducer : public edm::EDAnalyzer {
 
 		//Physics object containers
 		TClonesArray* recoJets;
+		TClonesArray* recoJPT;
 		TClonesArray* recoMuons;
 		TClonesArray* recoElectrons;
 		TClonesArray* recoTaus;
@@ -237,8 +239,8 @@ class ntupleProducer : public edm::EDAnalyzer {
 		TriggerNames      triggerNames;
 		vector<string>    hlNames;
 		vector<string>    triggerPaths_;
-		long unsigned int triggerStatus;
-		unsigned int      hltPrescale[64];
+		ULong64_t         triggerStatus;
+		unsigned          hltPrescale[64];
 
 		//Filters 
 		Bool_t isNoiseHcal, isDeadEcalCluster;

@@ -3,6 +3,7 @@
 ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
 {
     jetTag_           = iConfig.getUntrackedParameter<edm::InputTag>("JetTag");
+    jptTag_           = iConfig.getUntrackedParameter<edm::InputTag>("JPTTag");
     metTag_           = iConfig.getUntrackedParameter<edm::InputTag>("METTag");
     metNoPUTag_       = iConfig.getUntrackedParameter<edm::InputTag>("METNoPUTag");
     muonTag_          = iConfig.getUntrackedParameter<edm::InputTag>("MuonTag");
@@ -54,8 +55,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     beamSpot->SetXYZ(vertexBeamSpot.x0(), vertexBeamSpot.y0(), vertexBeamSpot.z0());
 
-    int vtxCount, jetCount, metCount, muCount, eleCount, photonCount, tauCount, genCount, genPartCount;
-    vtxCount = jetCount = metCount = muCount = eleCount = photonCount = tauCount = genCount = genPartCount = 0;
+    int vtxCount, jetCount, jptCount, metCount, muCount, eleCount, photonCount, tauCount, genCount, genPartCount;
+    vtxCount = jetCount = jptCount = metCount = muCount = eleCount = photonCount = tauCount = genCount = genPartCount = 0;
     float primaryVertexZ = -999;
 
 
@@ -93,12 +94,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         Handle<vector<pat::Jet> > jets;
         iEvent.getByLabel(jetTag_, jets);
 
-        for (vector<pat::Jet>::const_iterator iJet = jets->begin(); iJet!= jets->end(); ++iJet) {
+        for (vector<pat::Jet>::const_iterator iJet = jets->begin(); iJet != jets->end(); ++iJet) {
 
             if (iJet->pt() < 10.) continue;
 
             TCJet* jetCon = new ((*recoJets)[jetCount]) TCJet;
-
 
             //cout << "Uncorrected jet pt: " << iJet->correctedJet(0).pt() 
             //    << ", corrected jet pt: " << iJet->correctedJet(3).pt() 
@@ -149,6 +149,34 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             }
             ++jetCount;
         }   
+
+        // Temporary workaround for VBF analysis: adding JPT tracks...
+
+        Handle<reco::JPTJetCollection> jptJets;
+        iEvent.getByLabel(jptTag_, jptJets);
+
+        for (reco::JPTJetCollection::const_iterator iJet = jptJets->begin(); iJet != jptJets->end(); ++iJet) {
+
+            if (iJet->pt() < 10.) continue;
+
+            TCJet* jetCon = new ((*recoJPT)[jptCount]) TCJet;
+
+            jetCon->SetP4(iJet->px(), iJet->py(), iJet->pz(), iJet->energy());
+            jetCon->SetVtx(0., 0., 0.);
+
+            //cout << iJet->getSpecific().Zch << endl;;
+
+            jetCon->SetChHadFrac(iJet->chargedHadronEnergyFraction());
+            jetCon->SetNeuHadFrac(iJet->neutralHadronEnergyFraction());
+            jetCon->SetChEmFrac(iJet->chargedEmEnergyFraction());
+            jetCon->SetNeuEmFrac(iJet->neutralEmEnergyFraction());
+            jetCon->SetNumConstit(iJet->chargedMultiplicity());// + iJet->neutralMultiplicity());
+            jetCon->SetNumChPart(iJet->chargedMultiplicity());
+
+            ++jptCount;
+
+        }
+
     }
 
     /////////////
@@ -606,16 +634,19 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     for (int i=0; i < (int)hlNames.size(); ++i) {      
         if (!triggerDecision(hltR, i)) continue;	
         for (int j = 0; j < (int)triggerPaths_.size(); ++j){
+            if (triggerPaths_[j] == "") continue;
             if (hlNames[i].compare(0, triggerPaths_[j].length(),triggerPaths_[j]) == 0) {
+                cout << hlNames[i] << " ?= " << triggerPaths_[j] << endl;
                 triggerStatus |= 0x01 << j;
                 if (isRealData) {
                     pair<int, int> preScales;
-                    //preScales = hltConfig_.prescaleValues(iEvent, iSetup, hlNames[i]); 
-                    hltPrescale[j] = 1.;//preScales.first*preScales.second;
+                    preScales = hltConfig_.prescaleValues(iEvent, iSetup, hlNames[i]); 
+                    hltPrescale[j] = preScales.first*preScales.second;
                 }
             }
         }
     } 
+    printf("%016llX\n", triggerStatus);
 
     edm::Handle<trigger::TriggerEvent> triggerEvents;
     iEvent.getByLabel("hltTriggerSummaryAOD",triggerEvents);
@@ -635,6 +666,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     primaryVtx->Clear("C");
     recoJets->Clear("C");
+    recoJPT->Clear("C");
     recoMuons->Clear("C");
     recoElectrons->Clear("C");
     recoTaus->Clear("C");
@@ -653,6 +685,7 @@ void  ntupleProducer::beginJob()
 
     primaryVtx     = new TClonesArray("TCPrimaryVtx");
     recoJets       = new TClonesArray("TCJet");
+    recoJPT        = new TClonesArray("TCJet");
     recoElectrons  = new TClonesArray("TCElectron");
     recoMuons      = new TClonesArray("TCMuon");
     recoTaus       = new TClonesArray("TCTau");
@@ -665,6 +698,7 @@ void  ntupleProducer::beginJob()
     recoMETNoPU    = 0;
 
     eventTree->Branch("recoJets",&recoJets, 6400, 0);
+    eventTree->Branch("recoJPT",&recoJPT, 6400, 0);
     eventTree->Branch("recoElectrons",&recoElectrons, 6400, 0);
     eventTree->Branch("recoMuons",&recoMuons, 6400, 0);
     eventTree->Branch("recoTaus",&recoTaus, 6400, 0);
@@ -695,7 +729,7 @@ void  ntupleProducer::beginJob()
     eventTree->Branch("qScale", &qScale, "qScale/F");
     eventTree->Branch("evtWeight", &evtWeight, "evtWeight/F");
     eventTree->Branch("rhoFactor",&rhoFactor, "rhoFactor/F");
-    eventTree->Branch("triggerStatus",&triggerStatus, "triggerStatus/i");
+    eventTree->Branch("triggerStatus",&triggerStatus, "triggerStatus/l");
     eventTree->Branch("hltPrescale",hltPrescale, "hltPrescale[64]/i");
 
     runTree->Branch("deliveredLumi",&deliveredLumi, "deliveredLumi/F");
@@ -716,7 +750,7 @@ void  ntupleProducer::beginJob()
 void ntupleProducer::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
 {
     bool changed = true; 
-    //hltConfig_.init(iRun, iSetup, hltProcess_, changed);
+    hltConfig_.init(iRun, iSetup, hltProcess_, changed);
     deliveredLumi = 0;
     recordedLumi  = 0;
 }
