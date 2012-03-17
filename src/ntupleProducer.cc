@@ -636,7 +636,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         for (int j = 0; j < (int)triggerPaths_.size(); ++j){
             if (triggerPaths_[j] == "") continue;
             if (hlNames[i].compare(0, triggerPaths_[j].length(),triggerPaths_[j]) == 0) {
-                cout << hlNames[i] << " ?= " << triggerPaths_[j] << endl;
+                //cout << hlNames[i] << " ?= " << triggerPaths_[j] << endl;
                 triggerStatus |= 0x01 << j;
                 if (isRealData) {
                     pair<int, int> preScales;
@@ -646,7 +646,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             }
         }
     } 
-    printf("%016llX\n", triggerStatus);
+    //printf("%016llX\n", triggerStatus);
 
     edm::Handle<trigger::TriggerEvent> triggerEvents;
     iEvent.getByLabel("hltTriggerSummaryAOD",triggerEvents);
