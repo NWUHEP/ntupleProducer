@@ -48,7 +48,14 @@ process.MessageLogger.cerr.threshold = 'ERROR'
 process.MessageLogger.cerr.FwkReport.reportEvery = 100000000
 process.MessageLogger.categories = cms.untracked.vstring('FwkJob', 'FwkReport', 'FwkSummary', 'Root_NoDictionary', 'DataNotAvailable', 'HLTConfigData')
 process.MessageLogger.destinations = cms.untracked.vstring('myOutput')
-
+process.MessageLogger.myOutput = cms.untracked.PSet(
+                FwkJob              = cms.untracked.PSet(limit = cms.untracked.int32(0)),
+                FwkReport           = cms.untracked.PSet(limit = cms.untracked.int32(0)),
+                FwkSummary          = cms.untracked.PSet(limit = cms.untracked.int32(0)),
+                Root_NoDictionary   = cms.untracked.PSet(limit = cms.untracked.int32(0)),                    
+                DataNotAvailable    = cms.untracked.PSet(limit = cms.untracked.int32(0)),                    
+                HLTConfigData       = cms.untracked.PSet(limit = cms.untracked.int32(0))
+                )
 
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
                                      SkipEvent = cms.untracked.vstring('ProductNotFound')
@@ -175,4 +182,4 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
 process.ntuplePath = cms.Path(process.PFTau * process.patDefaultSequence * process.ntupleProducer)
 
-process.outpath = cms.EndPath(process.out)
+#process.outpath = cms.EndPath(process.out)
