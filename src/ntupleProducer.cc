@@ -518,7 +518,12 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         iEvent.getByLabel(edm::InputTag("addPileupInfo"), PUInfo);
         std::vector<PileupSummaryInfo>::const_iterator iPV;
 
-        for(iPV = PUInfo->begin(); iPV != PUInfo->end(); ++iPV) if (iPV->getBunchCrossing() == 0) nPUVertices = iPV->getPU_NumInteractions();
+        for(iPV = PUInfo->begin(); iPV != PUInfo->end(); ++iPV){
+          if (iPV->getBunchCrossing() == 0){
+            nPUVertices = iPV->getPU_NumInteractions();
+            nPUVerticesTrue = iPV->getTrueNumInteractions();
+          }
+        }
 
 
         //////////////////////
@@ -712,6 +717,7 @@ void  ntupleProducer::beginJob()
     eventTree->Branch("primaryVtx",&primaryVtx, 6400, 0);
     eventTree->Branch("beamSpot", &beamSpot, 6400, 0);
     eventTree->Branch("nPUVertices", &nPUVertices, "nPUVertices/I");
+    eventTree->Branch("nPUVerticesTrue", &nPUVerticesTrue, "nPUVerticesTrue/F");
 
     eventTree->Branch("isRealData",&isRealData, "isRealData/O");
     eventTree->Branch("runNumber",&runNumber, "runNumber/I");
