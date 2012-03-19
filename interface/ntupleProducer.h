@@ -232,6 +232,7 @@ class ntupleProducer : public edm::EDAnalyzer {
 		TClonesArray* primaryVtx;
 		TVector3*     beamSpot;
 		int           nPUVertices;
+		float         nPUVerticesTrue;
 
 		//Triggers
 		HLTConfigProvider hltConfig_;
