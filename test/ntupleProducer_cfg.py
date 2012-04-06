@@ -64,17 +64,17 @@ process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
                                     )
 '''
 
-# event source  
-#process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
-#process.source = cms.Source("PoolSource",
-#    fileNames = cms.untracked.vstring(
-#         '/store/mc/Fall11/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/AODSIM/PU_S6_START42_V14B-v1/0001/A6A53A52-4EF6-E011-8524-90E6BA0D09AD.root'
-#         #'/store/data/Run2011B/DoubleMu/AOD/16Jan2012-v1/0000/A0914A57-C344-E111-8687-001A928116D0.root'
-#         #'/store/user/stoyan/MC/H135toZG_500k/RECO_v1/H135toZG_7TeV_START44_V5_RAW2DIGI_RECO_PU_file9J_1_1_xse.root'
-#)
-#)
+ event source  
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
+process.source = cms.Source("PoolSource",
+    fileNames = cms.untracked.vstring(
+         '/store/mc/Fall11/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/AODSIM/PU_S6_START42_V14B-v1/0001/A6A53A52-4EF6-E011-8524-90E6BA0D09AD.root'
+         #'/store/data/Run2011B/DoubleMu/AOD/16Jan2012-v1/0000/A0914A57-C344-E111-8687-001A928116D0.root'
+         #'/store/user/stoyan/MC/H135toZG_500k/RECO_v1/H135toZG_7TeV_START44_V5_RAW2DIGI_RECO_PU_file9J_1_1_xse.root'
+)
+)
 
-process.load('gravitonData')
+#process.load('gravitonData')
 
 
 # event counters
