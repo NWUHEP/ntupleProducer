@@ -5,7 +5,7 @@ from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 process = cms.Process("PAT")
 
 # real data or MC?
-isRealData = True
+isRealData = False
 
 # global tag
 process.load("Configuration.StandardSequences.Geometry_cff")
@@ -46,6 +46,8 @@ addPatSequence(process, isRealData, addPhotons = True)
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.threshold = 'ERROR'
 process.MessageLogger.cerr.FwkReport.reportEvery = 100000000
+
+'''
 process.MessageLogger.categories = cms.untracked.vstring('FwkJob', 'FwkReport', 'FwkSummary', 'Root_NoDictionary', 'DataNotAvailable', 'HLTConfigData')
 process.MessageLogger.destinations = cms.untracked.vstring('myOutput')
 process.MessageLogger.myOutput = cms.untracked.PSet(
@@ -60,16 +62,19 @@ process.MessageLogger.myOutput = cms.untracked.PSet(
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
                                      SkipEvent = cms.untracked.vstring('ProductNotFound')
                                     )
+'''
 
 # event source  
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
-process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring(
-         #'/store/mc/Fall11/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/AODSIM/PU_S6_START42_V14B-v1/0001/A6A53A52-4EF6-E011-8524-90E6BA0D09AD.root'
-         '/store/data/Run2011B/DoubleMu/AOD/16Jan2012-v1/0000/A0914A57-C344-E111-8687-001A928116D0.root'
-         #'/store/user/stoyan/MC/H135toZG_500k/RECO_v1/H135toZG_7TeV_START44_V5_RAW2DIGI_RECO_PU_file9J_1_1_xse.root'
-)
-)
+#process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
+#process.source = cms.Source("PoolSource",
+#    fileNames = cms.untracked.vstring(
+#         '/store/mc/Fall11/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/AODSIM/PU_S6_START42_V14B-v1/0001/A6A53A52-4EF6-E011-8524-90E6BA0D09AD.root'
+#         #'/store/data/Run2011B/DoubleMu/AOD/16Jan2012-v1/0000/A0914A57-C344-E111-8687-001A928116D0.root'
+#         #'/store/user/stoyan/MC/H135toZG_500k/RECO_v1/H135toZG_7TeV_START44_V5_RAW2DIGI_RECO_PU_file9J_1_1_xse.root'
+#)
+#)
+
+process.load('gravitonData')
 
 
 # event counters
@@ -104,7 +109,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   PhotonTag         =    cms.untracked.InputTag('patPhotons'),
   TauTag            =    cms.untracked.InputTag('selectedPatTausPFlow'),
   PrimaryVtxTag     =    cms.untracked.InputTag('offlinePrimaryVertices'),
-  rhoCorrTag        =    cms.untracked.InputTag('kt6PFJetsIso', 'rho', 'ntuples'),
+  rhoCorrTag        =    cms.untracked.InputTag('kt6PFJetsPFlow', 'rho', 'PAT'),
 
   saveJets          =    cms.untracked.bool(True),
   saveElectrons     =    cms.untracked.bool(True),
@@ -180,6 +185,11 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 )
 )
 
-process.ntuplePath = cms.Path(process.PFTau * process.patDefaultSequence * process.ntupleProducer)
+process.ntuplePath = cms.Path(process.PFTau
+        * process.patDefaultSequence 
+        #* process.kt6PFJets
+        #* process.kt6PFJetsIso
+        * process.ntupleProducer
+        )
 
-#process.outpath = cms.EndPath(process.out)
+process.outpath = cms.EndPath(process.out)

@@ -85,9 +85,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     //get jet information//
     ///////////////////////
 
-    //Handle<double> rhoCorr;
-    //iEvent.getByLabel(rhoCorrTag_, rhoCorr);
-    //rhoFactor = (float)(*rhoCorr);
+    Handle<double> rhoCorr;
+    iEvent.getByLabel(rhoCorrTag_, rhoCorr);
+    rhoFactor = (float)(*rhoCorr);
 
     if(saveJets_){
 
@@ -520,7 +520,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
         for(iPV = PUInfo->begin(); iPV != PUInfo->end(); ++iPV){
           if (iPV->getBunchCrossing() == 0){
-            nPUVertices = iPV->getPU_NumInteractions();
+            nPUVertices     = iPV->getPU_NumInteractions();
             nPUVerticesTrue = iPV->getTrueNumInteractions();
           }
         }
