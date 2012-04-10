@@ -179,7 +179,8 @@ class ntupleProducer : public edm::EDAnalyzer {
         typedef std::map<reco::Jet, unsigned int, JetCompare> flavourMap;
 
 		//Standard event info
-		int   eventNumber, runNumber, lumiSection, bunchCross, nEvents;
+        long  eventNumber;
+		int   runNumber, lumiSection, bunchCross, nEvents;
 		float ptHat, qScale, evtWeight;
 		float deliveredLumi, recordedLumi, lumiDeadTime;
 		float rhoFactor;

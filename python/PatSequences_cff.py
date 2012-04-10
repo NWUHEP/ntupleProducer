@@ -40,9 +40,10 @@ def myAdaptPFTaus(process,tauType = 'hpsPFTau', postfix = ""):
         )
 
 
-##
-## add trigger matching for the leptons
-##
+##                                      ## 
+## add trigger matching for the leptons ##
+##                                      ##
+
 def addTriggerMatchingForLeptons(process, postfix='') :
     # define the trigger matchers
     process.muTriggerMatchPF = cms.EDProducer( "PATTriggerMatcherDRLessByR",
@@ -98,12 +99,8 @@ def addPatSequence(process, runOnData, addPhotons=True) :
     process.kt6PFJets25.Rho_EtaMax = cms.double(2.5)
 
     #start PF2PAT
-    usePF2PAT(process,
-              runPF2PAT=True,
-              runOnMC= not runOnData,
-              jetAlgo=jetAlgo,
-              postfix=postfix,
-              jetCorrections=(jecSetPF, jecLevels),
+    usePF2PAT(process, runPF2PAT=True, runOnMC= not runOnData,
+              jetAlgo=jetAlgo, postfix=postfix, jetCorrections=(jecSetPF, jecLevels), 
               typeIMetCorrections=True
               )
 
@@ -202,9 +199,10 @@ def addPatSequence(process, runOnData, addPhotons=True) :
             )
     else :
         process.patDefaultSequence = cms.Sequence(
-            process.electronIDSequence*
-            getattr(process,"patPF2PATSequence"+postfix)*
-            process.hzzmetSequence
+            process.electronIDSequence
+            * process.kt6PFJets25
+            * getattr(process,"patPF2PATSequence"+postfix)
+            * process.hzzmetSequence
             )
         
         

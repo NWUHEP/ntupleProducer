@@ -149,34 +149,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             }
             ++jetCount;
         }   
-
-        // Temporary workaround for VBF analysis: adding JPT tracks...
-
-        Handle<reco::JPTJetCollection> jptJets;
-        iEvent.getByLabel(jptTag_, jptJets);
-
-        for (reco::JPTJetCollection::const_iterator iJet = jptJets->begin(); iJet != jptJets->end(); ++iJet) {
-
-            if (iJet->pt() < 10.) continue;
-
-            TCJet* jetCon = new ((*recoJPT)[jptCount]) TCJet;
-
-            jetCon->SetP4(iJet->px(), iJet->py(), iJet->pz(), iJet->energy());
-            jetCon->SetVtx(0., 0., 0.);
-
-            //cout << iJet->getSpecific().Zch << endl;;
-
-            jetCon->SetChHadFrac(iJet->chargedHadronEnergyFraction());
-            jetCon->SetNeuHadFrac(iJet->neutralHadronEnergyFraction());
-            jetCon->SetChEmFrac(iJet->chargedEmEnergyFraction());
-            jetCon->SetNeuEmFrac(iJet->neutralEmEnergyFraction());
-            jetCon->SetNumConstit(iJet->chargedMultiplicity());// + iJet->neutralMultiplicity());
-            jetCon->SetNumChPart(iJet->chargedMultiplicity());
-
-            ++jptCount;
-
-        }
-
     }
 
     /////////////
@@ -235,11 +207,13 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     if (saveMuons_) {
 
-        Handle<vector<pat::Muon> > muons;
+        //Handle<vector<pat::Muon> > muons;
+        Handle<vector<reco::Muon> > muons;
         iEvent.getByLabel(muonTag_, muons);
 
-        for (vector<pat::Muon>::const_iterator iMuon = muons->begin(); iMuon != muons->end(); ++iMuon) {
-            if (!(iMuon->isGlobalMuon() && iMuon->isTrackerMuon()) || (iMuon->pt() < 10. && muCount < 2)) continue;
+        //for (vector<pat::Muon>::const_iterator iMuon = muons->begin(); iMuon != muons->end(); ++iMuon) {
+        for (vector<reco::Muon>::const_iterator iMuon = muons->begin(); iMuon != muons->end(); ++iMuon) {
+            if (!(iMuon->isGlobalMuon() && iMuon->isTrackerMuon()) || iMuon->pt() < 10.) continue;
 
             TCMuon* muCon = new ((*recoMuons)[muCount]) TCMuon;
 
@@ -273,6 +247,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             muCon->SetPfSumPt(0.3, iMuon->pfIsolationR03().sumChargedParticlePt);
             muCon->SetPfEGamma(0.3, iMuon->pfIsolationR03().sumPhotonEt);
             muCon->SetPfENeutral(0.3, iMuon->pfIsolationR03().sumNeutralHadronEt);
+            muCon->SetPfSumPt(0.4, iMuon->pfIsolationR04().sumChargedParticlePt);
+            muCon->SetPfEGamma(0.4, iMuon->pfIsolationR04().sumPhotonEt);
+            muCon->SetPfENeutral(0.4, iMuon->pfIsolationR04().sumNeutralHadronEt);
 
             muCount++;
         }
@@ -549,7 +526,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             }
 
 
-            if (myParticle.status() == 3 && (abs(myParticle.pdgId()) == 6 || abs(myParticle.pdgId()) == 23 || abs(myParticle.pdgId()) == 24)) {
+            if (myParticle.status() == 3 && (abs(myParticle.pdgId()) == 6 || abs(myParticle.pdgId()) == 21 || abs(myParticle.pdgId()) == 23 || abs(myParticle.pdgId()) == 24)) {
                 for (size_t i = 0; i < myParticle.numberOfDaughters(); ++i) {
                     const reco::Candidate *myDaughter = myParticle.daughter(i);
                     if (myDaughter->status() != 1 && (abs(myDaughter->pdgId()) == 5 || (abs(myDaughter->pdgId()) >= 11 && abs(myDaughter->pdgId()) <= 16))) {
@@ -667,7 +644,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     ++nEvents;
 
-    if (eleCount > 0 || muCount > 0 || photonCount > 0) eventTree -> Fill(); // possibly specify a cut in configuration
+    if (eleCount > 0 || muCount > 0) eventTree -> Fill(); // possibly specify a cut in configuration
 
     primaryVtx->Clear("C");
     recoJets->Clear("C");
