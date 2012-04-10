@@ -526,7 +526,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             }
 
 
-            if (myParticle.status() == 3 && (abs(myParticle.pdgId()) == 6 || abs(myParticle.pdgId()) == 21 || abs(myParticle.pdgId()) == 23 || abs(myParticle.pdgId()) == 24)) {
+            if (myParticle.status() == 3 && (abs(myParticle.pdgId()) == 6 || abs(myParticle.pdgId()) == 39 || abs(myParticle.pdgId()) == 23 || abs(myParticle.pdgId()) == 24)) {
                 for (size_t i = 0; i < myParticle.numberOfDaughters(); ++i) {
                     const reco::Candidate *myDaughter = myParticle.daughter(i);
                     if (myDaughter->status() != 1 && (abs(myDaughter->pdgId()) == 5 || (abs(myDaughter->pdgId()) >= 11 && abs(myDaughter->pdgId()) <= 16))) {
