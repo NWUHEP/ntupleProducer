@@ -697,9 +697,9 @@ void  ntupleProducer::beginJob()
     eventTree->Branch("nPUVerticesTrue", &nPUVerticesTrue, "nPUVerticesTrue/F");
 
     eventTree->Branch("isRealData",&isRealData, "isRealData/O");
-    eventTree->Branch("runNumber",&runNumber, "runNumber/l");
-    eventTree->Branch("eventNumber",&eventNumber, "eventNumber/i");
-    eventTree->Branch("lumiSection",&lumiSection, "lumiSection/e");
+    eventTree->Branch("runNumber",&runNumber, "runNumber/i");
+    eventTree->Branch("eventNumber",&eventNumber, "eventNumber/l");
+    eventTree->Branch("lumiSection",&lumiSection, "lumiSection/i");
     eventTree->Branch("bunchCross",&bunchCross, "bunchCross/i");
 
     eventTree->Branch("isScraping",&isScraping, "isScraping/O");
@@ -717,7 +717,7 @@ void  ntupleProducer::beginJob()
 
     runTree->Branch("deliveredLumi",&deliveredLumi, "deliveredLumi/F");
     runTree->Branch("recordedLumi",&recordedLumi, "recordedLumi/F");
-    runTree->Branch("runNumber",&runNumber, "runNumber/l");
+    runTree->Branch("runNumber",&runNumber, "runNumber/i");
 
     jobTree->Branch("savedTriggerNames",savedTriggerNames, "savedTriggerNames[64]/C");
     jobTree->Branch("nEvents",&nEvents, "nEvents/i");
