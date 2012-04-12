@@ -207,12 +207,12 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     if (saveMuons_) {
 
-        //Handle<vector<pat::Muon> > muons;
-        Handle<vector<reco::Muon> > muons;
+        Handle<vector<pat::Muon> > muons;
+        //Handle<vector<reco::Muon> > muons;
         iEvent.getByLabel(muonTag_, muons);
 
-        //for (vector<pat::Muon>::const_iterator iMuon = muons->begin(); iMuon != muons->end(); ++iMuon) {
-        for (vector<reco::Muon>::const_iterator iMuon = muons->begin(); iMuon != muons->end(); ++iMuon) {
+        for (vector<pat::Muon>::const_iterator iMuon = muons->begin(); iMuon != muons->end(); ++iMuon) {
+        //for (vector<reco::Muon>::const_iterator iMuon = muons->begin(); iMuon != muons->end(); ++iMuon) {
             if (!(iMuon->isGlobalMuon() && iMuon->isTrackerMuon()) || iMuon->pt() < 10.) continue;
 
             TCMuon* muCon = new ((*recoMuons)[muCount]) TCMuon;

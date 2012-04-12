@@ -5,7 +5,7 @@ from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 process = cms.Process("PAT")
 
 # real data or MC?
-isRealData = True 
+isRealData = False
 
 # global tag
 process.load("Configuration.StandardSequences.Geometry_cff")
@@ -68,8 +68,8 @@ process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(10))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-       #'/store/data/Fall11/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/AODSIM/PU_S6-START44_V5-v1/0000/0030ADBC-C409-E111-B1E7-E0CB4E553666.root',
-         '/store/data/Run2011B/DoubleMu/AOD/16Jan2012-v1/0000/A0914A57-C344-E111-8687-001A928116D0.root'
+       '/store/data/Fall11/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/AODSIM/PU_S6-START44_V5-v1/0000/0030ADBC-C409-E111-B1E7-E0CB4E553666.root',
+         #'/store/data/Run2011B/DoubleMu/AOD/16Jan2012-v1/0000/A0914A57-C344-E111-8687-001A928116D0.root'
          #'/store/user/stoyan/MC/H135toZG_500k/RECO_v1/H135toZG_7TeV_START44_V5_RAW2DIGI_RECO_PU_file9J_1_1_xse.root'
 )
 )
@@ -105,8 +105,8 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   METTag            =    cms.untracked.InputTag('patMETsPFlow'),
   METNoPUTag        =    cms.untracked.InputTag('patMETsPFlowNoPileup'),
   ElectronTag       =    cms.untracked.InputTag('selectedPatElectronsPFlow'),
-  #MuonTag           =    cms.untracked.InputTag('selectedPatMuonsPFlow'),
-  MuonTag           =    cms.untracked.InputTag('muons'),
+  MuonTag           =    cms.untracked.InputTag('selectedPatMuonsPFlow'),
+  #MuonTag           =    cms.untracked.InputTag('muons'),
   PhotonTag         =    cms.untracked.InputTag('patPhotons'),
   TauTag            =    cms.untracked.InputTag('selectedPatTausPFlow'),
   PrimaryVtxTag     =    cms.untracked.InputTag('offlinePrimaryVertices'),
@@ -191,4 +191,4 @@ process.ntuplePath = cms.Path(process.PFTau
         * process.ntupleProducer
         )
 
-process.outpath = cms.EndPath(process.out)
+#process.outpath = cms.EndPath(process.out)

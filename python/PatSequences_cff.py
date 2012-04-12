@@ -119,6 +119,11 @@ def addPatSequence(process, runOnData, addPhotons=True) :
     getattr(process,"pfNoTau"+postfix).enable = False
     getattr(process,"pfNoJet"+postfix).enable = False
 
+    #set pfMuon isolation
+    process.load("CommonTools.ParticleFlow.Isolation/pfIsolatedMuons_cfi")
+    process.pfIsolatedMuonsPFlow.isolationCuts   = cms.vdouble(9999.,9999.,9999.)
+    process.pfIsolatedMuonsPFlow.combinedIsolationCut = cms.double(9999.)
+
     #electron ID
     process.load("ElectroWeakAnalysis.WENu.simpleEleIdSequence_cff")
     process.load("RecoEgamma.ElectronIdentification.cutsInCategoriesElectronIdentificationV06_DataTuning_cfi")
