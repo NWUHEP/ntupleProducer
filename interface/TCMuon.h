@@ -40,9 +40,6 @@ private:
     float _pfIso_Pt04;
     float _pfIso_Neutral04;
     float _pfIso_Gamma04;
-    float _pfIso_Pt05;
-    float _pfIso_Neutral05;
-    float _pfIso_Gamma05;
 
 public:
     TCMuon();
@@ -87,10 +84,10 @@ public:
     float NormalizedChi2() const;
     int NumberOfMatches() const;
 
-    float PfRelIso(float coneSize) const;
-    float PfSumPt(float coneSize) const;
-    float PfEGamma(float coneSize) const;
-    float PfENeutral(float coneSize) const;
+    float PfRelIso(int coneSize) const;
+    float PfSumPt(int coneSize) const;
+    float PfEGamma(int coneSize) const;
+    float PfENeutral(int coneSize) const;
 
     float Dxy(TVector3 *primVtx) const;
     float Dz(TVector3 *primVtx) const;
@@ -101,7 +98,7 @@ public:
     void SetPtError(float er);
     void SetVtx(float vx, float vy, float vz);
 
-     void SetCharge(int c);
+    void SetCharge(int c);
     void SetIsGLB(bool t);
     void SetIsTRK(bool t);
     void SetCaloComp(float c);
@@ -122,9 +119,9 @@ public:
     void SetNumberOfLostTrackerHits(int n);
     void SetNormalizedChi2(float n);
 
-    void SetPfSumPt(float coneSize, float f); 
-    void SetPfEGamma(float coneSize, float f);
-    void SetPfENeutral(float coneSize, float f);
+    void SetPfSumPt(int coneSize, float f); 
+    void SetPfEGamma(int coneSize, float f);
+    void SetPfENeutral(int coneSize, float f);
 
     ClassDef(TCMuon, 1);
 
