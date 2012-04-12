@@ -131,38 +131,33 @@ int TCMuon::Ntracks05() const {
    return _nTracks05;
 }
 
-float TCMuon::PfSumPt(float coneSize) const {
+float TCMuon::PfSumPt(int coneSize) const {
   float sumPt = 0;
-  if (fabs(coneSize - 0.3) < 0.01) sumPt = _pfIso_Pt03;
-  if (fabs(coneSize - 0.4) < 0.01) sumPt = _pfIso_Pt04;
-  if (fabs(coneSize - 0.5) < 0.01) sumPt = _pfIso_Pt05;
+  if (coneSize == 3) sumPt = _pfIso_Pt03;
+  if (coneSize == 4) sumPt = _pfIso_Pt04;
   return sumPt;
 }
 
-float TCMuon::PfENeutral(float coneSize) const {
+float TCMuon::PfENeutral(int coneSize) const {
   float neutral = 0;
-  if (fabs(coneSize - 0.3) < 0.01) neutral = _pfIso_Neutral03;
-  if (fabs(coneSize - 0.4) < 0.01) neutral = _pfIso_Neutral04;
-  if (fabs(coneSize - 0.5) < 0.01) neutral = _pfIso_Neutral05;
+  if (coneSize == 3) neutral = _pfIso_Neutral03;
+  if (coneSize == 4) neutral = _pfIso_Neutral04;
   return neutral;
 }
 
-float TCMuon::PfEGamma(float coneSize) const {
+float TCMuon::PfEGamma(int coneSize) const {
   float gamma = 0;
-  if (fabs(coneSize - 0.3) < 0.01) gamma = _pfIso_Gamma03;
-  if (fabs(coneSize - 0.4) < 0.01) gamma = _pfIso_Gamma04;
-  if (fabs(coneSize - 0.5) < 0.01) gamma = _pfIso_Gamma05;
+  if (coneSize == 3) gamma = _pfIso_Gamma03;
+  if (coneSize == 4) gamma = _pfIso_Gamma04;
   return gamma;
 }
 
-float TCMuon::PfRelIso(float coneSize) const {
+float TCMuon::PfRelIso(int coneSize) const {
   float relIso = 0;
-  if (fabs(coneSize - 0.3) < 0.01)
+  if (coneSize == 3)
     relIso = (_pfIso_Pt03 + _pfIso_Gamma03 + _pfIso_Neutral03) / _p4.Pt();
-  if (fabs(coneSize - 0.4) < 0.01)
+  if (coneSize == 4)
     relIso = (_pfIso_Pt04 + _pfIso_Gamma04 + _pfIso_Neutral04) / _p4.Pt();
-  if (fabs(coneSize - 0.5) < 0.01)
-    relIso = (_pfIso_Pt05 + _pfIso_Gamma05 + _pfIso_Neutral05) / _p4.Pt();
   return relIso;
 }
 
@@ -282,20 +277,17 @@ void TCMuon::SetNtracks05(int n){
    _nTracks05 = n;
 }
 
-void TCMuon::SetPfSumPt(float coneSize, float f) {
-  if(fabs(coneSize - 0.3) < 0.01) _pfIso_Pt03 = f;
-  if(fabs(coneSize - 0.4) < 0.01) _pfIso_Pt04 = f;
-  if(fabs(coneSize - 0.5) < 0.01) _pfIso_Pt05 = f;
+void TCMuon::SetPfSumPt(int coneSize, float f) {
+  if(coneSize == 3) _pfIso_Pt03 = f;
+  if(coneSize == 4) _pfIso_Pt04 = f;
 }
 
-void TCMuon::SetPfEGamma(float coneSize, float f) {
-  if(fabs(coneSize - 0.3) < 0.01) _pfIso_Gamma03 = f;
-  if(fabs(coneSize - 0.4) < 0.01) _pfIso_Gamma04 = f;
-  if(fabs(coneSize - 0.5) < 0.01) _pfIso_Gamma05 = f;
+void TCMuon::SetPfEGamma(int coneSize, float f) {
+  if(coneSize == 3) _pfIso_Gamma03 = f;
+  if(coneSize == 4) _pfIso_Gamma04 = f;
 }
 
-void TCMuon::SetPfENeutral(float coneSize, float f) {
-  if(fabs(coneSize - 0.3) < 0.01) _pfIso_Neutral03 = f;
-  if(fabs(coneSize - 0.4) < 0.01) _pfIso_Neutral04 = f;
-  if(fabs(coneSize - 0.5) < 0.01) _pfIso_Neutral05 = f;
+void TCMuon::SetPfENeutral(int coneSize, float f) {
+  if(coneSize == 3) _pfIso_Neutral03 = f;
+  if(coneSize == 4) _pfIso_Neutral04 = f;
 }
