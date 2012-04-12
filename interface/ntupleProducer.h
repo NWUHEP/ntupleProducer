@@ -196,6 +196,7 @@ class ntupleProducer : public edm::EDAnalyzer {
 		edm::InputTag metNoPUTag_;
 		edm::InputTag genJetTag_;
 		edm::InputTag muonTag_;
+		edm::InputTag pfMuonTag_;
 		edm::InputTag electronTag_;
 		edm::InputTag photonTag_;
 		edm::InputTag tauTag_;
@@ -204,7 +205,7 @@ class ntupleProducer : public edm::EDAnalyzer {
 		edm::InputTag rhoCorrTag_;
 		edm::InputTag ecalFilterTag_;
 		edm::InputTag hcalFilterTag_;
-        edm::ParameterSet photonIsoCalcTag_;
+    edm::ParameterSet photonIsoCalcTag_;
 
 		bool saveJets_;
 		bool saveElectrons_;
@@ -220,6 +221,7 @@ class ntupleProducer : public edm::EDAnalyzer {
 		TClonesArray* recoJets;
 		TClonesArray* recoJPT;
 		TClonesArray* recoMuons;
+		TClonesArray* pfMuons;
 		TClonesArray* recoElectrons;
 		TClonesArray* recoTaus;
 		TClonesArray* recoPhotons;
