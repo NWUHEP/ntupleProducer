@@ -191,4 +191,4 @@ process.ntuplePath = cms.Path(process.PFTau
         * process.ntupleProducer
         )
 
-#process.outpath = cms.EndPath(process.out)
+process.outpath = cms.EndPath(process.out)

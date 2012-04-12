@@ -199,6 +199,7 @@ def addPatSequence(process, runOnData, addPhotons=True) :
             process.electronIDSequence
             * process.kt6PFJets25
             * getattr(process,"patPF2PATSequence"+postfix)
+            * process.pfIsolatedMuonsPFlow
             * process.hzzmetSequence
             * process.patPhotons
             )
@@ -207,6 +208,7 @@ def addPatSequence(process, runOnData, addPhotons=True) :
             process.electronIDSequence
             * process.kt6PFJets25
             * getattr(process,"patPF2PATSequence"+postfix)
+            * process.pfIsolatedMuonsPFlow
             * process.hzzmetSequence
             )
         
