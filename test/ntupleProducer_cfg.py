@@ -5,7 +5,7 @@ from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 process = cms.Process("PAT")
 
 # real data or MC?
-isRealData = False
+isRealData = True
 
 # global tag
 process.load("Configuration.StandardSequences.Geometry_cff")
@@ -13,7 +13,7 @@ process.load("Configuration.StandardSequences.MagneticField_cff")
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 if (isRealData):
-    process.GlobalTag.globaltag = 'GR_R_44_V14::All' 
+    process.GlobalTag.globaltag = 'GR_R_44_V14::All'
 else:
     process.GlobalTag.globaltag = 'START44_V13::All'
 
@@ -34,6 +34,7 @@ process.out = cms.OutputModule("PoolOutputModule",
                                )
 
 from Higgs.ntupleProducer.PatSequences_cff import addPatSequence
+
 addPatSequence(process, isRealData, addPhotons = True)
 
 ##------------------------------------------------------------------
@@ -54,8 +55,8 @@ process.MessageLogger.myOutput = cms.untracked.PSet(
                 FwkJob              = cms.untracked.PSet(limit = cms.untracked.int32(0)),
                 FwkReport           = cms.untracked.PSet(limit = cms.untracked.int32(0)),
                 FwkSummary          = cms.untracked.PSet(limit = cms.untracked.int32(0)),
-                Root_NoDictionary   = cms.untracked.PSet(limit = cms.untracked.int32(0)),                    
-                DataNotAvailable    = cms.untracked.PSet(limit = cms.untracked.int32(0)),                    
+                Root_NoDictionary   = cms.untracked.PSet(limit = cms.untracked.int32(0)),
+                DataNotAvailable    = cms.untracked.PSet(limit = cms.untracked.int32(0)),
                 HLTConfigData       = cms.untracked.PSet(limit = cms.untracked.int32(0))
                 )
 
@@ -64,11 +65,13 @@ process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
                                     )
 '''
 
-# event source  
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(10))
+# event source
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(200))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-       '/store/data/Fall11/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/AODSIM/PU_S6-START44_V5-v1/0000/0030ADBC-C409-E111-B1E7-E0CB4E553666.root',
+      #'/store/data/Fall11/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/AODSIM/PU_S6-START44_V5-v1/0000/0030ADBC-C409-E111-B1E7-E0CB4E553666.root',
+        '/store/data/Run2011B/DoubleMu/AOD/16Jan2012-v1/0000/A0914A57-C344-E111-8687-001A928116D0.root'
+        #'/store/data/Fall11/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/AODSIM/PU_S6-START44_V5-v1/0000/0030ADBC-C409-E111-B1E7-E0CB4E553666.root',
          #'/store/data/Run2011B/DoubleMu/AOD/16Jan2012-v1/0000/A0914A57-C344-E111-8687-001A928116D0.root'
          #'/store/user/stoyan/MC/H135toZG_500k/RECO_v1/H135toZG_7TeV_START44_V5_RAW2DIGI_RECO_PU_file9J_1_1_xse.root'
 )
@@ -91,7 +94,7 @@ print '\n\nNow run the ntuplizer...\n\n'
 
 ### TFile service!
 process.TFileService = cms.Service('TFileService',
-                                   fileName = cms.string('nuTuple.root')
+                                   fileName = cms.string('nuTupleDATA.root')
                                    )
 
 ### ntuple producer
@@ -105,8 +108,8 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   METTag            =    cms.untracked.InputTag('patMETsPFlow'),
   METNoPUTag        =    cms.untracked.InputTag('patMETsPFlowNoPileup'),
   ElectronTag       =    cms.untracked.InputTag('selectedPatElectronsPFlow'),
-  MuonTag           =    cms.untracked.InputTag('selectedPatMuonsPFlow'),
-  #MuonTag           =    cms.untracked.InputTag('muons'),
+  pfMuonTag         =    cms.untracked.InputTag('selectedPatMuonsPFlow'),
+  MuonTag           =    cms.untracked.InputTag('muons'),
   PhotonTag         =    cms.untracked.InputTag('patPhotons'),
   TauTag            =    cms.untracked.InputTag('selectedPatTausPFlow'),
   PrimaryVtxTag     =    cms.untracked.InputTag('offlinePrimaryVertices'),
@@ -175,9 +178,9 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_Ele20_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_MediumIsoPFTau20_v",
                                                "HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_MediumIsoPFTau25_v",
                                                "HLT_HT400_DoubleIsoPFTau10_Trk3_PFMHT50_v",
-                                               "HLT_IsoMu15_eta2p1_LooseIsoPFTau20_v", 
-                                               "HLT_IsoMu15_eta2p1_MediumIsoPFTau20_v", 
-                                               "HLT_IsoMu15_eta2p1_TightIsoPFTau20_v", 
+                                               "HLT_IsoMu15_eta2p1_LooseIsoPFTau20_v",
+                                               "HLT_IsoMu15_eta2p1_MediumIsoPFTau20_v",
+                                               "HLT_IsoMu15_eta2p1_TightIsoPFTau20_v",
                                                "HLT_Mu15_LooseIsoPFTau15_v"
                                                "",
                                                "",
@@ -187,8 +190,9 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 )
 
 process.ntuplePath = cms.Path(process.PFTau
-        * process.patDefaultSequence 
+        * process.patDefaultSequence
         * process.ntupleProducer
         )
 
-process.outpath = cms.EndPath(process.out)
+#process.outpath = cms.EndPath(process.out)
+
