@@ -382,6 +382,12 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             myPhoton->SetR9(iPhoton->r9());
             myPhoton->SetEtaSupercluster(iPhoton->superCluster()->eta());
             myPhoton->SetTrackVeto(iPhoton->hasPixelSeed());
+            myPhoton->SetEMIsoDR03(iPhoton->ecalRecHitSumEtConeDR03());
+            myPhoton->SetEMIsoDR04(iPhoton->ecalRecHitSumEtConeDR04());
+            myPhoton->SetHADIsoDR03(iPhoton->hcalTowerSumEtConeDR03());
+            myPhoton->SetHADIsoDR04(iPhoton->hcalTowerSumEtConeDR04());
+            myPhoton->SetTRKIsoVtxDR03(iPhoton->trkSumPtHollowConeDR03());
+            myPhoton->SetTRKIsoVtxDR04(iPhoton->trkSumPtHollowConeDR04());
 
             //Conversion info
             reco::ConversionRefVector conversions = iPhoton->conversions();
@@ -537,7 +543,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         // PU information //
         ////////////////////
 
-
+/*
         Handle<std::vector< PileupSummaryInfo > >  PUInfo;
         iEvent.getByLabel(edm::InputTag("addPileupInfo"), PUInfo);
         std::vector<PileupSummaryInfo>::const_iterator iPV;
@@ -548,7 +554,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             nPUVerticesTrue = iPV->getTrueNumInteractions();
           }
         }
-
+*/
 
         //////////////////////
         // Get genParticles //
