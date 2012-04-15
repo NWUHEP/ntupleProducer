@@ -386,8 +386,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             myPhoton->SetEMIsoDR04(iPhoton->ecalRecHitSumEtConeDR04());
             myPhoton->SetHADIsoDR03(iPhoton->hcalTowerSumEtConeDR03());
             myPhoton->SetHADIsoDR04(iPhoton->hcalTowerSumEtConeDR04());
-            myPhoton->SetTRKIsoVtxDR03(iPhoton->trkSumPtHollowConeDR03());
-            myPhoton->SetTRKIsoVtxDR04(iPhoton->trkSumPtHollowConeDR04());
+            myPhoton->SetTRKIsoDR03(iPhoton->trkSumPtHollowConeDR03());
+            myPhoton->SetTRKIsoDR04(iPhoton->trkSumPtHollowConeDR04());
 
             //Conversion info
             reco::ConversionRefVector conversions = iPhoton->conversions();
