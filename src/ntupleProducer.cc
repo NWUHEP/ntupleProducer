@@ -543,7 +543,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         // PU information //
         ////////////////////
 
-/*
         Handle<std::vector< PileupSummaryInfo > >  PUInfo;
         iEvent.getByLabel(edm::InputTag("addPileupInfo"), PUInfo);
         std::vector<PileupSummaryInfo>::const_iterator iPV;
@@ -551,10 +550,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         for(iPV = PUInfo->begin(); iPV != PUInfo->end(); ++iPV){
           if (iPV->getBunchCrossing() == 0){
             nPUVertices     = iPV->getPU_NumInteractions();
+            //cout<<iPV->getTrueNumInteractions()<<endl;
             nPUVerticesTrue = iPV->getTrueNumInteractions();
           }
         }
-*/
 
         //////////////////////
         // Get genParticles //
