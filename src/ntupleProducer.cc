@@ -1,4 +1,5 @@
 #include "Higgs/ntupleProducer/interface/ntupleProducer.h"
+#include "DataFormats/Math/interface/deltaR.h"
 
 ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
 {
@@ -17,6 +18,8 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
     hlTriggerResults_ = iConfig.getUntrackedParameter<string>("HLTriggerResults","TriggerResults");
     hltProcess_       = iConfig.getUntrackedParameter<string>("hltName");
     triggerPaths_     = iConfig.getUntrackedParameter<vector<string> >("triggers");
+
+    partFlowTag_      = iConfig.getUntrackedParameter<edm::InputTag>("partFlowTag");
 
     saveJets_         = iConfig.getUntrackedParameter<bool>("saveJets");
     saveElectrons_    = iConfig.getUntrackedParameter<bool>("saveElectrons");
@@ -56,8 +59,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     beamSpot->SetXYZ(vertexBeamSpot.x0(), vertexBeamSpot.y0(), vertexBeamSpot.z0());
 
-    int vtxCount, jetCount, jptCount, metCount, muCount, pfMuCount, eleCount, photonCount, tauCount, genCount, genPartCount;
-    vtxCount = jetCount = jptCount = metCount = muCount = pfMuCount = eleCount = photonCount = tauCount = genCount = genPartCount = 0;
+    int vtxCount, jetCount, jptCount, metCount, muCount, pfMuCount, eleCount, photonCount, pfPhotonCount, tauCount, genCount, genPartCount;
+    vtxCount = jetCount = jptCount = metCount = muCount = pfMuCount = eleCount = photonCount = pfPhotonCount = tauCount = genCount = genPartCount = 0;
     float primaryVertexZ = -999;
 
 
@@ -369,8 +372,42 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     /////////////////
 
     if (savePhotons_) {
-        Handle<vector<pat::Photon> > photons;
-        iEvent.getByLabel(photonTag_, photons);
+      Handle<vector<pat::Photon> > photons;
+      iEvent.getByLabel(photonTag_, photons);
+
+      Handle<PFCandidateCollection> pfCands;
+      iEvent.getByLabel(partFlowTag_,pfCands);
+
+      for (PFCandidateCollection::const_iterator pho = pfCands->begin(); pho != pfCands->end(); ++pho) {
+        if (pho->translateTypeToPdgId(pho->particleId()) == 22 && pho->et() > 2 && fabs(pho->eta()) < 2.5){
+          // calculate isolation
+          float em = 0;
+          float ch = 0;
+          float nh = 0;
+
+          for (PFCandidateCollection::const_iterator pf = pfCands->begin(); pf != pfCands->end(); ++pf) {
+            int pID = pf->particleId();
+            float dr = deltaR(pf->eta(), pf->phi(), pho->eta(), pho->phi());
+
+            if (pID != 3 && pID != 2 && pf != pho){
+               if (dr < 0.5){
+                 if (pID == 4 && dr > 0.05) em += pf->et();
+                 if (pID == 1) ch += pf->et();
+                 if (pID == 5) nh += pf->et();
+               }
+            }
+
+          }
+
+          TCPhoton* con = new ((*pfPhotons)[pfPhotonCount]) TCPhoton();
+          con->SetP4(pho->px(),pho->py(),pho->pz(),pho->energy());
+          con->SetVtx(pho->vx(),pho->vy(),pho->vz());
+          con->SetCustomIso(em,nh,ch);
+
+          pfPhotonCount++;
+        }
+      }
+
 
         for (vector<pat::Photon>::const_iterator iPhoton = photons->begin(); iPhoton != photons->end() ; ++iPhoton) {
 
@@ -381,6 +418,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             myPhoton->SetSigmaIEtaIEta(iPhoton->sigmaIetaIeta());
             myPhoton->SetR9(iPhoton->r9());
             myPhoton->SetEtaSupercluster(iPhoton->superCluster()->eta());
+            //cout<<iPhoton->hasPixelSeed()<<endl;
+            //if (iPhoton->hasPixelSeed() == true) cout<<"true"<<endl;
+            //if (iPhoton->hasPixelSeed() == false) cout<<"false"<<endl;
+            //cout<<endl;
             myPhoton->SetTrackVeto(iPhoton->hasPixelSeed());
             myPhoton->SetEMIsoDR03(iPhoton->ecalRecHitSumEtConeDR03());
             myPhoton->SetEMIsoDR04(iPhoton->ecalRecHitSumEtConeDR04());
@@ -743,6 +784,7 @@ void  ntupleProducer::beginJob()
     pfMuons        = new TClonesArray("TCMuon");
     recoTaus       = new TClonesArray("TCTau");
     recoPhotons    = new TClonesArray("TCPhoton");
+    pfPhotons      = new TClonesArray("TCPhoton");
     triggerObjects = new TClonesArray("TCTriggerObject");
     genJets        = new TClonesArray("TCGenJet");
     genParticles   = new TClonesArray("TCGenParticle");
@@ -757,6 +799,7 @@ void  ntupleProducer::beginJob()
     eventTree->Branch("pfMuons",&pfMuons, 6400, 0);
     eventTree->Branch("recoTaus",&recoTaus, 6400, 0);
     eventTree->Branch("recoPhotons",&recoPhotons, 6400, 0);
+    eventTree->Branch("pfPhotons",&pfPhotons, 6400, 0);
     eventTree->Branch("recoMET", &recoMET, 6400, 0);
     eventTree->Branch("recoMETNoPU", &recoMETNoPU, 6400, 0);
     eventTree->Branch("triggerObjects", &triggerObjects, 6400, 0);

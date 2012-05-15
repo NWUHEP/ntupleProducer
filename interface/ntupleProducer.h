@@ -205,6 +205,7 @@ class ntupleProducer : public edm::EDAnalyzer {
 		edm::InputTag rhoCorrTag_;
 		edm::InputTag ecalFilterTag_;
 		edm::InputTag hcalFilterTag_;
+		edm::InputTag partFlowTag_;
     edm::ParameterSet photonIsoCalcTag_;
 
 		bool saveJets_;
@@ -225,6 +226,7 @@ class ntupleProducer : public edm::EDAnalyzer {
 		TClonesArray* recoElectrons;
 		TClonesArray* recoTaus;
 		TClonesArray* recoPhotons;
+		TClonesArray* pfPhotons;
 		TClonesArray* triggerObjects;
 		TClonesArray* genJets;
 		TClonesArray* genParticles;
