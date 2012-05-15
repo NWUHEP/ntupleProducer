@@ -15,6 +15,10 @@ private:
     TVector3 _vtx;
     int   _charge;
 
+    float _customEm;
+    float _customNh;
+    float _customCh;
+
     float _normChi2;
     float _emIsoDR04; // 
     float _hadIsoDR04; // 
@@ -47,6 +51,10 @@ public:
     virtual ~TCPhoton();
 
     // "get" methods -----------
+
+    float CustomEm() const;
+    float CustomNh() const;
+    float CustomCh() const;
 
     TLorentzVector P4() const;
     TVector3 Vtx() const;
@@ -87,6 +95,8 @@ public:
     void SetP4(TLorentzVector p4);
     void SetP4(float px, float py, float pz, float e);
     void SetVtx(float vx, float vy, float vz);
+
+    void SetCustomIso(float em, float nh, float ch);
 
     void SetCharge(int c);
     void SetNormChi2(float c);

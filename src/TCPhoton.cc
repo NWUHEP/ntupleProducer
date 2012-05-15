@@ -37,7 +37,19 @@ int TCPhoton::Charge() const {
 float TCPhoton::NormChi2() const {
    return _normChi2;
 }
-
+  //////// pfPhoton custom Iso ///////
+float TCPhoton::CustomEm() const {  //
+  return _customEm;                 //
+}                                   //
+                                    //
+float TCPhoton::CustomCh() const {  //
+  return _customCh;                 //
+}                                   //
+                                    //
+float TCPhoton::CustomNh() const {  //
+  return _customNh;                 //
+}                                   //
+  //////// pfPhoton custom Iso ///////
 float TCPhoton::EmIsoDR03() const {
    return _emIsoDR03;
 }
@@ -143,6 +155,12 @@ void TCPhoton::SetVtx(float vx, float vy, float vz) {
 
 void TCPhoton::SetCharge(int c){
   _charge = c;
+}
+
+void TCPhoton::SetCustomIso(float em, float nh, float ch){
+  _customEm = em;
+  _customCh = ch;
+  _customNh = nh;
 }
 
 void TCPhoton::SetNormChi2(float c){
