@@ -5,7 +5,7 @@ from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 process = cms.Process("PAT")
 
 # real data or MC?
-isRealData = True
+isRealData = False
 
 # global tag
 process.load("Configuration.StandardSequences.Geometry_cff")
@@ -46,7 +46,7 @@ addPatSequence(process, isRealData, addPhotons = True)
 # global options
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.threshold = 'ERROR'
-process.MessageLogger.cerr.FwkReport.reportEvery = 100000000
+process.MessageLogger.cerr.FwkReport.reportEvery = 100
 
 '''
 process.MessageLogger.categories = cms.untracked.vstring('FwkJob', 'FwkReport', 'FwkSummary', 'Root_NoDictionary', 'DataNotAvailable', 'HLTConfigData')
@@ -60,20 +60,23 @@ process.MessageLogger.myOutput = cms.untracked.PSet(
                 HLTConfigData       = cms.untracked.PSet(limit = cms.untracked.int32(0))
                 )
 
+
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
                                      SkipEvent = cms.untracked.vstring('ProductNotFound')
                                     )
 '''
 
 # event source
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(200))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-      #'/store/data/Fall11/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/AODSIM/PU_S6-START44_V5-v1/0000/0030ADBC-C409-E111-B1E7-E0CB4E553666.root',
-        '/store/data/Run2011B/DoubleMu/AOD/16Jan2012-v1/0000/A0914A57-C344-E111-8687-001A928116D0.root'
-        #'/store/data/Fall11/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/AODSIM/PU_S6-START44_V5-v1/0000/0030ADBC-C409-E111-B1E7-E0CB4E553666.root',
+         '/store/data/Fall11/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/AODSIM/PU_S6-START44_V5-v1/0000/0030ADBC-C409-E111-B1E7-E0CB4E553666.root',
          #'/store/data/Run2011B/DoubleMu/AOD/16Jan2012-v1/0000/A0914A57-C344-E111-8687-001A928116D0.root'
-         #'/store/user/stoyan/MC/H135toZG_500k/RECO_v1/H135toZG_7TeV_START44_V5_RAW2DIGI_RECO_PU_file9J_1_1_xse.root'
+         #'/store/user/bpollack/HiggsToZGTo2LG_M125_Fall11_v2/HiggsToZGTo2LG_M125_Fall11_v2//c6585f750d9783c4264353a534af5e63/HToZG_M_125_TuneZ2_7TeV_pythia6_cff_py_GEN_SIM_DIGI_L1_DIGI2RAW_HLT_RAW2DIGI_RECO_PU_97_1_Tu5.root'
+         #'file:H125toZGtoLLG_7TeV_TEST_cfi_py_GEN_FASTSIM_HLT_PU.root'
+         #'/store/data/Run2011B/DoubleMu/AOD/HZZ-19Nov2011-v1/0000/E88001B3-091E-E111-AB76-00261894388F.root',
+         #'/store/data/Fall11/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/AODSIM/PU_S6-START44_V5-v1/0002/F866CFDA-EA0A-E111-8454-E0CB4EA0A8E0.root'
+         #'file:/uscms_data/d2/bpollack/genProd/CMSSW_4_4_2/src/test/HToZG_M_125_TuneZ2_7TeV_pythia6_cff_py_GEN_SIM_DIGI_L1_DIGI2RAW_HLT_RAW2DIGI_RECO_PU.root'
 )
 )
 
@@ -94,7 +97,7 @@ print '\n\nNow run the ntuplizer...\n\n'
 
 ### TFile service!
 process.TFileService = cms.Service('TFileService',
-                                   fileName = cms.string('nuTupleDATA.root')
+                                   fileName = cms.string('nuTuple.root')
                                    )
 
 ### ntuple producer
@@ -114,6 +117,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   TauTag            =    cms.untracked.InputTag('selectedPatTausPFlow'),
   PrimaryVtxTag     =    cms.untracked.InputTag('offlinePrimaryVertices'),
   rhoCorrTag        =    cms.untracked.InputTag('kt6PFJetsPFlow', 'rho', 'PAT'),
+  partFlowTag       =    cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
 
   saveJets          =    cms.untracked.bool(True),
   saveElectrons     =    cms.untracked.bool(True),
