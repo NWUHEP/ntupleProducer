@@ -207,18 +207,17 @@ bool TCElectron::PassID(int lvl) const {
   else return false;
 }   
 
-bool TCElectron::PassConversion(int lvl) const {
-  unsigned c = CutLevel(lvl);
-  if (c & 0x02) return true;
-  else return false;
-}
-
 bool TCElectron::PassIsolation(int lvl) const {
   unsigned c = CutLevel(lvl);
   if (c & 0x02) return true;
   else return false;
 }
 
+bool TCElectron::PassConversion(int lvl) const {
+  unsigned c = CutLevel(lvl);
+  if (c & 0x04) return true;
+  else return false;
+}
 
 
 float TCElectron::Dxy(TVector3 *primVtx) const {
