@@ -101,10 +101,6 @@
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 
-#include "JetMETCorrections/Type1MET/interface/Type1MET.h"
-#include "JetMETCorrections/Type1MET/interface/Type1METAlgo.h"
-
-#include "DataFormats/AnomalousEcalDataFormats/interface/AnomalousECALVariables.h"
 #include "DataFormats/METReco/interface/BeamHaloSummary.h"
 
 // ntuple storage classes

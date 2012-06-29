@@ -40,7 +40,7 @@ def myAdaptPFTaus(process,tauType = 'hpsPFTau', postfix = ""):
         )
 
 
-##                                      ## 
+##                                      ##
 ## add trigger matching for the leptons ##
 ##                                      ##
 
@@ -49,7 +49,7 @@ def addTriggerMatchingForLeptons(process, postfix='') :
     process.muTriggerMatchPF = cms.EDProducer( "PATTriggerMatcherDRLessByR",
                                                src     = cms.InputTag( "selectedPatMuons"+postfix ),
                                                matched = cms.InputTag( "patTrigger" ),
-                                               matchedCuts = cms.string( 'type( "TriggerMuon" ) && ( path("HLT_Mu8_*") || path("HLT_Mu12_*") || path("HLT_Mu13_*") || path("HLT_DoubleMu7_*") )' ), 
+                                               matchedCuts = cms.string( 'type( "TriggerMuon" ) && ( path("HLT_Mu8_*") || path("HLT_Mu12_*") || path("HLT_Mu13_*") || path("HLT_DoubleMu7_*") )' ),
                                                maxDPtRel   = cms.double( 0.5 ), # no effect here
                                                maxDeltaR   = cms.double( 0.5 ),
                                                maxDeltaEta = cms.double( 0.2 ), # no effect here
@@ -57,7 +57,7 @@ def addTriggerMatchingForLeptons(process, postfix='') :
                                                resolveAmbiguities    = cms.bool( False ),
                                                resolveByMatchQuality = cms.bool( False )
                                                )
-    
+
     process.eleTriggerMatchPF = cms.EDProducer( "PATTriggerMatcherDRLessByR",
                                                 src     = cms.InputTag( "selectedPatElectrons"+postfix ),
                                                 matched = cms.InputTag( "patTrigger" ),
@@ -83,34 +83,39 @@ def addTriggerMatchingForLeptons(process, postfix='') :
 ##                   ##
 
 def addPatSequence(process, runOnData, addPhotons=True) :
+    print 'pat check 1'
 
     #PF2PAT
     postfix = "PFlow"
-    
-    process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
+
+    #process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
     jetAlgo='AK5'
     jecSetPF = jetAlgo+'PFchs'
     jecLevels=['L1FastJet','L2Relative','L3Absolute']
     if(runOnData) : jecLevels.append( 'L2L3Residual' )
 
     #rho computed up to 2.5
-    process.load('RecoJets.Configuration.RecoPFJets_cff')
-    process.kt6PFJets25 = process.kt6PFJets.clone(doRhoFastjet = True)
-    process.kt6PFJets25.Rho_EtaMax = cms.double(2.5)
+    #process.load('RecoJets.Configuration.RecoPFJets_cff')
+    #process.kt6PFJets25 = process.kt6PFJets.clone(doRhoFastjet = True)
+    #process.kt6PFJets25.Rho_EtaMax = cms.double(2.5)
 
+    print 'pat check 2'
     #start PF2PAT
     usePF2PAT(process, runPF2PAT=True, runOnMC= not runOnData,
-              jetAlgo=jetAlgo, postfix=postfix, jetCorrections=(jecSetPF, jecLevels), 
-              typeIMetCorrections=True
+              jetAlgo=jetAlgo, postfix=postfix, jetCorrections=(jecSetPF, jecLevels),
+              pvCollection=cms.InputTag('goodOfflinePrimaryVertices')
               )
 
+    process.pfPileUpPFlow.checkClosestZVertex = False
+
+    print 'pat check 3'
     enablePileUpCorrection(process, postfix=postfix)
 
     #disable mc matching for photons
     removeMCMatching(process,names=['Photons'],postfix=postfix)
     process.patElectronsPFlow.embedTrack=True
     process.patMuonsPFlow.embedTrack=True
-           
+
     #configure top projections
     getattr(process,"pfNoPileUp"+postfix).enable = True
     getattr(process,"pfNoMuon"+postfix).enable = True
@@ -119,6 +124,7 @@ def addPatSequence(process, runOnData, addPhotons=True) :
     getattr(process,"pfNoTau"+postfix).enable = False
     getattr(process,"pfNoJet"+postfix).enable = False
 
+    print 'pat check 4'
     #set pfMuon isolation
     process.load("CommonTools.ParticleFlow.Isolation/pfIsolatedMuons_cfi")
     process.pfIsolatedMuonsPFlow.isolationCuts   = cms.vdouble(9999.,9999.,9999.)
@@ -158,14 +164,14 @@ def addPatSequence(process, runOnData, addPhotons=True) :
         eidLooseMC = cms.InputTag("eidLooseMC"),
         eidMediumMC = cms.InputTag("eidMediumMC"),
         eidTightMC = cms.InputTag("eidTightMC"),
-        eidSuperTightMC = cms.InputTag("eidSuperTightMC")       
+        eidSuperTightMC = cms.InputTag("eidSuperTightMC")
         )
 
     #add secondary vertex mass to jets
     applyPostfix( process, 'patJets', postfix ).tagInfoSources = cms.VInputTag( cms.InputTag("secondaryVertexTagInfosAOD"+postfix) )
     applyPostfix( process, 'patJets', postfix ).userData.userFunctions = cms.vstring( "? hasTagInfo('secondaryVertex') && tagInfoSecondaryVertex('secondaryVertex').nVertices() > 0 ? tagInfoSecondaryVertex('secondaryVertex').secondaryVertex(0).p4().mass() : -999")
     applyPostfix( process, 'patJets', postfix ).userData.userFunctionLabels = cms.vstring('secvtxMass')
-    
+
     #add trigger match
     addTriggerMatchingForLeptons(process,postfix=postfix)
 
@@ -173,7 +179,7 @@ def addPatSequence(process, runOnData, addPhotons=True) :
     #process.load("WWAnalysis.Tools.chargedMetProducer_cfi")
     #process.chargedMetProducer.collectionTag = cms.InputTag("particleFlow")
     #process.trackMetProducer = process.chargedMetProducer.clone(minNeutralPt = 99999., maxNeutralEta = 0)
-    
+
     #alternative met collections
     process.pfMETPFlowNoPileup = process.pfMETPFlow.clone(src=cms.InputTag("pfNoPileUpPFlow"))
     process.patMETsPFlowNoPileup = process.patMETsPFlow.clone(metSource=cms.InputTag("pfMETPFlowNoPileup"))
@@ -188,7 +194,7 @@ def addPatSequence(process, runOnData, addPhotons=True) :
                                           * process.pfMETPFlowPileup
                                           * process.patMETsPFlowPileup
                                           )
-    
+
     if(addPhotons) :
         # temporarily use std photons (switch to PF in 43x cf. with Daniele how to do it)
         process.load('PhysicsTools.PatAlgos.producersLayer1.photonProducer_cff')
@@ -197,7 +203,8 @@ def addPatSequence(process, runOnData, addPhotons=True) :
         #create the path
         process.patDefaultSequence = cms.Sequence(
             process.electronIDSequence
-            * process.kt6PFJets25
+            * process.goodOfflinePrimaryVertices
+            #* process.kt6PFJets25
             * getattr(process,"patPF2PATSequence"+postfix)
             * process.pfIsolatedMuonsPFlow
             * process.hzzmetSequence
@@ -206,20 +213,21 @@ def addPatSequence(process, runOnData, addPhotons=True) :
     else :
         process.patDefaultSequence = cms.Sequence(
             process.electronIDSequence
-            * process.kt6PFJets25
+            #* process.kt6PFJets25
+            * process.goodOfflinePrimaryVertices
             * getattr(process,"patPF2PATSequence"+postfix)
             * process.pfIsolatedMuonsPFlow
             * process.hzzmetSequence
             )
-        
-        
+
+
     # tau algoithm selection
     # override the default set in pfTaools.py
     # the definition of myAdaptPFTaus is at the beginning of the file
-    myAdaptPFTaus( process, tauType='hpsPFTau', postfix=postfix )
-    
+    #myAdaptPFTaus( process, tauType='hpsPFTau', postfix=postfix )
+
     # this is defined in pfTools.py but has some discriminators applied
-    # adaptPFTaus( process, tauType='hpsPFTau', postfix=postfix )
+    #adaptPFTaus( process, tauType='hpsPFTau', postfix=postfix )
 
     print " *** PAT path has been defined"
-    
+
