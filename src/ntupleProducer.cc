@@ -11,7 +11,7 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
     pfMuonTag_        = iConfig.getUntrackedParameter<edm::InputTag>("pfMuonTag");
     electronTag_      = iConfig.getUntrackedParameter<edm::InputTag>("ElectronTag");
     photonTag_        = iConfig.getUntrackedParameter<edm::InputTag>("PhotonTag");
-    //tauTag_           = iConfig.getUntrackedParameter<edm::InputTag>("TauTag");
+    tauTag_           = iConfig.getUntrackedParameter<edm::InputTag>("TauTag");
     genJetTag_        = iConfig.getUntrackedParameter<edm::InputTag>("GenJetTag");
     primaryVtxTag_    = iConfig.getUntrackedParameter<edm::InputTag>("PrimaryVtxTag");
     rhoCorrTag_       = iConfig.getUntrackedParameter<edm::InputTag>("rhoCorrTag");
@@ -689,7 +689,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         Handle<bool> hcalNoiseFilterHandle;
         iEvent.getByLabel(hcalFilterTag_, hcalNoiseFilterHandle);
         if (hcalNoiseFilterHandle.isValid())  isNoiseHcal = !(Bool_t)(*hcalNoiseFilterHandle);
-
 
         edm::Handle<BeamHaloSummary> TheBeamHaloSummary;
         iEvent.getByLabel("BeamHaloSummary",TheBeamHaloSummary);
