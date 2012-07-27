@@ -54,5 +54,9 @@ January 25
 
 * Port to PAT.  Ntuples are to be filled from PAT objects, rather than reco (in progress).
 
+----------------------------------------------------------------------------------------
 
+July 27
+
+* Make ntuples consistent between 2011 and 2012
 
