@@ -15,6 +15,7 @@ class TCGenParticle : public TObject {
 		int mother;
         int grandmother;
 		int PDGID;
+        unsigned status;
 		//    std::vector<int> daughters;
 
 	public:
@@ -30,6 +31,7 @@ class TCGenParticle : public TObject {
 		int Mother();
         int Grandmother();
 		int GetPDGId();
+        unsigned GetStatus();
 		//    std::vector<int> GetDaughters();
 
 		// "set" methods ---------
@@ -41,6 +43,7 @@ class TCGenParticle : public TObject {
 		void SetMother(int m);
         void SetGrandmother(int g);
 		void SetPDGId(int pdg_id);
+        void SetStatus(unsigned s);
 
 		ClassDef(TCGenParticle, 1);
 

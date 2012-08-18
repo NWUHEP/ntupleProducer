@@ -1,10 +1,3 @@
-/* 
- * File:   TCPrimaryVtx.h
- * Author: Anton A.
- *
- * Created on May 21, 2010, 11:16 AM
- */
-
 #ifndef _TCPRIMARYVTX_H
 #define	_TCPRIMARYVTX_H
 

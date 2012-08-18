@@ -8,35 +8,24 @@ process = cms.Process("PAT")
 isRealData = False
 
 # global tag
-#process.load("Configuration.StandardSequences.Geometry_cff")
-process.load("Configuration.Geometry.GeometryIdeal_cff")
+process.load("Configuration.StandardSequences.Geometry_cff")
 process.load("Configuration.StandardSequences.MagneticField_cff")
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 if (isRealData):
-    process.GlobalTag.globaltag = 'GR_R_53_V6::All'
+    process.GlobalTag.globaltag = 'GR_R_44_V14::All'
 else:
-  process.GlobalTag.globaltag = 'START52_V9::All'
+    process.GlobalTag.globaltag = 'START44_V13::All'
 
 # tau reconstruction configuration
-#process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
+process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
 
-print 'check 1'
 # jet energy corrections
-#process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
-
-from PhysicsTools.SelectorUtils.pvSelector_cfi import pvSelector
-
-process.goodOfflinePrimaryVertices = cms.EDFilter(
-    "PrimaryVertexObjectFilter",
-    filterParams = pvSelector.clone( minNdof = cms.double(4.0), maxZ = cms.double(24.0) ),
-    src=cms.InputTag('offlinePrimaryVertices')
-    )
+process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 
 # pat sequences
 process.load("PhysicsTools.PatAlgos.patSequences_cff")
 
-print 'check 2'
 from PhysicsTools.PatAlgos.patEventContent_cff import patEventContent
 process.out = cms.OutputModule("PoolOutputModule",
                                fileName = cms.untracked.string('/tmp/patTuple.root'),
@@ -46,10 +35,8 @@ process.out = cms.OutputModule("PoolOutputModule",
 
 from Higgs.ntupleProducer.PatSequences_cff import addPatSequence
 
-print 'check 3'
 addPatSequence(process, isRealData, addPhotons = True)
 
-print 'check 4'
 ##------------------------------------------------------------------
 ## see PhysicsTools/PatExamples/test/analyzePatTau_fromAOD_cfg.py
 ## switch the tau algorithm (AA))
@@ -78,11 +65,18 @@ process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
                                      SkipEvent = cms.untracked.vstring('ProductNotFound')
                                     )
 '''
+
 # event source
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-      '/store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0003/FCDE987D-859B-E111-B445-0025B3E05DDA.root',
+         '/store/data/Fall11/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/AODSIM/PU_S6-START44_V5-v1/0000/0030ADBC-C409-E111-B1E7-E0CB4E553666.root',
+         #'/store/data/Run2011B/DoubleMu/AOD/16Jan2012-v1/0000/A0914A57-C344-E111-8687-001A928116D0.root'
+         #'/store/user/bpollack/HiggsToZGTo2LG_M125_Fall11_v2/HiggsToZGTo2LG_M125_Fall11_v2//c6585f750d9783c4264353a534af5e63/HToZG_M_125_TuneZ2_7TeV_pythia6_cff_py_GEN_SIM_DIGI_L1_DIGI2RAW_HLT_RAW2DIGI_RECO_PU_97_1_Tu5.root'
+         #'file:H125toZGtoLLG_7TeV_TEST_cfi_py_GEN_FASTSIM_HLT_PU.root'
+         #'/store/data/Run2011B/DoubleMu/AOD/HZZ-19Nov2011-v1/0000/E88001B3-091E-E111-AB76-00261894388F.root',
+         #'/store/data/Fall11/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/AODSIM/PU_S6-START44_V5-v1/0002/F866CFDA-EA0A-E111-8454-E0CB4EA0A8E0.root'
+         #'file:/uscms_data/d2/bpollack/genProd/CMSSW_4_4_2/src/test/HToZG_M_125_TuneZ2_7TeV_pythia6_cff_py_GEN_SIM_DIGI_L1_DIGI2RAW_HLT_RAW2DIGI_RECO_PU.root'
 )
 )
 
@@ -120,7 +114,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   pfMuonTag         =    cms.untracked.InputTag('selectedPatMuonsPFlow'),
   MuonTag           =    cms.untracked.InputTag('muons'),
   PhotonTag         =    cms.untracked.InputTag('patPhotons'),
-  #TauTag            =    cms.untracked.InputTag('selectedPatTausPFlow'),
+  TauTag            =    cms.untracked.InputTag('selectedPatTausPFlow'),
   PrimaryVtxTag     =    cms.untracked.InputTag('offlinePrimaryVertices'),
   rhoCorrTag        =    cms.untracked.InputTag('kt6PFJetsPFlow', 'rho', 'PAT'),
   partFlowTag       =    cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
@@ -128,7 +122,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   saveJets          =    cms.untracked.bool(True),
   saveElectrons     =    cms.untracked.bool(True),
   saveMuons         =    cms.untracked.bool(True),
-  saveTaus          =    cms.untracked.bool(False),
+  saveTaus          =    cms.untracked.bool(True),
   savePhotons       =    cms.untracked.bool(True),
   saveMET           =    cms.untracked.bool(True),
   saveGenJets       =    cms.untracked.bool(True),
