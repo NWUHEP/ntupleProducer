@@ -187,7 +187,6 @@ class ntupleProducer : public edm::EDAnalyzer {
 		TTree* runTree;
 		TTree* jobTree;
 		edm::InputTag jetTag_;
-		edm::InputTag jptTag_;
 		edm::InputTag metTag_;
 		edm::InputTag metNoPUTag_;
 		edm::InputTag genJetTag_;
@@ -199,10 +198,9 @@ class ntupleProducer : public edm::EDAnalyzer {
 		edm::InputTag primaryVtxTag_;
 		edm::InputTag triggerResultsTag_;
 		edm::InputTag rhoCorrTag_;
-		edm::InputTag ecalFilterTag_;
 		edm::InputTag hcalFilterTag_;
 		edm::InputTag partFlowTag_;
-    edm::ParameterSet photonIsoCalcTag_;
+        edm::ParameterSet photonIsoCalcTag_;
 
 		bool saveJets_;
 		bool saveElectrons_;
@@ -245,11 +243,14 @@ class ntupleProducer : public edm::EDAnalyzer {
 		unsigned          hltPrescale[64];
 
 		//Filters 
-		Bool_t isNoiseHcal, isDeadEcalCluster;
+		Bool_t isNoiseHcal;
 		Bool_t isCSCTightHalo, isCSCLooseHalo, isHcalTightHalo, isHcalLooseHalo, isEcalTightHalo, isEcalLooseHalo;
 		Bool_t isGlobalTightHalo, isGlobalLooseHalo;
 		Bool_t isScraping;
 
 		//Histograms
 		TH1D * h1_ptHat;
+
+        // For map variables
+        vector<string> muonIsoMap;
 };

@@ -3,15 +3,14 @@
 
 #include "TObject.h"
 #include "TLorentzVector.h"
+#include "Higgs/ntupleProducer/interface/TCPhysObject.h"
 #include <vector>
 
-class TCTau : public TObject {
+class TCTau : public TCPhysObject {
 	private:
 		TVector3 _positionFromTauObject;
 		TVector3 _positionFromLeadTrack;
-		TLorentzVector _p4;
 
-		int tauCharge;
 		int nChHad;
 		int nGamma;
 		int nNeutrHad;
@@ -59,11 +58,6 @@ class TCTau : public TObject {
 		float hpsPFTauDiscriminationByTightCombinedIsolationDBSumPtCorr;
 
 
- 
-    
-
-
-
 	public:
 		TCTau();
 		virtual ~TCTau();
@@ -71,13 +65,7 @@ class TCTau : public TObject {
 		TVector3 PositionFromTrack() const;
 		TVector3 PositionFromTau() const;
 
-		TLorentzVector P4() const;
-		TVector2 P2() const;
-		float Et() const;
-		float Pt() const;
-
 		int DecayMode() const { return decayMode; }
-		int Charge() const {return tauCharge; }
 		int NChHad() const  {return nChHad; }
 		int NGamma() const {return nGamma; }
 		int NNeutrHad() const {return nNeutrHad; }
@@ -88,26 +76,19 @@ class TCTau : public TObject {
 		float IsoGammaEtSum() { return isoGammaEtSum; }
 		float IsoChHadPtSum() { return isoChHadPtSum; }
 
-
-
 		void SetDecayMode(int d) {decayMode = d; } 
-		void SetCharge(int c) { tauCharge = c; }
 		void SetNChHad(int n) { nChHad = n; }
 		void SetNGamma(int n) { nGamma = n; }
 		void SetNNeutrHad(int n) { nNeutrHad = n; }
 
 		void SetPositionFromTau(float x, float y, float z);
 		void SetPositionFromTrack(float x, float y, float z);
-		void SetP4(TLorentzVector p4);
-		void SetP4(float px, float py, float pz, float e);
-
 
 		void SetLeadChHadP4(TLorentzVector p4) { leadChHadP4 = p4; }
 		void SetLeadNeutrP4(TLorentzVector p4) { leadNeutrP4 = p4; }
 
 		void SetLeadChHadP4(float x, float y, float z, float e) { leadChHadP4.SetPxPyPzE(x,y,z,e); }
 		void SetLeadNeutrP4(float x, float y, float z, float e) { leadNeutrP4.SetPxPyPzE(x,y,z,e); }
-
 
 		void SetIsoGammaEtSum(float i) { isoGammaEtSum = i; }
 		void SetIsoChHadPtSum(float i) { isoChHadPtSum = i; }

@@ -4,16 +4,16 @@
 ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
 {
     jetTag_           = iConfig.getUntrackedParameter<edm::InputTag>("JetTag");
-    jptTag_           = iConfig.getUntrackedParameter<edm::InputTag>("JPTTag");
     metTag_           = iConfig.getUntrackedParameter<edm::InputTag>("METTag");
     metNoPUTag_       = iConfig.getUntrackedParameter<edm::InputTag>("METNoPUTag");
     muonTag_          = iConfig.getUntrackedParameter<edm::InputTag>("MuonTag");
     pfMuonTag_        = iConfig.getUntrackedParameter<edm::InputTag>("pfMuonTag");
     electronTag_      = iConfig.getUntrackedParameter<edm::InputTag>("ElectronTag");
     photonTag_        = iConfig.getUntrackedParameter<edm::InputTag>("PhotonTag");
-    //tauTag_           = iConfig.getUntrackedParameter<edm::InputTag>("TauTag");
+    tauTag_           = iConfig.getUntrackedParameter<edm::InputTag>("TauTag");
     genJetTag_        = iConfig.getUntrackedParameter<edm::InputTag>("GenJetTag");
     primaryVtxTag_    = iConfig.getUntrackedParameter<edm::InputTag>("PrimaryVtxTag");
+
     rhoCorrTag_       = iConfig.getUntrackedParameter<edm::InputTag>("rhoCorrTag");
     hlTriggerResults_ = iConfig.getUntrackedParameter<string>("HLTriggerResults","TriggerResults");
     hltProcess_       = iConfig.getUntrackedParameter<string>("hltName");
@@ -29,7 +29,7 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
     saveMET_          = iConfig.getUntrackedParameter<bool>("saveMET");
     saveGenJets_      = iConfig.getUntrackedParameter<bool>("saveGenJets");
 
-    ecalFilterTag_    = iConfig.getUntrackedParameter<edm::InputTag>("ecalFilterTag");
+    //ecalFilterTag_    = iConfig.getUntrackedParameter<edm::InputTag>("ecalFilterTag");
     hcalFilterTag_    = iConfig.getUntrackedParameter<edm::InputTag>("hcalFilterTag");
 
     photonIsoCalcTag_ = iConfig.getParameter<edm::ParameterSet>("photonIsoCalcTag");
@@ -61,7 +61,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     int vtxCount, jetCount, jptCount, metCount, muCount, pfMuCount, eleCount, photonCount, pfPhotonCount, tauCount, genCount, genPartCount;
     vtxCount = jetCount = jptCount = metCount = muCount = pfMuCount = eleCount = photonCount = pfPhotonCount = tauCount = genCount = genPartCount = 0;
-    float primaryVertexZ = -999;
 
 
     //////////////////////////
@@ -80,7 +79,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         vtxCon->SetChi2(myVtx.chi2());
         vtxCon->SetNtracks(myVtx.nTracks()); 
         vtxCon->SetSumPt2Trks(sumPtSquared(myVtx));
-        if(vtxCount == 0) primaryVertexZ = myVtx.z();
+        vtxCon->SetIsFake(myVtx.isFake());
         ++vtxCount;
     }
 
@@ -108,10 +107,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             //    << ", corrected jet pt: " << iJet->correctedJet(3).pt() 
             //    << endl; 
 
-            jetCon->SetP4(iJet->correctedJet(0).px(), iJet->correctedJet(0).py(), iJet->correctedJet(0).pz(), iJet->correctedJet(0).energy());
+            jetCon->SetPxPyPzE(iJet->correctedJet(0).px(), iJet->correctedJet(0).py(), iJet->correctedJet(0).pz(), iJet->correctedJet(0).energy());
             jetCon->SetVtx(0., 0., 0.);
-
-            //cout << iJet->getSpecific.Zch << endl;;
 
             jetCon->SetChHadFrac(iJet->chargedHadronEnergyFraction());
             jetCon->SetNeuHadFrac(iJet->neutralHadronEnergyFraction());
@@ -120,22 +117,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             jetCon->SetNumConstit(iJet->chargedMultiplicity() + iJet->neutralMultiplicity());
             jetCon->SetNumChPart(iJet->chargedMultiplicity());
 
-            jetCon->SetBDiscrTCHE(iJet->bDiscriminator("trackCountingHighEffBJetTags"));
-            jetCon->SetBDiscrTCHP(iJet->bDiscriminator("trackCountingHighPurBJetTags"));
-            jetCon->SetBDiscrSSVHE(iJet->bDiscriminator("simpleSecondaryVertexHighEffBJetTags"));
-            jetCon->SetBDiscrJBP(iJet->bDiscriminator("jetProbabilityBJetTags"));
+            //jetCon->SetBDiscrTCHE(iJet->bDiscriminator("trackCountingHighEffBJetTags"));
+            //jetCon->SetBDiscrTCHP(iJet->bDiscriminator("trackCountingHighPurBJetTags"));
+            //jetCon->SetBDiscrSSVHE(iJet->bDiscriminator("simpleSecondaryVertexHighEffBJetTags"));
+            //jetCon->SetBDiscrJBP(iJet->bDiscriminator("jetProbabilityBJetTags"));
 
-            jetCon->SetJetCorr(1, iJet->jecFactor(1));
-            jetCon->SetJetCorr(2, iJet->jecFactor(2));
-            jetCon->SetJetCorr(3, iJet->jecFactor(3));
-
-
-            if (isRealData) {
-                jetCon->SetJetCorr(4, iJet->jecFactor(4));
-            } else {
-                jetCon->SetJetCorr(4, 1.);
-                jetCon->SetJetFlavor(iJet->partonFlavour());
-            }
 
             /////////////////////////
             // Associate to vertex //
@@ -176,11 +162,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             recoMET->SetChargedHadronFraction(met->ChargedHadEtFraction());
             recoMET->SetChargedEMFraction(met->ChargedEMEtFraction());
 
-            //cout << met->nCorrections() << endl;
-
-            //recoMET->SetCorrectedSumEt(iMET.sumEt());
-            //recoMET->SetCorrectedMet(iMET.et());
-            //recoMET->SetCorrectedPhi(iMET.phi());
         }
 
         Handle<vector<pat::MET> > METNoPU;
@@ -197,11 +178,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             recoMETNoPU->SetChargedHadronFraction(met->ChargedHadEtFraction());
             recoMETNoPU->SetChargedEMFraction(met->ChargedEMEtFraction());
 
-            //cout << met->nCorrections() << endl;
-
-            //recoMETNoPU->SetCorrectedSumEt(iMET.sumEt());
-            //recoMETNoPU->SetCorrectedMet(iMET.et());
-            //recoMETNoPU->SetCorrectedPhi(iMET.phi());
         }
     }
 
@@ -213,46 +189,53 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
         Handle<vector<reco::Muon> > muons;
         iEvent.getByLabel(muonTag_, muons);
-        
+
 
         for (vector<reco::Muon>::const_iterator iMuon = muons->begin(); iMuon != muons->end(); ++iMuon) {
             if (!(iMuon->isGlobalMuon() && iMuon->isTrackerMuon()) || iMuon->pt() < 10.) continue;
 
             TCMuon* muCon = new ((*recoMuons)[muCount]) TCMuon;
 
-            muCon->SetP4(iMuon->px(), iMuon->py(), iMuon->pz(), iMuon->energy());
+            muCon->SetPxPyPzE(iMuon->px(), iMuon->py(), iMuon->pz(), iMuon->energy());
             muCon->SetVtx(iMuon->globalTrack()->vx(),iMuon->globalTrack()->vy(),iMuon->globalTrack()->vz());
             muCon->SetPtError(iMuon->globalTrack()->ptError());
             muCon->SetCharge(iMuon->charge());
+
+            // Muon ID variables
             muCon->SetIsGLB(iMuon->isGlobalMuon());
             muCon->SetIsTRK(iMuon->isTrackerMuon());
+            muCon->SetNormalizedChi2(iMuon->globalTrack()->normalizedChi2());
+            muCon->SetCaloComp(iMuon->caloCompatibility());
+            muCon->SetSegComp(muon::segmentCompatibility(*iMuon));
+
             muCon->SetNumberOfMatches(iMuon->numberOfMatches());
             muCon->SetNumberOfValidPixelHits(iMuon->globalTrack()->hitPattern().numberOfValidPixelHits());
             muCon->SetNumberOfValidTrackerHits(iMuon->globalTrack()->hitPattern().numberOfValidTrackerHits()); 
             muCon->SetNumberOfValidMuonHits(iMuon->globalTrack()->hitPattern().numberOfValidMuonHits());
             muCon->SetNumberOfLostPixelHits(iMuon->globalTrack()->hitPattern().numberOfLostPixelHits());
             muCon->SetNumberOfLostTrackerHits(iMuon->globalTrack()->hitPattern().numberOfLostTrackerHits());
-            muCon->SetNormalizedChi2(iMuon->globalTrack()->normalizedChi2());
 
-            muCon->SetCaloComp(iMuon->caloCompatibility());
-            muCon->SetSegComp(muon::segmentCompatibility(*iMuon));
 
-            muCon->SetNtracks03(iMuon->isolationR03().nTracks);
-            muCon->SetEmIso03(iMuon->isolationR03().emEt);
-            muCon->SetHadIso03(iMuon->isolationR03().hadEt);
-            muCon->SetTrkIso03(iMuon->isolationR03().sumPt);
+            /*
+            // Set isolation map values
+            // Detector-based isolation
+            muCon->SetIsoMap("NTracks_R03", iMuon->isolationR03().nTracks, &muonIsoMap);
+            muCon->SetIsoMap("EmIso_R03", iMuon->isolationR03().emEt, &muonIsoMap);
+            muCon->SetIsoMap("HadIso_R03", iMuon->isolationR03().hadEt, &muonIsoMap);
+            muCon->SetIsoMap("SumPt_R03", iMuon->isolationR03().sumPt, &muonIsoMap);
+            muCon->SetIsoMap("NTracks_R05", iMuon->isolationR05().nTracks, &muonIsoMap);
+            muCon->SetIsoMap("EmIso_R05", iMuon->isolationR05().emEt, &muonIsoMap);
+            muCon->SetIsoMap("HadIso_R05", iMuon->isolationR05().hadEt, &muonIsoMap);
+            muCon->SetIsoMap("SumPt_R05", iMuon->isolationR05().sumPt, &muonIsoMap);
 
-            muCon->SetNtracks05(iMuon->isolationR05().nTracks);
-            muCon->SetEmIso05(iMuon->isolationR05().emEt);
-            muCon->SetHadIso05(iMuon->isolationR05().hadEt);
-            muCon->SetTrkIso05(iMuon->isolationR05().sumPt);
-
-            muCon->SetPfSumPt(3, iMuon->pfIsolationR03().sumChargedParticlePt);
-            muCon->SetPfEGamma(3, iMuon->pfIsolationR03().sumPhotonEt);
-            muCon->SetPfENeutral(3, iMuon->pfIsolationR03().sumNeutralHadronEt);
-            muCon->SetPfSumPt(4, iMuon->pfIsolationR04().sumChargedParticlePt);
-            muCon->SetPfEGamma(4, iMuon->pfIsolationR04().sumPhotonEt);
-            muCon->SetPfENeutral(4, iMuon->pfIsolationR04().sumNeutralHadronEt);
+            // PF-based isolation
+            muCon->SetIsoMap("pfSumChargedPt_R03", iMuon->pfIsolationR03().sumChargedParticlePt, &muonIsoMap);
+            muCon->SetIsoMap("pfSumNeutralPt_R03", iMuon->pfIsolationR03().sumNeutralHadronEt, &muonIsoMap);
+            muCon->SetIsoMap("pfSumPhotonPt_R03", iMuon->pfIsolationR03().sumPhotonEt, &muonIsoMap);
+            muCon->SetIsoMap("pfSumChargedPt_R04", iMuon->pfIsolationR04().sumChargedParticlePt, &muonIsoMap);
+            muCon->SetIsoMap("pfSumNeutralPt_R04", iMuon->pfIsolationR04().sumNeutralHadronEt, &muonIsoMap);
+            muCon->SetIsoMap("pfSumPhotonPt_R04", iMuon->pfIsolationR04().sumPhotonEt, &muonIsoMap);
+            */
 
             muCount++;
         }
@@ -261,49 +244,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         Handle<vector<pat::Muon> > muons2;
         iEvent.getByLabel(pfMuonTag_, muons2);
 
-        for (vector<pat::Muon>::const_iterator iMuon = muons2->begin(); iMuon != muons2->end(); ++iMuon) {
-            if (!(iMuon->isGlobalMuon() && iMuon->isTrackerMuon()) || iMuon->pt() < 10.) continue;
-
-            TCMuon* muCon2 = new ((*pfMuons)[pfMuCount]) TCMuon;
-
-            muCon2->SetP4(iMuon->px(), iMuon->py(), iMuon->pz(), iMuon->energy());
-            muCon2->SetVtx(iMuon->globalTrack()->vx(),iMuon->globalTrack()->vy(),iMuon->globalTrack()->vz());
-            muCon2->SetPtError(iMuon->globalTrack()->ptError());
-            muCon2->SetCharge(iMuon->charge());
-            muCon2->SetIsGLB(iMuon->isGlobalMuon());
-            muCon2->SetIsTRK(iMuon->isTrackerMuon());
-            muCon2->SetNumberOfMatches(iMuon->numberOfMatches());
-            muCon2->SetNumberOfValidPixelHits(iMuon->globalTrack()->hitPattern().numberOfValidPixelHits());
-            muCon2->SetNumberOfValidTrackerHits(iMuon->globalTrack()->hitPattern().numberOfValidTrackerHits()); 
-            muCon2->SetNumberOfValidMuonHits(iMuon->globalTrack()->hitPattern().numberOfValidMuonHits());
-            muCon2->SetNumberOfLostPixelHits(iMuon->globalTrack()->hitPattern().numberOfLostPixelHits());
-            muCon2->SetNumberOfLostTrackerHits(iMuon->globalTrack()->hitPattern().numberOfLostTrackerHits());
-            muCon2->SetNormalizedChi2(iMuon->globalTrack()->normalizedChi2());
-
-            muCon2->SetCaloComp(iMuon->caloCompatibility());
-            muCon2->SetSegComp(muon::segmentCompatibility(*iMuon));
-
-            muCon2->SetNtracks03(iMuon->isolationR03().nTracks);
-            muCon2->SetEmIso03(iMuon->isolationR03().emEt);
-            muCon2->SetHadIso03(iMuon->isolationR03().hadEt);
-            muCon2->SetTrkIso03(iMuon->isolationR03().sumPt);
-
-            muCon2->SetNtracks05(iMuon->isolationR05().nTracks);
-            muCon2->SetEmIso05(iMuon->isolationR05().emEt);
-            muCon2->SetHadIso05(iMuon->isolationR05().hadEt);
-            muCon2->SetTrkIso05(iMuon->isolationR05().sumPt);
-
-            muCon2->SetPfSumPt(3, iMuon->pfIsolationR03().sumChargedParticlePt);
-            muCon2->SetPfEGamma(3, iMuon->pfIsolationR03().sumPhotonEt);
-            muCon2->SetPfENeutral(3, iMuon->pfIsolationR03().sumNeutralHadronEt);
-            muCon2->SetPfSumPt(4, iMuon->pfIsolationR04().sumChargedParticlePt);
-            muCon2->SetPfEGamma(4, iMuon->pfIsolationR04().sumPhotonEt);
-            muCon2->SetPfENeutral(4, iMuon->pfIsolationR04().sumNeutralHadronEt);
-
-            pfMuCount++;
-        }
-
     }
+
 
 
     ///////////////////
@@ -320,7 +262,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
             TCElectron* eleCon = new ((*recoElectrons)[eleCount]) TCElectron;
 
-            eleCon->SetP4(iElectron->px(),iElectron->py(),iElectron->pz(),iElectron->p());
+            eleCon->SetPxPyPzE(iElectron->px(), iElectron->py(), iElectron->pz(), iElectron->energy());
             eleCon->SetVtx(iElectron->gsfTrack()->vx(),iElectron->gsfTrack()->vy(),iElectron->gsfTrack()->vz());
             eleCon->SetCharge(iElectron->charge());
 
@@ -333,19 +275,21 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             eleCon->SetIsEE(iElectron->isEE());
             eleCon->SetIsInGap(iElectron->isGap());
 
-            eleCon->SetEmIso03(iElectron->dr03EcalRecHitSumEt());
-            eleCon->SetHadIso03(iElectron->dr03HcalTowerSumEt());
-            eleCon->SetTrkIso03(iElectron->dr03TkSumPt());
-            eleCon->SetEmIso04(iElectron->dr04EcalRecHitSumEt());
-            eleCon->SetHadIso04(iElectron->dr04HcalTowerSumEt());
-            eleCon->SetTrkIso04(iElectron->dr04TkSumPt());
-
             eleCon->SetHadOverEm(iElectron->hadronicOverEm());
             eleCon->SetDphiSuperCluster(iElectron->deltaPhiSuperClusterTrackAtVtx());
             eleCon->SetDetaSuperCluster(iElectron->deltaEtaSuperClusterTrackAtVtx());
             eleCon->SetSigmaIetaIeta(iElectron->sigmaIetaIeta());
             eleCon->SetFBrem(iElectron->fbrem());
             eleCon->SetEOverP(iElectron->eSuperClusterOverP());
+
+            /*
+               eleCon->SetEmIso03(iElectron->dr03EcalRecHitSumEt());
+               eleCon->SetHadIso03(iElectron->dr03HcalTowerSumEt());
+               eleCon->SetTrkIso03(iElectron->dr03TkSumPt());
+               eleCon->SetEmIso04(iElectron->dr04EcalRecHitSumEt());
+               eleCon->SetHadIso04(iElectron->dr04HcalTowerSumEt());
+               eleCon->SetTrkIso04(iElectron->dr04TkSumPt());
+             */
 
             eleCon->SetConversionFlag(iElectron->convFlags());
             eleCon->SetConversionDist(iElectron->convDist());
@@ -359,9 +303,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             eleCon->SetCutLevel(iElectron->electronID("eidVBTF70"), 70);
             eleCon->SetCutLevel(iElectron->electronID("eidVBTF60"), 60);
 
-            eleCon->SetPfEGamma(0.3, iElectron->pfIsolationVariables().photonIso);
-            eleCon->SetPfSumPt(0.3, iElectron->pfIsolationVariables().chargedHadronIso);
-            eleCon->SetPfENeutral(0.3, iElectron->pfIsolationVariables().neutralHadronIso);
+            /*
+               eleCon->SetPfEGamma(0.3, iElectron->pfIsolationVariables().photonIso);
+               eleCon->SetPfSumPt(0.3, iElectron->pfIsolationVariables().chargedHadronIso);
+               eleCon->SetPfENeutral(0.3, iElectron->pfIsolationVariables().neutralHadronIso);
+             */
 
             eleCount++;
         }
@@ -372,41 +318,41 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     /////////////////
 
     if (savePhotons_) {
-      Handle<vector<pat::Photon> > photons;
-      iEvent.getByLabel(photonTag_, photons);
+        Handle<vector<pat::Photon> > photons;
+        iEvent.getByLabel(photonTag_, photons);
 
-      Handle<PFCandidateCollection> pfCands;
-      iEvent.getByLabel(partFlowTag_,pfCands);
+        Handle<PFCandidateCollection> pfCands;
+        iEvent.getByLabel(partFlowTag_,pfCands);
 
-      for (PFCandidateCollection::const_iterator pho = pfCands->begin(); pho != pfCands->end(); ++pho) {
-        if (pho->translateTypeToPdgId(pho->particleId()) == 22 && pho->et() > 2 && fabs(pho->eta()) < 2.5){
-          // calculate isolation
-          float em = 0;
-          float ch = 0;
-          float nh = 0;
+        for (PFCandidateCollection::const_iterator pho = pfCands->begin(); pho != pfCands->end(); ++pho) {
+            if (pho->translateTypeToPdgId(pho->particleId()) == 22 && pho->et() > 2 && fabs(pho->eta()) < 2.5){
+                // calculate isolation
+                float em = 0;
+                float ch = 0;
+                float nh = 0;
 
-          for (PFCandidateCollection::const_iterator pf = pfCands->begin(); pf != pfCands->end(); ++pf) {
-            int pID = pf->particleId();
-            float dr = deltaR(pf->eta(), pf->phi(), pho->eta(), pho->phi());
+                for (PFCandidateCollection::const_iterator pf = pfCands->begin(); pf != pfCands->end(); ++pf) {
+                    int pID = pf->particleId();
+                    float dr = deltaR(pf->eta(), pf->phi(), pho->eta(), pho->phi());
 
-            if (pID != 3 && pID != 2 && pf != pho){
-               if (dr < 0.5){
-                 if (pID == 4 && dr > 0.05) em += pf->et();
-                 if (pID == 1) ch += pf->et();
-                 if (pID == 5) nh += pf->et();
-               }
+                    if (pID != 3 && pID != 2 && pf != pho){
+                        if (dr < 0.5){
+                            if (pID == 4 && dr > 0.05) em += pf->et();
+                            if (pID == 1) ch += pf->et();
+                            if (pID == 5) nh += pf->et();
+                        }
+                    }
+
+                }
+
+                TCPhoton* con = new ((*pfPhotons)[pfPhotonCount]) TCPhoton();
+                con->SetP4(pho->px(),pho->py(),pho->pz(),pho->energy());
+                con->SetVtx(pho->vx(),pho->vy(),pho->vz());
+                con->SetCustomIso(em,nh,ch);
+
+                pfPhotonCount++;
             }
-
-          }
-
-          TCPhoton* con = new ((*pfPhotons)[pfPhotonCount]) TCPhoton();
-          con->SetP4(pho->px(),pho->py(),pho->pz(),pho->energy());
-          con->SetVtx(pho->vx(),pho->vy(),pho->vz());
-          con->SetCustomIso(em,nh,ch);
-
-          pfPhotonCount++;
         }
-      }
 
 
         for (vector<pat::Photon>::const_iterator iPhoton = photons->begin(); iPhoton != photons->end() ; ++iPhoton) {
@@ -471,13 +417,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
         for (vector<pat::Tau>::const_iterator iTau = taus->begin(); iTau != taus->end(); ++iTau) {            
 
-            if (! (iTau->isPFTau()) ) continue;
-
-
-            // reject taus with no charged track at the beginning of the loop
-            if (iTau->signalPFChargedHadrCands().size() < 1) continue;
-
-            if (iTau->pt() < 10) continue;
+            if (!iTau->isPFTau() 
+                    or iTau->signalPFChargedHadrCands().size() < 1 
+                    or iTau->pt() < 10
+               ) continue;
 
             TCTau* tauCon = new ((*recoTaus)[tauCount]) TCTau;
 
@@ -487,7 +430,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             tauCon->SetCharge(iTau->charge());
             tauCon->SetDecayMode(iTau->decayMode());
 
-            tauCon->SetP4(iTau->px(),iTau->py(),iTau->pz(),iTau->energy());
+            tauCon->SetPxPyPzE(iTau->px(),iTau->py(),iTau->pz(),iTau->energy());
             tauCon->SetCharge(iTau->charge());
 
             if (iTau->leadPFChargedHadrCand()->trackRef().isNonnull()) {
@@ -522,11 +465,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             tauCon->SetHpsPFTauDiscriminationByDecayModeFinding(iTau->tauID("decayModeFinding"));  // "DiscriminationByDecayModeFinding"
 
             // isolation
-            //
             tauCon->SetHpsPFTauDiscriminationByVLooseIsolation(iTau->tauID("byVLooseIsolation")); // "DiscriminationByVLooseIsolation"
             tauCon->SetHpsPFTauDiscriminationByLooseIsolation (iTau->tauID("byLooseIsolation"));  // "DiscriminationByLooseIsolation"
             tauCon->SetHpsPFTauDiscriminationByMediumIsolation(iTau->tauID("byMediumIsolation")); // "DiscriminationByMediumIsolation"  
             tauCon->SetHpsPFTauDiscriminationByTightIsolation (iTau->tauID("byTightIsolation"));  // "DiscriminationByTightIsolation"
+
             // isolation with corrections
             tauCon->SetHpsPFTauDiscriminationByVLooseIsolationDBSumPtCorr	     
                 (iTau->tauID("byVLooseIsolationDeltaBetaCorr")); // "DiscriminationByVLooseIsolationDBSumPtCorr"
@@ -536,6 +479,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 (iTau->tauID("byMediumIsolationDeltaBetaCorr")); // "DiscriminationByMediumIsolationDBSumPtCorr"
             tauCon->SetHpsPFTauDiscriminationByTightIsolationDBSumPtCorr
                 (iTau->tauID("byTightIsolationDeltaBetaCorr")); // "DiscriminationByTightIsolationDBSumPtCorr"
+
             // combined isolation with corrections
             tauCon->SetHpsPFTauDiscriminationByVLooseCombinedIsolationDBSumPtCorr
                 (iTau->tauID("byVLooseCombinedIsolationDeltaBetaCorr")); // "DiscriminationByVLooseCombinedIsolationDBSumPtCorr"
@@ -556,8 +500,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             tauCon->SetHpsPFTauDiscriminationAgainstMuonTight  (iTau->tauID("againstMuonTight")); // "DiscriminationByTightMuonRejection"
 
             tauCount++;
-        } // loop over taus
-    } // if save taus
+        } 
+    } 
 
 
 
@@ -589,11 +533,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         std::vector<PileupSummaryInfo>::const_iterator iPV;
 
         for(iPV = PUInfo->begin(); iPV != PUInfo->end(); ++iPV){
-          if (iPV->getBunchCrossing() == 0){
-            nPUVertices     = iPV->getPU_NumInteractions();
-            //cout<<iPV->getTrueNumInteractions()<<endl;
-            nPUVerticesTrue = iPV->getTrueNumInteractions();
-          }
+            if (iPV->getBunchCrossing() == 0){
+                nPUVertices     = iPV->getPU_NumInteractions();
+                //cout<<iPV->getTrueNumInteractions()<<endl;
+                nPUVerticesTrue = iPV->getTrueNumInteractions();
+            }
         }
 
         //////////////////////
@@ -623,7 +567,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             //// intermediate particles
 
             if (myParticle.status() == 3 && (abs(myParticle.pdgId()) == 6 || abs(myParticle.pdgId()) == 39 
-                  || abs(myParticle.pdgId()) == 23 || abs(myParticle.pdgId()) == 24 || abs(myParticle.pdgId()) == 25)) {
+                        || abs(myParticle.pdgId()) == 23 || abs(myParticle.pdgId()) == 24 || abs(myParticle.pdgId()) == 25)) {
                 for (size_t i = 0; i < myParticle.numberOfDaughters(); ++i) {
                     const reco::Candidate *myDaughter = myParticle.daughter(i);
                     if (myDaughter->status() != 1 && (abs(myDaughter->pdgId()) == 5 || (abs(myDaughter->pdgId()) >= 11 && abs(myDaughter->pdgId()) <= 16))) {
@@ -641,14 +585,14 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
             //// Z's, W's, H's, and now big juicy Gravitons
             if (abs(myParticle.pdgId()) == 23 || abs(myParticle.pdgId()) == 24 || abs(myParticle.pdgId()) == 25 || abs(myParticle.pdgId()) == 39){
-              TCGenParticle* genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
+                TCGenParticle* genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
 
-              genCon->SetPosition(myParticle.vx(), myParticle.vy(), myParticle.vz() );
-              genCon->SetP4(myParticle.px(), myParticle.py(), myParticle.pz(), myParticle.energy() );
-              genCon->SetCharge(myParticle.charge());
-              genCon->SetPDGId(myParticle.pdgId());
-              genCon->SetMother(myParticle.mother()->pdgId());
-              ++genPartCount;
+                genCon->SetPosition(myParticle.vx(), myParticle.vy(), myParticle.vz() );
+                genCon->SetP4(myParticle.px(), myParticle.py(), myParticle.pz(), myParticle.energy() );
+                genCon->SetCharge(myParticle.charge());
+                genCon->SetPDGId(myParticle.pdgId());
+                genCon->SetMother(myParticle.mother()->pdgId());
+                ++genPartCount;
             }
 
         }
@@ -689,7 +633,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         Handle<bool> hcalNoiseFilterHandle;
         iEvent.getByLabel(hcalFilterTag_, hcalNoiseFilterHandle);
         if (hcalNoiseFilterHandle.isValid())  isNoiseHcal = !(Bool_t)(*hcalNoiseFilterHandle);
-
 
         edm::Handle<BeamHaloSummary> TheBeamHaloSummary;
         iEvent.getByLabel("BeamHaloSummary",TheBeamHaloSummary);
@@ -810,10 +753,10 @@ void  ntupleProducer::beginJob()
 
     eventTree->Branch("isScraping",&isScraping, "isScraping/O");
     eventTree->Branch("isNoiseHcal",&isNoiseHcal, "isNoiseHcal/O");
-    eventTree->Branch("isDeadEcalCluster",&isDeadEcalCluster, "isDeadEcalCluster/O");
     eventTree->Branch("isCSCTightHalo",&isCSCTightHalo, "isCSCTightHalo/O");
     eventTree->Branch("isCSCLooseHalo",&isCSCLooseHalo, "isCSCLooseHalo/O");
 
+    //eventTree->Branch("isoMap", &isoMap);
     eventTree->Branch("ptHat",&ptHat, "ptHat/F");
     eventTree->Branch("qScale", &qScale, "qScale/F");
     eventTree->Branch("evtWeight", &evtWeight, "evtWeight/F");

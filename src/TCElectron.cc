@@ -11,41 +11,9 @@ TCElectron::~TCElectron() {
 
 // "get" methods -------------------------------------
 
-TLorentzVector TCElectron::P4() const {
-   return _p4;
-}
-
-TVector2 TCElectron::P2() const {
-  TVector2 v2(_p4.Px(), _p4.Py());
-  return v2;
-}
-
-float TCElectron::Pt() const {
-   return _p4.Pt();
-}
-
-TVector3 TCElectron::Vtx() const {
-   return _vtx;
-}
 
 float TCElectron::PtError() const {
   return _ptError;
-}
-
-float TCElectron::Et() const {
-  return _p4.Et();
-}
-
-float TCElectron::Eta() const {
- return _p4.Eta();
-}
-
-float TCElectron::Phi() const {
-  return _p4.Phi();
-}
-
-int TCElectron::Charge() const {
-   return _charge;
 }
 
 int TCElectron::NumberOfValidPixelHits() const {
@@ -66,72 +34,6 @@ int TCElectron::NumberOfLostTrackerHits() const {
 
 float TCElectron::NormalizedChi2() const {
   return _normalizedChi2;
-}
-
-
-float TCElectron::EmIso() const {
-   return _emIso03;
-}
-float TCElectron::HadIso() const {
-   return _hadIso03;
-}
-float TCElectron::TrkIso() const {
-   return _trkIso03;
-}
-
-float TCElectron::EmIso03() const {
-   return _emIso03;
-}
-float TCElectron::HadIso03() const {
-   return _hadIso03;
-}
-float TCElectron::TrkIso03() const {
-   return _trkIso03;
-}
-
-float TCElectron::EmIso04() const {
-   return _emIso04;
-}
-float TCElectron::HadIso04() const {
-   return _hadIso04;
-}
-float TCElectron::TrkIso04() const {
-   return _trkIso04;
-}
-
-float TCElectron::PfRelIso(float coneSize) const {
-  float relIso = 0;
-  if (fabs(coneSize - 0.3) < 0.01)
-    relIso = (_pfIso_Pt03 + _pfIso_Gamma03 + _pfIso_Neutral03) / _p4.Pt();
-  if (fabs(coneSize - 0.4) < 0.01)
-    relIso = (_pfIso_Pt04 + _pfIso_Gamma04 + _pfIso_Neutral04) / _p4.Pt();
-  if (fabs(coneSize - 0.5) < 0.01)
-    relIso = (_pfIso_Pt05 + _pfIso_Gamma05 + _pfIso_Neutral05) / _p4.Pt();
-  return relIso;
-}
-
-float TCElectron::PfSumPt(float coneSize) const {
-  float sumPt = 0;
-  if (fabs(coneSize - 0.3) < 0.01) sumPt = _pfIso_Pt03;
-  if (fabs(coneSize - 0.4) < 0.01) sumPt = _pfIso_Pt04;
-  if (fabs(coneSize - 0.5) < 0.01) sumPt = _pfIso_Pt05;
-  return sumPt;
-}
-
-float TCElectron::PfENeutral(float coneSize) const {
-  float neutral = 0;
-  if (fabs(coneSize - 0.3) < 0.01) neutral = _pfIso_Neutral03;
-  if (fabs(coneSize - 0.4) < 0.01) neutral = _pfIso_Neutral04;
-  if (fabs(coneSize - 0.5) < 0.01) neutral = _pfIso_Neutral05;
-  return neutral;
-}
-
-float TCElectron::PfEGamma(float coneSize) const {
-  float gamma = 0;
-  if (fabs(coneSize - 0.3) < 0.01) gamma = _pfIso_Gamma03;
-  if (fabs(coneSize - 0.4) < 0.01) gamma = _pfIso_Gamma04;
-  if (fabs(coneSize - 0.5) < 0.01) gamma = _pfIso_Gamma05;
-  return gamma;
 }
 
 bool TCElectron::IsEB() const {
@@ -219,49 +121,9 @@ bool TCElectron::PassConversion(int lvl) const {
   else return false;
 }
 
-
-float TCElectron::Dxy(TVector3 *primVtx) const {
-  //Calculating track dxy parameter wrt primary vertex
-  //d0 = - dxy
-  float vx = _vtx.X(), vy = _vtx.Y();
-  float px = _p4.Px(), py = _p4.Py(), pt = _p4.Pt();
-  float pvx = primVtx->X(), pvy = primVtx->Y();
-  float ret =  (-(vx-pvx)*py + (vy-pvy)*px)/pt;
-  return ret;
-}
-
-float TCElectron::Dz(TVector3 *primVtx) const {
-  //Calculating track dz parameter wrt primary vertex
-  float vx = _vtx.X(), vy = _vtx.Y(), vz = _vtx.Z();
-  float px = _p4.Px(), py = _p4.Py();
-  float pz = _p4.Pz(), pt = _p4.Pt();
-  float pvx = primVtx->X(), pvy = primVtx->Y(), pvz = primVtx->Z();
-  float ret =  (vz-pvz)-((vx-pvx)*px +(vy-pvy)*py)/pt*(pz/pt);
-  return ret;
-}
-
 //------------------------------------------------
 // "set" methods ---------------------------------------------
 //------------------------------------------------------------------------
-
-void TCElectron::SetP4(TLorentzVector p4) {
-  _p4 = p4;
-}
-
-void TCElectron::SetP4(float px, float py, float pz, float e) {
-  TLorentzVector p4(px, py, pz, e);
-  _p4 = p4;
-}
-
-void TCElectron::SetVtx(float vx, float vy, float vz) {
-  TVector3 v3(vx, vy, vz);
-  _vtx = v3;
-}
-
-
-void TCElectron::SetCharge(int c){
-  _charge = c;
-}
 
 void TCElectron::SetNumberOfValidPixelHits(int n) {
   _numberOfValidPixelHits = n;
@@ -281,26 +143,6 @@ void TCElectron::SetNumberOfLostTrackerHits(int n) {
 
 void TCElectron::SetNormalizedChi2(float n) {
   _normalizedChi2 = n;
-}
-
-
-void TCElectron::SetEmIso03(float e){
-  _emIso03 = e;
-}
-void TCElectron::SetHadIso03(float h){
-  _hadIso03 = h;
-}
-void TCElectron::SetTrkIso03(float t){
-  _trkIso03 = t;
-}
-void TCElectron::SetEmIso04(float e){
-  _emIso04 = e;
-}
-void TCElectron::SetHadIso04(float h){
-  _hadIso04 = h;
-}
-void TCElectron::SetTrkIso04(float t){
-  _trkIso04 = t;
 }
 
 void TCElectron::SetHadOverEm(float he){
@@ -340,24 +182,6 @@ void TCElectron::SetConversionRad(float r) {
 
 void TCElectron::SetConversionFlag(int f){
   _convFlag = f;
-}
-
-void TCElectron::SetPfSumPt(float coneSize, float f) {
-  if(fabs(coneSize - 0.3) < 0.01) _pfIso_Pt03 = f;
-  if(fabs(coneSize - 0.4) < 0.01) _pfIso_Pt04 = f;
-  if(fabs(coneSize - 0.5) < 0.01) _pfIso_Pt05 = f;
-}
-
-void TCElectron::SetPfEGamma(float coneSize, float f) {
-  if(fabs(coneSize - 0.3) < 0.01) _pfIso_Gamma03 = f;
-  if(fabs(coneSize - 0.4) < 0.01) _pfIso_Gamma04 = f;
-  if(fabs(coneSize - 0.5) < 0.01) _pfIso_Gamma05 = f;
-}
-
-void TCElectron::SetPfENeutral(float coneSize, float f) {
-  if(fabs(coneSize - 0.3) < 0.01) _pfIso_Neutral03 = f;
-  if(fabs(coneSize - 0.4) < 0.01) _pfIso_Neutral04 = f;
-  if(fabs(coneSize - 0.5) < 0.01) _pfIso_Neutral05 = f;
 }
 
 void TCElectron::SetIsEB(bool b) {
