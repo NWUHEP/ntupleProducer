@@ -4,10 +4,9 @@
 #include "TObject.h"
 #include "TVector3.h"
 
-class TCPrimaryVtx : public TObject {
+class TCPrimaryVtx : public TVector3 {
 private:
 
-    TVector3 _position;
     float _nDof;
     float _chi2;
     bool  _isFake;
@@ -19,7 +18,6 @@ public:
     TCPrimaryVtx();
     virtual ~TCPrimaryVtx();
 
-    TVector3 Position() const;
     float NDof() const;
     float Chi2() const;
     bool  IsFake() const;
@@ -27,7 +25,6 @@ public:
     float SumPt2Trks() const;
 
     // set methods
-    void SetPosition(float x, float y, float z);
     void SetNDof(float n);
     void SetChi2(float chi2);
     void SetIsFake(bool isF);

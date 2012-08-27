@@ -75,7 +75,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         reco::Vertex myVtx = reco::Vertex(*iVtx);
         if(!myVtx.isValid() || myVtx.isFake()) continue;
         TCPrimaryVtx* vtxCon = new ((*primaryVtx)[vtxCount]) TCPrimaryVtx;
-        vtxCon->SetPosition(myVtx.x(), myVtx.y(), myVtx.z());
+        vtxCon->SetXYZ(myVtx.x(), myVtx.y(), myVtx.z());
         vtxCon->SetNDof(myVtx.ndof());
         vtxCon->SetChi2(myVtx.chi2());
         vtxCon->SetNtracks(myVtx.nTracks()); 

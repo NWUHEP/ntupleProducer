@@ -13,10 +13,6 @@ TCPrimaryVtx::TCPrimaryVtx() {
 TCPrimaryVtx::~TCPrimaryVtx() {
 }
 
-TVector3 TCPrimaryVtx::Position() const {
-   return _position;
-}
-
 float TCPrimaryVtx::NDof() const {
    return _nDof;
 }
@@ -37,11 +33,6 @@ float TCPrimaryVtx::SumPt2Trks() const {
   return _sumPt2Trks;
 }
 
-
-void TCPrimaryVtx::SetPosition(float x, float y, float z) {
-   TVector3 p(x, y, z);
-   _position = p;
-}
 
 void TCPrimaryVtx::SetNDof(float n) {
    _nDof = n;
