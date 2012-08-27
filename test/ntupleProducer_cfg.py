@@ -126,6 +126,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   savePhotons       =    cms.untracked.bool(True),
   saveMET           =    cms.untracked.bool(True),
   saveGenJets       =    cms.untracked.bool(True),
+  saveGenParticles  =    cms.untracked.bool(True),
 
   ecalFilterTag     =    cms.untracked.InputTag("BE1214","anomalousECALVariables"),
   hcalFilterTag     =    cms.untracked.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResult"),

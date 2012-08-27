@@ -28,6 +28,7 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
     savePhotons_      = iConfig.getUntrackedParameter<bool>("savePhotons");
     saveMET_          = iConfig.getUntrackedParameter<bool>("saveMET");
     saveGenJets_      = iConfig.getUntrackedParameter<bool>("saveGenJets");
+    saveGenParticles_ = iConfig.getUntrackedParameter<bool>("saveGenParticles");
 
     //ecalFilterTag_    = iConfig.getUntrackedParameter<edm::InputTag>("ecalFilterTag");
     hcalFilterTag_    = iConfig.getUntrackedParameter<edm::InputTag>("hcalFilterTag");
@@ -397,7 +398,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 reco::Vertex myVtx = reco::Vertex(*iVtx);
                 if(!myVtx.isValid() || myVtx.isFake()) continue;
                 // Calculate fiducial flags and isolation variable. Blocked are filled from the isolationCalculator
-                isoVtxAB = photonIsolationCalculator->calculateVtx( &(*iPhoton),iEvent,iSetup,fiducialFlags,isolVarR03, isolVarR04, myVtx);
+                //isoVtxAB = photonIsolationCalculator->calculateVtx( &(*iPhoton),iEvent,iSetup,fiducialFlags,isolVarR03, isolVarR04, myVtx);
                 myPhoton->SetTRKIsoVtxDR03(isoVtxAB[1]);
                 myPhoton->SetTRKIsoVtxDR04(isoVtxAB[0]);
                 vtxPhoCounter++;
@@ -544,63 +545,97 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         // Get genParticles //
         //////////////////////
 
-        Handle<GenParticleCollection> genParticleColl;
-        iEvent.getByLabel("genParticles", genParticleColl);
-
-        for (GenParticleCollection::const_iterator iGenPart = genParticleColl->begin(); iGenPart != genParticleColl->end(); ++iGenPart) {
+	if (saveGenParticles_) {
+	  Handle<GenParticleCollection> genParticleColl;
+	  iEvent.getByLabel("genParticles", genParticleColl);
+	  
+	  for (GenParticleCollection::const_iterator iGenPart = genParticleColl->begin(); iGenPart != genParticleColl->end(); ++iGenPart) {
             const reco::GenParticle myParticle = reco::GenParticle(*iGenPart);
-
+	    
             /// final state particles
-
+	    
             if (myParticle.status() == 1 && ((abs(myParticle.pdgId()) >= 11 && abs(myParticle.pdgId()) <= 16) || myParticle.pdgId() == 22)) {
-                TCGenParticle* genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
-
-                genCon->SetPosition(myParticle.vx(), myParticle.vy(), myParticle.vz() );
-                genCon->SetP4(myParticle.px(), myParticle.py(), myParticle.pz(), myParticle.energy() );
-                genCon->SetCharge(myParticle.charge());
-                genCon->SetPDGId(myParticle.pdgId());
-                genCon->SetMother(myParticle.mother()->pdgId());
-                if (myParticle.pdgId() == 22 && myParticle.mother()->numberOfMothers() != 0) genCon->SetGrandmother(myParticle.mother()->mother()->pdgId());
-                ++genPartCount;
+	      TCGenParticle* genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
+	      
+	      genCon->SetPosition(myParticle.vx(), myParticle.vy(), myParticle.vz() );
+	      genCon->SetP4(myParticle.px(), myParticle.py(), myParticle.pz(), myParticle.energy() );
+	      genCon->SetCharge(myParticle.charge());
+	      genCon->SetPDGId(myParticle.pdgId());
+	      genCon->SetMother(myParticle.mother()->pdgId());
+	      genCon->SetIsParton(0);
+	      if (myParticle.pdgId() == 22 && myParticle.mother()->numberOfMothers() != 0) genCon->SetGrandmother(myParticle.mother()->mother()->pdgId());
+	      ++genPartCount;
             }
-
+	    
             //// intermediate particles
-
+	    
             if (myParticle.status() == 3 && (abs(myParticle.pdgId()) == 6 || abs(myParticle.pdgId()) == 39 
-                        || abs(myParticle.pdgId()) == 23 || abs(myParticle.pdgId()) == 24 || abs(myParticle.pdgId()) == 25)) {
-                for (size_t i = 0; i < myParticle.numberOfDaughters(); ++i) {
-                    const reco::Candidate *myDaughter = myParticle.daughter(i);
-                    if (myDaughter->status() != 1 && (abs(myDaughter->pdgId()) == 5 || (abs(myDaughter->pdgId()) >= 11 && abs(myDaughter->pdgId()) <= 16))) {
-                        TCGenParticle* genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
-
-                        genCon->SetPosition(myDaughter->vx(), myDaughter->vy(), myDaughter->vz() );
-                        genCon->SetP4(myDaughter->px(), myDaughter->py(), myDaughter->pz(), myDaughter->energy() );
-                        genCon->SetCharge(myDaughter->charge());
-                        genCon->SetPDGId(myDaughter->pdgId());
-                        genCon->SetMother(myParticle.pdgId());
-                        ++genPartCount;
-                    }
+					     || abs(myParticle.pdgId()) == 23 || abs(myParticle.pdgId()) == 24 || abs(myParticle.pdgId()) == 25)) {
+	      for (size_t i = 0; i < myParticle.numberOfDaughters(); ++i) {
+		const reco::Candidate *myDaughter = myParticle.daughter(i);
+		if (myDaughter->status() != 1 && (abs(myDaughter->pdgId()) == 5 || (abs(myDaughter->pdgId()) >= 11 && abs(myDaughter->pdgId()) <= 16))) {
+		  TCGenParticle* genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
+		  
+		  genCon->SetPosition(myDaughter->vx(), myDaughter->vy(), myDaughter->vz() );
+		  genCon->SetP4(myDaughter->px(), myDaughter->py(), myDaughter->pz(), myDaughter->energy() );
+		  genCon->SetCharge(myDaughter->charge());
+		  genCon->SetPDGId(myDaughter->pdgId());
+		  genCon->SetMother(myParticle.pdgId());
+		  genCon->SetIsParton(0);
+		  ++genPartCount;
+		  
                 }
-            }
+	      }
+	    }
+	    
+	    //// Z's, W's, H's, and now big juicy Gravitons
+	    if (abs(myParticle.pdgId()) == 23 || abs(myParticle.pdgId()) == 24 || abs(myParticle.pdgId()) == 25 || abs(myParticle.pdgId()) == 39){
+	      TCGenParticle* genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
+	      
+	      genCon->SetPosition(myParticle.vx(), myParticle.vy(), myParticle.vz() );
+	      genCon->SetP4(myParticle.px(), myParticle.py(), myParticle.pz(), myParticle.energy() );
+	      genCon->SetCharge(myParticle.charge());
+	      genCon->SetPDGId(myParticle.pdgId());
+	      genCon->SetMother(myParticle.mother()->pdgId());
+	      genCon->SetIsParton(0);
+	      ++genPartCount;
+	    }
+	  
+	    // set mother and loop through daughters: 
+	    //particle is a parton if its daughter is a string(code=92) or a cluster(code=93), 
+	    //method: bool isParton 
+	    
+            if (abs(myParticle.pdgId()) == 5) {
+              TCGenParticle* genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
+	      
+	      genCon->SetPosition(myParticle.vx(), myParticle.vy(), myParticle.vz() );
+              genCon->SetP4(myParticle.px(), myParticle.py(), myParticle.pz(), myParticle.energy() );
+              genCon->SetCharge(myParticle.charge());
+              genCon->SetPDGId(myParticle.pdgId());
+	      
 
-            //// Z's, W's, H's, and now big juicy Gravitons
-            if (abs(myParticle.pdgId()) == 23 || abs(myParticle.pdgId()) == 24 || abs(myParticle.pdgId()) == 25 || abs(myParticle.pdgId()) == 39){
-                TCGenParticle* genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
-
-                genCon->SetPosition(myParticle.vx(), myParticle.vy(), myParticle.vz() );
-                genCon->SetP4(myParticle.px(), myParticle.py(), myParticle.pz(), myParticle.energy() );
-                genCon->SetCharge(myParticle.charge());
-                genCon->SetPDGId(myParticle.pdgId());
-                genCon->SetMother(myParticle.mother()->pdgId());
-                ++genPartCount;
-            }
-
-        }
-
-
-        /////////////////
-        // Get genJets //
-        /////////////////
+	      size_t n = myParticle.numberOfDaughters();
+	      genCon->SetIsParton(0);
+	      for(size_t j = 0; j < n; ++ j) {
+		const Candidate * d = myParticle.daughter( j );
+		int dauId = d->pdgId();
+		if ( (abs(dauId) == 92) || (abs(dauId)==93)) genCon->SetIsParton(1);
+	      }
+	      
+	      size_t n2 = myParticle.numberOfMothers();
+	      genCon->SetMother(0);
+	      for(size_t j = 0; j < n2; ++ j) {
+		const Candidate * d = myParticle.mother( j );
+		int moId = d->pdgId();
+		if (d->status() == 3 && (abs(moId) == 6 || abs(moId) == 23 || abs(moId) == 24)) genCon->SetMother(moId);
+	      }
+	      ++genPartCount;
+	    }
+	  }
+	}
+	/////////////////
+	// Get genJets //
+	/////////////////
 
         if (saveGenJets_) {
 

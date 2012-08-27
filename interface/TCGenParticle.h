@@ -13,9 +13,11 @@ class TCGenParticle : public TObject {
 		TLorentzVector _p4;
 		int charge;
 		int mother;
-        int grandmother;
+		int grandmother;
 		int PDGID;
-        unsigned status;
+		unsigned status;
+		bool isParton_;
+
 		//    std::vector<int> daughters;
 
 	public:
@@ -29,9 +31,12 @@ class TCGenParticle : public TObject {
 		float Pt() const;
 		int Charge() const;
 		int Mother();
-        int Grandmother();
+		int Grandmother();
 		int GetPDGId();
-        unsigned GetStatus();
+		unsigned GetStatus();
+
+		bool IsParton();
+
 		//    std::vector<int> GetDaughters();
 
 		// "set" methods ---------
@@ -41,9 +46,11 @@ class TCGenParticle : public TObject {
 		void SetCharge(int c);
 		//    void AddDaughter(int d);
 		void SetMother(int m);
-        void SetGrandmother(int g);
+		void SetGrandmother(int g);
 		void SetPDGId(int pdg_id);
-        void SetStatus(unsigned s);
+		void SetStatus(unsigned s);
+
+		void SetIsParton(bool a);
 
 		ClassDef(TCGenParticle, 1);
 

@@ -50,6 +50,10 @@ unsigned TCGenParticle::GetStatus() {
     return status;
 }
 
+bool TCGenParticle::IsParton() {
+return isParton_;
+}
+
 //std::vector<int> TCGenParticle::GetDaughters() {
 //   return daughters;
 //}
@@ -93,4 +97,7 @@ void TCGenParticle::SetPDGId(int pdg_id) {
 void TCGenParticle::SetStatus(unsigned s)
 {
     status = s;
+}
+void TCGenParticle::SetIsParton(bool a) {
+isParton_=a;
 }
