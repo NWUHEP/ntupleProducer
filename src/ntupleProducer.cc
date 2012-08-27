@@ -555,8 +555,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 if (myParticle.status() == 1 && ((abs(myParticle.pdgId()) >= 11 && abs(myParticle.pdgId()) <= 16) || myParticle.pdgId() == 22)) {
                     TCGenParticle* genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
 
-                    genCon->SetPosition(myParticle.vx(), myParticle.vy(), myParticle.vz() );
-                    genCon->SetP4(myParticle.px(), myParticle.py(), myParticle.pz(), myParticle.energy() );
+                    genCon->SetPxPyPzE(myParticle.px(), myParticle.py(), myParticle.pz(), myParticle.energy() );
+                    genCon->SetVtx(myParticle.vx(), myParticle.vy(), myParticle.vz() );
                     genCon->SetCharge(myParticle.charge());
                     genCon->SetPDGId(myParticle.pdgId());
                     genCon->SetMother(myParticle.mother()->pdgId());
@@ -574,8 +574,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                         if (myDaughter->status() != 1 && (abs(myDaughter->pdgId()) == 5 || (abs(myDaughter->pdgId()) >= 11 && abs(myDaughter->pdgId()) <= 16))) {
                             TCGenParticle* genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
 
-                            genCon->SetPosition(myDaughter->vx(), myDaughter->vy(), myDaughter->vz() );
-                            genCon->SetP4(myDaughter->px(), myDaughter->py(), myDaughter->pz(), myDaughter->energy() );
+                            genCon->SetPxPyPzE(myDaughter->px(), myDaughter->py(), myDaughter->pz(), myDaughter->energy() );
+                            genCon->SetVtx(myDaughter->vx(), myDaughter->vy(), myDaughter->vz() );
                             genCon->SetCharge(myDaughter->charge());
                             genCon->SetPDGId(myDaughter->pdgId());
                             genCon->SetMother(myParticle.pdgId());
@@ -590,8 +590,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 if (abs(myParticle.pdgId()) == 23 || abs(myParticle.pdgId()) == 24 || abs(myParticle.pdgId()) == 25 || abs(myParticle.pdgId()) == 39){
                     TCGenParticle* genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
 
-                    genCon->SetPosition(myParticle.vx(), myParticle.vy(), myParticle.vz() );
-                    genCon->SetP4(myParticle.px(), myParticle.py(), myParticle.pz(), myParticle.energy() );
+                    genCon->SetPxPyPzE(myParticle.px(), myParticle.py(), myParticle.pz(), myParticle.energy() );
+                    genCon->SetVtx(myParticle.vx(), myParticle.vy(), myParticle.vz() );
                     genCon->SetCharge(myParticle.charge());
                     genCon->SetPDGId(myParticle.pdgId());
                     genCon->SetMother(myParticle.mother()->pdgId());
@@ -606,8 +606,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 if (abs(myParticle.pdgId()) == 5) {
                     TCGenParticle* genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
 
-                    genCon->SetPosition(myParticle.vx(), myParticle.vy(), myParticle.vz() );
-                    genCon->SetP4(myParticle.px(), myParticle.py(), myParticle.pz(), myParticle.energy() );
+                    genCon->SetPxPyPzE(myParticle.px(), myParticle.py(), myParticle.pz(), myParticle.energy() );
+                    genCon->SetVtx(myParticle.vx(), myParticle.vy(), myParticle.vz() );
                     genCon->SetCharge(myParticle.charge());
                     genCon->SetPDGId(myParticle.pdgId());
 
