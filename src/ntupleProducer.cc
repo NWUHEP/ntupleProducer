@@ -155,8 +155,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
         if (MET->begin() != MET->end()) {
             recoMET->SetSumEt(met->sumEt());
-            recoMET->SetMet(met->et());
-            recoMET->SetPhi(met->phi());
+            recoMET->SetMagPhi(met->et(), met->phi());
             recoMET->SetMuonFraction(met->MuonEtFraction());
             recoMET->SetNeutralHadronFraction(met->NeutralHadEtFraction());
             recoMET->SetNeutralEMFraction(met->NeutralEMFraction());
@@ -171,8 +170,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
         if (METNoPU->begin() != METNoPU->end()) {
             recoMETNoPU->SetSumEt(met->sumEt());
-            recoMETNoPU->SetMet(met->et());
-            recoMETNoPU->SetPhi(met->phi());
+            recoMETNoPU->SetMagPhi(met->et(), met->phi());
             recoMETNoPU->SetMuonFraction(met->MuonEtFraction());
             recoMETNoPU->SetNeutralHadronFraction(met->NeutralHadEtFraction());
             recoMETNoPU->SetNeutralEMFraction(met->NeutralEMFraction());

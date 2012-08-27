@@ -12,17 +12,12 @@
 #include "TLorentzVector.h"
 #include "TVector2.h"
 
-class TCMET : public TObject {
+class TCMET : public TVector2 {
 private:
 
     TVector2 _genMET;
 
     float _sumEt;
-    float _met;
-    float _phi;
-    float _corSumEt;
-    float _corMet;
-    float _corPhi;
     float _muonFraction;
     float _neutralHadronFraction;
     float _neutralEMFraction;
@@ -36,11 +31,6 @@ public:
     // "get" methods -----------
 
     float SumEt() const;
-    float Met() const;
-    float Phi() const;
-    float CorrectedSumEt() const;
-    float CorrectedMet() const;
-    float CorrectedPhi() const;
     float MuonFraction() const;
     float NeutralHadronFraction() const;
     float NeutralEMFraction() const;
@@ -50,11 +40,6 @@ public:
     // "set" methods ---------
 
     void SetSumEt(float n);
-    void SetMet(float n);
-    void SetPhi(float n);
-    void SetCorrectedSumEt(float n);
-    void SetCorrectedMet(float n);
-    void SetCorrectedPhi(float n);
     void SetMuonFraction(float n);
     void SetNeutralHadronFraction(float n);
     void SetNeutralEMFraction(float n);
