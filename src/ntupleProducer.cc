@@ -391,17 +391,19 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             reco::Photon::IsolationVariables isolVarR03, isolVarR04;
             int vtxPhoCounter = 0;
 
-            for(VertexCollection::const_iterator iVtx = primaryVtcs->begin(); iVtx!= primaryVtcs->end(); ++iVtx){
-                float *isoVtxAB;
-                reco::Vertex myVtx = reco::Vertex(*iVtx);
-                if(!myVtx.isValid() || myVtx.isFake()) continue;
-                // Calculate fiducial flags and isolation variable. Blocked are filled from the isolationCalculator
-                //isoVtxAB = photonIsolationCalculator->calculateVtx( &(*iPhoton),iEvent,iSetup,fiducialFlags,isolVarR03, isolVarR04, myVtx);
-                myPhoton->SetTRKIsoVtxDR03(isoVtxAB[1]);
-                myPhoton->SetTRKIsoVtxDR04(isoVtxAB[0]);
-                vtxPhoCounter++;
+            /*
+               for(VertexCollection::const_iterator iVtx = primaryVtcs->begin(); iVtx!= primaryVtcs->end(); ++iVtx){
+               float *isoVtxAB;
+               reco::Vertex myVtx = reco::Vertex(*iVtx);
+               if(!myVtx.isValid() || myVtx.isFake()) continue;
+            // Calculate fiducial flags and isolation variable. Blocked are filled from the isolationCalculator
+            //isoVtxAB = photonIsolationCalculator->calculateVtx( &(*iPhoton),iEvent,iSetup,fiducialFlags,isolVarR03, isolVarR04, myVtx);
+            myPhoton->SetTRKIsoVtxDR03(isoVtxAB[1]);
+            myPhoton->SetTRKIsoVtxDR04(isoVtxAB[0]);
+            vtxPhoCounter++;
 
             }
+             */
             ++photonCount;
         }
     }
