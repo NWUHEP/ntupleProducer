@@ -156,7 +156,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
             if (
                     iJet->pt() < 10.
-                    || iJet->chargedEmEnergyFraction() + iJet->neutralEmEnergyFraction() < 0.01
+                    || (iJet->chargedEmEnergyFraction() + iJet->neutralEmEnergyFraction()) > 0.01
                     || rawCaloJet->n90() < 2
                     //|| (*jetsID)[(*iJet).getCaloJetRef()].fHPD > 0.98 
                ) continue;
@@ -166,7 +166,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             jetCon->SetPxPyPzE(iJet->px(), iJet->py(), iJet->pz(), iJet->energy());
             jetCon->SetVtx(0., 0., 0.);
 
-            //cout << iJet->getSpecific().Zch << endl;;
+            cout << iJet->getSpecific().Zch << endl;;
 
             jetCon->SetChHadFrac(iJet->chargedHadronEnergyFraction());
             jetCon->SetNeuHadFrac(iJet->neutralHadronEnergyFraction());
