@@ -24,6 +24,7 @@ class TCMuon : public TCPhysObject {
         int _numberOfValidMuonHits;
         float _normalizedChi2;
 
+
     public:
         TCMuon();
         virtual ~TCMuon();

@@ -23,6 +23,7 @@ class TCPhysObject : public TLorentzVector {
     public:
         TCPhysObject();
         TCPhysObject(TLorentzVector p4, int charge);
+        TCPhysObject(TLorentzVector p4, int charge, string type);
         virtual ~TCPhysObject();
 
         // "get" methods -----------

@@ -1,9 +1,10 @@
 #!/bin/csh
 
 #set mypath = "nuTuples_v1_7TeV/VBFHZZ250"
-set mypath = "/eos/uscms/store/user/bpollack/May15/MC/WWJets"
+#set mypath = "/eos/uscms/store/user/bpollack/May15/MC/WWJets"
+set mypath = "/pnfs/cms/WAX/11/store/user/naodell/March18/MC/VBFZ"
 
-set nfiles = 105
+set nfiles = 101
 set count = 1
 while ($count <= $nfiles)
    set nlines = `ll -h ${mypath}/nuTuple_${count}_*.root | wc -l`
@@ -12,7 +13,7 @@ while ($count <= $nfiles)
     echo "File not found for # " $count
    endif
    if ( $nlines > 1) then
-       echo $count $nlines
+       #echo $count $nlines
        ll -ht ${mypath}/nuTuple_${count}_*.root > listoffiles.txt
        set count2 = 1 
        while ($count2 <= $nlines)
@@ -20,7 +21,7 @@ while ($count <= $nfiles)
           echo $fname 
                if ( $count2>1) then
                    echo "To be removed: " $fname 
-                   #rm $fname 
+                   rm $fname 
                endif
         @ count2 ++
         end

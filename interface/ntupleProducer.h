@@ -161,7 +161,8 @@ class ntupleProducer : public edm::EDAnalyzer {
 
 		virtual bool  triggerDecision(edm::Handle<edm::TriggerResults>& hltR, int iTrigger);
 		virtual float sumPtSquared(const Vertex& v);
-		virtual void  associateJetToVertex(pat::Jet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet *outJet);   
+		virtual bool  associateJetToVertex(pat::Jet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet *outJet);   
+        virtual bool  electronMVA(Handle<reco::VertexCollection> vtxCollection, vector<pat::Electron>::const_iterator iElectron);
 		virtual bool  isFilteredOutScraping(const edm::Event& iEvent, const edm::EventSetup& iSetup, int numtrack=10, double thresh=0.25);
 		// ----------member data ---------------------------
 
@@ -216,11 +217,11 @@ class ntupleProducer : public edm::EDAnalyzer {
 		TClonesArray* recoJets;
 		TClonesArray* recoJPT;
 		TClonesArray* recoMuons;
-		TClonesArray* pfMuons;
+		//TClonesArray* pfMuons;
 		TClonesArray* recoElectrons;
 		TClonesArray* recoTaus;
 		TClonesArray* recoPhotons;
-		TClonesArray* pfPhotons;
+		//TClonesArray* pfPhotons;
 		TClonesArray* triggerObjects;
 		TClonesArray* genJets;
 		TClonesArray* genParticles;

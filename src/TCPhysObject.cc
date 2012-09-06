@@ -8,6 +8,12 @@ TCPhysObject::TCPhysObject(TLorentzVector p4, int charge) {
     this->SetCharge(charge);
 }
 
+TCPhysObject::TCPhysObject(TLorentzVector p4, int charge, string type) {
+    this->SetP4(p4);
+    this->SetCharge(charge);
+    this->SetType(type);
+}
+
 TCPhysObject::~TCPhysObject() {
 }
 
