@@ -114,9 +114,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
             TCJet* jetCon = new ((*recoJets)[jetCount]) TCJet;
 
-            //cout << "Uncorrected jet pt: " << iJet->correctedJet(0).pt() 
-            //    << ", corrected jet pt: " << iJet->correctedJet(3).pt() 
-            //    << endl; 
+            //if (jetCount == 0) {
+            //    cout << "Uncorrected jet pt: " << iJet->correctedJet(0).pt() 
+            //        << ", corrected jet pt: " << iJet->correctedJet(3).pt() 
+            //        << endl; 
+            //}
 
             jetCon->SetPxPyPzE(iJet->correctedJet(0).px(), iJet->correctedJet(0).py(), iJet->correctedJet(0).pz(), iJet->correctedJet(0).energy());
             jetCon->SetVtx(0., 0., 0.);
@@ -163,11 +165,12 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
             TCJet* jetCon = new ((*recoJPT)[jptCount]) TCJet;
 
+            //if (jptCount == 0) cout << iJet->pt() << endl;
+
             jetCon->SetPxPyPzE(iJet->px(), iJet->py(), iJet->pz(), iJet->energy());
             jetCon->SetVtx(0., 0., 0.);
 
-            cout << iJet->getSpecific().Zch << endl;;
-
+            //jetCon->SetIDMap("Zch", iJet->getSpecific().Zch);
             jetCon->SetChHadFrac(iJet->chargedHadronEnergyFraction());
             jetCon->SetNeuHadFrac(iJet->neutralHadronEnergyFraction());
             jetCon->SetChEmFrac(iJet->chargedEmEnergyFraction());
@@ -176,7 +179,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             jetCon->SetNumChPart(iJet->chargedMultiplicity());
 
             ++jptCount;
-
         }
     }
 

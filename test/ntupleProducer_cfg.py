@@ -208,11 +208,12 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 )
 )
 
-process.ntuplePath = cms.Path(process.PFTau
+process.ntuplePath = cms.Path(
+        process.PFTau
         * process.patDefaultSequence
         * process.jpt
         * process.ntupleProducer
         )
 
-#process.outpath = cms.EndPath(process.out)
+process.outpath = cms.EndPath(process.out)
 
