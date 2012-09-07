@@ -1,4 +1,4 @@
-#include "Higgs/ntupleProducer/interface/TCPhoton.h"
+#include "../interface/TCPhoton.h"
 #include <iostream>
 
 TCPhoton::TCPhoton() { }

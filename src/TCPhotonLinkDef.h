@@ -1,4 +1,4 @@
-#include "Higgs/ntupleProducer/interface/TCPhoton.h"
+#include "../interface/TCPhoton.h"
 #ifdef __CINT__
 #pragma link C++ class TCPhoton;
 #endif

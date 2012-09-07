@@ -2,7 +2,7 @@
 #define _TGENPARTICLE_H
 
 #include "TObject.h"
-#include "Higgs/ntupleProducer/interface/TCPhysObject.h"
+#include "TCPhysObject.h"
 #include "TLorentzVector.h"
 #include "TVector2.h"
 #include "TVector3.h"

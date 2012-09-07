@@ -1,4 +1,4 @@
-#include "Higgs/ntupleProducer/interface/TCPhysObject.h"
+#include "../interface/TCPhysObject.h"
 
 TCPhysObject::TCPhysObject() {
 }

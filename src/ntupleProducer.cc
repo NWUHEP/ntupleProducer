@@ -1,4 +1,4 @@
-#include "Higgs/ntupleProducer/interface/ntupleProducer.h"
+#include "../interface/ntupleProducer.h"
 #include "DataFormats/Math/interface/deltaR.h"
 
 ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)

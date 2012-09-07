@@ -1,6 +1,6 @@
 /* 
  * File:   TCGenJet.h
- * Author: Nate 0.
+ * Author: Nate 0oooo).
  *
  * Created on Nov 29, 2010, 1_39 PM
  */
@@ -11,7 +11,7 @@
 #include <iostream>
 #include "TObject.h"
 #include "TLorentzVector.h"
-#include "Higgs/ntupleProducer/interface/TCPhysObject.h"
+#include "TCPhysObject.h"
 
 class TCGenJet : public TCPhysObject {
 private:

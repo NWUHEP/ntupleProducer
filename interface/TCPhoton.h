@@ -4,7 +4,7 @@
 #include "TObject.h"
 #include "TLorentzVector.h"
 #include "TArrayF.h"
-#include "Higgs/ntupleProducer/interface/TCPhysObject.h"
+#include "TCPhysObject.h"
 #include <vector>
 
 using namespace std;

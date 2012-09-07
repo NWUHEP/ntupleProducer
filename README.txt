@@ -11,6 +11,10 @@ cvs co -r V04-04-04 JetMETCorrections/Type1MET
 
  Log.           It's better than bad it's good.
 
+2012 Sep 07
+  * Tagged B11-01 for Nate's changes.
+  * Changed the paths to local ../interface rather than global Higgs/ntuplepruducer/interface
+
 2011 Sep 30
   Tagged with V00-05 - Wjets and Data with proper json files are produced with it.
   Attempted to properly include the TriggerObject - failed. Need to figure out the way to call the method from HLT trigger.

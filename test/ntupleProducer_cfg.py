@@ -56,7 +56,7 @@ process.out = cms.OutputModule("PoolOutputModule",
                                outputCommands = cms.untracked.vstring('drop *', *patEventContent )
                                )
 
-from Higgs.ntupleProducer.PatSequences_cff import addPatSequence
+from NWU.ntupleProducer.PatSequences_cff import addPatSequence
 
 addPatSequence(process, isRealData, addPhotons = True)
 
@@ -105,7 +105,7 @@ process.endCounter = process.startCounter.clone()
 #process.ntuplePath = cms.Path(process.startCounter * process.patDefaultSequence * process.endCounter)
 
 # configure output
-from Higgs.ntupleProducer.OutputConfiguration_cff import configureOutput
+from NWU.ntupleProducer.OutputConfiguration_cff import configureOutput
 configureOutput(process)
 
 print '\n\nNow run the ntuplizer...\n\n'

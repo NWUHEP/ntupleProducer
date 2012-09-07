@@ -5,7 +5,7 @@
  * Created on April 30, 2010, 2:49 PM
  */
 
-#include "Higgs/ntupleProducer/interface/TCJet.h"
+#include "../interface/TCJet.h"
 
 
 TCJet::TCJet() {

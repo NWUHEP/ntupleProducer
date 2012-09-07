@@ -3,7 +3,7 @@
 
 #include "TObject.h"
 #include "TLorentzVector.h"
-#include "Higgs/ntupleProducer/interface/TCPhysObject.h"
+#include "TCPhysObject.h"
 
 class TCElectron : public TCPhysObject {
     private:

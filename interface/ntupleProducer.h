@@ -104,16 +104,16 @@
 #include "DataFormats/METReco/interface/BeamHaloSummary.h"
 
 // ntuple storage classes
-#include "Higgs/ntupleProducer/interface/TCPrimaryVtx.h"
-#include "Higgs/ntupleProducer/interface/TCJet.h"
-#include "Higgs/ntupleProducer/interface/TCMET.h"
-#include "Higgs/ntupleProducer/interface/TCMuon.h"
-#include "Higgs/ntupleProducer/interface/TCElectron.h"
-#include "Higgs/ntupleProducer/interface/TCTau.h"
-#include "Higgs/ntupleProducer/interface/TCPhoton.h"
-#include "Higgs/ntupleProducer/interface/TCTriggerObject.h"
-#include "Higgs/ntupleProducer/interface/TCGenJet.h"
-#include "Higgs/ntupleProducer/interface/TCGenParticle.h"
+#include "TCPrimaryVtx.h"
+#include "TCJet.h"
+#include "TCMET.h"
+#include "TCMuon.h"
+#include "TCElectron.h"
+#include "TCTau.h"
+#include "TCPhoton.h"
+#include "TCTriggerObject.h"
+#include "TCGenJet.h"
+#include "TCGenParticle.h"
 
 // Need for HLT trigger info:
 #include "FWCore/Common/interface/TriggerNames.h"

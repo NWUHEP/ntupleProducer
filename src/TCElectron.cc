@@ -1,4 +1,4 @@
-#include "Higgs/ntupleProducer/interface/TCElectron.h"
+#include "../interface/TCElectron.h"
 #include <iostream>
 
 TCElectron::TCElectron() {

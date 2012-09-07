@@ -32,6 +32,3 @@
 <use   name="HLTrigger/HLTcore"/>
 <use   name="RecoEgamma/PhotonIdentification"/>
 <flags   EDM_PLUGIN="1"/>
-<export>
-  <lib   name="1"/>
-</export>

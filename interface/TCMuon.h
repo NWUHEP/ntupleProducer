@@ -5,7 +5,7 @@
 #include "TLorentzVector.h"
 #include "TVector2.h"
 #include "TVector3.h"
-#include "Higgs/ntupleProducer/interface/TCPhysObject.h"
+#include "TCPhysObject.h"
 
 class TCMuon : public TCPhysObject {
     private:

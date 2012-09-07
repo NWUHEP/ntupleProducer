@@ -11,7 +11,7 @@
 #include "TObject.h"
 #include "TLorentzVector.h"
 #include "TVector2.h"
-#include "Higgs/ntupleProducer/interface/TCPhysObject.h"
+#include "TCPhysObject.h"
 
 class TCJet : public TCPhysObject {
     private:

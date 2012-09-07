@@ -1,4 +1,4 @@
-#include "Higgs/ntupleProducer/interface/TCGenParticle.h"
+#include "../interface/TCGenParticle.h"
 #include <iostream>
 
 TCGenParticle::TCGenParticle() {
