@@ -114,21 +114,30 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
             TCJet* jetCon = new ((*recoJets)[jetCount]) TCJet;
 
-            //if (jetCount == 0) {
-            //    cout << "Uncorrected jet pt: " << iJet->correctedJet(0).pt() 
-            //        << ", corrected jet pt: " << iJet->correctedJet(3).pt() 
-            //        << endl; 
-            //}
+            if (jetCount == 0) {
+	      cout << "Uncorrected jet pt: " << iJet->correctedJet(0).pt() 
+		   << ", corrected jet pt: " << iJet->correctedJet(1).pt() 
+		   << ", corrected jet pt: " << iJet->correctedJet(2).pt() 
+		   << ", corrected jet pt: " << iJet->correctedJet(3).pt()
+		   <<endl;
+		if(isRealData)	
+		  cout<< ", corrected jet pt: " << iJet->correctedJet(4).pt() 
+		      << endl; 
+            }
 
-            jetCon->SetPxPyPzE(iJet->correctedJet(0).px(), iJet->correctedJet(0).py(), iJet->correctedJet(0).pz(), iJet->correctedJet(0).energy());
+            jetCon->SetPxPyPzE(iJet->px(), iJet->py(), iJet->pz(), iJet->energy());
             jetCon->SetVtx(0., 0., 0.);
-
+	    cout<<"  jetCon object pt = "<<jetCon->Pt()<<endl;
             jetCon->SetChHadFrac(iJet->chargedHadronEnergyFraction());
             jetCon->SetNeuHadFrac(iJet->neutralHadronEnergyFraction());
             jetCon->SetChEmFrac(iJet->chargedEmEnergyFraction());
             jetCon->SetNeuEmFrac(iJet->neutralEmEnergyFraction());
             jetCon->SetNumConstit(iJet->chargedMultiplicity() + iJet->neutralMultiplicity());
             jetCon->SetNumChPart(iJet->chargedMultiplicity());
+
+            jetCon->SetJetFlavor(iJet->partonFlavour());
+
+	    jetCon->SetUncertaintyJES(-1);
 
             jetCon->SetBDiscriminatorMap("TCHE", iJet->bDiscriminator("trackCountingHighEffBJetTags"));
             jetCon->SetBDiscriminatorMap("TCHP", iJet->bDiscriminator("trackCountingHighPurBJetTags"));
@@ -256,6 +265,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
             // Set isolation map values
             // Detector-based isolation
+
             muCon->SetIsoMap("NTracks_R03", iMuon->isolationR03().nTracks);
             muCon->SetIsoMap("EmIso_R03", iMuon->isolationR03().emEt);
             muCon->SetIsoMap("HadIso_R03", iMuon->isolationR03().hadEt);
@@ -303,6 +313,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             eleCon->SetVtx(iElectron->gsfTrack()->vx(),iElectron->gsfTrack()->vy(),iElectron->gsfTrack()->vz());
             eleCon->SetCharge(iElectron->charge());
 
+            eleCon->SetPtError(iElectron->gsfTrack()->ptError());
+            eleCon->SetNormalizedChi2(iElectron->gsfTrack()->normalizedChi2());
+
             eleCon->SetIsEB(iElectron->isEB());
             eleCon->SetIsEE(iElectron->isEE());
             eleCon->SetIsInGap(iElectron->isGap());
@@ -321,6 +334,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             eleCon->SetEOverP(iElectron->eSuperClusterOverP());
 
             // Electron Iso variables
+
             eleCon->SetIsoMap("EmIso_R03", iElectron->dr03EcalRecHitSumEt());
             eleCon->SetIsoMap("HadIso_R03", iElectron->dr03HcalTowerSumEt());
             eleCon->SetIsoMap("SumPt_R03", iElectron->dr03TkSumPt());
@@ -646,6 +660,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     jetCon->SetInvEnergy(myJet.invisibleEnergy());
                     jetCon->SetAuxEnergy(myJet.auxiliaryEnergy());
                     jetCon->SetNumConstit(myJet.getGenConstituents().size());
+		    jetCon->SetJetFlavor(0);
                 }
                 ++genCount;	
             }

@@ -125,6 +125,10 @@ bool TCElectron::PassConversion(int lvl) const {
 // "set" methods ---------------------------------------------
 //------------------------------------------------------------------------
 
+
+void TCElectron::SetPtError(float e) {
+  _ptError = e;
+}
 void TCElectron::SetNumberOfValidPixelHits(int n) {
   _numberOfValidPixelHits = n;
 }

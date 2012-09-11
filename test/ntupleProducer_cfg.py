@@ -30,6 +30,7 @@ process.load("RecoJets.JetAssociationProducers.ak5JTA_cff")
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 process.load('JetMETCorrections.Configuration.JetCorrectionServices_cff')
 
+
 process.kt6PFJets.doRhoFastjet = True
 process.kt6PFJets.Rho_EtaMax   = cms.double(4.4)
 process.kt6PFJets.rParam       = cms.double(0.6)
@@ -69,7 +70,7 @@ addPatSequence(process, isRealData, addPhotons = True)
 # global options
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.threshold = 'ERROR'
-process.MessageLogger.cerr.FwkReport.reportEvery = 100
+process.MessageLogger.cerr.FwkReport.reportEvery = 300
 
 '''
 process.MessageLogger.categories = cms.untracked.vstring('FwkJob', 'FwkReport', 'FwkSummary', 'Root_NoDictionary', 'DataNotAvailable', 'HLTConfigData')
@@ -215,5 +216,5 @@ process.ntuplePath = cms.Path(
         * process.ntupleProducer
         )
 
-process.outpath = cms.EndPath(process.out)
+#process.outpath = cms.EndPath(process.out)
 

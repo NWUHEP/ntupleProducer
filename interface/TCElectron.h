@@ -78,7 +78,7 @@ class TCElectron : public TCPhysObject {
         //--------------------------
         // "set" methods ---------
         //--------------------------
-
+	void SetPtError(float e);
         void SetHadOverEm(float h);
         void SetDphiSuperCluster(float dp);
         void SetDetaSuperCluster(float de);
