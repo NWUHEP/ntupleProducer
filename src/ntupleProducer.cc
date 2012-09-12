@@ -114,6 +114,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
             TCJet* jetCon = new ((*recoJets)[jetCount]) TCJet;
 
+	    /*
             if (jetCount == 0) {
 	      cout << "Uncorrected jet pt: " << iJet->correctedJet(0).pt() 
 		   << ", corrected jet pt: " << iJet->correctedJet(1).pt() 
@@ -124,10 +125,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 		  cout<< ", corrected jet pt: " << iJet->correctedJet(4).pt() 
 		      << endl; 
             }
-
+	    */
+	    //
             jetCon->SetPxPyPzE(iJet->px(), iJet->py(), iJet->pz(), iJet->energy());
             jetCon->SetVtx(0., 0., 0.);
-	    cout<<"  jetCon object pt = "<<jetCon->Pt()<<endl;
+	    //cout<<"  jetCon object pt = "<<jetCon->Pt()<<endl;
             jetCon->SetChHadFrac(iJet->chargedHadronEnergyFraction());
             jetCon->SetNeuHadFrac(iJet->neutralHadronEnergyFraction());
             jetCon->SetChEmFrac(iJet->chargedEmEnergyFraction());

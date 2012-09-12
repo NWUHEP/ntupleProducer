@@ -1,5 +1,8 @@
 *2012* !!!
 
+Sep 12
+  * Fix JPT jet corrections in the next iteration..?
+  
 Sep 07
   * Make the logs in reverse order!
   

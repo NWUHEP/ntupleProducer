@@ -40,7 +40,7 @@ process.ak5JetTracksAssociatorAtVertex.useAssigned = cms.bool(True)
 process.ak5JetTracksAssociatorAtVertex.pvSrc = cms.InputTag("offlinePrimaryVertices")
 
 process.jpt = cms.Sequence(
-                        #process.primaryVertexFilter *
+                       #process.primaryVertexFilter *
                         process.ak5JTA*process.recoJPTJets *
                         process.ak5JPTJetsL1L2L3 *
                         process.kt6PFJets *
