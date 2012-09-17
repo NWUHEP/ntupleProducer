@@ -3,6 +3,11 @@ https://twiki.cern.ch/twiki/bin/view/CMS/UserCodeNWUntupleProducer
 
 
  Log.           It's better than bad it's good.
+
+2012 Sep 17
+  * Tagging with B11-04
+    * Removed certain tau HLT trigger names: problems with prescale determination
+    
 2012 Sep 12
   * Tagging with B11-03
   * Forgetting about JPT corrections - they are wrong. 
