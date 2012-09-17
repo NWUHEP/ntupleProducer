@@ -5,7 +5,7 @@ from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 process = cms.Process("PAT")
 
 # real data or MC?
-isRealData = False
+isRealData = True
 
 # global tag
 process.load("Configuration.StandardSequences.Geometry_cff")
@@ -70,7 +70,7 @@ addPatSequence(process, isRealData, addPhotons = True)
 # global options
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.threshold = 'ERROR'
-process.MessageLogger.cerr.FwkReport.reportEvery = 300
+process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
 '''
 process.MessageLogger.categories = cms.untracked.vstring('FwkJob', 'FwkReport', 'FwkSummary', 'Root_NoDictionary', 'DataNotAvailable', 'HLTConfigData')
@@ -94,7 +94,8 @@ process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(150))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-         '/store/data/Fall11/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/AODSIM/PU_S6-START44_V5-v1/0000/0030ADBC-C409-E111-B1E7-E0CB4E553666.root',
+         #'/store/data/Fall11/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/AODSIM/PU_S6-START44_V5-v1/0000/0030ADBC-C409-E111-B1E7-E0CB4E553666.root',
+         '/store/data/Run2011A/DoubleMu/AOD/08Nov2011-v1/0001/FCFE2B44-321B-E111-AB95-0018F3D09636.root',
          #'/store/data/Run2011B/DoubleMu/AOD/16Jan2012-v1/0000/A0914A57-C344-E111-8687-001A928116D0.root'
 )
 )
@@ -195,8 +196,8 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "",
                                                "",
                                                "HLT_Ele18_CaloIdVT_TrkIdT_MediumIsoPFTau20_v",
-                                               "HLT_Ele20_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_MediumIsoPFTau20_v",
-                                               "HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_MediumIsoPFTau25_v",
+                                               "",
+                                               "",
                                                "HLT_HT400_DoubleIsoPFTau10_Trk3_PFMHT50_v",
                                                "HLT_IsoMu15_eta2p1_LooseIsoPFTau20_v",
                                                "HLT_IsoMu15_eta2p1_MediumIsoPFTau20_v",

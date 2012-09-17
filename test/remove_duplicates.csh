@@ -2,9 +2,9 @@
 
 #set mypath = "nuTuples_v1_7TeV/VBFHZZ250"
 #set mypath = "/eos/uscms/store/user/bpollack/May15/MC/WWJets"
-set mypath = "/pnfs/cms/WAX/11/store/user/naodell/March18/MC/VBFZ"
+set mypath = "/pnfs/cms/WAX/11/store/user/andreypz/nuTuples_v2_7TeV/DYjets/"
 
-set nfiles = 101
+set nfiles = 500
 set count = 1
 while ($count <= $nfiles)
    set nlines = `ll -h ${mypath}/nuTuple_${count}_*.root | wc -l`
@@ -21,7 +21,7 @@ while ($count <= $nfiles)
           echo $fname 
                if ( $count2>1) then
                    echo "To be removed: " $fname 
-                   rm $fname 
+                   #rm $fname 
                endif
         @ count2 ++
         end
