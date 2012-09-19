@@ -2,51 +2,45 @@
 #define _TGENPARTICLE_H
 
 #include "TObject.h"
+#include "TCPhysObject.h"
 #include "TLorentzVector.h"
 #include "TVector2.h"
 #include "TVector3.h"
 #include <vector>
 
-class TCGenParticle : public TObject {
-	private:
-		TVector3 _position;
-		TLorentzVector _p4;
-		int charge;
-		int mother;
+class TCGenParticle : public TCPhysObject {
+    private:
+        int mother;
         int grandmother;
-		int PDGID;
+        int PDGID;
         unsigned status;
-		//    std::vector<int> daughters;
+        bool isParton_;
 
-	public:
-		TCGenParticle();
-		virtual ~TCGenParticle();
+        //    std::vector<int> daughters;
 
-		TVector3 Position() const;
-		TLorentzVector P4() const;
-		TVector2 P2() const;
-		float Et() const;
-		float Pt() const;
-		int Charge() const;
-		int Mother();
+    public:
+        TCGenParticle();
+        virtual ~TCGenParticle();
+
+        int Mother();
         int Grandmother();
-		int GetPDGId();
+        int GetPDGId();
         unsigned GetStatus();
-		//    std::vector<int> GetDaughters();
 
-		// "set" methods ---------
-		void SetPosition(float x, float y, float z);
-		void SetP4(TLorentzVector p4);
-		void SetP4(float px, float py, float pz, float e);
-		void SetCharge(int c);
-		//    void AddDaughter(int d);
-		void SetMother(int m);
+        bool IsParton();
+
+        //    std::vector<int> GetDaughters();
+
+        // "set" methods ---------
+        //    void AddDaughter(int d);
+        void SetMother(int m);
         void SetGrandmother(int g);
-		void SetPDGId(int pdg_id);
+        void SetPDGId(int pdg_id);
         void SetStatus(unsigned s);
 
-		ClassDef(TCGenParticle, 1);
+        void SetIsParton(bool a);
 
+        ClassDef(TCGenParticle, 1);
 };
 
 #endif	

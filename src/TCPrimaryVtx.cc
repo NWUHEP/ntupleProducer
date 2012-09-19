@@ -5,16 +5,12 @@
  * Created on May 21, 2010, 11:16 AM
  */
 
-#include "Higgs/ntupleProducer/interface/TCPrimaryVtx.h"
+#include "../interface/TCPrimaryVtx.h"
 
 TCPrimaryVtx::TCPrimaryVtx() {
 }
 
 TCPrimaryVtx::~TCPrimaryVtx() {
-}
-
-TVector3 TCPrimaryVtx::Position() const {
-   return _position;
 }
 
 float TCPrimaryVtx::NDof() const {
@@ -37,11 +33,6 @@ float TCPrimaryVtx::SumPt2Trks() const {
   return _sumPt2Trks;
 }
 
-
-void TCPrimaryVtx::SetPosition(float x, float y, float z) {
-   TVector3 p(x, y, z);
-   _position = p;
-}
 
 void TCPrimaryVtx::SetNDof(float n) {
    _nDof = n;

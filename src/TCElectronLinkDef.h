@@ -5,7 +5,7 @@
  * Created on May 19, 2010, 5:37 PM
  */
 
-#include "Higgs/ntupleProducer/interface/TCElectron.h"
+#include "../interface/TCElectron.h"
 #ifdef __CINT__
 #pragma link C++ class TCElectron;
 #endif

@@ -104,16 +104,16 @@
 #include "DataFormats/METReco/interface/BeamHaloSummary.h"
 
 // ntuple storage classes
-#include "Higgs/ntupleProducer/interface/TCPrimaryVtx.h"
-#include "Higgs/ntupleProducer/interface/TCJet.h"
-#include "Higgs/ntupleProducer/interface/TCMET.h"
-#include "Higgs/ntupleProducer/interface/TCMuon.h"
-#include "Higgs/ntupleProducer/interface/TCElectron.h"
-#include "Higgs/ntupleProducer/interface/TCTau.h"
-#include "Higgs/ntupleProducer/interface/TCPhoton.h"
-#include "Higgs/ntupleProducer/interface/TCTriggerObject.h"
-#include "Higgs/ntupleProducer/interface/TCGenJet.h"
-#include "Higgs/ntupleProducer/interface/TCGenParticle.h"
+#include "TCPrimaryVtx.h"
+#include "TCJet.h"
+#include "TCMET.h"
+#include "TCMuon.h"
+#include "TCElectron.h"
+#include "TCTau.h"
+#include "TCPhoton.h"
+#include "TCTriggerObject.h"
+#include "TCGenJet.h"
+#include "TCGenParticle.h"
 
 // Need for HLT trigger info:
 #include "FWCore/Common/interface/TriggerNames.h"
@@ -161,7 +161,8 @@ class ntupleProducer : public edm::EDAnalyzer {
 
 		virtual bool  triggerDecision(edm::Handle<edm::TriggerResults>& hltR, int iTrigger);
 		virtual float sumPtSquared(const Vertex& v);
-		virtual void  associateJetToVertex(pat::Jet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet *outJet);   
+		virtual bool  associateJetToVertex(pat::Jet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet *outJet);   
+        virtual bool  electronMVA(Handle<reco::VertexCollection> vtxCollection, vector<pat::Electron>::const_iterator iElectron);
 		virtual bool  isFilteredOutScraping(const edm::Event& iEvent, const edm::EventSetup& iSetup, int numtrack=10, double thresh=0.25);
 		// ----------member data ---------------------------
 
@@ -187,7 +188,6 @@ class ntupleProducer : public edm::EDAnalyzer {
 		TTree* runTree;
 		TTree* jobTree;
 		edm::InputTag jetTag_;
-		edm::InputTag jptTag_;
 		edm::InputTag metTag_;
 		edm::InputTag metNoPUTag_;
 		edm::InputTag genJetTag_;
@@ -199,10 +199,9 @@ class ntupleProducer : public edm::EDAnalyzer {
 		edm::InputTag primaryVtxTag_;
 		edm::InputTag triggerResultsTag_;
 		edm::InputTag rhoCorrTag_;
-		edm::InputTag ecalFilterTag_;
 		edm::InputTag hcalFilterTag_;
 		edm::InputTag partFlowTag_;
-    edm::ParameterSet photonIsoCalcTag_;
+        edm::ParameterSet photonIsoCalcTag_;
 
 		bool saveJets_;
 		bool saveElectrons_;
@@ -218,11 +217,11 @@ class ntupleProducer : public edm::EDAnalyzer {
 		TClonesArray* recoJets;
 		TClonesArray* recoJPT;
 		TClonesArray* recoMuons;
-		TClonesArray* pfMuons;
+		//TClonesArray* pfMuons;
 		TClonesArray* recoElectrons;
 		TClonesArray* recoTaus;
 		TClonesArray* recoPhotons;
-		TClonesArray* pfPhotons;
+		//TClonesArray* pfPhotons;
 		TClonesArray* triggerObjects;
 		TClonesArray* genJets;
 		TClonesArray* genParticles;
@@ -245,11 +244,14 @@ class ntupleProducer : public edm::EDAnalyzer {
 		unsigned          hltPrescale[64];
 
 		//Filters 
-		Bool_t isNoiseHcal, isDeadEcalCluster;
+		Bool_t isNoiseHcal;
 		Bool_t isCSCTightHalo, isCSCLooseHalo, isHcalTightHalo, isHcalLooseHalo, isEcalTightHalo, isEcalLooseHalo;
 		Bool_t isGlobalTightHalo, isGlobalLooseHalo;
 		Bool_t isScraping;
 
 		//Histograms
 		TH1D * h1_ptHat;
+
+        // For map variables
+        vector<string> muonIsoMap;
 };
