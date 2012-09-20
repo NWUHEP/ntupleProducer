@@ -1,17 +1,21 @@
 #!/bin/csh
 
-set username = $1
-set dir = $2
+set username = andreypz
 
-ls -d -1 /pnfs/cms/WAX/11/store/user/$username/$dir/nuTuple_*.root  > DataFiles.txt
+set dir = nuTuples_v2_7TeV/DoubleMu_HZZ_Run2011B
 
-if (! -d ~/nobackup/$dir) then
-   mkdir ~/nobackup/$dir
+set outDir = ~/eos/$dir
+set inDir = /pnfs/cms/WAX/11/store/user/$username/$dir
+echo $inDir
+ls -d -1 $inDir/nuTuple_*.root  > DataFiles.txt
+
+if (! -d $outDir) then
+   mkdir $outDir
 endif
 
 foreach line (`cat DataFiles.txt`)
-   echo "${line} to ~/nobackup/$dir/"
-   dccp ${line} ~/nobackup/$dir/  
+   echo "${line} to ${outDir}"
+   dccp ${line} $outDir  
 end
 
 rm DataFiles.txt

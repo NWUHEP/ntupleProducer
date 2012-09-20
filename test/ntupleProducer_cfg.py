@@ -5,7 +5,7 @@ from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 process = cms.Process("PAT")
 
 # real data or MC?
-isRealData = True
+isRealData = False
 
 # global tag
 process.load("Configuration.StandardSequences.Geometry_cff")
