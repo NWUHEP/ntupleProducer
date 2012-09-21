@@ -8,14 +8,14 @@ process = cms.Process("PAT")
 isRealData = False
 
 # global tag
-process.load("Configuration.StandardSequences.Geometry_cff")
+process.load("Configuration.Geometry.GeometryIdeal_cff")
 process.load("Configuration.StandardSequences.MagneticField_cff")
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 if (isRealData):
-    process.GlobalTag.globaltag = 'GR_R_44_V14::All'
+    process.GlobalTag.globaltag = 'GR_R_53_V14::All'
 else:
-    process.GlobalTag.globaltag = 'START44_V13::All'
+    process.GlobalTag.globaltag = 'START53_V7A::All'
 
 # tau reconstruction configuration
 process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
@@ -48,19 +48,19 @@ process.jpt = cms.Sequence(
                         )
 
 # pat sequences
-process.load("PhysicsTools.PatAlgos.patSequences_cff")
-
-from PhysicsTools.PatAlgos.patEventContent_cff import patEventContent
-process.out = cms.OutputModule("PoolOutputModule",
-                               fileName = cms.untracked.string('/tmp/patTuple.root'),
-                               SelectEvents   = cms.untracked.PSet( SelectEvents = cms.vstring('p') ),
-                               outputCommands = cms.untracked.vstring('drop *', *patEventContent )
-                               )
-
-from NWU.ntupleProducer.PatSequences_cff import addPatSequence
-
-addPatSequence(process, isRealData, addPhotons = True)
-
+#process.load("PhysicsTools.PatAlgos.patSequences_cff")
+#
+#from PhysicsTools.PatAlgos.patEventContent_cff import patEventContent
+#process.out = cms.OutputModule("PoolOutputModule",
+#                               fileName = cms.untracked.string('/tmp/patTuple.root'),
+#                               SelectEvents   = cms.untracked.PSet( SelectEvents = cms.vstring('p') ),
+#                               outputCommands = cms.untracked.vstring('drop *', *patEventContent )
+#                               )
+#
+#from NWU.ntupleProducer.PatSequences_cff import addPatSequence
+#
+#addPatSequence(process, isRealData, addPhotons = True)
+#
 ##------------------------------------------------------------------
 ## see PhysicsTools/PatExamples/test/analyzePatTau_fromAOD_cfg.py
 ## switch the tau algorithm (AA))
@@ -72,6 +72,7 @@ process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.threshold = 'ERROR'
 process.MessageLogger.cerr.FwkReport.reportEvery = 300
 
+'''
 process.MessageLogger.categories = cms.untracked.vstring('FwkJob', 'FwkReport', 'FwkSummary', 'Root_NoDictionary', 'DataNotAvailable', 'HLTConfigData')
 process.MessageLogger.destinations = cms.untracked.vstring('myOutput')
 process.MessageLogger.myOutput = cms.untracked.PSet(
@@ -83,17 +84,16 @@ process.MessageLogger.myOutput = cms.untracked.PSet(
                 HLTConfigData       = cms.untracked.PSet(limit = cms.untracked.int32(0))
                 )
 
-
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
                                      SkipEvent = cms.untracked.vstring('ProductNotFound')
                                     )
+'''
 
 # event source
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(150))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-         '/store/data/Fall11/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/AODSIM/PU_S6-START44_V5-v1/0000/0030ADBC-C409-E111-B1E7-E0CB4E553666.root',
-         #'/store/data/Run2011B/DoubleMu/AOD/16Jan2012-v1/0000/A0914A57-C344-E111-8687-001A928116D0.root'
+           '/store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0003/EAF43999-8D9B-E111-A418-003048D4610E.root'
 )
 )
 
@@ -104,8 +104,8 @@ process.endCounter = process.startCounter.clone()
 #process.ntuplePath = cms.Path(process.startCounter * process.patDefaultSequence * process.endCounter)
 
 # configure output
-from NWU.ntupleProducer.OutputConfiguration_cff import configureOutput
-configureOutput(process)
+#from NWU.ntupleProducer.OutputConfiguration_cff import configureOutput
+#configureOutput(process)
 
 print '\n\nNow run the ntuplizer...\n\n'
 
@@ -132,12 +132,12 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   rhoCorrTag        =    cms.untracked.InputTag('kt6PFJetsPFlow', 'rho', 'PAT'),
   partFlowTag       =    cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
 
-  saveJets          =    cms.untracked.bool(True),
-  saveElectrons     =    cms.untracked.bool(True),
+  saveJets          =    cms.untracked.bool(False),
+  saveElectrons     =    cms.untracked.bool(False),
   saveMuons         =    cms.untracked.bool(True),
   saveTaus          =    cms.untracked.bool(False),
-  savePhotons       =    cms.untracked.bool(True),
-  saveMET           =    cms.untracked.bool(True),
+  savePhotons       =    cms.untracked.bool(False),
+  saveMET           =    cms.untracked.bool(False),
   saveGenJets       =    cms.untracked.bool(True),
   saveGenParticles  =    cms.untracked.bool(True),
 
@@ -208,10 +208,10 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 )
 
 process.ntuplePath = cms.Path(
-        process.PFTau
-        * process.patDefaultSequence
-        * process.jpt
-        * process.ntupleProducer
+        #process.PFTau
+        #* process.patDefaultSequence
+        #* process.jpt
+        process.ntupleProducer
         )
 
 #process.outpath = cms.EndPath(process.out)

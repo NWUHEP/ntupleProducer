@@ -94,14 +94,17 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         ++vtxCount;
     }
 
+    cout << "Vtx cleared!" << endl;
 
     ///////////////////////
     //get jet information//
     ///////////////////////
 
+    /*
     Handle<double> rhoCorr;
     iEvent.getByLabel(rhoCorrTag_, rhoCorr);
     rhoFactor = (float)(*rhoCorr);
+    */
 
     if(saveJets_){
 
