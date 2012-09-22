@@ -17,6 +17,13 @@ if (isRealData):
 else:
     process.GlobalTag.globaltag = 'START53_V7A::All'
 
+# Create good primary vertices for PF association
+from PhysicsTools.SelectorUtils.pvSelector_cfi import pvSelector
+process.goodOfflinePrimaryVertices = cms.EDFilter( "PrimaryVertexObjectFilter",
+    filterParams = pvSelector.clone( minNdof = cms.double(4.0), maxZ = cms.double(24.0) ),
+    src=cms.InputTag('offlinePrimaryVertices')
+    )
+
 # tau reconstruction configuration
 process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
 
@@ -48,24 +55,18 @@ process.jpt = cms.Sequence(
                         )
 
 # pat sequences
-#process.load("PhysicsTools.PatAlgos.patSequences_cff")
-#
-#from PhysicsTools.PatAlgos.patEventContent_cff import patEventContent
-#process.out = cms.OutputModule("PoolOutputModule",
-#                               fileName = cms.untracked.string('/tmp/patTuple.root'),
-#                               SelectEvents   = cms.untracked.PSet( SelectEvents = cms.vstring('p') ),
-#                               outputCommands = cms.untracked.vstring('drop *', *patEventContent )
-#                               )
-#
-#from NWU.ntupleProducer.PatSequences_cff import addPatSequence
-#
-#addPatSequence(process, isRealData, addPhotons = True)
-#
-##------------------------------------------------------------------
-## see PhysicsTools/PatExamples/test/analyzePatTau_fromAOD_cfg.py
-## switch the tau algorithm (AA))
-#from PhysicsTools.PatAlgos.tools.tauTools import *
-#switchToPFTauHPS(process)
+process.load("PhysicsTools.PatAlgos.patSequences_cff")
+
+from PhysicsTools.PatAlgos.patEventContent_cff import patEventContent
+process.out = cms.OutputModule("PoolOutputModule",
+                               fileName = cms.untracked.string('/tmp/patTuple.root'),
+                               SelectEvents   = cms.untracked.PSet( SelectEvents = cms.vstring('p') ),
+                               outputCommands = cms.untracked.vstring('drop *', *patEventContent )
+                               )
+
+from NWU.ntupleProducer.PatSequences_cff import addPatSequence
+addPatSequence(process, isRealData, addPhotons = True)
+
 
 # global options
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
@@ -101,11 +102,6 @@ process.source = cms.Source("PoolSource",
 process.startCounter = cms.EDProducer("EventCountProducer")
 process.endCounter = process.startCounter.clone()
 
-#process.ntuplePath = cms.Path(process.startCounter * process.patDefaultSequence * process.endCounter)
-
-# configure output
-#from NWU.ntupleProducer.OutputConfiguration_cff import configureOutput
-#configureOutput(process)
 
 print '\n\nNow run the ntuplizer...\n\n'
 
@@ -123,7 +119,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   GenJetTag         =    cms.untracked.InputTag('ak5GenJets'),
   METTag            =    cms.untracked.InputTag('patMETsPFlow'),
   METNoPUTag        =    cms.untracked.InputTag('patMETsPFlowNoPileup'),
-  ElectronTag       =    cms.untracked.InputTag('selectedPatElectronsPFlow'),
+  ElectronTag       =    cms.untracked.InputTag('gsfElectrons'),
   pfMuonTag         =    cms.untracked.InputTag('selectedPatMuonsPFlow'),
   MuonTag           =    cms.untracked.InputTag('muons'),
   PhotonTag         =    cms.untracked.InputTag('photons'),
@@ -133,10 +129,10 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   partFlowTag       =    cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
 
   saveJets          =    cms.untracked.bool(False),
-  saveElectrons     =    cms.untracked.bool(False),
+  saveElectrons     =    cms.untracked.bool(True),
   saveMuons         =    cms.untracked.bool(True),
   saveTaus          =    cms.untracked.bool(False),
-  savePhotons       =    cms.untracked.bool(False),
+  savePhotons       =    cms.untracked.bool(True),
   saveMET           =    cms.untracked.bool(False),
   saveGenJets       =    cms.untracked.bool(True),
   saveGenParticles  =    cms.untracked.bool(True),
@@ -154,20 +150,12 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_DoubleMu3_v",
                                                "HLT_DoubleMu6_v",
                                                "HLT_DoubleMu7_v",
-                                               "",
-                                               "",
-                                               "",
-                                               "",
                                                "HLT_Ele8_CaloIdL_CaloIsoVL_v",
                                                "HLT_Ele17_CaloIdL_CaloIsoVL_v",
                                                "HLT_Ele8_CaloIdL_CaloIsoVL_Jet40_v",
                                                "HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL_v",
                                                "HLT_Ele17_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_Ele8_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_v",
                                                "HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
-                                               "",
-                                               "",
-                                               "",
-                                               "",
                                                "HLT_Photon20_CaloIdVL_IsoL_v",
                                                "HLT_Photon20_CaloIdVL_v",
                                                "HLT_Photon30_CaloIdVL_IsoL_v",
@@ -179,19 +167,11 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_Photon90_CaloIdVL_IsoL_v",
                                                "HLT_Photon90_CaloIdVL_v",
                                                "HLT_Photon135_v",
-                                               "",
-                                               "",
-                                               "",
-                                               "",
                                                "HLT_Mu17_Ele8_CaloIdL_v",
                                                "HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v",
                                                "HLT_Mu3_Ele8_CaloIdT_CaloIsoVL_v",
                                                "HLT_Mu8_Ele17_CaloIdL_v",
                                                "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v",
-                                               "",
-                                               "",
-                                               "",
-                                               "",
                                                "HLT_Ele18_CaloIdVT_TrkIdT_MediumIsoPFTau20_v",
                                                "HLT_Ele20_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_MediumIsoPFTau20_v",
                                                "HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_MediumIsoPFTau25_v",
@@ -200,18 +180,15 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_IsoMu15_eta2p1_MediumIsoPFTau20_v",
                                                "HLT_IsoMu15_eta2p1_TightIsoPFTau20_v",
                                                "HLT_Mu15_LooseIsoPFTau15_v"
-                                               "",
-                                               "",
-                                               "",
-                                               ""
 )
 )
 
 process.ntuplePath = cms.Path(
-        #process.PFTau
-        #* process.patDefaultSequence
+        process.goodOfflinePrimaryVertices
+        #* process.PFTau
+        * process.patDefaultSequence
         #* process.jpt
-        process.ntupleProducer
+        * process.ntupleProducer
         )
 
 #process.outpath = cms.EndPath(process.out)

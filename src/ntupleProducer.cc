@@ -94,17 +94,14 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         ++vtxCount;
     }
 
-    cout << "Vtx cleared!" << endl;
 
     ///////////////////////
     //get jet information//
     ///////////////////////
 
-    /*
     Handle<double> rhoCorr;
     iEvent.getByLabel(rhoCorrTag_, rhoCorr);
     rhoFactor = (float)(*rhoCorr);
-    */
 
     if(saveJets_){
 
@@ -306,10 +303,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     if (saveElectrons_) {
 
-        Handle<vector<pat::Electron> > electrons;
+        Handle<reco::GsfElectronCollection > electrons;
         iEvent.getByLabel(electronTag_, electrons);
 
-        for (vector<pat::Electron>::const_iterator iElectron = electrons->begin(); iElectron != electrons->end(); ++iElectron) {
+        for (vector<reco::GsfElectron>::const_iterator iElectron = electrons->begin(); iElectron != electrons->end(); ++iElectron) {
             if (iElectron->pt() < 10) continue;
 
             TCElectron* eleCon = new ((*recoElectrons)[eleCount]) TCElectron;
@@ -360,12 +357,12 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 
             // EID maps for VBTF working points
-            eleCon->SetCutLevel(iElectron->electronID("eidVBTF95"), 95);
-            eleCon->SetCutLevel(iElectron->electronID("eidVBTF90"), 90);
-            eleCon->SetCutLevel(iElectron->electronID("eidVBTF85"), 85);
-            eleCon->SetCutLevel(iElectron->electronID("eidVBTF80"), 80);
-            eleCon->SetCutLevel(iElectron->electronID("eidVBTF70"), 70);
-            eleCon->SetCutLevel(iElectron->electronID("eidVBTF60"), 60);
+            //eleCon->SetCutLevel(iElectron->electronID("eidVBTF95"), 95);
+            //eleCon->SetCutLevel(iElectron->electronID("eidVBTF90"), 90);
+            //eleCon->SetCutLevel(iElectron->electronID("eidVBTF85"), 85);
+            //eleCon->SetCutLevel(iElectron->electronID("eidVBTF80"), 80);
+            //eleCon->SetCutLevel(iElectron->electronID("eidVBTF70"), 70);
+            //eleCon->SetCutLevel(iElectron->electronID("eidVBTF60"), 60);
 
             // Add electron MVA ID and ISO when done
             //electronMVA(vtxCollection, iElectron);
@@ -742,7 +739,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     recoJets->Clear("C");
     recoJPT->Clear("C");
     recoMuons->Clear("C");
-    //pfMuons->Clear("C");
     recoElectrons->Clear("C");
     recoTaus->Clear("C");
     recoPhotons->Clear("C");
@@ -764,7 +760,6 @@ void  ntupleProducer::beginJob()
     recoJPT        = new TClonesArray("TCJet");
     recoElectrons  = new TClonesArray("TCElectron");
     recoMuons      = new TClonesArray("TCMuon");
-    //pfMuons        = new TClonesArray("TCMuon");
     recoTaus       = new TClonesArray("TCTau");
     recoPhotons    = new TClonesArray("TCPhoton");
     //pfPhotons      = new TClonesArray("TCPhoton");
@@ -779,7 +774,6 @@ void  ntupleProducer::beginJob()
     eventTree->Branch("recoJPT",&recoJPT, 6400, 0);
     eventTree->Branch("recoElectrons",&recoElectrons, 6400, 0);
     eventTree->Branch("recoMuons",&recoMuons, 6400, 0);
-    //eventTree->Branch("pfMuons",&pfMuons, 6400, 0);
     eventTree->Branch("recoTaus",&recoTaus, 6400, 0);
     eventTree->Branch("recoPhotons",&recoPhotons, 6400, 0);
     //eventTree->Branch("pfPhotons",&pfPhotons, 6400, 0);
