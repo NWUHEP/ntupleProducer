@@ -5,7 +5,6 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
 {
     jetTag_           = iConfig.getUntrackedParameter<edm::InputTag>("JetTag");
     metTag_           = iConfig.getUntrackedParameter<edm::InputTag>("METTag");
-    metNoPUTag_       = iConfig.getUntrackedParameter<edm::InputTag>("METNoPUTag");
     muonTag_          = iConfig.getUntrackedParameter<edm::InputTag>("MuonTag");
     electronTag_      = iConfig.getUntrackedParameter<edm::InputTag>("ElectronTag");
     photonTag_        = iConfig.getUntrackedParameter<edm::InputTag>("PhotonTag");
@@ -99,9 +98,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     //get jet information//
     ///////////////////////
 
-    Handle<double> rhoCorr;
-    iEvent.getByLabel(rhoCorrTag_, rhoCorr);
-    rhoFactor = (float)(*rhoCorr);
+    //Handle<double> rhoCorr;
+    //iEvent.getByLabel(rhoCorrTag_, rhoCorr);
+    //rhoFactor = (float)(*rhoCorr);
 
     if(saveJets_){
 
@@ -158,6 +157,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
         // For VBF analysis...
 
+        /*
         Handle<reco::JPTJetCollection> jptJets;
         iEvent.getByLabel("ak5JPTJetsL1L2L3", jptJets);
 
@@ -191,6 +191,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
             ++jptCount;
         }
+        */
     }
 
     /////////////
@@ -212,21 +213,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             recoMET->SetNeutralEMFraction(met->NeutralEMFraction());
             recoMET->SetChargedHadronFraction(met->ChargedHadEtFraction());
             recoMET->SetChargedEMFraction(met->ChargedEMEtFraction());
-
-        }
-
-        Handle<vector<pat::MET> > METNoPU;
-        iEvent.getByLabel(metNoPUTag_, METNoPU);
-        met = METNoPU->begin();
-
-        if (METNoPU->begin() != METNoPU->end()) {
-            recoMETNoPU->SetSumEt(met->sumEt());
-            recoMETNoPU->SetMagPhi(met->et(), met->phi());
-            recoMETNoPU->SetMuonFraction(met->MuonEtFraction());
-            recoMETNoPU->SetNeutralHadronFraction(met->NeutralHadEtFraction());
-            recoMETNoPU->SetNeutralEMFraction(met->NeutralEMFraction());
-            recoMETNoPU->SetChargedHadronFraction(met->ChargedHadEtFraction());
-            recoMETNoPU->SetChargedEMFraction(met->ChargedEMEtFraction());
 
         }
     }
@@ -768,7 +754,6 @@ void  ntupleProducer::beginJob()
     genParticles   = new TClonesArray("TCGenParticle");
     beamSpot       = new TVector3();
     recoMET        = 0;
-    recoMETNoPU    = 0;
 
     eventTree->Branch("recoJets",&recoJets, 6400, 0);
     eventTree->Branch("recoJPT",&recoJPT, 6400, 0);
@@ -778,7 +763,6 @@ void  ntupleProducer::beginJob()
     eventTree->Branch("recoPhotons",&recoPhotons, 6400, 0);
     //eventTree->Branch("pfPhotons",&pfPhotons, 6400, 0);
     eventTree->Branch("recoMET", &recoMET, 6400, 0);
-    eventTree->Branch("recoMETNoPU", &recoMETNoPU, 6400, 0);
     eventTree->Branch("triggerObjects", &triggerObjects, 6400, 0);
     eventTree->Branch("genJets",&genJets, 6400, 0);
     eventTree->Branch("genParticles",&genParticles, 6400, 0);

@@ -56,12 +56,11 @@ process.jpt = cms.Sequence(
 
 # pat sequences
 process.load("PhysicsTools.PatAlgos.patSequences_cff")
-
 from PhysicsTools.PatAlgos.patEventContent_cff import patEventContent
 process.out = cms.OutputModule("PoolOutputModule",
                                fileName = cms.untracked.string('/tmp/patTuple.root'),
-                               SelectEvents   = cms.untracked.PSet( SelectEvents = cms.vstring('p') ),
-                               outputCommands = cms.untracked.vstring('drop *', *patEventContent )
+                               SelectEvents   = cms.untracked.PSet( SelectEvents = cms.vstring('ntuplePath')),
+                               outputCommands = cms.untracked.vstring('keep *')#, *patEventContent )
                                )
 
 from NWU.ntupleProducer.PatSequences_cff import addPatSequence
@@ -94,7 +93,8 @@ process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(150))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-           '/store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0003/EAF43999-8D9B-E111-A418-003048D4610E.root'
+            'file:/tmp/naodell/FCDE987D-859B-E111-B445-0025B3E05DDA.root'
+           #'/store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0003/EAF43999-8D9B-E111-A418-003048D4610E.root'
 )
 )
 
@@ -118,7 +118,6 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   JetTag            =    cms.untracked.InputTag('selectedPatJetsPFlow'),
   GenJetTag         =    cms.untracked.InputTag('ak5GenJets'),
   METTag            =    cms.untracked.InputTag('patMETsPFlow'),
-  METNoPUTag        =    cms.untracked.InputTag('patMETsPFlowNoPileup'),
   ElectronTag       =    cms.untracked.InputTag('gsfElectrons'),
   pfMuonTag         =    cms.untracked.InputTag('selectedPatMuonsPFlow'),
   MuonTag           =    cms.untracked.InputTag('muons'),
@@ -128,7 +127,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   rhoCorrTag        =    cms.untracked.InputTag('kt6PFJetsPFlow', 'rho', 'PAT'),
   partFlowTag       =    cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
 
-  saveJets          =    cms.untracked.bool(False),
+  saveJets          =    cms.untracked.bool(True),
   saveElectrons     =    cms.untracked.bool(True),
   saveMuons         =    cms.untracked.bool(True),
   saveTaus          =    cms.untracked.bool(False),
@@ -191,5 +190,4 @@ process.ntuplePath = cms.Path(
         * process.ntupleProducer
         )
 
-#process.outpath = cms.EndPath(process.out)
-
+process.outpath = cms.EndPath(process.out)

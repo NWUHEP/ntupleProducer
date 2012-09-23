@@ -64,9 +64,8 @@ def addPatSequence(process, runOnMC, addPhotons=True) :
               typeIMetCorrections=True, pvCollection=cms.InputTag('goodOfflinePrimaryVertices')
               )
 
-    #process.pfPileUpPFlow.checkClosestZVertex = False
+    process.pfPileUpPFlow.checkClosestZVertex = False
 
-    '''
     # configure muons
     getattr(process,"patMuons"+postfix).embedCaloMETMuonCorrs = False 
     getattr(process,"patMuons"+postfix).embedTcMETMuonCorrs = False
@@ -83,6 +82,7 @@ def addPatSequence(process, runOnMC, addPhotons=True) :
     getattr(process,"pfSelectedElectrons"+postfix).cut="pt()>5"
 
     #electron ID
+    '''
     process.load("ElectroWeakAnalysis.WENu.simpleEleIdSequence_cff")
     process.load("RecoEgamma.ElectronIdentification.cutsInCategoriesElectronIdentificationV06_DataTuning_cfi")
     process.load("RecoEgamma.ElectronIdentification.cutsInCategoriesElectronIdentificationV06_cfi")
@@ -106,23 +106,14 @@ def addPatSequence(process, runOnMC, addPhotons=True) :
         eidVBTF85 = cms.InputTag("simpleEleId85relIso"),
         eidVBTF80 = cms.InputTag("simpleEleId80relIso"),
         eidVBTF70 = cms.InputTag("simpleEleId70relIso"),
-        eidVBTF60 = cms.InputTag("simpleEleId60relIso"),
-        eidVeryLoose = cms.InputTag("eidVeryLoose"),
-        eidLoose = cms.InputTag("eidLoose"),
-        eidMedium = cms.InputTag("eidMedium"),
-        eidTight = cms.InputTag("eidTight"),
-        eidSuperTight = cms.InputTag("eidSuperTight"),
-        eidVeryLooseMC = cms.InputTag("eidVeryLooseMC"),
-        eidLooseMC = cms.InputTag("eidLooseMC"),
-        eidMediumMC = cms.InputTag("eidMediumMC"),
-        eidTightMC = cms.InputTag("eidTightMC"),
-        eidSuperTightMC = cms.InputTag("eidSuperTightMC")       
+        eidVBTF60 = cms.InputTag("simpleEleId60relIso")
         )
+    '''
 
 
     # configure jets
     enablePileUpCorrection( process, postfix=postfix)
-    getattr(process,"patJetCorrFactors"+postfix).payload = jetAlgoPayLoad 
+    getattr(process,"patJetCorrFactors"+postfix).payload = jecSetPF 
     getattr(process,"patJets"+postfix).embedPFCandidates = cms.bool(True)
     getattr(process,"patJets"+postfix).embedCaloTowers   = cms.bool(True)
     
@@ -171,17 +162,15 @@ def addPatSequence(process, runOnMC, addPhotons=True) :
     applyPostfix( process, 'patJets', postfix ).tagInfoSources = cms.VInputTag( cms.InputTag("secondaryVertexTagInfosAOD"+postfix) )
     applyPostfix( process, 'patJets', postfix ).userData.userFunctions = cms.vstring( "? hasTagInfo('secondaryVertex') && tagInfoSecondaryVertex('secondaryVertex').nVertices() > 0 ? tagInfoSecondaryVertex('secondaryVertex').secondaryVertex(0).p4().mass() : -999")
     applyPostfix( process, 'patJets', postfix ).userData.userFunctionLabels = cms.vstring('secvtxMass')
-    '''
     
     #create the path
     process.patDefaultSequence = cms.Sequence(
-       #process.electronIDSequence
+        #process.electronIDSequence
         #* process.kt6PFJets25
         getattr(process,"patPF2PATSequence"+postfix)
-        #* process.stdMuonSeq 
-        #* process.stdElectronSeq 
-        #* process.stdPhotonSeq
-        #* process.patPhotons
+        * process.stdMuonSeq 
+        * process.stdElectronSeq 
+        * process.stdPhotonSeq
         )
         
     print " *** PAT path has been defined"
