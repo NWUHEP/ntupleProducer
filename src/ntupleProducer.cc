@@ -98,9 +98,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     //get jet information//
     ///////////////////////
 
-    //Handle<double> rhoCorr;
-    //iEvent.getByLabel(rhoCorrTag_, rhoCorr);
-    //rhoFactor = (float)(*rhoCorr);
+    Handle<double> rhoCorr;
+    iEvent.getByLabel(rhoCorrTag_, rhoCorr);
+    rhoFactor = (float)(*rhoCorr);
 
     if(saveJets_){
 

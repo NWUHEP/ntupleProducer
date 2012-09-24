@@ -133,7 +133,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   PhotonTag         =    cms.untracked.InputTag('photons'),
   TauTag            =    cms.untracked.InputTag('selectedPatTausPFlow'),
   PrimaryVtxTag     =    cms.untracked.InputTag('offlinePrimaryVertices'),
-  rhoCorrTag        =    cms.untracked.InputTag('kt6PFJetsPFlow', 'rho', 'PAT'),
+  rhoCorrTag        =    cms.untracked.InputTag('kt6PFJets', 'rho', 'RECO'),
   partFlowTag       =    cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
 
   saveJets          =    cms.untracked.bool(True),
