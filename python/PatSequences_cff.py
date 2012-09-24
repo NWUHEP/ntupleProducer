@@ -81,7 +81,6 @@ def addPatSequence(process, runOnMC, addPhotons=True) :
     getattr(process,"pfElectronsFromVertex"+postfix).d0Cut = 99
     getattr(process,"pfSelectedElectrons"+postfix).cut="pt()>5"
 
-
     # configure jets
     enablePileUpCorrection( process, postfix=postfix)
     getattr(process,"patJetCorrFactors"+postfix).payload = jecSetPF 

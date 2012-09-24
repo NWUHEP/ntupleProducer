@@ -200,21 +200,27 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     if (saveMET_){
 
+        /*
         Handle<vector<pat::MET> > MET;
         iEvent.getByLabel(metTag_, MET);
         vector<pat::MET>::const_iterator met = MET->begin();
+        */
+
+        Handle<PFMETCollection> MET;
+        iEvent.getByLabel(metTag_, MET);
+        PFMETCollection::const_iterator met = MET->begin();
 
         if (MET->begin() != MET->end()) {
-            cout << met->isPFMET()  << ", " << met->isCaloMET() << endl;
-            /*
             recoMET->SetSumEt(met->sumEt());
             recoMET->SetMagPhi(met->et(), met->phi());
+
+            // PF specififc methods
             recoMET->SetMuonFraction(met->MuonEtFraction());
             recoMET->SetNeutralHadronFraction(met->NeutralHadEtFraction());
             recoMET->SetNeutralEMFraction(met->NeutralEMFraction());
             recoMET->SetChargedHadronFraction(met->ChargedHadEtFraction());
             recoMET->SetChargedEMFraction(met->ChargedEMEtFraction());
-            */
+
         }
     }
 

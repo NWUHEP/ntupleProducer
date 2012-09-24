@@ -25,10 +25,20 @@ process.goodOfflinePrimaryVertices = cms.EDFilter( "PrimaryVertexObjectFilter",
     )
 
 # tau reconstruction configuration
-process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
+#process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
 
 # jet energy corrections
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
+
+# MET corrections
+process.load('JetMETCorrections.Type1MET.pfMETCorrections_cff')
+skipEMfractionThreshold = cms.double(0.90)
+skipEM = cms.bool(True)
+skipMuonSelection = cms.string('isGlobalMuon | isStandAloneMuon')
+skipMuons = cms.bool(True)
+
+if (isRealData):
+    process.pfJetMETcorr.jetCorrLabel = cms.string("ak5PFL1FastL2L3Residual")
 
 # jpt extras
 process.load("RecoJets.Configuration.RecoPFJets_cff")
@@ -117,7 +127,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
   JetTag            =    cms.untracked.InputTag('selectedPatJetsPFlow'),
   GenJetTag         =    cms.untracked.InputTag('ak5GenJets'),
-  METTag            =    cms.untracked.InputTag('patMETsPFlow'),
+  METTag            =    cms.untracked.InputTag('pfType1CorrectedMet'),
   ElectronTag       =    cms.untracked.InputTag('gsfElectrons'),
   MuonTag           =    cms.untracked.InputTag('muons'),
   PhotonTag         =    cms.untracked.InputTag('photons'),
@@ -183,6 +193,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
 process.ntuplePath = cms.Path(
         process.goodOfflinePrimaryVertices
+        * process.producePFMETCorrections
         #* process.PFTau
         * process.patDefaultSequence
         #* process.jpt
