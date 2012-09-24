@@ -13,9 +13,9 @@ process.load("Configuration.StandardSequences.MagneticField_cff")
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 if (isRealData):
-    process.GlobalTag.globaltag = 'GR_R_53_V14::All'
+    process.GlobalTag.globaltag = 'GR_R_53_V13::All'
 else:
-    process.GlobalTag.globaltag = 'START53_V7A::All'
+    process.GlobalTag.globaltag = 'START53_V11::All'
 
 # Create good primary vertices for PF association
 from PhysicsTools.SelectorUtils.pvSelector_cfi import pvSelector
@@ -47,11 +47,11 @@ process.ak5JetTracksAssociatorAtVertex.useAssigned = cms.bool(True)
 process.ak5JetTracksAssociatorAtVertex.pvSrc = cms.InputTag("offlinePrimaryVertices")
 
 process.jpt = cms.Sequence(
-                       #process.primaryVertexFilter *
-                        process.ak5JTA*process.recoJPTJets *
-                        process.ak5JPTJetsL1L2L3 *
-                        process.kt6PFJets *
-                        process.ak5PFJetsL1FastL2L3 
+                        process.ak5JTA 
+                        * process.recoJPTJets 
+                        * process.ak5JPTJetsL1L2L3 
+                        * process.kt6PFJets 
+                        * process.ak5PFJetsL1FastL2L3 
                         )
 
 # pat sequences
@@ -64,7 +64,7 @@ process.out = cms.OutputModule("PoolOutputModule",
                                )
 
 from NWU.ntupleProducer.PatSequences_cff import addPatSequence
-addPatSequence(process, isRealData, addPhotons = True)
+addPatSequence(process, not isRealData, addPhotons = True)
 
 
 # global options
@@ -83,18 +83,18 @@ process.MessageLogger.myOutput = cms.untracked.PSet(
                 DataNotAvailable    = cms.untracked.PSet(limit = cms.untracked.int32(0)),
                 HLTConfigData       = cms.untracked.PSet(limit = cms.untracked.int32(0))
                 )
+'''
 
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
                                      SkipEvent = cms.untracked.vstring('ProductNotFound')
                                     )
-'''
 
 # event source
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(150))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(50))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-            'file:/tmp/naodell/FCDE987D-859B-E111-B445-0025B3E05DDA.root'
-           #'/store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0003/EAF43999-8D9B-E111-A418-003048D4610E.root'
+           # 'file:/tmp/naodell/FCDE987D-859B-E111-B445-0025B3E05DDA.root'
+           '/store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0003/EAF43999-8D9B-E111-A418-003048D4610E.root'
 )
 )
 
@@ -119,7 +119,6 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   GenJetTag         =    cms.untracked.InputTag('ak5GenJets'),
   METTag            =    cms.untracked.InputTag('patMETsPFlow'),
   ElectronTag       =    cms.untracked.InputTag('gsfElectrons'),
-  pfMuonTag         =    cms.untracked.InputTag('selectedPatMuonsPFlow'),
   MuonTag           =    cms.untracked.InputTag('muons'),
   PhotonTag         =    cms.untracked.InputTag('photons'),
   TauTag            =    cms.untracked.InputTag('selectedPatTausPFlow'),
@@ -132,7 +131,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   saveMuons         =    cms.untracked.bool(True),
   saveTaus          =    cms.untracked.bool(False),
   savePhotons       =    cms.untracked.bool(True),
-  saveMET           =    cms.untracked.bool(False),
+  saveMET           =    cms.untracked.bool(True),
   saveGenJets       =    cms.untracked.bool(True),
   saveGenParticles  =    cms.untracked.bool(True),
 

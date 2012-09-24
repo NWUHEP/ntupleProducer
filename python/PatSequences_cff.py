@@ -81,35 +81,6 @@ def addPatSequence(process, runOnMC, addPhotons=True) :
     getattr(process,"pfElectronsFromVertex"+postfix).d0Cut = 99
     getattr(process,"pfSelectedElectrons"+postfix).cut="pt()>5"
 
-    #electron ID
-    '''
-    process.load("ElectroWeakAnalysis.WENu.simpleEleIdSequence_cff")
-    process.load("RecoEgamma.ElectronIdentification.cutsInCategoriesElectronIdentificationV06_DataTuning_cfi")
-    process.load("RecoEgamma.ElectronIdentification.cutsInCategoriesElectronIdentificationV06_cfi")
-    process.electronIDSequence = cms.Sequence(
-        process.simpleEleIdSequence +
-        process.eidVeryLoose +
-        process.eidLoose +
-        process.eidMedium +
-        process.eidTight +
-        process.eidSuperTight+
-        process.eidVeryLooseMC +
-        process.eidLooseMC +
-        process.eidMediumMC +
-        process.eidTightMC +
-        process.eidSuperTightMC
-        )
-
-    applyPostfix( process, 'patElectrons', postfix ).electronIDSources = cms.PSet(
-        eidVBTF95 = cms.InputTag("simpleEleId95relIso"),
-        eidVBTF90 = cms.InputTag("simpleEleId90relIso"),
-        eidVBTF85 = cms.InputTag("simpleEleId85relIso"),
-        eidVBTF80 = cms.InputTag("simpleEleId80relIso"),
-        eidVBTF70 = cms.InputTag("simpleEleId70relIso"),
-        eidVBTF60 = cms.InputTag("simpleEleId60relIso")
-        )
-    '''
-
 
     # configure jets
     enablePileUpCorrection( process, postfix=postfix)
@@ -128,6 +99,19 @@ def addPatSequence(process, runOnMC, addPhotons=True) :
     getattr(process,"pfNoTau"+postfix).enable       = False
     getattr(process,"pfNoJet"+postfix).enable       = False
 
+    #alternative met collections
+    process.pfMETPFlowNoPileup   = process.pfMETPFlow.clone(src=cms.InputTag("pfNoPileUpPFlow"))
+    process.patMETsPFlowNoPileup = process.patMETsPFlow.clone(metSource=cms.InputTag("pfMETPFlowNoPileup"))
+
+    process.pfMETPFlowPileup    = process.pfMETPFlow.clone(jets=cms.InputTag("ak5PFJets"))
+    process.patMETsPFlowPileup  = process.patMETsPFlow.clone(metSource=cms.InputTag("pfMETPFlowPileup"))
+
+    process.hzzmetSequence = cms.Sequence(process.pfMETPFlowNoPileup
+                                          * process.patMETsPFlowNoPileup
+                                          * process.pfMETPFlowPileup
+                                          * process.patMETsPFlowPileup
+                                          )
+
 
     ### adding standard muons and electrons
     process.patMuons.embedTcMETMuonCorrs = False
@@ -139,8 +123,10 @@ def addPatSequence(process, runOnMC, addPhotons=True) :
 
     process.eleIsoSequence = setupPFElectronIso(process, 'gsfElectrons', 'PFIso')
     process.muIsoSequence = setupPFMuonIso(process, 'muons', 'PFIso')
+
     adaptPFIsoMuons( process, applyPostfix(process,"patMuons",""), 'PFIso')
     adaptPFIsoElectrons( process, applyPostfix(process,"patElectrons",""), 'PFIso')
+
     process.stdMuonSeq = cms.Sequence( process.pfParticleSelectionSequence +
                                        process.muIsoSequence +
                                        process.makePatMuons +
@@ -165,9 +151,9 @@ def addPatSequence(process, runOnMC, addPhotons=True) :
     
     #create the path
     process.patDefaultSequence = cms.Sequence(
-        #process.electronIDSequence
         #* process.kt6PFJets25
         getattr(process,"patPF2PATSequence"+postfix)
+        * process.hzzmetSequence
         * process.stdMuonSeq 
         * process.stdElectronSeq 
         * process.stdPhotonSeq
