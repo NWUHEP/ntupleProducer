@@ -48,9 +48,10 @@ process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 process.load('JetMETCorrections.Configuration.JetCorrectionServices_cff')
 
 
-process.kt6PFJets.doRhoFastjet = True
-process.kt6PFJets.Rho_EtaMax   = cms.double(4.4)
-process.kt6PFJets.rParam       = cms.double(0.6)
+process.kt6PFJetsIso = process.kt6PFJets.clone()
+process.kt6PFJetsIso.doRhoFastjet = True
+process.kt6PFJetsIso.Rho_EtaMax = cms.double(2.5)
+
 
 process.ak5JPTL1Offset.algorithm = 'AK5JPT'
 process.ak5JetTracksAssociatorAtVertex.useAssigned = cms.bool(True)
@@ -79,8 +80,8 @@ addPatSequence(process, not isRealData, addPhotons = True)
 
 # global options
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
-process.MessageLogger.cerr.threshold = 'WARNING'
-process.MessageLogger.cerr.FwkReport.reportEvery = 300
+process.MessageLogger.cerr.threshold = 'INFO'
+process.MessageLogger.cerr.FwkReport.reportEvery = 10
 
 '''
 process.MessageLogger.categories = cms.untracked.vstring('FwkJob', 'FwkReport', 'FwkSummary', 'Root_NoDictionary', 'DataNotAvailable', 'HLTConfigData')
@@ -181,6 +182,8 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   TauTag            =    cms.untracked.InputTag('selectedPatTausPFlow'),
   PrimaryVtxTag     =    cms.untracked.InputTag('offlinePrimaryVertices'),
   rhoCorrTag        =    cms.untracked.InputTag('kt6PFJets', 'rho', 'RECO'),
+  rho25CorrTag      =    cms.untracked.InputTag('kt6PFJetsIso', 'rho', 'PAT'),
+  
   partFlowTag       =    cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
 
   saveJets          =    cms.untracked.bool(True),
@@ -246,8 +249,9 @@ process.ntuplePath = cms.Path(
         #* process.PFTau
         * process.patDefaultSequence
         #* process.jpt
+        * process.kt6PFJetsIso
         * AllFilters
         * process.ntupleProducer
         )
 
-process.outpath = cms.EndPath(process.out)
+#process.outpath = cms.EndPath(process.out)

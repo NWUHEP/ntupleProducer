@@ -13,6 +13,7 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
     primaryVtxTag_    = iConfig.getUntrackedParameter<edm::InputTag>("PrimaryVtxTag");
 
     rhoCorrTag_       = iConfig.getUntrackedParameter<edm::InputTag>("rhoCorrTag");
+    rho25CorrTag_     = iConfig.getUntrackedParameter<edm::InputTag>("rho25CorrTag");
     hlTriggerResults_ = iConfig.getUntrackedParameter<string>("HLTriggerResults","TriggerResults");
     hltProcess_       = iConfig.getUntrackedParameter<string>("hltName");
     triggerPaths_     = iConfig.getUntrackedParameter<vector<string> >("triggers");
@@ -103,6 +104,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     Handle<double> rhoCorr;
     iEvent.getByLabel(rhoCorrTag_, rhoCorr);
     rhoFactor = (float)(*rhoCorr);
+
+    Handle<double> rho25Corr;
+    iEvent.getByLabel(rho25CorrTag_, rho25Corr);
+    rho25Factor = (float)(*rho25Corr);
+    cout<<" RHOS. In eta 4.4 = "<<rhoFactor<<"   in eta25 "<<rho25Factor<<endl;
 
     if(saveJets_){
 
@@ -246,6 +252,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             muCon->SetCharge(iMuon->charge());
 
             // Muon ID variables
+            muCon->SetIsPF(iMuon->isPFMuon());
             muCon->SetIsGLB(iMuon->isGlobalMuon());
             muCon->SetIsTRK(iMuon->isTrackerMuon());
             muCon->SetNormalizedChi2(iMuon->globalTrack()->normalizedChi2());
@@ -277,15 +284,18 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             muCon->SetIsoMap("pfChargedPt_R03", iMuon->pfIsolationR03().sumChargedParticlePt);
             muCon->SetIsoMap("pfChargedHadronPt_R03", iMuon->pfIsolationR03().sumChargedHadronPt);
             muCon->SetIsoMap("pfPhotonEt_R03", iMuon->pfIsolationR03().sumPhotonEt);
-            muCon->SetIsoMap("pfNeutralEt_R03", iMuon->pfIsolationR03().sumNeutralHadronEt);
-            muCon->SetIsoMap("pfPhotonPt_R03", iMuon->pfIsolationR03().sumPUPt);
+            muCon->SetIsoMap("pfNeutralHadronEt_R03", iMuon->pfIsolationR03().sumNeutralHadronEt);
+            muCon->SetIsoMap("pfPUPt_R03", iMuon->pfIsolationR03().sumPUPt);
 
             muCon->SetIsoMap("pfChargedPt_R04", iMuon->pfIsolationR04().sumChargedParticlePt);
             muCon->SetIsoMap("pfChargedHadronPt_R04", iMuon->pfIsolationR04().sumChargedHadronPt);
             muCon->SetIsoMap("pfPhotonEt_R04", iMuon->pfIsolationR04().sumPhotonEt);
-            muCon->SetIsoMap("pfNeutralEt_R04", iMuon->pfIsolationR04().sumNeutralHadronEt);
-            muCon->SetIsoMap("pfPhotonPt_R04", iMuon->pfIsolationR04().sumPUPt);
+            muCon->SetIsoMap("pfNeutralHadronEt_R04", iMuon->pfIsolationR04().sumNeutralHadronEt);
+            muCon->SetIsoMap("pfPUPt_R04", iMuon->pfIsolationR04().sumPUPt);
 
+	    cout<<"MUON \n"<<muCon->IsoMap("pfPhotonEt_R04")
+		<<"   "<<muCon->IsoMap("pfChargedHadronPt_R04")
+		<<"   "<<muCon->IsoMap("pfNeutraHadronEt_R04")<<endl;
             muCount++;
         }
     }
@@ -350,6 +360,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             eleCon->SetConversionDcot(iElectron->convDcot());
             eleCon->SetConversionRad(iElectron->convRadius());
 
+	    cout<<"        Electron\n"<<eleCon->IsoMap("pfPhotonEt_R03")
+		<<"    "<<eleCon->IsoMap("pfChargedHadron_R03")
+		<<"    "<<eleCon->IsoMap("pfNeutralHadron_R03")<<endl;
 
             // EID maps for VBTF working points
             //eleCon->SetCutLevel(iElectron->electronID("eidVBTF95"), 95);
@@ -405,6 +418,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             myPhoton->SetIsoMap("HadIso_R04", (iPhoton->hcalTowerSumEtConeDR04()));
             myPhoton->SetIsoMap("TrkIso_R04", (iPhoton->trkSumPtHollowConeDR04()));
 
+	    cout<<"  Photon\n"<<myPhoton->IsoMap("EmIso_R04")
+		<<"   "<<myPhoton->IsoMap("HadIso_R04")
+		<<"   "<<myPhoton->IsoMap("TrkIso_R04")<<endl;
+
             // Hcal isolation for 2012
             //myPhoton->SetIsoMap("HadIso_R03",iPhoton->hcalTowerSumEtConeDR03() + 
             //        (iPhoton->hadronicOverEm() - iPhoton->hadTowOverEm())*iPhoton->superCluster()->energy()/cosh(iPhoton->superCluster()->eta()));
@@ -423,6 +440,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 ++conversionCount;
             }
             myPhoton->SetNumberOfConversions(iPhoton->conversions().size());
+
 
             /*
             PhotonIsolationCalculator* photonIsolationCalculator = new PhotonIsolationCalculator();
@@ -814,6 +832,7 @@ void  ntupleProducer::beginJob()
     eventTree->Branch("qScale", &qScale, "qScale/F");
     eventTree->Branch("evtWeight", &evtWeight, "evtWeight/F");
     eventTree->Branch("rhoFactor",&rhoFactor, "rhoFactor/F");
+    eventTree->Branch("rho25Factor",&rho25Factor, "rho25Factor/F");
     eventTree->Branch("triggerStatus",&triggerStatus, "triggerStatus/l");
     eventTree->Branch("hltPrescale",hltPrescale, "hltPrescale[64]/i");
 

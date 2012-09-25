@@ -191,7 +191,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   UInt_t      runNumber, lumiSection, bunchCross, nEvents;
   float ptHat, qScale, evtWeight;
   float deliveredLumi, recordedLumi, lumiDeadTime;
-  float rhoFactor;
+  float rhoFactor, rho25Factor;
   string  savedTriggerNames[64];
   
   edm::Service<TFileService> fs;
@@ -207,7 +207,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   edm::InputTag tauTag_;
   edm::InputTag primaryVtxTag_;
   edm::InputTag triggerResultsTag_;
-  edm::InputTag rhoCorrTag_;
+  edm::InputTag rhoCorrTag_, rho25CorrTag_;
   edm::InputTag hcalHBHEFilterTag_;
   edm::InputTag ecalTPFilterTag_;
   edm::InputTag ecalBEFilterTag_;
@@ -215,49 +215,49 @@ class ntupleProducer : public edm::EDAnalyzer {
   edm::InputTag partFlowTag_;
   edm::ParameterSet photonIsoCalcTag_;
 
-		bool saveJets_;
-		bool saveElectrons_;
-		bool saveMuons_;
-		bool savePhotons_;
-		bool saveTaus_;
-		bool saveMET_;
-		bool saveGenJets_;
-		bool saveGenParticles_;
-		bool isRealData;
-
-		//Physics object containers
-		TClonesArray* recoJets;
-		TClonesArray* recoJPT;
-		TClonesArray* recoMuons;
-		//TClonesArray* pfMuons;
-		TClonesArray* recoElectrons;
-		TClonesArray* recoTaus;
-		TClonesArray* recoPhotons;
-		//TClonesArray* pfPhotons;
-		TClonesArray* triggerObjects;
-		TClonesArray* genJets;
-		TClonesArray* genParticles;
-		TCMET*        recoMET;
-
-		//Vertex info
-		TClonesArray* primaryVtx;
-		TVector3*     beamSpot;
-		unsigned      nPUVertices;
-		float         nPUVerticesTrue;
-
-		//Triggers
-		HLTConfigProvider hltConfig_;
-		string            hlTriggerResults_, hltProcess_, triggerName_;
-		TriggerNames      triggerNames;
-		vector<string>    hlNames;
-		vector<string>    triggerPaths_;
-		ULong64_t         triggerStatus;
-		unsigned          hltPrescale[64];
-
-		Filters myNoiseFilters;
-		//Histograms
-		TH1D * h1_ptHat;
-
-        // For map variables
-        vector<string> muonIsoMap;
+  bool saveJets_;
+  bool saveElectrons_;
+  bool saveMuons_;
+  bool savePhotons_;
+  bool saveTaus_;
+  bool saveMET_;
+  bool saveGenJets_;
+  bool saveGenParticles_;
+  bool isRealData;
+  
+  //Physics object containers
+  TClonesArray* recoJets;
+  TClonesArray* recoJPT;
+  TClonesArray* recoMuons;
+  //TClonesArray* pfMuons;
+  TClonesArray* recoElectrons;
+  TClonesArray* recoTaus;
+  TClonesArray* recoPhotons;
+  //TClonesArray* pfPhotons;
+  TClonesArray* triggerObjects;
+  TClonesArray* genJets;
+  TClonesArray* genParticles;
+  TCMET*        recoMET;
+  
+  //Vertex info
+  TClonesArray* primaryVtx;
+  TVector3*     beamSpot;
+  unsigned      nPUVertices;
+  float         nPUVerticesTrue;
+  
+  //Triggers
+  HLTConfigProvider hltConfig_;
+  string            hlTriggerResults_, hltProcess_, triggerName_;
+  TriggerNames      triggerNames;
+  vector<string>    hlNames;
+  vector<string>    triggerPaths_;
+  ULong64_t         triggerStatus;
+  unsigned          hltPrescale[64];
+  
+  Filters myNoiseFilters;
+  //Histograms
+  TH1D * h1_ptHat;
+  
+  // For map variables
+  vector<string> muonIsoMap;
 };
