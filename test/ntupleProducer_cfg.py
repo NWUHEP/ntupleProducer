@@ -112,6 +112,53 @@ process.source = cms.Source("PoolSource",
 process.startCounter = cms.EDProducer("EventCountProducer")
 process.endCounter = process.startCounter.clone()
 
+#############################################
+#### Met/Noise/BeamHalo filters  #############
+## Following the recipe from this twiki:
+## https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFilters
+## Using *Tagging mode* for all filters (produces the boolean instead of filtering an event)
+## Saving this boolean in the ntuples!
+##############################################
+process.load('CommonTools/RecoAlgos/HBHENoiseFilterResultProducer_cfi')
+process.load("RecoMET.METFilters.hcalLaserEventFilter_cfi")
+process.hcalLaserEventFilter.vetoByRunEventNumber=cms.untracked.bool(False)
+process.hcalLaserEventFilter.vetoByHBHEOccupancy=cms.untracked.bool(True)
+process.hcalLaserEventFilter.taggingMode = cms.bool(True)
+
+
+process.load('RecoMET.METFilters.EcalDeadCellTriggerPrimitiveFilter_cfi')
+## For AOD and RECO recommendation to use recovered rechits
+process.EcalDeadCellTriggerPrimitiveFilter.tpDigiCollection = cms.InputTag("ecalTPSkimNA")
+process.EcalDeadCellTriggerPrimitiveFilter.taggingMode = cms.bool(True)
+
+# The section below is for the filter on Boundary Energy. Available in AOD in CMSSW>44x
+# For releases earlier than 44x, one should make the following changes
+# process.EcalDeadCellBoundaryEnergyFilter.recHitsEB = cms.InputTag("ecalRecHit","EcalRecHitsEB")
+# process.EcalDeadCellBoundaryEnergyFilter.recHitsEE = cms.InputTag("ecalRecHit","EcalRecHitsEE")
+process.load('RecoMET.METFilters.EcalDeadCellBoundaryEnergyFilter_cfi')
+process.EcalDeadCellBoundaryEnergyFilter.taggingMode = cms.bool(True)
+process.EcalDeadCellBoundaryEnergyFilter.cutBoundEnergyDeadCellsEB=cms.untracked.double(10)
+process.EcalDeadCellBoundaryEnergyFilter.cutBoundEnergyDeadCellsEE=cms.untracked.double(10)
+process.EcalDeadCellBoundaryEnergyFilter.cutBoundEnergyGapEB=cms.untracked.double(100)
+process.EcalDeadCellBoundaryEnergyFilter.cutBoundEnergyGapEE=cms.untracked.double(100)
+process.EcalDeadCellBoundaryEnergyFilter.enableGap=cms.untracked.bool(False)
+process.EcalDeadCellBoundaryEnergyFilter.limitDeadCellToChannelStatusEB = cms.vint32(12,14)
+process.EcalDeadCellBoundaryEnergyFilter.limitDeadCellToChannelStatusEE = cms.vint32(12,14)
+# End of Boundary Energy filter configuration
+
+# This one is not working for some reason:
+#process.load('RecoMET.METFilters.trackingFailureFilter_cfi')
+#process.trackingFailureFilter.taggingMode = cms.bool(True)
+
+AllFilters = cms.Sequence(process.HBHENoiseFilterResultProducer
+                          * process.hcalLaserEventFilter
+                          * process.EcalDeadCellTriggerPrimitiveFilter
+                          * process.EcalDeadCellBoundaryEnergyFilter
+                          #* process.trackingFailureFilter
+                            )
+
+
+##### END OF Noise Filters ############
 
 print '\n\nNow run the ntuplizer...\n\n'
 
@@ -197,6 +244,7 @@ process.ntuplePath = cms.Path(
         #* process.PFTau
         * process.patDefaultSequence
         #* process.jpt
+        * AllFilters
         * process.ntupleProducer
         )
 
