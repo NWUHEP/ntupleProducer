@@ -146,60 +146,74 @@ using namespace reco;
 // class declaration
 //
 
+struct Filters {		//Filters 
+  Bool_t isScraping;
+  Bool_t isNoiseHcalHBHE;
+  Bool_t isNoiseHcalLaser;
+  Bool_t isNoiseEcalTP;
+  Bool_t isNoiseEcalBE;
+  Bool_t isCSCTightHalo;
+  Bool_t isCSCLooseHalo;
+};
+
+
 class ntupleProducer : public edm::EDAnalyzer {
-	public:
-		explicit ntupleProducer(const edm::ParameterSet&);
-		~ntupleProducer();
-
-	private:
-		virtual void beginJob() ;
-		virtual void beginRun(const edm::Run&, const edm::EventSetup&) ;
-		virtual void analyze(const edm::Event&, const edm::EventSetup&);
-		virtual void endLuminosityBlock(const edm::LuminosityBlock&,const edm::EventSetup&);
-		virtual void endRun(const edm::Run&, const edm::EventSetup&);
-		virtual void endJob() ;
-
-		virtual bool  triggerDecision(edm::Handle<edm::TriggerResults>& hltR, int iTrigger);
-		virtual float sumPtSquared(const Vertex& v);
-		virtual bool  associateJetToVertex(pat::Jet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet *outJet);   
-        virtual bool  electronMVA(Handle<reco::VertexCollection> vtxCollection, vector<pat::Electron>::const_iterator iElectron);
-		virtual bool  isFilteredOutScraping(const edm::Event& iEvent, const edm::EventSetup& iSetup, int numtrack=10, double thresh=0.25);
-		// ----------member data ---------------------------
-
-        struct JetCompare :
-            public std::binary_function<reco::Jet, reco::Jet, bool> {
-                inline bool operator () (const reco::Jet &j1,
-                        const reco::Jet &j2) const
-                { return (j1.p4().Pt() > j2.p4().Pt()); }
-            };
-
-        typedef std::map<reco::Jet, unsigned int, JetCompare> flavourMap;
-
-		//Standard event info
-        ULong64_t   eventNumber;
-		UInt_t      runNumber, lumiSection, bunchCross, nEvents;
-		float ptHat, qScale, evtWeight;
-		float deliveredLumi, recordedLumi, lumiDeadTime;
-		float rhoFactor;
-		string  savedTriggerNames[64];
-
-		edm::Service<TFileService> fs;
-		TTree* eventTree;
-		TTree* runTree;
-		TTree* jobTree;
-		edm::InputTag jetTag_;
-		edm::InputTag metTag_;
-		edm::InputTag genJetTag_;
-		edm::InputTag muonTag_;
-		edm::InputTag electronTag_;
-		edm::InputTag photonTag_;
-		edm::InputTag tauTag_;
-		edm::InputTag primaryVtxTag_;
-		edm::InputTag triggerResultsTag_;
-		edm::InputTag rhoCorrTag_;
-		edm::InputTag hcalFilterTag_;
-		edm::InputTag partFlowTag_;
-        edm::ParameterSet photonIsoCalcTag_;
+ public:
+  explicit ntupleProducer(const edm::ParameterSet&);
+  ~ntupleProducer();
+  
+ private:
+  virtual void beginJob() ;
+  virtual void beginRun(const edm::Run&, const edm::EventSetup&) ;
+  virtual void analyze(const edm::Event&, const edm::EventSetup&);
+  virtual void endLuminosityBlock(const edm::LuminosityBlock&,const edm::EventSetup&);
+  virtual void endRun(const edm::Run&, const edm::EventSetup&);
+  virtual void endJob() ;
+  
+  virtual bool  triggerDecision(edm::Handle<edm::TriggerResults>& hltR, int iTrigger);
+  virtual float sumPtSquared(const Vertex& v);
+  virtual bool  associateJetToVertex(pat::Jet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet *outJet);   
+  virtual bool  electronMVA(Handle<reco::VertexCollection> vtxCollection, vector<pat::Electron>::const_iterator iElectron);
+  virtual bool  isFilteredOutScraping(const edm::Event& iEvent, const edm::EventSetup& iSetup, int numtrack=10, double thresh=0.25);
+  // ----------member data ---------------------------
+  
+  struct JetCompare :
+    public std::binary_function<reco::Jet, reco::Jet, bool> {
+    inline bool operator () (const reco::Jet &j1,
+			     const reco::Jet &j2) const
+    { return (j1.p4().Pt() > j2.p4().Pt()); }
+  };
+  
+  typedef std::map<reco::Jet, unsigned int, JetCompare> flavourMap;
+  
+  //Standard event info
+  ULong64_t   eventNumber;
+  UInt_t      runNumber, lumiSection, bunchCross, nEvents;
+  float ptHat, qScale, evtWeight;
+  float deliveredLumi, recordedLumi, lumiDeadTime;
+  float rhoFactor;
+  string  savedTriggerNames[64];
+  
+  edm::Service<TFileService> fs;
+  TTree* eventTree;
+  TTree* runTree;
+  TTree* jobTree;
+  edm::InputTag jetTag_;
+  edm::InputTag metTag_;
+  edm::InputTag genJetTag_;
+  edm::InputTag muonTag_;
+  edm::InputTag electronTag_;
+  edm::InputTag photonTag_;
+  edm::InputTag tauTag_;
+  edm::InputTag primaryVtxTag_;
+  edm::InputTag triggerResultsTag_;
+  edm::InputTag rhoCorrTag_;
+  edm::InputTag hcalHBHEFilterTag_;
+  edm::InputTag ecalTPFilterTag_;
+  edm::InputTag ecalBEFilterTag_;
+  edm::InputTag hcalLaserFilterTag_;
+  edm::InputTag partFlowTag_;
+  edm::ParameterSet photonIsoCalcTag_;
 
 		bool saveJets_;
 		bool saveElectrons_;
@@ -240,12 +254,7 @@ class ntupleProducer : public edm::EDAnalyzer {
 		ULong64_t         triggerStatus;
 		unsigned          hltPrescale[64];
 
-		//Filters 
-		Bool_t isNoiseHcal;
-		Bool_t isCSCTightHalo, isCSCLooseHalo, isHcalTightHalo, isHcalLooseHalo, isEcalTightHalo, isEcalLooseHalo;
-		Bool_t isGlobalTightHalo, isGlobalLooseHalo;
-		Bool_t isScraping;
-
+		Filters myNoiseFilters;
 		//Histograms
 		TH1D * h1_ptHat;
 

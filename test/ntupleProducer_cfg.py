@@ -79,7 +79,7 @@ addPatSequence(process, not isRealData, addPhotons = True)
 
 # global options
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
-process.MessageLogger.cerr.threshold = 'ERROR'
+process.MessageLogger.cerr.threshold = 'WARNING'
 process.MessageLogger.cerr.FwkReport.reportEvery = 300
 
 '''
@@ -192,8 +192,10 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   saveGenJets       =    cms.untracked.bool(True),
   saveGenParticles  =    cms.untracked.bool(True),
 
-  ecalFilterTag     =    cms.untracked.InputTag("BE1214","anomalousECALVariables"),
-  hcalFilterTag     =    cms.untracked.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResult"),
+  ecalTPFilterTag    =    cms.untracked.InputTag("EcalDeadCellTriggerPrimitiveFilter",""),
+  ecalBEFilterTag    =    cms.untracked.InputTag("EcalDeadCellBoundaryEnergyFilter",""),
+  hcalHBHEFilterTag  =    cms.untracked.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResult"),
+  hcalLaserFilterTag =    cms.untracked.InputTag("hcalLaserEventFilter",""),
 
   hltName           =    cms.untracked.string("HLT"),
   triggers          =    cms.untracked.vstring(

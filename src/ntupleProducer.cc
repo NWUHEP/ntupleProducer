@@ -28,8 +28,10 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
     saveGenJets_      = iConfig.getUntrackedParameter<bool>("saveGenJets");
     saveGenParticles_ = iConfig.getUntrackedParameter<bool>("saveGenParticles");
 
-    //ecalFilterTag_    = iConfig.getUntrackedParameter<edm::InputTag>("ecalFilterTag");
-    hcalFilterTag_    = iConfig.getUntrackedParameter<edm::InputTag>("hcalFilterTag");
+    ecalTPFilterTag_    = iConfig.getUntrackedParameter<edm::InputTag>("ecalTPFilterTag");
+    ecalBEFilterTag_    = iConfig.getUntrackedParameter<edm::InputTag>("ecalBEFilterTag");
+    hcalHBHEFilterTag_  = iConfig.getUntrackedParameter<edm::InputTag>("hcalHBHEFilterTag");
+    hcalLaserFilterTag_ = iConfig.getUntrackedParameter<edm::InputTag>("hcalLaserFilterTag");
 
     photonIsoCalcTag_ = iConfig.getParameter<edm::ParameterSet>("photonIsoCalcTag");
 }
@@ -667,21 +669,44 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     // Noise filters //
     ///////////////////
 
-    if (isRealData) {
+    //if (isRealData) {
+
+        myNoiseFilters.isScraping = isFilteredOutScraping(iEvent, iSetup, 10, 0.25);
 
         Handle<bool> hcalNoiseFilterHandle;
-        iEvent.getByLabel(hcalFilterTag_, hcalNoiseFilterHandle);
-        if (hcalNoiseFilterHandle.isValid())  isNoiseHcal = !(Bool_t)(*hcalNoiseFilterHandle);
+        iEvent.getByLabel(hcalHBHEFilterTag_, hcalNoiseFilterHandle);
+        if (hcalNoiseFilterHandle.isValid())  myNoiseFilters.isNoiseHcalHBHE = !(Bool_t)(*hcalNoiseFilterHandle);
+	else LogWarning("Filters")<<"hcal noise NOT valid  ";
+
+        Handle<bool> hcalLaserFilterHandle;
+        iEvent.getByLabel(hcalLaserFilterTag_, hcalLaserFilterHandle);
+        if (hcalLaserFilterHandle.isValid())  myNoiseFilters.isNoiseHcalLaser = !(Bool_t)(*hcalLaserFilterHandle);
+	else LogWarning("Filters")<<"hcal Laser NOT valid  ";
+
+        Handle<bool> ecalTPFilterHandle;
+        iEvent.getByLabel(ecalTPFilterTag_, ecalTPFilterHandle);
+        if (ecalTPFilterHandle.isValid())  myNoiseFilters.isNoiseEcalTP = !(Bool_t)(*ecalTPFilterHandle);
+	else LogWarning("Filters")<<"Ecal TP NOT valid  ";
+
+        Handle<bool> ecalBEFilterHandle;
+        iEvent.getByLabel(ecalBEFilterTag_, ecalBEFilterHandle);
+        if (ecalBEFilterHandle.isValid())  myNoiseFilters.isNoiseEcalBE = !(Bool_t)(*ecalBEFilterHandle);
+	else LogWarning("Filters")<<"Ecal BE NOT valid  ";
 
         edm::Handle<BeamHaloSummary> TheBeamHaloSummary;
         iEvent.getByLabel("BeamHaloSummary",TheBeamHaloSummary);
         const BeamHaloSummary TheSummary = (*TheBeamHaloSummary.product() );
+        if (!TheBeamHaloSummary.isValid()) LogWarning("Filters")<<"The Summary (for CSC halo) NOT valid  ";
 
-        isCSCTightHalo = TheSummary.CSCTightHaloId();
-        isCSCLooseHalo = TheSummary.CSCLooseHaloId();
+        myNoiseFilters.isCSCTightHalo = TheSummary.CSCTightHaloId();
+        myNoiseFilters.isCSCLooseHalo = TheSummary.CSCLooseHaloId();
 
-        isScraping = isFilteredOutScraping(iEvent, iSetup, 10, 0.25); 
-    }
+ 
+	//LogWarning("Filters")<<"\n csc1  "<< myNoiseFilters.isCSCTightHalo<<"  csc2  "<<myNoiseFilters.isCSCLooseHalo
+	//  <<" isNoiseHcal HBHE "<<myNoiseFilters.isNoiseHcalHBHE<<"  laser "<<myNoiseFilters.isNoiseHcalLaser<<"\n"
+	//  <<" ecal TP  "<<myNoiseFilters.isNoiseEcalTP<<"   ecal BE  "<<myNoiseFilters.isNoiseEcalBE;
+      
+	//}
 
     ////////////////////////////  
     // get trigger information//
@@ -728,17 +753,17 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     if (eleCount > 0 || muCount > 0) eventTree -> Fill(); // possibly specify a cut in configuration
 
-    primaryVtx->Clear("C");
-    recoJets->Clear("C");
-    recoJPT->Clear("C");
-    recoMuons->Clear("C");
-    recoElectrons->Clear("C");
-    recoTaus->Clear("C");
-    recoPhotons->Clear("C");
-    //pfPhotons->Clear("C");
-    triggerObjects->Clear("C");
-    genJets->Clear("C");
-    genParticles->Clear("C");
+    primaryVtx    -> Clear("C");
+    recoJets      -> Clear("C");
+    recoJPT       -> Clear("C");
+    recoMuons     -> Clear("C");
+    recoElectrons -> Clear("C");
+    recoTaus      -> Clear("C");
+    recoPhotons   -> Clear("C");
+    //pfPhotons   -> Clear("C");
+    triggerObjects-> Clear("C");
+    genJets       -> Clear("C");
+    genParticles  -> Clear("C");
 }
 
 // ------------ method called once each job just before starting event loop  ------------
@@ -785,17 +810,14 @@ void  ntupleProducer::beginJob()
     eventTree->Branch("lumiSection",&lumiSection, "lumiSection/i");
     eventTree->Branch("bunchCross",&bunchCross, "bunchCross/i");
 
-    eventTree->Branch("isScraping",&isScraping, "isScraping/O");
-    eventTree->Branch("isNoiseHcal",&isNoiseHcal, "isNoiseHcal/O");
-    eventTree->Branch("isCSCTightHalo",&isCSCTightHalo, "isCSCTightHalo/O");
-    eventTree->Branch("isCSCLooseHalo",&isCSCLooseHalo, "isCSCLooseHalo/O");
-
     eventTree->Branch("ptHat",&ptHat, "ptHat/F");
     eventTree->Branch("qScale", &qScale, "qScale/F");
     eventTree->Branch("evtWeight", &evtWeight, "evtWeight/F");
     eventTree->Branch("rhoFactor",&rhoFactor, "rhoFactor/F");
     eventTree->Branch("triggerStatus",&triggerStatus, "triggerStatus/l");
     eventTree->Branch("hltPrescale",hltPrescale, "hltPrescale[64]/i");
+
+    eventTree->Branch("NoiseFilters", &myNoiseFilters.isScraping, "isScraping/O:isNoiseHcalHBHE:isNoiseHcalLaser:isNoiseEcalTP:isNoiseEcalBE:isCSCTightHalo:isCSCLooseHalo");
 
     runTree->Branch("deliveredLumi",&deliveredLumi, "deliveredLumi/F");
     runTree->Branch("recordedLumi",&recordedLumi, "recordedLumi/F");
