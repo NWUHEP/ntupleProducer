@@ -880,7 +880,8 @@ void ntupleProducer::endRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
 
 void ntupleProducer::endJob() 
 {
-    for (int i =0; i < (int)triggerPaths_.size(); ++i) savedTriggerNames[i] = triggerPaths_[i];
+    for (int i =0; i < (int)triggerPaths_.size(); ++i) savedTriggerNames[i] = triggerPaths_[i]; 
+
     cout<<nEvents<<endl;
     jobTree->Fill();
 }

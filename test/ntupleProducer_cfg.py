@@ -256,4 +256,4 @@ process.ntuplePath = cms.Path(
         * process.ntupleProducer
         )
 
-process.outpath = cms.EndPath(process.out)
+#process.outpath = cms.EndPath(process.out)
