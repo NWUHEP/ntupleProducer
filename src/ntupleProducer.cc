@@ -211,11 +211,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     if (saveMET_){
 
-        /*
-           Handle<vector<pat::MET> > MET;
-           iEvent.getByLabel(metTag_, MET);
-           vector<pat::MET>::const_iterator met = MET->begin();
-         */
+        //Handle<vector<pat::MET> > MET;
+        //iEvent.getByLabel(metTag_, MET);
+        //vector<pat::MET>::const_iterator met = MET->begin();
 
         Handle<PFMETCollection> MET;
         iEvent.getByLabel(metTag_, MET);
@@ -319,7 +317,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
             TCElectron* eleCon = new ((*recoElectrons)[eleCount]) TCElectron;
 
-            cout << fabs(iElectron->eta() - iElectron->superCluster()->eta()) << endl;
+            //cout << fabs(iElectron->eta() - iElectron->superCluster()->eta()) << endl;
 
             // Basic physics object info
             eleCon->SetPxPyPzE(iElectron->px(), iElectron->py(), iElectron->pz(), iElectron->energy());
@@ -432,12 +430,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             myPhoton->SetIsoMap("TrkIso_R04", (iPhoton->trkSumPtHollowConeDR04()));
 
             // PF Iso for photons
-            /*
             phoIsolator.fGetIsolation(&(*iPhoton),&thePfColl, myVtxRef, primaryVtcs);
             myPhoton->SetIsoMap("chIso03",phoIsolator.getIsolationCharged());
             myPhoton->SetIsoMap("nhIso03",phoIsolator.getIsolationNeutral());
             myPhoton->SetIsoMap("phIso03",phoIsolator.getIsolationPhoton());
-            */
 
             // Hcal isolation for 2012
             //myPhoton->SetIsoMap("HadIso_R03",iPhoton->hcalTowerSumEtConeDR03() + 

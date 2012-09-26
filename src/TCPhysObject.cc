@@ -1,17 +1,22 @@
 #include "../interface/TCPhysObject.h"
 
 TCPhysObject::TCPhysObject() {
+    _isPF = _isReco = false;
 }
 
 TCPhysObject::TCPhysObject(TLorentzVector p4, int charge) {
     this->SetP4(p4);
     this->SetCharge(charge);
+
+    _isPF = _isReco = false;
 }
 
 TCPhysObject::TCPhysObject(TLorentzVector p4, int charge, string type) {
     this->SetP4(p4);
     this->SetCharge(charge);
     this->SetType(type);
+
+    _isPF = _isReco = false;
 }
 
 TCPhysObject::~TCPhysObject() {
@@ -21,57 +26,35 @@ TCPhysObject::~TCPhysObject() {
 
 using namespace std;
 
-float TCPhysObject::IdMap(string key) {
-    return _IdMap[key];
-}
-
-float TCPhysObject::IsoMap(string key) {
-    return _IsoMap[key];
-}
+float TCPhysObject::IdMap(string key) { return _IdMap[key]; }
+float TCPhysObject::IsoMap(string key) { return _IsoMap[key]; }
 
 TVector2 TCPhysObject::P2() const {
     TVector2 v2(this->Px(), this->Py());
     return v2;
 }
 
-TVector3 TCPhysObject::Vtx() const {
-    return _vtx;
-}
-
-string TCPhysObject::Type() const {
-    return _type;
-}
-
-int TCPhysObject::Charge() const {
-    return _charge;
-}
+TVector3 TCPhysObject::Vtx() const { return _vtx; }
+string TCPhysObject::Type() const { return _type; }
+int TCPhysObject::Charge() const { return _charge; }
+bool TCPhysObject::IsPF() const { return _isPF; }
+bool TCPhysObject::IsReco() const { return _isReco; }
 
 // "set" methods ---------------------------------------------
 
-void TCPhysObject::SetP4(TLorentzVector p4) {
-    this->SetPxPyPzE(p4.Px(), p4.Py(), p4.Pz(), p4.E());
-}
-
-void TCPhysObject::SetIdMap(string s, float v){
-    _IdMap[s] = v;
-}
-
-void TCPhysObject::SetIsoMap(string s, float v){
-    _IsoMap[s] = v;
-}
+void TCPhysObject::SetP4(TLorentzVector p4) { this->SetPxPyPzE(p4.Px(), p4.Py(), p4.Pz(), p4.E()); } 
+void TCPhysObject::SetIdMap(string s, float v){ _IdMap[s] = v; }
+void TCPhysObject::SetIsoMap(string s, float v){ _IsoMap[s] = v; }
 
 void TCPhysObject::SetVtx(float vx, float vy, float vz) {
     TVector3 v3(vx, vy, vz);
     _vtx = v3;
 }
 
-void TCPhysObject::SetCharge(int c){
-    _charge = c;
-}
-
-void TCPhysObject::SetType(string s){
-    _type = s;
-}
+void TCPhysObject::SetCharge(int c){ _charge = c; }
+void TCPhysObject::SetType(string s){ _type = s; }
+void TCPhysObject::SetPF(bool p){ _isPF = p;}
+void TCPhysObject::SetReco(bool r){ _isReco = r;}
 
 // generally useful methods -----------------------------------
 

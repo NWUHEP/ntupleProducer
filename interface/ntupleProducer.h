@@ -203,6 +203,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   TTree* eventTree;
   TTree* runTree;
   TTree* jobTree;
+
   edm::InputTag jetTag_;
   edm::InputTag metTag_;
   edm::InputTag genJetTag_;
@@ -234,11 +235,9 @@ class ntupleProducer : public edm::EDAnalyzer {
   TClonesArray* recoJets;
   TClonesArray* recoJPT;
   TClonesArray* recoMuons;
-  //TClonesArray* pfMuons;
   TClonesArray* recoElectrons;
   TClonesArray* recoTaus;
   TClonesArray* recoPhotons;
-  //TClonesArray* pfPhotons;
   TClonesArray* triggerObjects;
   TClonesArray* genJets;
   TClonesArray* genParticles;

@@ -120,6 +120,7 @@ process.endCounter = process.startCounter.clone()
 ## Using *Tagging mode* for all filters (produces the boolean instead of filtering an event)
 ## Saving this boolean in the ntuples!
 ##############################################
+
 process.load('CommonTools/RecoAlgos/HBHENoiseFilterResultProducer_cfi')
 process.load("RecoMET.METFilters.hcalLaserEventFilter_cfi")
 process.hcalLaserEventFilter.vetoByRunEventNumber=cms.untracked.bool(False)
@@ -161,7 +162,7 @@ AllFilters = cms.Sequence(process.HBHENoiseFilterResultProducer
 
 ##### END OF Noise Filters ############
 
-print '\n\nNow run the ntuplizer...\n\n'
+print '\n\nCommence ntuplization and deandreyification...\n\n'
 
 ### TFile service!
 process.TFileService = cms.Service('TFileService',
@@ -175,6 +176,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
   JetTag            =    cms.untracked.InputTag('selectedPatJetsPFlow'),
   GenJetTag         =    cms.untracked.InputTag('ak5GenJets'),
+  #METTag            =    cms.untracked.InputTag('patMETsPFlow'),
   METTag            =    cms.untracked.InputTag('pfType1CorrectedMet'),
   ElectronTag       =    cms.untracked.InputTag('gsfElectrons'),
   MuonTag           =    cms.untracked.InputTag('muons'),
@@ -254,4 +256,4 @@ process.ntuplePath = cms.Path(
         * process.ntupleProducer
         )
 
-#process.outpath = cms.EndPath(process.out)
+process.outpath = cms.EndPath(process.out)
