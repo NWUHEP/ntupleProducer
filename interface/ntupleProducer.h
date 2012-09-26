@@ -95,8 +95,13 @@
 #include "RecoJets/JetAssociationAlgorithms/interface/JetTracksAssociationDRCalo.h"
 #include "RecoJets/JetAssociationAlgorithms/interface/JetTracksAssociationDRVertex.h"
 
-// Photon isolation
+// EGamma tools
 #include "RecoEgamma/PhotonIdentification/interface/PhotonIsolationCalculator.h"
+#include "RecoEgamma/EgammaTools/interface/ConversionTools.h"
+#include "EGamma/EGammaAnalysisTools/interface/ElectronEffectiveArea.h"
+#include "EGamma/EGammaAnalysisTools/src/PFIsolationEstimator.cc"
+//#include "EGamma/EGammaAnalysisTools/interface/EGammaMvaEleEstimator.h"
+//#include "TrackingTools/Records/interface/TransientTrackRecord.h"
 
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
@@ -254,10 +259,10 @@ class ntupleProducer : public edm::EDAnalyzer {
   ULong64_t         triggerStatus;
   unsigned          hltPrescale[64];
   
+  // Technical filters
   Filters myNoiseFilters;
-  //Histograms
-  TH1D * h1_ptHat;
-  
-  // For map variables
-  vector<string> muonIsoMap;
+
+  //Isolator
+  PFIsolationEstimator phoIsolator;
+  PFIsolationEstimator eleIsolator;
 };

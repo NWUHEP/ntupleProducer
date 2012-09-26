@@ -16,11 +16,10 @@ class TCElectron : public TCPhysObject {
         float _eOverP;
         float _fBrem;
 
+        float _scEta;
 
-        float _convDist;
-        float _convDcot;
-        float _convRad;
-        int _convFlag;
+        bool  _convVeto;
+        short _convMissHits;
 
         bool _isEB;        // true if particle is in ECAL Barrel
         bool _isEE;        // true if particle is in ECAL Endcaps
@@ -56,10 +55,10 @@ class TCElectron : public TCPhysObject {
         float EOverP() const;
         float NormalizedChi2() const;
 
-        int ConversionFlag() const;
-        float ConversionDist() const;
-        float ConversionDcot() const;
-        float ConversionRad() const;
+        float SCEta() const;
+
+        bool  ConversionVeto() const;
+        short ConversionMissHits() const;
 
         bool IsEB() const;
         bool IsEE() const;
@@ -78,7 +77,8 @@ class TCElectron : public TCPhysObject {
         //--------------------------
         // "set" methods ---------
         //--------------------------
-	void SetPtError(float e);
+
+        void SetPtError(float e);
         void SetHadOverEm(float h);
         void SetDphiSuperCluster(float dp);
         void SetDetaSuperCluster(float de);
@@ -86,10 +86,10 @@ class TCElectron : public TCPhysObject {
         void SetEOverP(float e);
         void SetFBrem(float fb);
 
-        void SetConversionDist(float d);
-        void SetConversionDcot(float d);
-        void SetConversionRad(float r);
-        void SetConversionFlag(int f);
+        void SetSCEta(float);
+
+        void SetConversionVeto(bool);
+        void SetConversionMissHits(short);
 
         void SetNumberOfValidPixelHits(int n);
         void SetNumberOfValidTrackerHits(int n);
@@ -104,7 +104,6 @@ class TCElectron : public TCPhysObject {
         void SetCutLevel(int cut, int lvl);
 
         ClassDef(TCElectron, 1);
-
 };
 
 #endif	/* _TCELECTRON_H */

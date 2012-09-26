@@ -36,6 +36,18 @@ float TCElectron::NormalizedChi2() const {
   return _normalizedChi2;
 }
 
+bool TCElectron::ConversionVeto() const {
+    return _convVeto;
+}
+
+short TCElectron::ConversionMissHits() const {
+    return _convMissHits;
+}
+
+float TCElectron::SCEta() const {
+    return _scEta;
+}
+
 bool TCElectron::IsEB() const {
   return _isEB;
 }
@@ -67,22 +79,6 @@ float TCElectron::EOverP() const {
 
 float TCElectron::FBrem() const {
     return _fBrem;
-}
-
-int TCElectron::ConversionFlag() const {
-  return _convFlag;
-}
-
-float TCElectron::ConversionDist() const {
-  return _convDist;
-}
-
-float TCElectron::ConversionDcot() const {
-  return _convDcot;
-}
-
-float TCElectron::ConversionRad() const {
-  return _convRad;
 }
 
 int TCElectron::CutLevel(int lvl) const{
@@ -158,6 +154,7 @@ void TCElectron::SetDphiSuperCluster(float dp){
 void TCElectron::SetDetaSuperCluster(float de){
   _dEtaSuperCluster = de;
 }
+
 void TCElectron::SetSigmaIetaIeta(float sieie){
   _sigmaIetaIeta = sieie;
 }
@@ -172,20 +169,17 @@ void TCElectron::SetFBrem(float fb)
     _fBrem = fb;
 }
 
-void TCElectron::SetConversionDist(float d) {
-  _convDist = d;
+void TCElectron::SetSCEta(float e)
+{
+    _scEta = e;
 }
 
-void TCElectron::SetConversionDcot(float d) {
-  _convDcot = d;
+void TCElectron::SetConversionVeto(bool v) {
+  _convVeto = v;
 }
 
-void TCElectron::SetConversionRad(float r) {
-  _convRad = r;
-}
-
-void TCElectron::SetConversionFlag(int f){
-  _convFlag = f;
+void TCElectron::SetConversionMissHits(short m) {
+  _convMissHits = m;
 }
 
 void TCElectron::SetIsEB(bool b) {

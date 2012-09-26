@@ -28,9 +28,7 @@ private:
     float _energySC;
 
     //conversion info
-    int   _nConversions; //
-    float _conversionDz; //
-    float _conversionDxy; //
+    bool    _convVeto;
 
     // vertex-by-vertex iso
     vector<float> _trkIsoVtxDR03;
@@ -55,35 +53,25 @@ public:
     float EnergySC() const;
     float EtaSC() const;
 
-    int    NumberOfConversions() const;
-    float  ConversionDz() const;
-    float  ConversionDxy() const;
-
-    float TrkIsoVtxDR03(int);
-    float TrkIsoVtxDR04(int);
+    bool  ConversionVeto() const;
 
     // "set" methods ---------
 
-    void SetNormChi2(float c);
-    void SetHadOverEm(float h);
-    void SetSigmaIEtaIEta(float s);
-    void SetSigmaIPhiIPhi(float s);
-    void SetR9(float r);
-    void SetE2OverE9(float e);
-    void SetTrackVeto(bool t);
+    void SetNormChi2(float);
+    void SetHadOverEm(float);
+    void SetSigmaIEtaIEta(float);
+    void SetSigmaIPhiIPhi(float);
+    void SetR9(float);
+    void SetE2OverE9(float);
+    void SetTrackVeto(bool);
 
-    void SetDPhiSC(float d);
-    void SetDEtaSC(float d);
-    void SetEtaSC(float e);
-    void SetEnergySC(float e);
+    void SetDPhiSC(float);
+    void SetDEtaSC(float);
+    void SetEtaSC(float);
+    void SetEnergySC(float);
 
-    void SetNumberOfConversions(int n);
-    void SetConversionDz(float d);
-    void SetConversionDxy(float d);
+    void SetConversionVeto(bool);
 
-    void SetTRKIsoVtxDR04(float);
-    void SetTRKIsoVtxDR03(float);
- 
     ClassDef(TCPhoton, 1);
 };
 

@@ -25,7 +25,6 @@ class TCMuon : public TCPhysObject {
         int _numberOfValidMuonHits;
         float _normalizedChi2;
 
-
     public:
         TCMuon();
         virtual ~TCMuon();
@@ -54,6 +53,7 @@ class TCMuon : public TCPhysObject {
         void SetIsPF(bool t);
         void SetCaloComp(float c);
         void SetSegComp(float s);
+
         void SetNumberOfMatches(int n);
         void SetNumberOfValidPixelHits(int n);
         void SetNumberOfValidTrackerHits(int n);
