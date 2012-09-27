@@ -197,7 +197,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   float ptHat, qScale, evtWeight;
   float deliveredLumi, recordedLumi, lumiDeadTime;
   float rhoFactor, rho25Factor;
-  string  savedTriggerNames[64];
+  vector<string>  savedTriggerNames;
   
   edm::Service<TFileService> fs;
   TTree* eventTree;

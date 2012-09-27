@@ -719,7 +719,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     iEvent.getByLabel(triggerResultsTag_,hltR);
 
     const TriggerNames & triggerNames = iEvent.triggerNames(*hltR);
-    hlNames=triggerNames.triggerNames();   
+    hlNames = triggerNames.triggerNames();   
 
     triggerStatus = 0x0;    
 
@@ -826,8 +826,8 @@ void  ntupleProducer::beginJob()
     runTree->Branch("recordedLumi",&recordedLumi, "recordedLumi/F");
     runTree->Branch("runNumber",&runNumber, "runNumber/i");
 
-    jobTree->Branch("savedTriggerNames",savedTriggerNames, "savedTriggerNames[64]/C");
     jobTree->Branch("nEvents",&nEvents, "nEvents/i");
+    jobTree->Branch("triggerNames", "vector<string>", &triggerPaths_);
 
     // Initialize HLT prescales //
 
@@ -880,8 +880,6 @@ void ntupleProducer::endRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
 
 void ntupleProducer::endJob() 
 {
-    for (int i =0; i < (int)triggerPaths_.size(); ++i) savedTriggerNames[i] = triggerPaths_[i]; 
-
     cout<<nEvents<<endl;
     jobTree->Fill();
 }
