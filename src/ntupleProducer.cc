@@ -761,27 +761,21 @@ void  ntupleProducer::beginJob()
     recoJPT        = new TClonesArray("TCJet");
     recoElectrons  = new TClonesArray("TCElectron");
     recoMuons      = new TClonesArray("TCMuon");
-    //pfMuons        = new TClonesArray("TCMuon");
     recoTaus       = new TClonesArray("TCTau");
     recoPhotons    = new TClonesArray("TCPhoton");
-    //pfPhotons      = new TClonesArray("TCPhoton");
     triggerObjects = new TClonesArray("TCTriggerObject");
     genJets        = new TClonesArray("TCGenJet");
     genParticles   = new TClonesArray("TCGenParticle");
     beamSpot       = new TVector3();
     recoMET        = 0;
-    recoMETNoPU    = 0;
 
     eventTree->Branch("recoJets",&recoJets, 6400, 0);
     eventTree->Branch("recoJPT",&recoJPT, 6400, 0);
     eventTree->Branch("recoElectrons",&recoElectrons, 6400, 0);
     eventTree->Branch("recoMuons",&recoMuons, 6400, 0);
-    //eventTree->Branch("pfMuons",&pfMuons, 6400, 0);
     eventTree->Branch("recoTaus",&recoTaus, 6400, 0);
     eventTree->Branch("recoPhotons",&recoPhotons, 6400, 0);
-    //eventTree->Branch("pfPhotons",&pfPhotons, 6400, 0);
     eventTree->Branch("recoMET", &recoMET, 6400, 0);
-    eventTree->Branch("recoMETNoPU", &recoMETNoPU, 6400, 0);
     eventTree->Branch("triggerObjects", &triggerObjects, 6400, 0);
     eventTree->Branch("genJets",&genJets, 6400, 0);
     eventTree->Branch("genParticles",&genParticles, 6400, 0);
@@ -813,8 +807,8 @@ void  ntupleProducer::beginJob()
     runTree->Branch("recordedLumi",&recordedLumi, "recordedLumi/F");
     runTree->Branch("runNumber",&runNumber, "runNumber/i");
 
-    jobTree->Branch("savedTriggerNames",savedTriggerNames, "savedTriggerNames[64]/C");
     jobTree->Branch("nEvents",&nEvents, "nEvents/i");
+    jobTree->Branch("triggerNames", "vector<string>", &triggerPaths_);
 
     // Initialize HLT prescales //
 
@@ -853,7 +847,6 @@ void ntupleProducer::endRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
 
 void ntupleProducer::endJob() 
 {
-    for (int i =0; i < (int)triggerPaths_.size(); ++i) savedTriggerNames[i] = triggerPaths_[i];
     cout<<nEvents<<endl;
     jobTree->Fill();
 }
