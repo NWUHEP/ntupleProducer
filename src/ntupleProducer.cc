@@ -214,21 +214,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             recoMET->SetChargedEMFraction(met->ChargedEMEtFraction());
 
         }
-
-        Handle<vector<pat::MET> > METNoPU;
-        iEvent.getByLabel(metNoPUTag_, METNoPU);
-        met = METNoPU->begin();
-
-        if (METNoPU->begin() != METNoPU->end()) {
-            recoMETNoPU->SetSumEt(met->sumEt());
-            recoMETNoPU->SetMagPhi(met->et(), met->phi());
-            recoMETNoPU->SetMuonFraction(met->MuonEtFraction());
-            recoMETNoPU->SetNeutralHadronFraction(met->NeutralHadEtFraction());
-            recoMETNoPU->SetNeutralEMFraction(met->NeutralEMFraction());
-            recoMETNoPU->SetChargedHadronFraction(met->ChargedHadEtFraction());
-            recoMETNoPU->SetChargedEMFraction(met->ChargedEMEtFraction());
-
-        }
     }
 
     ///////////////
@@ -300,6 +285,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     // Get electrons //
     ///////////////////
 
+    edm::Handle<reco::ConversionCollection> hConversions;
+    iEvent.getByLabel("allConversions", hConversions);
 
     if (saveElectrons_) {
 
@@ -350,10 +337,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             eleCon->SetIsoMap("pfNeutralHadron_R03", iElectron->pfIsolationVariables().neutralHadronIso);
 
             // Conversion information
-            eleCon->SetConversionFlag(iElectron->convFlags());
-            eleCon->SetConversionDist(iElectron->convDist());
-            eleCon->SetConversionDcot(iElectron->convDcot());
-            eleCon->SetConversionRad(iElectron->convRadius());
+            bool convVeto = !(ConversionTools::hasMatchedConversion(*iElectron,hConversions,vertexBeamSpot.position()));
+            eleCon->SetConversionVeto(convVeto);
+            eleCon->SetConversionMissHits(iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfHits());
 
 
             // EID maps for VBTF working points
@@ -382,8 +368,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         Handle<vector<reco::Photon> > photons;
         iEvent.getByLabel(photonTag_, photons);
 
-        unsigned int ivtx = 0;
-        VertexRef myVtxRef(primaryVtcs, ivtx);
+        edm::Handle<reco::GsfElectronCollection> hElectrons;
+        iEvent.getByLabel("gsfElectrons", hElectrons);
 
         for (vector<reco::Photon>::const_iterator iPhoton = photons->begin(); iPhoton != photons->end() ; ++iPhoton) {
 
@@ -394,7 +380,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             // ID variables
             myPhoton->SetHadOverEm(iPhoton->hadronicOverEm());
             myPhoton->SetSigmaIEtaIEta(iPhoton->sigmaIetaIeta());
-            //myPhoton->SetSigmaIPhiIPhi(iPhoton->sigmaIphiIphi());
             myPhoton->SetR9(iPhoton->r9());
             myPhoton->SetTrackVeto(iPhoton->hasPixelSeed());
 
@@ -410,45 +395,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             myPhoton->SetIsoMap("HadIso_R04", (iPhoton->hcalTowerSumEtConeDR04()));
             myPhoton->SetIsoMap("TrkIso_R04", (iPhoton->trkSumPtHollowConeDR04()));
 
-            // Hcal isolation for 2012
-            //myPhoton->SetIsoMap("HadIso_R03",iPhoton->hcalTowerSumEtConeDR03() + 
-            //        (iPhoton->hadronicOverEm() - iPhoton->hadTowOverEm())*iPhoton->superCluster()->energy()/cosh(iPhoton->superCluster()->eta()));
-            //myPhoton->SetIsoMap("HadIso_R04",iPhoton->hcalTowerSumEtConeDR04() + 
-            //        (iPhoton->hadronicOverEm() - iPhoton->hadTowOverEm())*iPhoton->superCluster()->energy()/cosh(iPhoton->superCluster()->eta()));
-
-            // pf isolation
-
-
             //Conversion info
-            reco::ConversionRefVector conversions = iPhoton->conversions();
-            int   conversionCount = 0;
-
-            for (reco::ConversionRefVector::const_iterator iConversion = conversions.begin(); iConversion != conversions.end(); ++iConversion) {
-                const reco::ConversionRef myConversion = *iConversion;
-                ++conversionCount;
-            }
-            myPhoton->SetNumberOfConversions(iPhoton->conversions().size());
-
-            /*
-            PhotonIsolationCalculator* photonIsolationCalculator = new PhotonIsolationCalculator();
-            photonIsolationCalculator->setup(photonIsoCalcTag_);
-            reco::Photon::FiducialFlags fiducialFlags;
-            reco::Photon::IsolationVariables isolVarR03, isolVarR04;
-            
-            int vtxPhoCounter = 0;
-            for(VertexCollection::const_iterator iVtx = primaryVtcs->begin(); iVtx!= primaryVtcs->end(); ++iVtx){
-                const reco::Vertex myVtx = reco::Vertex(*iVtx);
-                float *isoVtxAB;
-
-                if(!myVtx.isValid() || myVtx.isFake()) continue;
-                // Calculate fiducial flags and isolation variable. Blocked are filled from the isolationCalculator
-                isoVtxAB = photonIsolationCalculator->calculateVtx(&(*iPhoton), iEvent, iSetup, fiducialFlags, isolVarR03, isolVarR04, myVtx);
-                myPhoton->SetTRKIsoVtxDR03(isoVtxAB[1]);
-                myPhoton->SetTRKIsoVtxDR04(isoVtxAB[0]);
-                vtxPhoCounter++;
-
-            }
-            */
+            bool passElectronVeto = !(ConversionTools::hasMatchedPromptElectron(iPhoton->superCluster(), hElectrons, hConversions, vertexBeamSpot.position()));
+            myPhoton->SetConversionVeto(passElectronVeto);
 
             ++photonCount;
         }

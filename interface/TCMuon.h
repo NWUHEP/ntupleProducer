@@ -11,6 +11,7 @@ class TCMuon : public TCPhysObject {
     private:
 
         float _ptError; 
+        bool _isPF;
         bool _isTRK;
         bool _isGLB;
         float _caloComp;
@@ -24,7 +25,6 @@ class TCMuon : public TCPhysObject {
         int _numberOfValidMuonHits;
         float _normalizedChi2;
 
-
     public:
         TCMuon();
         virtual ~TCMuon();
@@ -35,6 +35,7 @@ class TCMuon : public TCPhysObject {
 
         bool IsGLB() const;
         bool IsTRK() const;
+        bool IsPF() const;
         float CaloComp() const;
         float SegComp() const;
 
@@ -49,8 +50,10 @@ class TCMuon : public TCPhysObject {
         void SetPtError(float er);
         void SetIsGLB(bool t);
         void SetIsTRK(bool t);
+        void SetIsPF(bool t);
         void SetCaloComp(float c);
         void SetSegComp(float s);
+
         void SetNumberOfMatches(int n);
         void SetNumberOfValidPixelHits(int n);
         void SetNumberOfValidTrackerHits(int n);

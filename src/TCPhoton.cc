@@ -20,16 +20,7 @@ float TCPhoton::DEtaSC() const { return _dEtaSC; }
 float TCPhoton::EnergySC() const { return _energySC; }
 float TCPhoton::EtaSC() const { return _etaSC; }
 
-int  TCPhoton::NumberOfConversions() const { return _nConversions; }
-float  TCPhoton::ConversionDz() const { return _conversionDz; }
-float  TCPhoton::ConversionDxy() const { return _conversionDxy; }
-
-float TCPhoton::TrkIsoVtxDR03(int i) { return _trkIsoVtxDR03[i]; }
-float TCPhoton::TrkIsoVtxDR04(int i) { return _trkIsoVtxDR04[i]; }
-
-//std::pair<TLorentzVector, TLorentzVector> TCPhoton::ConversionPairP4() const {
-//    return _convP4;
-//}
+bool  TCPhoton::ConversionVeto() const { return _convVeto; }
 
 // "set" methods ---------------------------------------------
 
@@ -46,9 +37,4 @@ void TCPhoton::SetDEtaSC(float d){ _dEtaSC = d; }
 void TCPhoton::SetEtaSC(float n) { _etaSC = n; }
 void TCPhoton::SetEnergySC(float e) { _energySC = e; }
 
-void TCPhoton::SetNumberOfConversions(int n) { _nConversions = n; }
-void TCPhoton::SetConversionDz(float d) { _conversionDz = d; }
-void TCPhoton::SetConversionDxy(float d) { _conversionDxy = d; }
-
-void TCPhoton::SetTRKIsoVtxDR03(float t){ _trkIsoVtxDR03.push_back(t); }
-void TCPhoton::SetTRKIsoVtxDR04(float t){ _trkIsoVtxDR04.push_back(t); }
+void TCPhoton::SetConversionVeto(bool v) { _convVeto = v; }

@@ -14,13 +14,18 @@ float TCMuon::PtError() const {
    return _ptError;
 }
 
+bool TCMuon::IsGLB() const {
+   return _isGLB;
+}
 bool TCMuon::IsTRK() const {
    return _isTRK;
 }
 
-bool TCMuon::IsGLB() const {
-   return _isGLB;
+bool TCMuon::IsPF() const {
+   return _isPF;
 }
+
+
 
 int TCMuon::NumberOfValidPixelHits() const {
   return _numberOfValidPixelHits;
@@ -70,6 +75,9 @@ void TCMuon::SetIsGLB(bool t){
 
 void TCMuon::SetIsTRK(bool t){
    _isTRK = t;
+}
+void TCMuon::SetIsPF(bool t){
+   _isPF = t;
 }
 
 void TCMuon::SetNumberOfValidMuonHits(int n) {

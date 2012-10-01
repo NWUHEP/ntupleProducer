@@ -95,8 +95,11 @@
 #include "RecoJets/JetAssociationAlgorithms/interface/JetTracksAssociationDRCalo.h"
 #include "RecoJets/JetAssociationAlgorithms/interface/JetTracksAssociationDRVertex.h"
 
-// Photon isolation
+// EGamma tools
 #include "RecoEgamma/PhotonIdentification/interface/PhotonIsolationCalculator.h"
+#include "RecoEgamma/EgammaTools/interface/ConversionTools.h"
+//#include "EGamma/EGammaAnalysisTools/interface/ElectronEffectiveArea.h"
+//#include "EGamma/EGammaAnalysisTools/src/PFIsolationEstimator.cc"
 
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
@@ -225,7 +228,6 @@ class ntupleProducer : public edm::EDAnalyzer {
 		TClonesArray* genJets;
 		TClonesArray* genParticles;
 		TCMET*        recoMET;
-		TCMET*        recoMETNoPU;
 
 		//Vertex info
 		TClonesArray* primaryVtx;
