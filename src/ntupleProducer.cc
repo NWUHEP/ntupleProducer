@@ -345,6 +345,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             eleCon->SetNumberOfLostPixelHits(iElectron->gsfTrack()->hitPattern().numberOfLostPixelHits());
             eleCon->SetNumberOfLostTrackerHits(iElectron->gsfTrack()->hitPattern().numberOfLostTrackerHits());
 
+            eleCon->SetIdMap("fabsEPDiff",fabs((1/iElectron->ecalEnergy()) - (1/iElectron->trackMomentumAtVtx().R()))); 
 
             // Electron Iso variables
             eleCon->SetIsoMap("EmIso_R03", iElectron->dr03EcalRecHitSumEt());
@@ -367,8 +368,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             // Effective area for rho PU corrections (not sure if needed)
             float AEff03 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso03, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
             float AEff04 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso04, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
-            eleCon->SetIdMap("EffArea_R03", AEff03);
-            eleCon->SetIdMap("EffArea_R04", AEff04);
+            eleCon->SetIsoMap("EffArea_R03", AEff03);
+            eleCon->SetIsoMap("EffArea_R04", AEff04);
 
             // Conversion information
             bool convVeto = !(ConversionTools::hasMatchedConversion(*iElectron,hConversions,vertexBeamSpot.position()));
