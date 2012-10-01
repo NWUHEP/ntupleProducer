@@ -336,6 +336,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             eleCon->SetIsoMap("pfChargedHadron_R03", iElectron->pfIsolationVariables().chargedHadronIso);
             eleCon->SetIsoMap("pfNeutralHadron_R03", iElectron->pfIsolationVariables().neutralHadronIso);
 
+
             // Conversion information
             bool convVeto = !(ConversionTools::hasMatchedConversion(*iElectron,hConversions,vertexBeamSpot.position()));
             eleCon->SetConversionVeto(convVeto);

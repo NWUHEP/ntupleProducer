@@ -24,10 +24,33 @@ TCPhysObject::~TCPhysObject() {
 
 // "get" methods -------------------------------------
 
-using namespace std;
+float TCPhysObject::IdMap(string key) { 
 
-float TCPhysObject::IdMap(string key) { return _IdMap[key]; }
-float TCPhysObject::IsoMap(string key) { return _IsoMap[key]; }
+    //Check that key is present in the id map
+    try {
+        string exception = "Can't find " + key + " in id map"; 
+        if (_IdMap.count(key) == 0)
+            throw exception;
+    } catch (string ex) {
+        cout << ex << endl;
+    }
+    
+    return _IdMap[key]; 
+}
+
+float TCPhysObject::IsoMap(string key) { 
+
+    //Check that key is present in the iso map
+    try {
+        string exception = "Can't find " + key + " in isolation map"; 
+        if (_IsoMap.count(key) == 0)
+            throw exception;
+    } catch (string ex) {
+        cout << ex << endl;
+    }
+
+    return _IsoMap[key]; 
+}
 
 TVector2 TCPhysObject::P2() const {
     TVector2 v2(this->Px(), this->Py());
