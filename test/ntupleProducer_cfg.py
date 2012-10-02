@@ -81,7 +81,7 @@ addPatSequence(process, not isRealData, addPhotons = True)
 # global options
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.threshold = 'INFO'
-process.MessageLogger.cerr.FwkReport.reportEvery = 10
+process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
 '''
 process.MessageLogger.categories = cms.untracked.vstring('FwkJob', 'FwkReport', 'FwkSummary', 'Root_NoDictionary', 'DataNotAvailable', 'HLTConfigData')
@@ -101,12 +101,15 @@ process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
                                     )
 
 # event source
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(50))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
            # 'file:/tmp/naodell/FCDE987D-859B-E111-B445-0025B3E05DDA.root'
+           #'/store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0003/EAF43999-8D9B-E111-A418-003048D4610E.root'
+           # Synchronization with Brian:
+           '/store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0002/002C5B35-519B-E111-862D-001E67398025.root',
            '/store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0003/EAF43999-8D9B-E111-A418-003048D4610E.root'
-)
+        )
 )
 
 # event counters
@@ -185,6 +188,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   PrimaryVtxTag     =    cms.untracked.InputTag('offlinePrimaryVertices'),
   rhoCorrTag        =    cms.untracked.InputTag('kt6PFJets', 'rho', 'RECO'),
   rho25CorrTag      =    cms.untracked.InputTag('kt6PFJetsIso', 'rho', 'PAT'),
+  rhoMuCorrTag      =    cms.untracked.InputTag('kt6PFJetsCentralNeutral', 'rho','RECO'),  # specifically for muon iso
   
   partFlowTag       =    cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
 

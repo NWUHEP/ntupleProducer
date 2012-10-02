@@ -197,7 +197,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   UInt_t      runNumber, lumiSection, bunchCross, nEvents;
   float ptHat, qScale, evtWeight;
   float deliveredLumi, recordedLumi, lumiDeadTime;
-  float rhoFactor, rho25Factor;
+  float rhoFactor, rho25Factor, rhoMuFactor,;
   vector<string>  savedTriggerNames;
   
   edm::Service<TFileService> fs;
@@ -214,7 +214,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   edm::InputTag tauTag_;
   edm::InputTag primaryVtxTag_;
   edm::InputTag triggerResultsTag_;
-  edm::InputTag rhoCorrTag_, rho25CorrTag_;
+  edm::InputTag rhoCorrTag_, rho25CorrTag_, rhoMuCorrTag_;
   edm::InputTag hcalHBHEFilterTag_;
   edm::InputTag ecalTPFilterTag_;
   edm::InputTag ecalBEFilterTag_;

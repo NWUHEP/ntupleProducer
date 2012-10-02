@@ -13,6 +13,7 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
 
     rhoCorrTag_       = iConfig.getUntrackedParameter<edm::InputTag>("rhoCorrTag");
     rho25CorrTag_     = iConfig.getUntrackedParameter<edm::InputTag>("rho25CorrTag");
+    rhoMuCorrTag_     = iConfig.getUntrackedParameter<edm::InputTag>("rhoMuCorrTag");
     hlTriggerResults_ = iConfig.getUntrackedParameter<string>("HLTriggerResults","TriggerResults");
     hltProcess_       = iConfig.getUntrackedParameter<string>("hltName");
     triggerPaths_     = iConfig.getUntrackedParameter<vector<string> >("triggers");
@@ -110,7 +111,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     iEvent.getByLabel(rho25CorrTag_, rho25Corr);
     rho25Factor = (float)(*rho25Corr);
 
-    //cout<<" RHOS. In eta 4.4 = "<<rhoFactor<<"   in eta25 "<<rho25Factor<<endl;
+    Handle<double> rhoMuCorr;
+    iEvent.getByLabel(rhoMuCorrTag_, rhoMuCorr);
+    rhoMuFactor = (float)(*rhoMuCorr);
+
+    cout<<" RHOS. In eta 4.4 = "<<rhoFactor<<"   in eta25 "<<rho25Factor<<"  MUs: "<<rhoMuFactor<<endl;
 
     if(saveJets_){
 
@@ -328,6 +333,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             eleCon->SetIsEE(iElectron->isEE());
             eleCon->SetIsInGap(iElectron->isGap());
 
+
             // Electron ID variables
             eleCon->SetHadOverEm(iElectron->hadronicOverEm());
             eleCon->SetDphiSuperCluster(iElectron->deltaPhiSuperClusterTrackAtVtx());
@@ -375,6 +381,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             bool convVeto = !(ConversionTools::hasMatchedConversion(*iElectron,hConversions,vertexBeamSpot.position()));
             eleCon->SetConversionVeto(convVeto);
             eleCon->SetConversionMissHits(iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfHits());
+
+            eleCon->SetIsoMap("fabsEPDiff",fabs((1/iElectron->ecalEnergy()) - (1/iElectron->trackMomentumAtVtx().R()))); //ooemoop 
 
             // EID maps for VBTF working points -- probably not needed anymore
             //eleCon->SetCutLevel(iElectron->electronID("eidVBTF95"), 95);
@@ -817,6 +825,7 @@ void  ntupleProducer::beginJob()
     eventTree->Branch("evtWeight", &evtWeight, "evtWeight/F");
     eventTree->Branch("rhoFactor",&rhoFactor, "rhoFactor/F");
     eventTree->Branch("rho25Factor",&rho25Factor, "rho25Factor/F");
+    eventTree->Branch("rhoMuFactor",&rhoMuFactor, "rhoMuFactor/F");
     eventTree->Branch("triggerStatus",&triggerStatus, "triggerStatus/l");
     eventTree->Branch("hltPrescale",hltPrescale, "hltPrescale[64]/i");
 
