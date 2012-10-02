@@ -57,6 +57,8 @@ def addPatSequence(process, runOnMC, addPhotons=True) :
 
     #enablePileUpCorrection(process, postfix=postfix)
 
+    print runOnMC
+
     #start PF2PAT
     usePF2PAT(process, runPF2PAT=True,
               jetAlgo=jetAlgo, runOnMC= runOnMC, postfix=postfix,
@@ -121,17 +123,20 @@ def addPatSequence(process, runOnMC, addPhotons=True) :
     process.patElectrons.embedTrack = True
 
     process.eleIsoSequence = setupPFElectronIso(process, 'gsfElectrons', 'PFIso')
-    process.muIsoSequence = setupPFMuonIso(process, 'muons', 'PFIso')
+    process.muIsoSequence  = setupPFMuonIso(process, 'muons', 'PFIso')
 
-    adaptPFIsoMuons( process, applyPostfix(process,"patMuons",""), 'PFIso')
-    adaptPFIsoElectrons( process, applyPostfix(process,"patElectrons",""), 'PFIso')
+    adaptPFIsoMuons(process, applyPostfix(process,"patMuons",""), 'PFIso')
+    adaptPFIsoElectrons(process, applyPostfix(process,"patElectrons",""), 'PFIso')
 
-    process.stdMuonSeq = cms.Sequence( process.pfParticleSelectionSequence +
+    process.stdMuonSeq = cms.Sequence( 
+                                       process.pfParticleSelectionSequence +
                                        process.muIsoSequence +
                                        process.makePatMuons +
                                        process.selectedPatMuons
                                        )
-    process.stdElectronSeq = cms.Sequence( process.pfParticleSelectionSequence +
+
+    process.stdElectronSeq = cms.Sequence( 
+                                           process.pfParticleSelectionSequence +
                                            process.eleIsoSequence +
                                            process.makePatElectrons +
                                            process.selectedPatElectrons
@@ -139,6 +144,12 @@ def addPatSequence(process, runOnMC, addPhotons=True) :
     if(runOnMC) :
         process.stdPhotonSeq = cms.Sequence( process.makePatPhotons )
     else :
+        ### Remove gen matching for running over data
+        process.stdMuonSeq.remove( process.muonMatch )
+        process.stdElectronSeq.remove( process.electronMatch )
+        process.patMuons.embedGenMatch = False
+        process.patElectrons.embedGenMatch = False
+
         process.patPhotons.addGenMatch = cms.bool(False)
         process.patPhotons.embedGenMatch = cms.bool(False)
         process.stdPhotonSeq = cms.Sequence( process.patPhotons ) 
