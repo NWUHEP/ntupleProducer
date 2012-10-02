@@ -115,7 +115,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     iEvent.getByLabel(rhoMuCorrTag_, rhoMuCorr);
     rhoMuFactor = (float)(*rhoMuCorr);
 
-    cout<<" RHOS. In eta 4.4 = "<<rhoFactor<<"   in eta25 "<<rho25Factor<<"  MUs: "<<rhoMuFactor<<endl;
+    //cout<<" RHOS. In eta 4.4 = "<<rhoFactor<<"   in eta25 "<<rho25Factor<<"  MUs: "<<rhoMuFactor<<endl;
 
     if(saveJets_){
 
@@ -128,22 +128,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
             TCJet* jetCon = new ((*recoJets)[jetCount]) TCJet;
 
-            /*
-               if (jetCount == 0) {
-               cout << "Uncorrected jet pt: " << iJet->correctedJet(0).pt() 
-               << ", corrected jet pt: " << iJet->correctedJet(1).pt() 
-               << ", corrected jet pt: " << iJet->correctedJet(2).pt() 
-               << ", corrected jet pt: " << iJet->correctedJet(3).pt()
-               <<endl;
-               if(isRealData)	
-               cout<< ", corrected jet pt: " << iJet->correctedJet(4).pt() 
-               << endl; 
-               }
-             */
-            //
             jetCon->SetPxPyPzE(iJet->px(), iJet->py(), iJet->pz(), iJet->energy());
             jetCon->SetVtx(0., 0., 0.);
-            //cout<<"  jetCon object pt = "<<jetCon->Pt()<<endl;
             jetCon->SetChHadFrac(iJet->chargedHadronEnergyFraction());
             jetCon->SetNeuHadFrac(iJet->neutralHadronEnergyFraction());
             jetCon->SetChEmFrac(iJet->chargedEmEnergyFraction());
@@ -190,8 +176,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         ) continue;
 
         TCJet* jetCon = new ((*recoJPT)[jptCount]) TCJet;
-
-        //if (jptCount == 0) cout << iJet->pt() << endl;
 
         jetCon->SetPxPyPzE(iJet->px(), iJet->py(), iJet->pz(), iJet->energy());
         jetCon->SetVtx(0., 0., 0.);
@@ -320,8 +304,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             if (iElectron->pt() < 10) continue;
 
             TCElectron* eleCon = new ((*recoElectrons)[eleCount]) TCElectron;
-
-            //cout << fabs(iElectron->eta() - iElectron->superCluster()->eta()) << endl;
 
             // Basic physics object info
             eleCon->SetPxPyPzE(iElectron->px(), iElectron->py(), iElectron->pz(), iElectron->energy());
@@ -589,8 +571,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             if (iPV->getBunchCrossing() == 0){
                 nPUVertices     = iPV->getPU_NumInteractions();
                 nPUVerticesTrue = iPV->getTrueNumInteractions();
-
-                //cout<<iPV->getTrueNumInteractions()<<endl;
             }
         }
 
@@ -882,7 +862,6 @@ void ntupleProducer::endLuminosityBlock(const edm::LuminosityBlock& iLumi, const
 
 void ntupleProducer::endRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
 {
-    //cout<<"\t Integrated luminosity = "<<deliveredLumi<<endl;
     runTree->Fill();
 }
 

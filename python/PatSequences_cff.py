@@ -57,8 +57,6 @@ def addPatSequence(process, runOnMC, addPhotons=True) :
 
     #enablePileUpCorrection(process, postfix=postfix)
 
-    print runOnMC
-
     #start PF2PAT
     usePF2PAT(process, runPF2PAT=True,
               jetAlgo=jetAlgo, runOnMC= runOnMC, postfix=postfix,
