@@ -1,17 +1,13 @@
-Several packages need to be check out for the ntuple code to run properly.
-This is true as of CMSSW_4_2_4.  
-
---- Ecal noise cleaning
-cvs co -r V110523_BE -d DataFormats/AnomalousEcalDataFormats UserCode/csander/DataFormats/AnomalousEcalDataFormats
-cvs co -r V110523_BE -d PhysicsTools/EcalAnomalousEventFilter UserCode/csander/PhysicsTools/EcalAnomalousEventFilter
-cvs co -r V110523_BE -d Sandbox UserCode/csander/Sandbox
-cvs co -r V19MAY2011_v3 JetMETAnalysis/ecalDeadCellTools
-#--- MET corrections
-cvs co -r V04-04-04 JetMETCorrections/Type1MET
+Consult with this page before production:
+https://twiki.cern.ch/twiki/bin/view/CMS/UserCodeNWUntupleProducer
 
  Log.           It's better than bad it's good.
 
+2012 Oct 04
+ Branch for 533 release
+
 2011 Sep 30
+
   Tagged with V00-05 - Wjets and Data with proper json files are produced with it.
   Attempted to properly include the TriggerObject - failed. Need to figure out the way to call the method from HLT trigger.
   Tested skimZ - works fine. 
