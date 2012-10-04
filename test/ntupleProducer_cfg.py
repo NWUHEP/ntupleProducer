@@ -5,7 +5,7 @@ from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 process = cms.Process("PAT")
 
 # real data or MC?
-isRealData = True
+isRealData = False
 
 # global tag
 process.load("Configuration.Geometry.GeometryIdeal_cff")
@@ -104,8 +104,8 @@ process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(1000))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-           '/store/data/Run2012A/DoubleMu/AOD/29Jun2012-v1/0000/18B2A40A-81C2-E111-9AF6-003048678FDE.root' ### DATA
-          # '/store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0003/EAF43999-8D9B-E111-A418-003048D4610E.root' ### MC
+           #'/store/data/Run2012A/DoubleMu/AOD/29Jun2012-v1/0000/18B2A40A-81C2-E111-9AF6-003048678FDE.root' ### DATA
+         '/store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0003/EAF43999-8D9B-E111-A418-003048D4610E.root' ### MC
 )
 )
 
@@ -213,13 +213,17 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_DoubleMu3_v",
                                                "HLT_DoubleMu6_v",
                                                "HLT_DoubleMu7_v",
+                                               "HLT_Mu17_TkMu8_v",
+                                               "HLT_Mu22_TkMu8_v",
+                                               "HLT_Mu22_TkMu22_v",
 
                                                "HLT_Ele8_CaloIdL_CaloIsoVL_v",
                                                "HLT_Ele17_CaloIdL_CaloIsoVL_v",
                                                "HLT_Ele8_CaloIdL_CaloIsoVL_Jet40_v",
                                                "HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL_v",
                                                "HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
-
+                                               "HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_v",
+                                               
                                                "HLT_Photon20_CaloIdVL_IsoL_v",
                                                "HLT_Photon20_CaloIdVL_v",
                                                "HLT_Photon30_CaloIdVL_IsoL_v",
@@ -231,14 +235,20 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_Photon90_CaloIdVL_IsoL_v",
                                                "HLT_Photon90_CaloIdVL_v",
                                                "HLT_Photon135_v",
+                                               "HLT_Photon150_v",
+                                               "HLT_Photon22_R9Id90_HE10_Iso40_EBOnly_v",
+                                               "HLT_Photon36_R9Id90_HE10_Iso40_EBOnly_v",
+                                               "HLT_Photon50_R9Id90_HE10_Iso40_EBOnly_v",
+                                               "HLT_Photon75_R9Id90_HE10_Iso40_EBOnly_v",
+                                               "HLT_Photon90_R9Id90_HE10_Iso40_EBOnly_v",
 
                                                "HLT_Mu17_Ele8_CaloIdL_v",
                                                "HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v",
-                                               "HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVLv",
+                                               "HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
                                                "HLT_Mu3_Ele8_CaloIdT_CaloIsoVL_v",
                                                "HLT_Mu8_Ele17_CaloIdL_v",
                                                "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v",
-                                               "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVLv",
+                                               "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
 
                                                "HLT_Ele18_CaloIdVT_TrkIdT_MediumIsoPFTau20_v",
                                                "HLT_Ele20_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_MediumIsoPFTau20_v",
