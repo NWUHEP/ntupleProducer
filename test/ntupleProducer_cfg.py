@@ -101,7 +101,7 @@ process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
                                     )
 
 # event source
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(50))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(1000))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
            '/store/data/Run2012A/DoubleMu/AOD/29Jun2012-v1/0000/18B2A40A-81C2-E111-9AF6-003048678FDE.root' ### DATA
