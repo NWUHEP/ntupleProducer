@@ -734,8 +734,12 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     for(trigger::TriggerObjectCollection::const_iterator iTrigObj = triggerObjCol.begin(); iTrigObj != triggerObjCol.end(); ++iTrigObj) { 
 
-        if (iTrigObj->pt() > 3 
-                && (fabs(iTrigObj->id()) == 11 || fabs(iTrigObj->id()) == 13 || fabs(iTrigObj->id()) == 15) 
+
+        if (iTrigObj->pt() > 5 
+                && (iTrigObj->id() == 11 
+                    || iTrigObj->id() == 13 
+                    || iTrigObj->id() == 82 
+                    || iTrigObj->id() == 83) 
            ) {
             TCTriggerObject * thisTrig = new ((*triggerObjects)[triggerCount]) TCTriggerObject;
             thisTrig->SetPxPyPzE(iTrigObj->px(), iTrigObj->py(), iTrigObj->pz(), iTrigObj->energy());
