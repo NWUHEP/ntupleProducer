@@ -5,7 +5,7 @@ from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 process = cms.Process("PAT")
 
 # real data or MC?
-isRealData = False
+isRealData = True
 
 # global tag
 process.load("Configuration.Geometry.GeometryIdeal_cff")
@@ -101,11 +101,11 @@ process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
                                     )
 
 # event source
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(1000))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-           #'/store/data/Run2012A/DoubleMu/AOD/29Jun2012-v1/0000/18B2A40A-81C2-E111-9AF6-003048678FDE.root' ### DATA
-         '/store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0003/EAF43999-8D9B-E111-A418-003048D4610E.root' ### MC
+           '/store/data/Run2012A/DoubleMu/AOD/29Jun2012-v1/0000/18B2A40A-81C2-E111-9AF6-003048678FDE.root' ### DATA
+           #'/store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0003/EAF43999-8D9B-E111-A418-003048D4610E.root' ### MC
 )
 )
 

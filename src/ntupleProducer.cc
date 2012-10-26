@@ -730,13 +730,18 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     edm::Handle<trigger::TriggerEvent> triggerEvents;
     iEvent.getByLabel("hltTriggerSummaryAOD",triggerEvents);
     trigger::TriggerObjectCollection triggerObjCol = triggerEvents->getObjects();
-    int triggerCount = 0;
+    unsigned triggerCount = 0;
 
     for(trigger::TriggerObjectCollection::const_iterator iTrigObj = triggerObjCol.begin(); iTrigObj != triggerObjCol.end(); ++iTrigObj) { 
-        TCTriggerObject * thisTrig = new ((*triggerObjects)[triggerCount]) TCTriggerObject;
-        thisTrig->SetPxPyPzE(iTrigObj->px(), iTrigObj->py(), iTrigObj->pz(), iTrigObj->energy());
-        thisTrig->SetId(iTrigObj->id());
-        ++triggerCount;
+
+        if (iTrigObj->pt() > 3 
+                && (fabs(iTrigObj->id()) == 11 || fabs(iTrigObj->id()) == 13 || fabs(iTrigObj->id()) == 15) 
+           ) {
+            TCTriggerObject * thisTrig = new ((*triggerObjects)[triggerCount]) TCTriggerObject;
+            thisTrig->SetPxPyPzE(iTrigObj->px(), iTrigObj->py(), iTrigObj->pz(), iTrigObj->energy());
+            thisTrig->SetId(iTrigObj->id());
+            ++triggerCount;
+        }
     }
 
     ++nEvents;
