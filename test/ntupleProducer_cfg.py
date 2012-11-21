@@ -65,6 +65,7 @@ process.jpt = cms.Sequence(
                         * process.ak5PFJetsL1FastL2L3 
                         )
 
+'''
 # pat sequences
 process.load("PhysicsTools.PatAlgos.patSequences_cff")
 from PhysicsTools.PatAlgos.patEventContent_cff import patEventContent
@@ -76,12 +77,13 @@ process.out = cms.OutputModule("PoolOutputModule",
 
 from NWU.ntupleProducer.PatSequences_cff import addPatSequence
 addPatSequence(process, not isRealData, addPhotons = True)
+'''
 
 
 # global options
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.threshold = 'INFO'
-process.MessageLogger.cerr.FwkReport.reportEvery = 1000
+process.MessageLogger.cerr.FwkReport.reportEvery = 100
 
 '''
 process.MessageLogger.categories = cms.untracked.vstring('FwkJob', 'FwkReport', 'FwkSummary', 'Root_NoDictionary', 'DataNotAvailable', 'HLTConfigData')
@@ -94,17 +96,18 @@ process.MessageLogger.myOutput = cms.untracked.PSet(
                 DataNotAvailable    = cms.untracked.PSet(limit = cms.untracked.int32(0)),
                 HLTConfigData       = cms.untracked.PSet(limit = cms.untracked.int32(0))
                 )
-'''
 
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
                                      SkipEvent = cms.untracked.vstring('ProductNotFound')
                                     )
+'''
 
 # event source
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-           '/store/data/Run2012A/DoubleMu/AOD/29Jun2012-v1/0000/18B2A40A-81C2-E111-9AF6-003048678FDE.root' ### DATA
+           '/store/data/Run2012A/MuEG/AOD/13Jul2012-v1/0000/FEF59314-34D8-E111-8DF9-E0CB4E19F972.root'
+           #'/store/data/Run2012A/DoubleMu/AOD/29Jun2012-v1/0000/18B2A40A-81C2-E111-9AF6-003048678FDE.root' ### DATA
            #'/store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0003/EAF43999-8D9B-E111-A418-003048D4610E.root' ### MC
 )
 )
@@ -174,7 +177,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
   photonIsoCalcTag  =    cms.PSet(isolationSumsCalculator),
 
-  JetTag            =    cms.untracked.InputTag('selectedPatJetsPFlow'),
+  JetTag            =    cms.untracked.InputTag('ak5PFJets'),
   GenJetTag         =    cms.untracked.InputTag('ak5GenJets'),
   #METTag            =    cms.untracked.InputTag('patMETsPFlow'),
   METTag            =    cms.untracked.InputTag('pfType1CorrectedMet'),
@@ -265,7 +268,7 @@ process.ntuplePath = cms.Path(
         process.goodOfflinePrimaryVertices
         * process.producePFMETCorrections
         #* process.PFTau
-        * process.patDefaultSequence
+        #* process.patDefaultSequence
         #* process.jpt
         * process.kt6PFJetsIso
         * AllFilters
