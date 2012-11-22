@@ -65,7 +65,6 @@ process.jpt = cms.Sequence(
                         * process.ak5PFJetsL1FastL2L3 
                         )
 
-'''
 # pat sequences
 process.load("PhysicsTools.PatAlgos.patSequences_cff")
 from PhysicsTools.PatAlgos.patEventContent_cff import patEventContent
@@ -77,7 +76,6 @@ process.out = cms.OutputModule("PoolOutputModule",
 
 from NWU.ntupleProducer.PatSequences_cff import addPatSequence
 addPatSequence(process, not isRealData, addPhotons = True)
-'''
 
 
 # global options
@@ -85,7 +83,6 @@ process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.threshold = 'INFO'
 process.MessageLogger.cerr.FwkReport.reportEvery = 100
 
-'''
 process.MessageLogger.categories = cms.untracked.vstring('FwkJob', 'FwkReport', 'FwkSummary', 'Root_NoDictionary', 'DataNotAvailable', 'HLTConfigData')
 process.MessageLogger.destinations = cms.untracked.vstring('myOutput')
 process.MessageLogger.myOutput = cms.untracked.PSet(
@@ -100,7 +97,6 @@ process.MessageLogger.myOutput = cms.untracked.PSet(
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
                                      SkipEvent = cms.untracked.vstring('ProductNotFound')
                                     )
-'''
 
 # event source
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
@@ -165,7 +161,7 @@ AllFilters = cms.Sequence(process.HBHENoiseFilterResultProducer
 
 ##### END OF Noise Filters ############
 
-print '\n\nCommence ntuplization and deandreyification...\n\n'
+print '\n\nCommence ntuplization...\n\n'
 
 ### TFile service!
 process.TFileService = cms.Service('TFileService',
@@ -177,7 +173,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
   photonIsoCalcTag  =    cms.PSet(isolationSumsCalculator),
 
-  JetTag            =    cms.untracked.InputTag('ak5PFJets'),
+  JetTag            =    cms.untracked.InputTag('selectedPatJetsPFlow'),
   GenJetTag         =    cms.untracked.InputTag('ak5GenJets'),
   #METTag            =    cms.untracked.InputTag('patMETsPFlow'),
   METTag            =    cms.untracked.InputTag('pfType1CorrectedMet'),
@@ -268,7 +264,7 @@ process.ntuplePath = cms.Path(
         process.goodOfflinePrimaryVertices
         * process.producePFMETCorrections
         #* process.PFTau
-        #* process.patDefaultSequence
+        * process.patDefaultSequence
         #* process.jpt
         * process.kt6PFJetsIso
         * AllFilters

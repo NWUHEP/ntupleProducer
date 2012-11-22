@@ -119,6 +119,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     if(saveJets_){
 
+        //Handle<vector<pat::Jet> > jets;
+        //iEvent.getByLabel(jetTag_, jets);
+
         Handle<vector<pat::Jet> > jets;
         iEvent.getByLabel(jetTag_, jets);
 
@@ -225,7 +228,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     // Get muons //
     ///////////////
 
+
     if (saveMuons_) {
+
 
         Handle<vector<reco::Muon> > muons;
         iEvent.getByLabel(muonTag_, muons);
@@ -281,6 +286,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             muCon->SetIsoMap("pfPhotonEt_R04", iMuon->pfIsolationR04().sumPhotonEt);
             muCon->SetIsoMap("pfNeutralHadronEt_R04", iMuon->pfIsolationR04().sumNeutralHadronEt);
             muCon->SetIsoMap("pfPUPt_R04", iMuon->pfIsolationR04().sumPUPt);
+
 
             muCount++;
         }
@@ -611,6 +617,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                         abs(myParticle.pdgId()) == 23 
                         || abs(myParticle.pdgId()) == 24 
                         || abs(myParticle.pdgId()) == 25 
+                        || abs(myParticle.pdgId()) == 35 
+                        || abs(myParticle.pdgId()) == 36 
                         || abs(myParticle.pdgId()) == 39
                    ){
 
@@ -709,7 +717,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     const TriggerNames & triggerNames = iEvent.triggerNames(*hltR);
     hlNames = triggerNames.triggerNames();   
 
-    triggerStatus = 0x0;    
+    triggerStatus   = 0x0;    
 
     for (int i=0; i < (int)hlNames.size(); ++i) {      
         if (!triggerDecision(hltR, i)) continue;	
@@ -717,7 +725,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             if (triggerPaths_[j] == "") continue;
             if (hlNames[i].compare(0, triggerPaths_[j].length(),triggerPaths_[j]) == 0) {
                 //cout << hlNames[i] << " ?= " << triggerPaths_[j] << endl;
-                triggerStatus |= 0x01 << j;
+                triggerStatus |= ULong64_t(0x01) << j;
                 if (isRealData) {
                     pair<int, int> preScales;
                     preScales = hltConfig_.prescaleValues(iEvent, iSetup, hlNames[i]); 
@@ -726,27 +734,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             }
         }
     } 
-
-    edm::Handle<trigger::TriggerEvent> triggerEvents;
-    iEvent.getByLabel("hltTriggerSummaryAOD",triggerEvents);
-    trigger::TriggerObjectCollection triggerObjCol = triggerEvents->getObjects();
-    unsigned triggerCount = 0;
-
-    for(trigger::TriggerObjectCollection::const_iterator iTrigObj = triggerObjCol.begin(); iTrigObj != triggerObjCol.end(); ++iTrigObj) { 
-
-
-        if (iTrigObj->pt() > 5 
-                && (iTrigObj->id() == 11 
-                    || iTrigObj->id() == 13 
-                    || iTrigObj->id() == 82 
-                    || iTrigObj->id() == 83) 
-           ) {
-            TCTriggerObject * thisTrig = new ((*triggerObjects)[triggerCount]) TCTriggerObject;
-            thisTrig->SetPxPyPzE(iTrigObj->px(), iTrigObj->py(), iTrigObj->pz(), iTrigObj->energy());
-            thisTrig->SetId(iTrigObj->id());
-            ++triggerCount;
-        }
-    }
 
     ++nEvents;
 
@@ -859,7 +846,8 @@ void ntupleProducer::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetu
 
 void ntupleProducer::endLuminosityBlock(const edm::LuminosityBlock& iLumi, const edm::EventSetup& iSetup)
 {
-    if (isRealData) {
+    //if (isRealData) {
+    if (false) {
         edm::Handle<LumiSummary> lumiSummary;
         iLumi.getByLabel("lumiProducer", lumiSummary);
 

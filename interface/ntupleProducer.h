@@ -243,6 +243,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   TClonesArray* genJets;
   TClonesArray* genParticles;
   TCMET*        recoMET;
+  TCMET*        recoMET_corr;
   
   //Vertex info
   TClonesArray* primaryVtx;
