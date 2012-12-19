@@ -22,18 +22,14 @@ private:
     bool  _trackVeto;
 
     // supercluster information
-    float _dPhiSC;
-    float _dEtaSC;
-    float _etaSC;
-    float _phiSC;
-    float _energySC;
+    float _SCdPhi;
+    float _SCdEta;
+    float _SCeta;
+    float _SCphi;
+    float _SCenergy;
 
     //conversion info
     bool    _convVeto;
-
-    // vertex-by-vertex iso
-    vector<float> _trkIsoVtxDR03;
-    vector<float> _trkIsoVtxDR04;
 
 public:
     TCPhoton();
@@ -49,11 +45,11 @@ public:
     float E2OverE9() const; 
     bool  TrackVeto() const;
 
-    float DPhiSC() const;
-    float DEtaSC() const;
-    float EnergySC() const;
-    float EtaSC() const;
-    float PhiSC() const;
+    float SCDPhi() const;
+    float SCDEta() const;
+    float SCEnergy() const;
+    float SCEta() const;
+    float SCPhi() const;
 
     bool  ConversionVeto() const;
 
@@ -67,11 +63,11 @@ public:
     void SetE2OverE9(float);
     void SetTrackVeto(bool);
 
-    void SetDPhiSC(float);
-    void SetDEtaSC(float);
-    void SetEtaSC(float);
-    void SetPhiSC(float);
-    void SetEnergySC(float);
+    void SetSCDPhi(float);
+    void SetSCDEta(float);
+    void SetSCEta(float);
+    void SetSCPhi(float);
+    void SetSCEnergy(float);
 
     void SetConversionVeto(bool);
 

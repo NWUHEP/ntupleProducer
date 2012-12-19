@@ -25,7 +25,13 @@ bool TCMuon::IsPF() const {
    return _isPF;
 }
 
+int TCMuon::NumberOfMatchedStations() const {
+  return _numberOfMatchedStations;
+}
 
+int TCMuon::TrackLayersWithMeasurement() const {
+  return _trackLayersWithMeasurement;
+}
 
 int TCMuon::NumberOfValidPixelHits() const {
   return _numberOfValidPixelHits;
@@ -64,6 +70,13 @@ float TCMuon::SegComp() const {
 }
 
 // "set" methods ---------------------------------------------
+void TCMuon::SetNumberOfMatchedStations(int n){
+  _numberOfMatchedStations = n;
+}
+
+void TCMuon::SetTrackLayersWithMeasurement(int n) {
+  _trackLayersWithMeasurement = n;
+}
 
 void TCMuon::SetPtError(float er){
    _ptError = er;

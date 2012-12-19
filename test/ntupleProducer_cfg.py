@@ -61,13 +61,13 @@ else:
             tag = cms.string("TrackProbabilityCalibration_3D_Data53X_v2"),
             connect = cms.untracked.string("frontier://FrontierPrep/CMS_COND_BTAU"))
         )
-    
+
 ### To get b-tags from ak5PFJets
 process.load('RecoJets.JetAssociationProducers.ak5JTA_cff')
 process.ak5JetTracksAssociatorAtVertex.jets = cms.InputTag("ak5PFJetsL1FastL2L3")
 process.ak5JetTracksAssociatorAtCaloFace.jets = cms.InputTag("ak5PFJetsL1FastL2L3")
 process.ak5JetExtender.jets = cms.InputTag("ak5PFJetsL1FastL2L3")
-    
+
 # jpt extras
 process.load("RecoJets.Configuration.RecoPFJets_cff")
 process.load("RecoJets.Configuration.RecoJPTJets_cff")
@@ -86,11 +86,11 @@ process.ak5JetTracksAssociatorAtVertex.useAssigned = cms.bool(True)
 process.ak5JetTracksAssociatorAtVertex.pvSrc = cms.InputTag("offlinePrimaryVertices")
 
 process.jpt = cms.Sequence(
-                        process.ak5JTA 
-                        * process.recoJPTJets 
-                        * process.ak5JPTJetsL1L2L3 
-                        * process.kt6PFJets 
-                        * process.ak5PFJetsL1FastL2L3 
+                        process.ak5JTA
+                        * process.recoJPTJets
+                        * process.ak5JPTJetsL1L2L3
+                        * process.kt6PFJets
+                        * process.ak5PFJetsL1FastL2L3
                         )
 
 # pat sequences
@@ -132,9 +132,9 @@ process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-           #'/store/data/Run2012A/MuEG/AOD/13Jul2012-v1/0000/FEF59314-34D8-E111-8DF9-E0CB4E19F972.root'
-           '/store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0003/EAF43999-8D9B-E111-A418-003048D4610E.root' ### MC
-           #'file:/tmp/naodell/TTJetsToHqToWWq_M-145_TuneZ2_8TeV_pythia6_v2_1_1_GPf.root'
+    #'/store/data/Run2012A/MuEG/AOD/13Jul2012-v1/0000/FEF59314-34D8-E111-8DF9-E0CB4E19F972.root'
+    '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
+    #'file:/tmp/naodell/TTJetsToHqToWWq_M-145_TuneZ2_8TeV_pythia6_v2_1_1_GPf.root'
 )
 )
 
@@ -215,7 +215,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   rhoCorrTag        =    cms.untracked.InputTag('kt6PFJets', 'rho', 'RECO'),
   rho25CorrTag      =    cms.untracked.InputTag('kt6PFJetsIso', 'rho', 'PAT'),
   rhoMuCorrTag      =    cms.untracked.InputTag('kt6PFJetsCentralNeutral', 'rho','RECO'),  # specifically for muon iso
-  
+
   partFlowTag       =    cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
 
   saveJets          =    cms.untracked.bool(False),
@@ -252,7 +252,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL_v",
                                                "HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
                                                "HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_v",
-                                               
+
                                                "HLT_Photon20_CaloIdVL_IsoL_v",
                                                "HLT_Photon20_CaloIdVL_v",
                                                "HLT_Photon30_CaloIdVL_IsoL_v",
@@ -298,7 +298,7 @@ process.ntuplePath = cms.Path(
         #* process.jpt
         * process.kt6PFJetsIso
         * process.ak5PFJetsL1FastL2L3
-        * process.ak5JetTracksAssociatorAtVertex 
+        * process.ak5JetTracksAssociatorAtVertex
         * process.btagging
         * AllFilters
         * process.ntupleProducer

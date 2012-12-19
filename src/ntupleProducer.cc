@@ -249,7 +249,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         iEvent.getByLabel(muonTag_, muons);
 
         for (vector<reco::Muon>::const_iterator iMuon = muons->begin(); iMuon != muons->end(); ++iMuon) {
-            if (!(iMuon->isGlobalMuon() && iMuon->isTrackerMuon())) continue;
+            if (!iMuon->isGlobalMuon()) continue;
 
             TCMuon* muCon = new ((*recoMuons)[muCount]) TCMuon;
 
@@ -266,6 +266,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             muCon->SetCaloComp(iMuon->caloCompatibility());
             muCon->SetSegComp(muon::segmentCompatibility(*iMuon));
 
+            muCon->SetTrackLayersWithMeasurement(iMuon->track()->hitPattern().trackerLayersWithMeasurement());
+            muCon->SetNumberOfMatchedStations(iMuon->numberOfMatchedStations());
             muCon->SetNumberOfMatches(iMuon->numberOfMatches());
             muCon->SetNumberOfValidPixelHits(iMuon->globalTrack()->hitPattern().numberOfValidPixelHits());
             muCon->SetNumberOfValidTrackerHits(iMuon->globalTrack()->hitPattern().numberOfValidTrackerHits()); 
@@ -427,9 +429,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             myPhoton->SetR9(iPhoton->r9());
             myPhoton->SetTrackVeto(iPhoton->hasPixelSeed());
 
-            myPhoton->SetEtaSC(iPhoton->superCluster()->eta());
-            myPhoton->SetPhiSC(iPhoton->superCluster()->phi());
-            myPhoton->SetEnergySC(iPhoton->superCluster()->energy());
+            myPhoton->SetSCEta(iPhoton->superCluster()->eta());
+            myPhoton->SetSCPhi(iPhoton->superCluster()->phi());
+            myPhoton->SetSCEnergy(iPhoton->superCluster()->energy());
 
             // detector-based isolation
             myPhoton->SetIsoMap("EmIso_R03", (iPhoton->ecalRecHitSumEtConeDR03()));
