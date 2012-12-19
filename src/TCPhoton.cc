@@ -19,6 +19,7 @@ float TCPhoton::DPhiSC() const { return _dPhiSC; }
 float TCPhoton::DEtaSC() const { return _dEtaSC; } 
 float TCPhoton::EnergySC() const { return _energySC; }
 float TCPhoton::EtaSC() const { return _etaSC; }
+float TCPhoton::PhiSC() const { return _phiSC; }
 
 bool  TCPhoton::ConversionVeto() const { return _convVeto; }
 
@@ -35,6 +36,7 @@ void TCPhoton::SetTrackVeto(bool t) { _trackVeto = t; }
 void TCPhoton::SetDPhiSC(float d){ _dPhiSC = d; } 
 void TCPhoton::SetDEtaSC(float d){ _dEtaSC = d; } 
 void TCPhoton::SetEtaSC(float n) { _etaSC = n; }
+void TCPhoton::SetPhiSC(float p) { _phiSC = p; }
 void TCPhoton::SetEnergySC(float e) { _energySC = e; }
 
 void TCPhoton::SetConversionVeto(bool v) { _convVeto = v; }

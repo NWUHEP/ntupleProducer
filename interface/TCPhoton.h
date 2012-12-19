@@ -25,6 +25,7 @@ private:
     float _dPhiSC;
     float _dEtaSC;
     float _etaSC;
+    float _phiSC;
     float _energySC;
 
     //conversion info
@@ -52,6 +53,7 @@ public:
     float DEtaSC() const;
     float EnergySC() const;
     float EtaSC() const;
+    float PhiSC() const;
 
     bool  ConversionVeto() const;
 
@@ -68,6 +70,7 @@ public:
     void SetDPhiSC(float);
     void SetDEtaSC(float);
     void SetEtaSC(float);
+    void SetPhiSC(float);
     void SetEnergySC(float);
 
     void SetConversionVeto(bool);

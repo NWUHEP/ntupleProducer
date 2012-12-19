@@ -15,6 +15,7 @@ class TCElectron : public TCPhysObject {
         float _sigmaIetaIeta;
         float _eOverP;
         float _fBrem;
+        float _r9;
 
         float _scEta;
 
@@ -56,6 +57,7 @@ class TCElectron : public TCPhysObject {
         float NormalizedChi2() const;
 
         float SCEta() const;
+        float R9() const; 
 
         bool  ConversionVeto() const;
         short ConversionMissHits() const;
@@ -96,6 +98,7 @@ class TCElectron : public TCPhysObject {
         void SetNumberOfLostPixelHits(int n);
         void SetNumberOfLostTrackerHits(int n);
         void SetNormalizedChi2(float n);
+        void SetR9(float r);
 
         void SetIsEB(bool b);
         void SetIsEE(bool b);

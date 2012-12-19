@@ -5,12 +5,13 @@ from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 process = cms.Process("PAT")
 
 # real data or MC?
-isRealData = True
+isRealData = False
 
 # global tag
 process.load("Configuration.Geometry.GeometryIdeal_cff")
 process.load("Configuration.StandardSequences.MagneticField_cff")
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
+process.load('Configuration.StandardSequences.Reconstruction_cff')
 
 if (isRealData):
     process.GlobalTag.globaltag = 'GR_R_53_V13::All'
@@ -29,6 +30,7 @@ process.goodOfflinePrimaryVertices = cms.EDFilter( "PrimaryVertexObjectFilter",
 
 # jet energy corrections
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
+process.load("CondCore.DBCommon.CondDBCommon_cfi")
 
 # MET corrections
 process.load('JetMETCorrections.Type1MET.pfMETCorrections_cff')
@@ -40,6 +42,32 @@ skipMuons = cms.bool(True)
 if (isRealData):
     process.pfJetMETcorr.jetCorrLabel = cms.string("ak5PFL1FastL2L3Residual")
 
+    # 53X b-jet discriminator calibration
+    process.GlobalTag.toGet = cms.VPSet(
+        cms.PSet(record = cms.string("BTagTrackProbability2DRcd"),
+            tag = cms.string("TrackProbabilityCalibration_2D_Data53X_v2"),
+            connect = cms.untracked.string("frontier://FrontierPrep/CMS_COND_BTAU")),
+        cms.PSet(record = cms.string("BTagTrackProbability3DRcd"),
+            tag = cms.string("TrackProbabilityCalibration_3D_Data53X_v2"),
+            connect = cms.untracked.string("frontier://FrontierPrep/CMS_COND_BTAU"))
+        )
+else:
+    # 53X b-jet discriminator calibration
+    process.GlobalTag.toGet = cms.VPSet(
+        cms.PSet(record = cms.string("BTagTrackProbability2DRcd"),
+            tag = cms.string("TrackProbabilityCalibration_2D_Data53X_v2"),
+            connect = cms.untracked.string("frontier://FrontierPrep/CMS_COND_BTAU")),
+        cms.PSet(record = cms.string("BTagTrackProbability3DRcd"),
+            tag = cms.string("TrackProbabilityCalibration_3D_Data53X_v2"),
+            connect = cms.untracked.string("frontier://FrontierPrep/CMS_COND_BTAU"))
+        )
+    
+### To get b-tags from ak5PFJets
+process.load('RecoJets.JetAssociationProducers.ak5JTA_cff')
+process.ak5JetTracksAssociatorAtVertex.jets = cms.InputTag("ak5PFJetsL1FastL2L3")
+process.ak5JetTracksAssociatorAtCaloFace.jets = cms.InputTag("ak5PFJetsL1FastL2L3")
+process.ak5JetExtender.jets = cms.InputTag("ak5PFJetsL1FastL2L3")
+    
 # jpt extras
 process.load("RecoJets.Configuration.RecoPFJets_cff")
 process.load("RecoJets.Configuration.RecoJPTJets_cff")
@@ -75,7 +103,7 @@ process.out = cms.OutputModule("PoolOutputModule",
                                )
 
 from NWU.ntupleProducer.PatSequences_cff import addPatSequence
-addPatSequence(process, not isRealData, addPhotons = True)
+#addPatSequence(process, not isRealData, addPhotons = True)
 
 
 # global options
@@ -83,6 +111,7 @@ process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.threshold = 'INFO'
 process.MessageLogger.cerr.FwkReport.reportEvery = 100
 
+'''
 process.MessageLogger.categories = cms.untracked.vstring('FwkJob', 'FwkReport', 'FwkSummary', 'Root_NoDictionary', 'DataNotAvailable', 'HLTConfigData')
 process.MessageLogger.destinations = cms.untracked.vstring('myOutput')
 process.MessageLogger.myOutput = cms.untracked.PSet(
@@ -93,6 +122,7 @@ process.MessageLogger.myOutput = cms.untracked.PSet(
                 DataNotAvailable    = cms.untracked.PSet(limit = cms.untracked.int32(0)),
                 HLTConfigData       = cms.untracked.PSet(limit = cms.untracked.int32(0))
                 )
+'''
 
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
                                      SkipEvent = cms.untracked.vstring('ProductNotFound')
@@ -102,9 +132,9 @@ process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-           '/store/data/Run2012A/MuEG/AOD/13Jul2012-v1/0000/FEF59314-34D8-E111-8DF9-E0CB4E19F972.root'
-           #'/store/data/Run2012A/DoubleMu/AOD/29Jun2012-v1/0000/18B2A40A-81C2-E111-9AF6-003048678FDE.root' ### DATA
-           #'/store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0003/EAF43999-8D9B-E111-A418-003048D4610E.root' ### MC
+           #'/store/data/Run2012A/MuEG/AOD/13Jul2012-v1/0000/FEF59314-34D8-E111-8DF9-E0CB4E19F972.root'
+           '/store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0003/EAF43999-8D9B-E111-A418-003048D4610E.root' ### MC
+           #'file:/tmp/naodell/TTJetsToHqToWWq_M-145_TuneZ2_8TeV_pythia6_v2_1_1_GPf.root'
 )
 )
 
@@ -173,7 +203,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
   photonIsoCalcTag  =    cms.PSet(isolationSumsCalculator),
 
-  JetTag            =    cms.untracked.InputTag('selectedPatJetsPFlow'),
+  JetTag            =    cms.untracked.InputTag('ak5PFJetsL1FastL2L3'),
   GenJetTag         =    cms.untracked.InputTag('ak5GenJets'),
   #METTag            =    cms.untracked.InputTag('patMETsPFlow'),
   METTag            =    cms.untracked.InputTag('pfType1CorrectedMet'),
@@ -188,7 +218,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   
   partFlowTag       =    cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
 
-  saveJets          =    cms.untracked.bool(True),
+  saveJets          =    cms.untracked.bool(False),
   saveElectrons     =    cms.untracked.bool(True),
   saveMuons         =    cms.untracked.bool(True),
   saveTaus          =    cms.untracked.bool(False),
@@ -264,9 +294,12 @@ process.ntuplePath = cms.Path(
         process.goodOfflinePrimaryVertices
         * process.producePFMETCorrections
         #* process.PFTau
-        * process.patDefaultSequence
+        #* process.patDefaultSequence
         #* process.jpt
         * process.kt6PFJetsIso
+        * process.ak5PFJetsL1FastL2L3
+        * process.ak5JetTracksAssociatorAtVertex 
+        * process.btagging
         * AllFilters
         * process.ntupleProducer
         )

@@ -119,13 +119,19 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     if(saveJets_){
 
+        edm::Handle<reco::JetTagCollection> bTagCollectionTCHE;
+        iEvent.getByLabel("trackCountingHighEffBJetTags", bTagCollectionTCHE);
+        const reco::JetTagCollection & bTagsTCHE = *(bTagCollectionTCHE.product());
+
+        Handle<vector<reco::PFJet> > jets;
+        iEvent.getByLabel(jetTag_, jets);
+
         //Handle<vector<pat::Jet> > jets;
         //iEvent.getByLabel(jetTag_, jets);
 
-        Handle<vector<pat::Jet> > jets;
-        iEvent.getByLabel(jetTag_, jets);
+        //for (vector<pat::Jet>::const_iterator iJet = jets->begin(); iJet != jets->end(); ++iJet) {
 
-        for (vector<pat::Jet>::const_iterator iJet = jets->begin(); iJet != jets->end(); ++iJet) {
+        for (vector<reco::PFJet>::const_iterator iJet = jets->begin(); iJet != jets->end(); ++iJet) {
 
             if (iJet->pt() < 10.) continue;
 
@@ -140,14 +146,21 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             jetCon->SetNumConstit(iJet->chargedMultiplicity() + iJet->neutralMultiplicity());
             jetCon->SetNumChPart(iJet->chargedMultiplicity());
 
-            jetCon->SetJetFlavor(iJet->partonFlavour());
+            //jetCon->SetJetFlavor(iJet->partonFlavour());
 
             jetCon->SetUncertaintyJES(-1);
 
-            jetCon->SetBDiscriminatorMap("TCHE", iJet->bDiscriminator("trackCountingHighEffBJetTags"));
-            jetCon->SetBDiscriminatorMap("TCHP", iJet->bDiscriminator("trackCountingHighPurBJetTags"));
-            jetCon->SetBDiscriminatorMap("SSVHE", iJet->bDiscriminator("simpleSecondaryVertexHighEffBJetTags"));
-            jetCon->SetBDiscriminatorMap("JPB", iJet->bDiscriminator("jetProbabilityBJetTags"));
+            for (tag_iter iTag = bTagsTCHE.begin(); iTag != bTagsTCHE.end(); iTag++) {
+                if (sqrt(pow(iTag->first->eta() - iJet->eta(), 2) + pow(deltaPhi(iTag->first->phi(),iJet->phi()), 2)) == 0.) {
+                    jetCon->SetBDiscriminatorMap("TCHE", iTag->second);
+                    break;
+                }
+            }
+
+            //jetCon->SetBDiscriminatorMap("TCHE", iJet->bDiscriminator("trackCountingHighEffBJetTags"));
+            //jetCon->SetBDiscriminatorMap("TCHP", iJet->bDiscriminator("trackCountingHighPurBJetTags"));
+            //jetCon->SetBDiscriminatorMap("SSVHE", iJet->bDiscriminator("simpleSecondaryVertexHighEffBJetTags"));
+            //jetCon->SetBDiscriminatorMap("JPB", iJet->bDiscriminator("jetProbabilityBJetTags"));
 
 
             /////////////////////////
@@ -330,6 +343,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             eleCon->SetFBrem(iElectron->fbrem());
             eleCon->SetEOverP(iElectron->eSuperClusterOverP());
             eleCon->SetSCEta(iElectron->superCluster()->eta());
+            eleCon->SetR9(iElectron->r9());
 
             eleCon->SetPtError(iElectron->gsfTrack()->ptError());
             eleCon->SetNormalizedChi2(iElectron->gsfTrack()->normalizedChi2());
@@ -414,6 +428,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             myPhoton->SetTrackVeto(iPhoton->hasPixelSeed());
 
             myPhoton->SetEtaSC(iPhoton->superCluster()->eta());
+            myPhoton->SetPhiSC(iPhoton->superCluster()->phi());
             myPhoton->SetEnergySC(iPhoton->superCluster()->energy());
 
             // detector-based isolation
@@ -721,15 +736,20 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     for (int i=0; i < (int)hlNames.size(); ++i) {      
         if (!triggerDecision(hltR, i)) continue;	
+
         for (int j = 0; j < (int)triggerPaths_.size(); ++j){
             if (triggerPaths_[j] == "") continue;
+
             if (hlNames[i].compare(0, triggerPaths_[j].length(),triggerPaths_[j]) == 0) {
                 //cout << hlNames[i] << " ?= " << triggerPaths_[j] << endl;
                 triggerStatus |= ULong64_t(0x01) << j;
+
                 if (isRealData) {
                     pair<int, int> preScales;
                     preScales = hltConfig_.prescaleValues(iEvent, iSetup, hlNames[i]); 
                     hltPrescale[j] = preScales.first*preScales.second;
+                } else {
+                    hltPrescale[j] = 1;
                 }
             }
         }
@@ -823,12 +843,7 @@ void  ntupleProducer::beginJob()
 
     // Photon Iso maker init
     phoIsolator.initializePhotonIsolation(kTRUE);
-    // Below should be default from initializePhotonIsolation, but we can set them to be sure
     phoIsolator.setConeSize(0.3);
-    phoIsolator.setDeltaRVetoBarrelCharged(0.02);
-    phoIsolator.setDeltaRVetoEndcapCharged(0.02);
-    phoIsolator.setRectangleDeltaEtaVetoBarrelPhotons(0.015);
-    phoIsolator.setDeltaRVetoEndcapPhotons(0.07);
 
     // Initialize Electron MVA nonsense
     eleIsolator.initializeElectronIsolation(kTRUE);
@@ -926,7 +941,7 @@ bool ntupleProducer::isFilteredOutScraping( const edm::Event& iEvent, const edm:
 }
 
 
-bool ntupleProducer::associateJetToVertex(pat::Jet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet *outJet)
+bool ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet *outJet)
 {
     if(fabs(inJet.eta()) > 2.5){
         outJet->SetVtxSumPtFrac(-1);
@@ -948,7 +963,9 @@ bool ntupleProducer::associateJetToVertex(pat::Jet inJet, Handle<reco::VertexCol
 
     sumTrackX = sumTrackY = sumTrackZ  = sumTrackPt = 0;
 
-    const reco::TrackRefVector &tracks = inJet.associatedTracks(); 
+    //const reco::TrackRefVector &tracks = inJet.associatedTracks(); 
+    const reco::TrackRefVector &tracks = inJet.getTrackRefs(); 
+
     for (TrackRefVector::const_iterator iTrack = tracks.begin(); iTrack != tracks.end(); ++iTrack) {
         const reco::Track &jetTrack = **iTrack;
 
@@ -1019,6 +1036,10 @@ bool ntupleProducer::associateJetToVertex(pat::Jet inJet, Handle<reco::VertexCol
 
     return true;
 }
+
+//void ntupleProducer::JetSelector(Handle<reco::PFJetsCollection> inJets, TClonesArray& outJets)
+//{
+//}
 
 bool ntupleProducer::electronMVA(Handle<reco::VertexCollection> vtxCollection, vector<pat::Electron>::const_iterator iElectron)
 {

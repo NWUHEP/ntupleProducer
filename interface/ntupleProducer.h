@@ -178,7 +178,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   
   virtual bool  triggerDecision(edm::Handle<edm::TriggerResults>& hltR, int iTrigger);
   virtual float sumPtSquared(const Vertex& v);
-  virtual bool  associateJetToVertex(pat::Jet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet *outJet);   
+  virtual bool  associateJetToVertex(reco::PFJet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet *outJet);   
   virtual bool  electronMVA(Handle<reco::VertexCollection> vtxCollection, vector<pat::Electron>::const_iterator iElectron);
   virtual bool  isFilteredOutScraping(const edm::Event& iEvent, const edm::EventSetup& iSetup, int numtrack=10, double thresh=0.25);
   // ----------member data ---------------------------
@@ -191,6 +191,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   };
   
   typedef std::map<reco::Jet, unsigned int, JetCompare> flavourMap;
+  typedef reco::JetTagCollection::const_iterator tag_iter;
   
   //Standard event info
   ULong64_t   eventNumber;

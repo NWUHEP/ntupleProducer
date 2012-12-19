@@ -11,6 +11,7 @@ TCElectron::~TCElectron() {
 
 // "get" methods -------------------------------------
 
+float TCElectron::R9() const { return _r9; } 
 
 float TCElectron::PtError() const {
   return _ptError;
@@ -121,6 +122,8 @@ bool TCElectron::PassConversion(int lvl) const {
 // "set" methods ---------------------------------------------
 //------------------------------------------------------------------------
 
+
+void TCElectron::SetR9(float r){ _r9 = r; } 
 
 void TCElectron::SetPtError(float e) {
   _ptError = e;
