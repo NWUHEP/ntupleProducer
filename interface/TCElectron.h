@@ -51,7 +51,7 @@ class TCElectron : public TCPhysObject {
         float HadOverEm() const;
         float DphiSuperCluster() const;
         float DetaSuperCluster() const;
-        float SigmaIetaIeta() const;
+        float SigmaIEtaIEta() const;
         float FBrem() const;
         float EOverP() const;
         float NormalizedChi2() const;
@@ -84,7 +84,7 @@ class TCElectron : public TCPhysObject {
         void SetHadOverEm(float h);
         void SetDphiSuperCluster(float dp);
         void SetDetaSuperCluster(float de);
-        void SetSigmaIetaIeta(float sieie);
+        void SetSigmaIEtaIEta(float sieie);
         void SetEOverP(float e);
         void SetFBrem(float fb);
 

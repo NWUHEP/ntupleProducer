@@ -181,6 +181,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   virtual bool  associateJetToVertex(reco::PFJet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet *outJet);   
   virtual bool  electronMVA(Handle<reco::VertexCollection> vtxCollection, vector<pat::Electron>::const_iterator iElectron);
   virtual bool  isFilteredOutScraping(const edm::Event& iEvent, const edm::EventSetup& iSetup, int numtrack=10, double thresh=0.25);
+  void analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR, edm::Handle<trigger::TriggerEvent> &hltE, const std::string& triggerName, int* trigCount);                   
   // ----------member data ---------------------------
   
   struct JetCompare :
@@ -222,6 +223,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   edm::InputTag hcalLaserFilterTag_;
   edm::InputTag partFlowTag_;
   edm::ParameterSet photonIsoCalcTag_;
+  edm::InputTag triggerEventTag_;
 
   bool saveJets_;
   bool saveElectrons_;
@@ -232,6 +234,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   bool saveGenJets_;
   bool saveGenParticles_;
   bool isRealData;
+  bool printalot;
   
   //Physics object containers
   TClonesArray* recoJets;
@@ -267,4 +270,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   //Isolator
   PFIsolationEstimator phoIsolator;
   PFIsolationEstimator eleIsolator;
+
+  // Histograms
+  TH1F * h1_numOfEvents;
 };

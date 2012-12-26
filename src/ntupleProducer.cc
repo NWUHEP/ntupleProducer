@@ -29,6 +29,8 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
     saveGenJets_      = iConfig.getUntrackedParameter<bool>("saveGenJets");
     saveGenParticles_ = iConfig.getUntrackedParameter<bool>("saveGenParticles");
 
+    printalot         = iConfig.getUntrackedParameter<bool>("printalot");
+
     ecalTPFilterTag_    = iConfig.getUntrackedParameter<edm::InputTag>("ecalTPFilterTag");
     ecalBEFilterTag_    = iConfig.getUntrackedParameter<edm::InputTag>("ecalBEFilterTag");
     hcalHBHEFilterTag_  = iConfig.getUntrackedParameter<edm::InputTag>("hcalHBHEFilterTag");
@@ -61,8 +63,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     beamSpot->SetXYZ(vertexBeamSpot.x0(), vertexBeamSpot.y0(), vertexBeamSpot.z0());
 
-    int vtxCount, jetCount, jptCount, metCount, muCount, pfMuCount, eleCount, photonCount, pfPhotonCount, tauCount, genCount, genPartCount;
-    vtxCount = jetCount = jptCount = metCount = muCount = pfMuCount = eleCount = photonCount = pfPhotonCount = tauCount = genCount = genPartCount = 0;
+    int vtxCount, jetCount, jptCount, metCount, muCount, pfMuCount, eleCount, photonCount, pfPhotonCount, tauCount, genCount, genPartCount, trigCount;
+    vtxCount = jetCount = jptCount = metCount = muCount = pfMuCount = eleCount = photonCount = pfPhotonCount = tauCount = genCount = genPartCount = trigCount = 0;
 
 
     /////////////////////////////////////
@@ -341,7 +343,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             eleCon->SetHadOverEm(iElectron->hadronicOverEm());
             eleCon->SetDphiSuperCluster(iElectron->deltaPhiSuperClusterTrackAtVtx());
             eleCon->SetDetaSuperCluster(iElectron->deltaEtaSuperClusterTrackAtVtx());
-            eleCon->SetSigmaIetaIeta(iElectron->sigmaIetaIeta());
+            eleCon->SetSigmaIEtaIEta(iElectron->sigmaIetaIeta());
             eleCon->SetFBrem(iElectron->fbrem());
             eleCon->SetEOverP(iElectron->eSuperClusterOverP());
             eleCon->SetSCEta(iElectron->superCluster()->eta());
@@ -730,6 +732,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     edm::Handle<TriggerResults> hltR;
     triggerResultsTag_ = InputTag(hlTriggerResults_,"",hltProcess_);
     iEvent.getByLabel(triggerResultsTag_,hltR);
+    triggerEventTag_ = InputTag("hltTriggerSummaryAOD","",hltProcess_);
+    edm::Handle<trigger::TriggerEvent> hltE;                           
+    iEvent.getByLabel(triggerEventTag_,hltE);                          
 
     const TriggerNames & triggerNames = iEvent.triggerNames(*hltR);
     hlNames = triggerNames.triggerNames();   
@@ -756,6 +761,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             }
         }
     } 
+
+    for(unsigned int t = 1; t<hlNames.size();t++){  
+      analyzeTrigger(hltR, hltE, hlNames[t], &trigCount);       
+    }                                               
 
     ++nEvents;
 
@@ -794,6 +803,8 @@ void  ntupleProducer::beginJob()
     genParticles   = new TClonesArray("TCGenParticle");
     beamSpot       = new TVector3();
     recoMET        = 0;
+
+    h1_numOfEvents = fs->make<TH1F>("numOfEvents", "total number of events, unskimmed", 1,0,1);
 
     eventTree->Branch("recoJets",&recoJets, 6400, 0);
     eventTree->Branch("recoJPT",&recoJPT, 6400, 0);
@@ -883,6 +894,7 @@ void ntupleProducer::endRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
 void ntupleProducer::endJob() 
 {
     cout<<nEvents<<endl;
+    h1_numOfEvents->SetBinContent(1,nEvents);
     jobTree->Fill();
 }
 
@@ -1131,6 +1143,135 @@ double isomva = fElectronIsoMVA->mvaValue( *iElectron, *pv, pfCanIso, rhoFactor,
 */
 
 return true;
+}
+
+void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR, 
+    edm::Handle<trigger::TriggerEvent> &hltE, 
+    const std::string& triggerName,
+    int* trigCount) {
+
+  using namespace trigger;
+
+  const unsigned int n(hltConfig_.size());
+  const unsigned int triggerIndex(hltConfig_.triggerIndex(triggerName));
+
+  TLorentzVector triggerLepton;
+
+  // abort on invalid trigger name
+
+  bool goodTrigger = false;
+  for (unsigned int i =0; i< triggerPaths_.size(); i++){
+    if (triggerName.find(triggerPaths_[i]) != string::npos){
+      goodTrigger = true;
+      break;
+    }
+  }
+  
+  if(!goodTrigger) return;
+
+  //if(printalot){
+  //  std::cout<<" n = "<<n<<" triggerIndex = "<<triggerIndex<<" size = "<<hltConfig_.size()<<std::endl;
+  //  std::cout<<" Analyze triggerName : "<<triggerName<<std::endl;
+  //}
+  //std::cout<<" Analyze triggerName : "<<triggerName<<std::endl;
+  if (triggerIndex>=n) {
+    if(printalot){
+      cout << "DimuonAna::analyzeTrigger: path "
+        << triggerName << " - not found!" << endl;
+    }
+    return;
+  }
+  // modules on this trigger path
+  // const unsigned int moduleIndex(hltR->index(triggerIndex));
+  const unsigned int moduleIndex(hltR->index(triggerIndex));
+  const unsigned int m(hltConfig_.size(triggerIndex));
+  const vector<string>& moduleLabels(hltConfig_.moduleLabels(triggerIndex));
+  if (moduleIndex != m-1) return;
+  if(printalot){
+    cout << "DimuonAna::analyzeTrigger: path "
+      << triggerName << " [" << triggerIndex << "]" << endl;
+
+    std::cout<<"  n = "<< n<<" triggerIndex = "<<triggerIndex<<" m = "<<m<<std::endl;
+    std::cout<<" moduleLabels = "<<moduleLabels.size()<<" moduleIndex = "<<moduleIndex<<std::endl;
+
+    // Results from TriggerResults product
+    cout << " Trigger path status:"
+      << " WasRun=" << hltR->wasrun(triggerIndex)
+      << " Accept=" << hltR->accept(triggerIndex)
+      << " Error =" << hltR->error(triggerIndex)
+      << endl;
+    cout << " Last active module - label/type: "
+      << moduleLabels[moduleIndex] << "/" << hltConfig_.moduleType(moduleLabels[moduleIndex])
+      << " [" << moduleIndex << " out of 0-" << (m-1) << " on this path]"
+      << endl;
+  }
+  assert (moduleIndex<m);
+
+  // Results from TriggerEvent product - Attention: must look only for
+  // modules actually run in this path for this event!
+  std::vector < GlobalVector > passMomenta; 
+  for (unsigned int j=0; j<=moduleIndex; ++j) {
+    const string& moduleLabel(moduleLabels[j]);
+    const string  moduleType(hltConfig_.moduleType(moduleLabel));
+    // check whether the module is packed up in TriggerEvent product
+    //cout<<hltE->filterIndex(InputTag(moduleLabel,"",hltProcess_))<<endl;
+    const unsigned int filterIndex(hltE->filterIndex(InputTag(moduleLabel,"",hltProcess_)));
+    //  if ( (moduleLabel.find("Calo") == string::npos) )continue;
+    //  if ( (moduleLabel.find("hltEle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoDZ") == string::npos)
+    //      && (moduleLabel.find("hltEle17CaloId") == string::npos)
+    //      && (moduleLabel.find("hltEle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoDoubleFilter") == string::npos) ) continue;
+    if(printalot){
+      std::cout<<" j = "<<j<<" modLabel/moduleType = "<<moduleLabel<<"/"<<moduleType<<" filterIndex = "<<filterIndex<<" sizeF = "<<hltE->sizeFilters()<<std::endl;
+    }
+    if (filterIndex<hltE->sizeFilters()) {
+      if(printalot){
+        cout << " 'L3' (or 'L1', 'L2') filter in slot " << j << " - label/type " << moduleLabel << "/" << moduleType << endl;
+      }
+      const Vids& VIDS (hltE->filterIds(filterIndex));
+      const Keys& KEYS(hltE->filterKeys(filterIndex));
+      const size_type nI(VIDS.size());
+      const size_type nK(KEYS.size());
+      assert(nI==nK);
+      const size_type n(max(nI,nK));
+      if(printalot){
+        cout << "   " << n  << " accepted 'L3' (or 'L1', 'L2') objects found: " << endl;
+      }
+      const TriggerObjectCollection& TOC(hltE->getObjects());
+      for (size_type i=0; i!=n; ++i) {
+        if(0==i){
+          passMomenta.clear();
+        }
+        const TriggerObject& TO(TOC[KEYS[i]]);
+        GlobalVector momentumT0(TO.px(),TO.py(),TO.pz());
+        if (TO.pt() < 10) continue;
+        TCTriggerObject* trigObj = new ((*triggerObjects)[*trigCount]) TCTriggerObject;
+
+        //std::cout<<" i_KEY = "<<i<<" id = "<<TO.id()<<" typ = "<<moduleType<<std::endl;
+        //if("HLTLevel1GTSeed"==moduleType){
+        //allMuL1TriggerVectors.push_back(momentumT0);
+        ////std::cout<<" L1 object found"<<std::endl;
+        //}
+
+        if(printalot){
+          std::cout<<" i = "<<i<<" moduleLabel/moduleType : "<<moduleLabel<<"/"<<moduleType<<std::endl;
+          cout << "   " << i << " " << VIDS[i] << "/" << KEYS[i] << ": "
+            << TO.id() << " " << TO.pt() << " " << TO.eta() << " " << TO.phi() << " " << TO.mass()
+            << endl;
+        }
+
+        trigObj->SetPtEtaPhiE(TO.pt(),TO.eta(),TO.phi(),TO.energy());
+        trigObj->SetHLTName(triggerName);
+        trigObj->SetModuleName(moduleLabel);
+        trigObj->SetId(TO.id());
+
+        (*trigCount)++;
+
+      }
+      //
+    }
+  }
+  //cout<<endl;
+  return;
 }
 
 //define this as a plug-in

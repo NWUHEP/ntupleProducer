@@ -133,7 +133,8 @@ process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
     #'/store/data/Run2012A/MuEG/AOD/13Jul2012-v1/0000/FEF59314-34D8-E111-8DF9-E0CB4E19F972.root'
-    '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
+    #'/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
+    '/store/mc/Summer12_DR53X/GluGluToHToZG_M-125_8TeV-powheg-pythia6/AODSIM/PU_S10_START53_V7A-v1/0000/DEF04071-6EFA-E111-BA18-00266CFFC4D4.root'
     #'file:/tmp/naodell/TTJetsToHqToWWq_M-145_TuneZ2_8TeV_pythia6_v2_1_1_GPf.root'
 )
 )
@@ -201,6 +202,8 @@ process.TFileService = cms.Service('TFileService',
 ### ntuple producer
 process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
+  printalot         =    cms.untracked.bool(False),
+
   photonIsoCalcTag  =    cms.PSet(isolationSumsCalculator),
 
   JetTag            =    cms.untracked.InputTag('ak5PFJetsL1FastL2L3'),
@@ -227,6 +230,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   saveGenJets       =    cms.untracked.bool(True),
   saveGenParticles  =    cms.untracked.bool(True),
 
+
   ecalTPFilterTag    =    cms.untracked.InputTag("EcalDeadCellTriggerPrimitiveFilter",""),
   ecalBEFilterTag    =    cms.untracked.InputTag("EcalDeadCellBoundaryEnergyFilter",""),
   hcalHBHEFilterTag  =    cms.untracked.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResult"),
@@ -250,6 +254,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_Ele17_CaloIdL_CaloIsoVL_v",
                                                "HLT_Ele8_CaloIdL_CaloIsoVL_Jet40_v",
                                                "HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL_v",
+                                               "HLT_Ele17_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_Ele8_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_v",
                                                "HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
                                                "HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_v",
 

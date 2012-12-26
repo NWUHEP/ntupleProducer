@@ -70,7 +70,7 @@ float TCElectron::DphiSuperCluster() const {
 float TCElectron::DetaSuperCluster() const {
   return _dEtaSuperCluster;
 }
-float TCElectron::SigmaIetaIeta() const {
+float TCElectron::SigmaIEtaIEta() const {
   return _sigmaIetaIeta;
 }
 
@@ -158,7 +158,7 @@ void TCElectron::SetDetaSuperCluster(float de){
   _dEtaSuperCluster = de;
 }
 
-void TCElectron::SetSigmaIetaIeta(float sieie){
+void TCElectron::SetSigmaIEtaIEta(float sieie){
   _sigmaIetaIeta = sieie;
 }
 
