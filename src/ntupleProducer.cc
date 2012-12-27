@@ -426,7 +426,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             myPhoton->SetVtx(iPhoton->vx(), iPhoton->vy(), iPhoton->vz());
 
             // ID variables
-            myPhoton->SetHadOverEm(iPhoton->hadronicOverEm());
+            myPhoton->SetHadOverEm(iPhoton->hadTowOverEm());
             myPhoton->SetSigmaIEtaIEta(iPhoton->sigmaIetaIeta());
             myPhoton->SetR9(iPhoton->r9());
             myPhoton->SetTrackVeto(iPhoton->hasPixelSeed());
