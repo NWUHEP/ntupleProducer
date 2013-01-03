@@ -398,7 +398,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             //eleCon->SetCutLevel(iElectron->electronID("eidVBTF60"), 60);
 
             // Add electron MVA ID and ISO when done -- needs work
-            //electronMVA(&(*iElectron), eleCon, iEvent, iSetup, thePfColl, rhoFactor);
+            electronMVA(&(*iElectron), eleCon, iEvent, iSetup, thePfColl, rhoFactor);
 
             eleCount++;
         }
@@ -1273,6 +1273,52 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
   eleCon->SetIsoMap("NeutralHadronIso_DR0p2To0p3",fMVAVar_NeutralHadronIso_DR0p2To0p3);
   eleCon->SetIsoMap("NeutralHadronIso_DR0p3To0p4",fMVAVar_NeutralHadronIso_DR0p3To0p4);
   eleCon->SetIsoMap("NeutralHadronIso_DR0p4To0p5",fMVAVar_NeutralHadronIso_DR0p4To0p5);
+
+  bool preSelPass = false;
+
+  double electronTrackZ = 0;
+  if (iElectron->gsfTrack().isNonnull()) {
+    electronTrackZ = iElectron->gsfTrack()->dz(pv->position());
+  } else if (iElectron->closestCtfTrackRef().isNonnull()) {
+    electronTrackZ = iElectron->closestCtfTrackRef()->dz(pv->position());
+  }
+
+  if (fabs(iElectron->superCluster()->eta()) < 1.479) {
+    if ( (
+             iElectron->sigmaIetaIeta()< 0.01
+          && fabs(iElectron->deltaEtaSuperClusterTrackAtVtx()) < 0.007
+          && fabs(iElectron->deltaPhiSuperClusterTrackAtVtx()) < 0.15
+          && iElectron->hadronicOverEm() < 0.12
+          && iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfLostHits() <= 1
+          && fabs(electronTrackZ) < 0.1
+          && ( iElectron->dr03TkSumPt()) / iElectron->pt() < 0.2
+          && ( fmax(iElectron->dr03EcalRecHitSumEt() - 1.0,0.0) ) /iElectron->pt() < 0.20
+          && (iElectron->dr03HcalTowerSumEt()) / iElectron->pt() < 0.20
+          )
+       ) {
+      preSelPass= true;
+    }
+  }
+
+  //endcap
+  else {
+    if ( (  
+             iElectron->sigmaIetaIeta()< 0.03
+          && fabs(iElectron->deltaEtaSuperClusterTrackAtVtx()) < 0.009
+          && fabs(iElectron->deltaPhiSuperClusterTrackAtVtx()) < 0.10
+          && iElectron->hadronicOverEm() < 0.10
+          && iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfLostHits() <= 1
+          && fabs(electronTrackZ) < 0.1
+          && (iElectron->dr03TkSumPt() ) / iElectron->pt() < 0.2
+          && (iElectron->dr03EcalRecHitSumEt() ) / iElectron->pt() < 0.20
+          && (iElectron->dr03HcalTowerSumEt()) / iElectron->pt() < 0.20
+
+          )
+       ) {
+      preSelPass = true;
+    }
+  }
+  eleCon->SetIdMap("preSelPass",preSelPass);
 
   return;
 }
