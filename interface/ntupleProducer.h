@@ -104,12 +104,11 @@
 //#include "EGamma/EGammaAnalysisTools/interface/EGammaMvaEleEstimator.h"
 #include "TrackingTools/Records/interface/TransientTrackRecord.h"
 #include "TrackingTools/TransientTrack/interface/TransientTrackBuilder.h"
-
-
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
-
 #include "DataFormats/METReco/interface/BeamHaloSummary.h"
+#include "EGamma/EGammaAnalysisTools/interface/ElectronEnergyRegressionEvaluate.h"
+#include "EgammaAnalysis/ElectronTools/interface/PatElectronEnergyCalibrator.h"
 
 // ntuple storage classes
 #include "TCPrimaryVtx.h"
@@ -275,4 +274,8 @@ class ntupleProducer : public edm::EDAnalyzer {
 
   // Histograms
   TH1F * h1_numOfEvents;
+
+  // Electron Regression
+  ElectronEnergyRegressionEvaluate* myEleReg;
+  
 };

@@ -118,6 +118,10 @@ bool TCElectron::PassConversion(int lvl) const {
   else return false;
 }
 
+TLorentzVector TCElectron::RegressionMomCombP4() const {
+  return _regressionMomCombP4;
+}
+
 //------------------------------------------------
 // "set" methods ---------------------------------------------
 //------------------------------------------------------------------------
@@ -212,3 +216,8 @@ void TCElectron::SetCutLevel(int cut, int lvl){
     _cut60 = cut;
   }
 }
+
+void TCElectron::SetRegressionMomCombP4(TLorentzVector tmpP4){
+  _regressionMomCombP4 = tmpP4;
+}
+

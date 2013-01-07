@@ -39,6 +39,8 @@ class TCElectron : public TCPhysObject {
         int _cut70;
         int _cut60;
 
+        TLorentzVector _regressionMomCombP4;
+
 
     public:
         TCElectron();
@@ -76,6 +78,8 @@ class TCElectron : public TCPhysObject {
         bool PassConversion(int lvl) const;
         bool PassIsolation(int lvl) const;
 
+        TLorentzVector RegressionMomCombP4() const;
+
         //--------------------------
         // "set" methods ---------
         //--------------------------
@@ -105,6 +109,8 @@ class TCElectron : public TCPhysObject {
         void SetIsInGap(bool b);
 
         void SetCutLevel(int cut, int lvl);
+
+        void SetRegressionMomCombP4(TLorentzVector tmpP4);
 
         ClassDef(TCElectron, 1);
 };

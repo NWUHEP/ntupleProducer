@@ -16,7 +16,7 @@ process.load('Configuration.StandardSequences.Reconstruction_cff')
 if (isRealData):
     process.GlobalTag.globaltag = 'GR_R_53_V13::All'
 else:
-    process.GlobalTag.globaltag = 'START53_V11::All'
+    process.GlobalTag.globaltag = 'START53_V15::All'
 
 # Create good primary vertices for PF association
 from PhysicsTools.SelectorUtils.pvSelector_cfi import pvSelector
@@ -196,9 +196,29 @@ print '\n\nCommence ntuplization...\n\n'
 
 ### TFile service!
 process.TFileService = cms.Service('TFileService',
-                                  #fileName = cms.string('nuTuple.root')
-                                   fileName = cms.string('nuTupleMVA.root')
+                                  fileName = cms.string('nuTuple.root')
+                                  #fileName = cms.string('nuTupleMVA.root')
                                    )
+
+### pfNoPU Sequence for electron MVA
+process.pfPileUp = cms.EDProducer("PFPileUp",
+    PFCandidates = cms.InputTag("particleFlow"),
+    Enable = cms.bool(True),
+    checkClosestZVertex = cms.bool(True),
+    verbose = cms.untracked.bool(False),
+    Vertices = cms.InputTag("offlinePrimaryVertices")
+)
+
+process.pfNoPileUp = cms.EDProducer("TPPFCandidatesOnPFCandidates",
+    bottomCollection = cms.InputTag("particleFlow"),
+    enable = cms.bool(True),
+    topCollection = cms.InputTag("pfPileUp"),
+    name = cms.untracked.string('pileUpOnPFCandidates'),
+    verbose = cms.untracked.bool(False)
+)
+
+process.pfNoPUSeq = cms.Sequence(process.pfPileUp + process.pfNoPileUp)
+
 
 ### ntuple producer
 process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
@@ -299,6 +319,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 process.ntuplePath = cms.Path(
         process.goodOfflinePrimaryVertices
         * process.producePFMETCorrections
+        * process.pfNoPUSeq
         #* process.PFTau
         #* process.patDefaultSequence
         #* process.jpt

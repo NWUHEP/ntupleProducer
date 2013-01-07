@@ -76,6 +76,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     iEvent.getByLabel(partFlowTag_,pfCands);
     const  PFCandidateCollection thePfColl = *(pfCands.product());
 
+    Handle<PFCandidateCollection> pfCandsEleIso;
+    iEvent.getByLabel("pfNoPileUp",pfCandsEleIso);
+    const  PFCandidateCollection thePfCollEleIso = *(pfCandsEleIso.product());
+
 
     //////////////////////////
     //Get vertex information//
@@ -329,7 +333,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             TCElectron* eleCon = new ((*recoElectrons)[eleCount]) TCElectron;
 
             // Basic physics object info
-            eleCon->SetPxPyPzE(iElectron->px(), iElectron->py(), iElectron->pz(), iElectron->energy());
+            eleCon->SetPtEtaPhiM(iElectron->pt(), iElectron->eta(), iElectron->phi(), iElectron->mass());
             eleCon->SetVtx(iElectron->gsfTrack()->vx(),iElectron->gsfTrack()->vy(),iElectron->gsfTrack()->vz());
             eleCon->SetCharge(iElectron->charge());
 
@@ -397,8 +401,39 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             //eleCon->SetCutLevel(iElectron->electronID("eidVBTF70"), 70);
             //eleCon->SetCutLevel(iElectron->electronID("eidVBTF60"), 60);
 
-            // Add electron MVA ID and ISO when done -- needs work
-            electronMVA(&(*iElectron), eleCon, iEvent, iSetup, thePfColl, rhoFactor);
+            // Add electron MVA ID and ISO
+            electronMVA(&(*iElectron), eleCon, iEvent, iSetup, thePfCollEleIso, rhoFactor);
+
+            // Calculate electron energy regression
+            InputTag  reducedEBRecHitCollection(string("reducedEcalRecHitsEB"));                                 
+            InputTag  reducedEERecHitCollection(string("reducedEcalRecHitsEE"));                                 
+            EcalClusterLazyTools lazyTools(iEvent, iSetup, reducedEBRecHitCollection, reducedEERecHitCollection);
+
+            double eleEngReg = myEleReg->calculateRegressionEnergy(&(*iElectron), lazyTools, iSetup, rhoFactor, primaryVtcs->size(), false);
+            double eleEngRegErr = myEleReg->calculateRegressionEnergyUncertainty(&(*iElectron), lazyTools, iSetup, rhoFactor, primaryVtcs->size(), false);
+
+
+            eleCon->SetIdMap("EnergyRegression",eleEngReg);
+            eleCon->SetIdMap("EnergyRegressionErr",eleEngRegErr);
+
+            reco::GsfElectron iElectronTmp = *iElectron;
+            ElectronEnergyCalibrator myCalibrator("none",true,!isRealData,true,10,false);
+            myCalibrator.correct(iElectronTmp, iElectronTmp.r9(), iEvent, iSetup, eleEngReg,eleEngRegErr);
+            TLorentzVector tmpP4;
+            tmpP4.SetPtEtaPhiE(iElectronTmp.pt(), iElectronTmp.eta(), iElectronTmp.phi(), iElectronTmp.energy());
+            eleCon->SetRegressionMomCombP4(tmpP4);
+            
+            /*
+            if (eventNumber == 616){
+              cout<<"original energy: "<<eleCon->E()<<endl;
+              cout<<"regressed energy: "<<eleEngReg<<endl;
+              cout<<"corrected energy: "<<eleCon->RegressionMomCombP4().E()<<endl;
+              cout<<endl;
+              cout<<"original pt: "<<eleCon->Pt()<<endl;
+              cout<<"corrected pt: "<<eleCon->RegressionMomCombP4().Pt()<<endl;
+            }
+            */
+
 
             eleCount++;
         }
@@ -861,6 +896,14 @@ void  ntupleProducer::beginJob()
     eleIsolator.initializeElectronIsolation(kTRUE);
     eleIsolator.setConeSize(0.4);
                                     
+    // Initialize Electron Regression
+    myEleReg = new ElectronEnergyRegressionEvaluate();
+    string mvaPath = getenv("CMSSW_BASE");
+    mvaPath = mvaPath+"/src/data:"+getenv("CMSSW_SEARCH_PATH");
+    setenv("CMSSW_SEARCH_PATH",mvaPath.c_str(),1);
+    //myEleReg->initialize(mvaPath+"/src/data/eleEnergyRegWeights_V1.root",
+    myEleReg->initialize("eleEnergyRegWeights_V1.root",
+        ElectronEnergyRegressionEvaluate::kNoTrkVar);
 }
 
 void ntupleProducer::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
@@ -1064,16 +1107,25 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
   validKF = (myTrackRef.isAvailable());
   validKF = (myTrackRef.isNonnull());  
 
+  eleCon->SetIdMap("fbrem", (iElectron->fbrem() < -1) ? -1 : iElectron->fbrem());
+  eleCon->SetIdMap("gsfChi2", (iElectron->gsfTrack()->normalizedChi2() > 200) ? 200 : iElectron->gsfTrack()->normalizedChi2());
   eleCon->SetIdMap("kfChi2", (validKF) ? myTrackRef->normalizedChi2() : 0);
+  if (eleCon->IdMap("kfChi2") > 10) eleCon->SetIdMap("kfChi2",10);
   eleCon->SetIdMap("kfNLayers", (validKF) ? myTrackRef->hitPattern().trackerLayersWithMeasurement() : -1.);
   eleCon->SetIdMap("kfNLayersAll", (validKF) ? myTrackRef->numberOfValidHits() : -1.);
+  eleCon->SetIdMap("dEta", (fabs(iElectron->deltaEtaSuperClusterTrackAtVtx()) > 0.06) ? 0.06 : fabs(iElectron->deltaEtaSuperClusterTrackAtVtx()));
+  eleCon->SetIdMap("dPhi", iElectron->deltaPhiSuperClusterTrackAtVtx());
   eleCon->SetIdMap("dEtaAtCalo", iElectron->deltaEtaSeedClusterTrackAtCalo());
-  eleCon->SetIdMap("SigmaIPhiIPhi", iElectron->sigmaIphiIphi());
+  eleCon->SetIdMap("SigmaIPhiIPhi", (isnan(iElectron->sigmaIphiIphi())) ? 0 : iElectron->sigmaIphiIphi() );
   eleCon->SetIdMap("SCEtaWidth", iElectron->superCluster()->etaWidth());
   eleCon->SetIdMap("SCPhiWidth", iElectron->superCluster()->phiWidth());
+  eleCon->SetIdMap("EoP", (iElectron->eSuperClusterOverP() > 20) ? 20 : iElectron->eSuperClusterOverP());
   eleCon->SetIdMap("ome1x5oe5x5",(iElectron->e5x5()) !=0. ? 1.-(iElectron->e1x5()/iElectron->e5x5()) : -1.);
-  eleCon->SetIdMap("ooemoop",(1.0/iElectron->ecalEnergy()) - (1.0 / iElectron->p()));
-  eleCon->SetIdMap("eopOut",iElectron->eEleClusterOverPout());
+  if (eleCon->IdMap("ome1x5oe5x5") < -1) eleCon->SetIdMap("ome1x5oe5x5",-1);
+  if (eleCon->IdMap("ome1x5oe5x5") > 2) eleCon->SetIdMap("ome1x5oe5x5",2);
+  eleCon->SetIdMap("R9",(iElectron->r9() > 5) ? 5 : iElectron->r9());
+  eleCon->SetIdMap("ooemoop",(1.0/iElectron->superCluster()->energy()) - (1.0 / iElectron->trackMomentumAtVtx().R()));
+  eleCon->SetIdMap("eopOut",(iElectron->eEleClusterOverPout() > 20) ? 20 : iElectron->eEleClusterOverPout());
   eleCon->SetIdMap("preShowerORaw",iElectron->superCluster()->preshowerEnergy() / iElectron->superCluster()->rawEnergy());
 
   InputTag  vertexLabel(string("offlinePrimaryVertices"));
@@ -1214,7 +1266,7 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
          fMVAVar_GammaIso_DR0p3To0p4,fMVAVar_GammaIso_DR0p4To0p5,fMVAVar_NeutralHadronIso_DR0p0To0p1,fMVAVar_NeutralHadronIso_DR0p1To0p2,fMVAVar_NeutralHadronIso_DR0p2To0p3,fMVAVar_NeutralHadronIso_DR0p3To0p4,fMVAVar_NeutralHadronIso_DR0p4To0p5;
 
   bool doPUCorrection = false;
-  if (!doPUCorrection) {
+  if (doPUCorrection) {
     fMVAVar_ChargedIso_DR0p0To0p1   = TMath::Min((tmpChargedIso_DR0p0To0p1)/iElectron->pt(), 2.5);
     fMVAVar_ChargedIso_DR0p1To0p2   = TMath::Min((tmpChargedIso_DR0p1To0p2)/iElectron->pt(), 2.5);
     fMVAVar_ChargedIso_DR0p2To0p3 = TMath::Min((tmpChargedIso_DR0p2To0p3)/iElectron->pt(), 2.5);

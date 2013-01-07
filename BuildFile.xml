@@ -33,4 +33,6 @@
 <use   name="RecoEgamma/PhotonIdentification"/>
 <use   name="RecoEgamma/EgammaTools"/>
 <use   name="EGamma/EGammaAnalysisTools"/>
+<use   name="EgammaAnalysis/ElectronTools"/>
+<use   name="RecoEgamma/EgammaTools"/>
 <flags   EDM_PLUGIN="1"/>
