@@ -785,13 +785,15 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 //cout << hlNames[i] << " ?= " << triggerPaths_[j] << endl;
                 triggerStatus |= ULong64_t(0x01) << j;
 
+                /*
                 if (isRealData) {
                     pair<int, int> preScales;
                     preScales = hltConfig_.prescaleValues(iEvent, iSetup, hlNames[i]); 
                     hltPrescale[j] = preScales.first*preScales.second;
                 } else {
+                */
                     hltPrescale[j] = 1;
-                }
+                //}
             }
         }
     } 
@@ -802,7 +804,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     ++nEvents;
 
-    if (eleCount > 0 || muCount > 0) eventTree -> Fill(); // possibly specify a cut in configuration
+    eventTree -> Fill(); // possibly specify a cut in configuration
 
     primaryVtx    -> Clear("C");
     recoJets      -> Clear("C");
@@ -1110,7 +1112,6 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
   eleCon->SetIdMap("fbrem", (iElectron->fbrem() < -1) ? -1 : iElectron->fbrem());
   eleCon->SetIdMap("gsfChi2", (iElectron->gsfTrack()->normalizedChi2() > 200) ? 200 : iElectron->gsfTrack()->normalizedChi2());
   eleCon->SetIdMap("kfChi2", (validKF) ? myTrackRef->normalizedChi2() : 0);
-  if (eleCon->IdMap("kfChi2") > 10) eleCon->SetIdMap("kfChi2",10);
   eleCon->SetIdMap("kfNLayers", (validKF) ? myTrackRef->hitPattern().trackerLayersWithMeasurement() : -1.);
   eleCon->SetIdMap("kfNLayersAll", (validKF) ? myTrackRef->numberOfValidHits() : -1.);
   eleCon->SetIdMap("dEta", (fabs(iElectron->deltaEtaSuperClusterTrackAtVtx()) > 0.06) ? 0.06 : fabs(iElectron->deltaEtaSuperClusterTrackAtVtx()));
@@ -1124,7 +1125,8 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
   if (eleCon->IdMap("ome1x5oe5x5") < -1) eleCon->SetIdMap("ome1x5oe5x5",-1);
   if (eleCon->IdMap("ome1x5oe5x5") > 2) eleCon->SetIdMap("ome1x5oe5x5",2);
   eleCon->SetIdMap("R9",(iElectron->r9() > 5) ? 5 : iElectron->r9());
-  eleCon->SetIdMap("ooemoop",(1.0/iElectron->superCluster()->energy()) - (1.0 / iElectron->trackMomentumAtVtx().R()));
+  eleCon->SetIdMap("ooemoopV1",(1.0/iElectron->ecalEnergy()) - (1.0 / iElectron->p()));
+  eleCon->SetIdMap("ooemoopV2",(1.0/iElectron->superCluster()->energy()) - (1.0 / iElectron->trackMomentumAtVtx().R()));
   eleCon->SetIdMap("eopOut",(iElectron->eEleClusterOverPout() > 20) ? 20 : iElectron->eEleClusterOverPout());
   eleCon->SetIdMap("preShowerORaw",iElectron->superCluster()->preshowerEnergy() / iElectron->superCluster()->rawEnergy());
 
@@ -1326,7 +1328,7 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
   eleCon->SetIsoMap("NeutralHadronIso_DR0p3To0p4",fMVAVar_NeutralHadronIso_DR0p3To0p4);
   eleCon->SetIsoMap("NeutralHadronIso_DR0p4To0p5",fMVAVar_NeutralHadronIso_DR0p4To0p5);
 
-  bool preSelPass = false;
+  bool preSelPassV2 = false;
 
   double electronTrackZ = 0;
   if (iElectron->gsfTrack().isNonnull()) {
@@ -1348,7 +1350,7 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
           && (iElectron->dr03HcalTowerSumEt()) / iElectron->pt() < 0.20
           )
        ) {
-      preSelPass= true;
+      preSelPassV2= true;
     }
   }
 
@@ -1367,10 +1369,43 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
 
           )
        ) {
-      preSelPass = true;
+      preSelPassV2 = true;
     }
   }
-  eleCon->SetIdMap("preSelPass",preSelPass);
+  eleCon->SetIdMap("preSelPassV2",preSelPassV2);
+
+  bool preSelPassV1 = false;
+
+  if (fabs(iElectron->superCluster()->eta()) < 1.479) {
+    if ( (
+             iElectron->sigmaIetaIeta()< 0.014
+          && iElectron->hadronicOverEm() < 0.15
+          && iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfLostHits() == 0
+          && ( iElectron->dr03TkSumPt()) / iElectron->pt() < 0.2
+          && ( iElectron->dr03EcalRecHitSumEt()) /iElectron->pt() < 0.2
+          && (iElectron->dr03HcalTowerSumEt()) / iElectron->pt() < 0.2
+          )
+       ) {
+      preSelPassV1 = true;
+    }
+  }
+
+  //endcap
+  else {
+    if ( (  
+             iElectron->sigmaIetaIeta()< 0.035
+          && iElectron->hadronicOverEm() < 0.10
+          && iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfLostHits() == 0
+          && (iElectron->dr03TkSumPt() ) / iElectron->pt() < 0.2
+          && (iElectron->dr03EcalRecHitSumEt() ) / iElectron->pt() < 0.20
+          && (iElectron->dr03HcalTowerSumEt()) / iElectron->pt() < 0.20
+
+          )
+       ) {
+      preSelPassV1 = true;
+    }
+  }
+  eleCon->SetIdMap("preSelPassV1",preSelPassV1);
 
   return;
 }

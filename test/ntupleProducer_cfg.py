@@ -5,7 +5,7 @@ from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 process = cms.Process("PAT")
 
 # real data or MC?
-isRealData = False
+isRealData = True
 
 # global tag
 process.load("Configuration.Geometry.GeometryIdeal_cff")
@@ -14,7 +14,7 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.load('Configuration.StandardSequences.Reconstruction_cff')
 
 if (isRealData):
-    process.GlobalTag.globaltag = 'GR_R_53_V13::All'
+    process.GlobalTag.globaltag = 'GR_P_V42_AN3::All'
 else:
     process.GlobalTag.globaltag = 'START53_V15::All'
 
@@ -134,7 +134,9 @@ process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
     #'/store/data/Run2012A/MuEG/AOD/13Jul2012-v1/0000/FEF59314-34D8-E111-8DF9-E0CB4E19F972.root'
     #'/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
-    '/store/mc/Summer12_DR53X/GluGluToHToZG_M-125_8TeV-powheg-pythia6/AODSIM/PU_S10_START53_V7A-v1/0000/DEF04071-6EFA-E111-BA18-00266CFFC4D4.root'
+    #'/store/mc/Summer12_DR53X/GluGluToHToZG_M-125_8TeV-powheg-pythia6/AODSIM/PU_S10_START53_V7A-v1/0000/DEF04071-6EFA-E111-BA18-00266CFFC4D4.root'
+    #'/store/data/Run2012C/DoubleMu/AOD/24Aug2012-v1/00000/F2644055-AEEF-E111-BCBC-001EC9D81460.root'
+    '/store/data/Run2012D/DoubleMu/AOD/PromptReco-v1/000/208/341/285B355D-553D-E211-A3FC-BCAEC532971E.root'
     #'file:/tmp/naodell/TTJetsToHqToWWq_M-145_TuneZ2_8TeV_pythia6_v2_1_1_GPf.root'
 )
 )
@@ -197,6 +199,7 @@ print '\n\nCommence ntuplization...\n\n'
 ### TFile service!
 process.TFileService = cms.Service('TFileService',
                                   fileName = cms.string('nuTuple.root')
+                                  #fileName = cms.string('nuTupleData.root')
                                   #fileName = cms.string('nuTupleMVA.root')
                                    )
 
