@@ -901,7 +901,7 @@ void  ntupleProducer::beginJob()
     // Initialize Electron Regression
     myEleReg = new ElectronEnergyRegressionEvaluate();
     string mvaPath = getenv("CMSSW_BASE");
-    mvaPath = mvaPath+"/src/data:"+getenv("CMSSW_SEARCH_PATH");
+    mvaPath = mvaPath+"/src/EGamma/EGammaAnalysisTools/data:"+getenv("CMSSW_SEARCH_PATH");
     setenv("CMSSW_SEARCH_PATH",mvaPath.c_str(),1);
     //myEleReg->initialize(mvaPath+"/src/data/eleEnergyRegWeights_V1.root",
     myEleReg->initialize("eleEnergyRegWeights_V1.root",
