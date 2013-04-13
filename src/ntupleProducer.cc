@@ -1412,6 +1412,39 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
   }
   eleCon->SetIdMap("preSelPassV1",preSelPassV1);
 
+  bool preSelPassV3 = false;
+
+  if (fabs(iElectron->superCluster()->eta()) < 1.479) {
+    if ( (
+             iElectron->sigmaIetaIeta()< 0.014
+          && iElectron->hadronicOverEm() < 0.15
+          && iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfLostHits() == 0
+          && ( iElectron->dr03TkSumPt()) / iElectron->pt() < 0.2
+          && ( iElectron->dr03EcalRecHitSumEt()) /iElectron->pt() < 0.2
+          && (iElectron->dr03HcalTowerSumEt()) / iElectron->pt() < 0.2
+          )
+       ) {
+      preSelPassV3 = true;
+    }
+  }
+
+  //endcap
+  else {
+    if ( (  
+             iElectron->sigmaIetaIeta()< 0.035
+          && iElectron->hadronicOverEm() < 0.10
+          && iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfLostHits() == 0
+          && (iElectron->dr03TkSumPt() ) / iElectron->pt() < 0.2
+          && (iElectron->dr03EcalRecHitSumEt()-1.0 ) / iElectron->pt() < 0.20
+          && (iElectron->dr03HcalTowerSumEt()) / iElectron->pt() < 0.20
+
+          )
+       ) {
+      preSelPassV3 = true;
+    }
+  }
+  eleCon->SetIdMap("preSelPassV3",preSelPassV3);
+
   return;
 }
 
