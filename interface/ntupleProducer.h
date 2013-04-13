@@ -235,7 +235,8 @@ class ntupleProducer : public edm::EDAnalyzer {
   bool saveGenJets_;
   bool saveGenParticles_;
   bool isRealData;
-  bool printalot;
+  bool verboseTrigs;
+  bool verboseMVAs;
   
   //Physics object containers
   TClonesArray* recoJets;

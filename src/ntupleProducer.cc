@@ -29,7 +29,8 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
     saveGenJets_      = iConfig.getUntrackedParameter<bool>("saveGenJets");
     saveGenParticles_ = iConfig.getUntrackedParameter<bool>("saveGenParticles");
 
-    printalot         = iConfig.getUntrackedParameter<bool>("printalot");
+    verboseTrigs       = iConfig.getUntrackedParameter<bool>("verboseTrigs");
+    verboseMVAs        = iConfig.getUntrackedParameter<bool>("verboseMVAs");
 
     ecalTPFilterTag_    = iConfig.getUntrackedParameter<edm::InputTag>("ecalTPFilterTag");
     ecalBEFilterTag_    = iConfig.getUntrackedParameter<edm::InputTag>("ecalBEFilterTag");
@@ -51,6 +52,7 @@ ntupleProducer::~ntupleProducer()
 // ------------ method called to for each event  ------------
 void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
+  // this is for CVS check test
     eventNumber  = iEvent.id().event(); 
     runNumber    = iEvent.id().run();
     lumiSection  = (unsigned int)iEvent.getLuminosityBlock().luminosityBlock();
@@ -381,7 +383,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             eleCon->SetIsoMap("pfNeuIso_R04",eleIsolator.getIsolationNeutral());
             eleCon->SetIsoMap("pfPhoIso_R04",eleIsolator.getIsolationPhoton());
 
-            // Effective area for rho PU corrections (not sure if needed)
+          // Effective area for rho PU corrections (not sure if needed)
             float AEff03 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso03, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
             float AEff04 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso04, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
             eleCon->SetIsoMap("EffArea_R03", AEff03);
@@ -906,6 +908,8 @@ void  ntupleProducer::beginJob()
     //myEleReg->initialize(mvaPath+"/src/data/eleEnergyRegWeights_V1.root",
     myEleReg->initialize("eleEnergyRegWeights_V1.root",
         ElectronEnergyRegressionEvaluate::kNoTrkVar);
+    if (verboseMVAs) cout<<"mvaPath: "<<mvaPath<<endl;
+    if (verboseMVAs) cout<<"MVA electron regression shit probably has initialized"<<endl;
 }
 
 void ntupleProducer::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
@@ -1101,6 +1105,7 @@ bool ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::Vertex
 
 void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron* eleCon, const edm::Event& iEvent, const edm::EventSetup& iSetup, const reco::PFCandidateCollection& PFCandidates, float Rho)
 {
+  if (verboseMVAs) cout<<"loading up electron MVA values"<<endl;
   //**********************************************************
   //ID variables
   //**********************************************************
@@ -1434,13 +1439,13 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR,
   
   if(!goodTrigger) return;
 
-  //if(printalot){
+  //if(verboseTrigs){
   //  std::cout<<" n = "<<n<<" triggerIndex = "<<triggerIndex<<" size = "<<hltConfig_.size()<<std::endl;
   //  std::cout<<" Analyze triggerName : "<<triggerName<<std::endl;
   //}
   //std::cout<<" Analyze triggerName : "<<triggerName<<std::endl;
   if (triggerIndex>=n) {
-    if(printalot){
+    if(verboseTrigs){
       cout << "DimuonAna::analyzeTrigger: path "
         << triggerName << " - not found!" << endl;
     }
@@ -1452,7 +1457,7 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR,
   const unsigned int m(hltConfig_.size(triggerIndex));
   const vector<string>& moduleLabels(hltConfig_.moduleLabels(triggerIndex));
   if (moduleIndex != m-1) return;
-  if(printalot){
+  if(verboseTrigs){
     cout << "DimuonAna::analyzeTrigger: path "
       << triggerName << " [" << triggerIndex << "]" << endl;
 
@@ -1485,11 +1490,11 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR,
     //  if ( (moduleLabel.find("hltEle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoDZ") == string::npos)
     //      && (moduleLabel.find("hltEle17CaloId") == string::npos)
     //      && (moduleLabel.find("hltEle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoDoubleFilter") == string::npos) ) continue;
-    if(printalot){
+    if(verboseTrigs){
       std::cout<<" j = "<<j<<" modLabel/moduleType = "<<moduleLabel<<"/"<<moduleType<<" filterIndex = "<<filterIndex<<" sizeF = "<<hltE->sizeFilters()<<std::endl;
     }
     if (filterIndex<hltE->sizeFilters()) {
-      if(printalot){
+      if(verboseTrigs){
         cout << " 'L3' (or 'L1', 'L2') filter in slot " << j << " - label/type " << moduleLabel << "/" << moduleType << endl;
       }
       const Vids& VIDS (hltE->filterIds(filterIndex));
@@ -1498,7 +1503,7 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR,
       const size_type nK(KEYS.size());
       assert(nI==nK);
       const size_type n(max(nI,nK));
-      if(printalot){
+      if(verboseTrigs){
         cout << "   " << n  << " accepted 'L3' (or 'L1', 'L2') objects found: " << endl;
       }
       const TriggerObjectCollection& TOC(hltE->getObjects());
@@ -1517,7 +1522,7 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR,
         ////std::cout<<" L1 object found"<<std::endl;
         //}
 
-        if(printalot){
+        if(verboseTrigs){
           std::cout<<" i = "<<i<<" moduleLabel/moduleType : "<<moduleLabel<<"/"<<moduleType<<std::endl;
           cout << "   " << i << " " << VIDS[i] << "/" << KEYS[i] << ": "
             << TO.id() << " " << TO.pt() << " " << TO.eta() << " " << TO.phi() << " " << TO.mass()
