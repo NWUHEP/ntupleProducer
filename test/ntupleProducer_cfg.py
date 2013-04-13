@@ -32,12 +32,27 @@ process.goodOfflinePrimaryVertices = cms.EDFilter( "PrimaryVertexObjectFilter",
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 process.load("CondCore.DBCommon.CondDBCommon_cfi")
 
-# MET corrections
+
+# MET corrections Type 1 and x,y corrections
 process.load('JetMETCorrections.Type1MET.pfMETCorrections_cff')
-skipEMfractionThreshold = cms.double(0.90)
-skipEM = cms.bool(True)
-skipMuonSelection = cms.string('isGlobalMuon | isStandAloneMuon')
-skipMuons = cms.bool(True)
+process.load("JetMETCorrections.Type1MET.pfMETsysShiftCorrections_cfi")
+
+# use for 2012 Data
+if (isRealData):
+    process.pfMEtSysShiftCorr.parameter = process.pfMEtSysShiftCorrParameters_2012runAvsNvtx_data
+# use for Spring'12 MC
+else:
+    process.pfMEtSysShiftCorr.parameter = process.pfMEtSysShiftCorrParameters_2012runAvsNvtx_mc
+
+process.pfType1CorrectedMet.srcType1Corrections = cms.VInputTag(
+    cms.InputTag('pfJetMETcorr', 'type1') ,
+    cms.InputTag('pfMEtSysShiftCorr')
+)
+process.pfType1p2CorrectedMet.srcType1Corrections = cms.VInputTag(
+    cms.InputTag('pfJetMETcorr', 'type1') ,
+    cms.InputTag('pfMEtSysShiftCorr')
+)
+
 
 if (isRealData):
     process.pfJetMETcorr.jetCorrLabel = cms.string("ak5PFL1FastL2L3Residual")
@@ -322,6 +337,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
 process.ntuplePath = cms.Path(
         process.goodOfflinePrimaryVertices
+        * process.pfMEtSysShiftCorrSequence
         * process.producePFMETCorrections
         * process.pfNoPUSeq
         #* process.PFTau
