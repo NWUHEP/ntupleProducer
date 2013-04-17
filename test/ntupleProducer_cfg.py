@@ -33,6 +33,11 @@ process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 process.load("CondCore.DBCommon.CondDBCommon_cfi")
 
 
+# Add MET collection for PAT
+#from PhysicsTools.PatAlgos.tools.metTools import *
+#addPfMET(process,'PF')
+#addTcMET(process,"TC")
+
 # MET corrections Type 1 and x,y corrections
 process.load('JetMETCorrections.Type1MET.pfMETCorrections_cff')
 process.load("JetMETCorrections.Type1MET.pfMETsysShiftCorrections_cfi")
@@ -52,7 +57,6 @@ process.pfType1p2CorrectedMet.srcType1Corrections = cms.VInputTag(
     cms.InputTag('pfJetMETcorr', 'type1') ,
     cms.InputTag('pfMEtSysShiftCorr')
 )
-
 
 if (isRealData):
     process.pfJetMETcorr.jetCorrLabel = cms.string("ak5PFL1FastL2L3Residual")
@@ -144,7 +148,7 @@ process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
                                     )
 
 # event source
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(5))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
     #'/store/data/Run2012A/MuEG/AOD/13Jul2012-v1/0000/FEF59314-34D8-E111-8DF9-E0CB4E19F972.root'
@@ -168,13 +172,16 @@ process.endCounter = process.startCounter.clone()
 ## Saving this boolean in the ntuples!
 ##############################################
 
+## The iso-based HBHE noise filter
 process.load('CommonTools/RecoAlgos/HBHENoiseFilterResultProducer_cfi')
+
+## This might need updating for the VBF Parked - waiting for the recommendation
 process.load("RecoMET.METFilters.hcalLaserEventFilter_cfi")
 process.hcalLaserEventFilter.vetoByRunEventNumber=cms.untracked.bool(False)
 process.hcalLaserEventFilter.vetoByHBHEOccupancy=cms.untracked.bool(True)
 process.hcalLaserEventFilter.taggingMode = cms.bool(True)
 
-
+## Ecal Dead Cell Filter
 process.load('RecoMET.METFilters.EcalDeadCellTriggerPrimitiveFilter_cfi')
 ## For AOD and RECO recommendation to use recovered rechits
 process.EcalDeadCellTriggerPrimitiveFilter.tpDigiCollection = cms.InputTag("ecalTPSkimNA")
@@ -195,16 +202,48 @@ process.EcalDeadCellBoundaryEnergyFilter.limitDeadCellToChannelStatusEB = cms.vi
 process.EcalDeadCellBoundaryEnergyFilter.limitDeadCellToChannelStatusEE = cms.vint32(12,14)
 # End of Boundary Energy filter configuration
 
-# This one is not working for some reason:
-#process.load('RecoMET.METFilters.trackingFailureFilter_cfi')
-#process.trackingFailureFilter.taggingMode = cms.bool(True)
+
+## The Good vertices collection needed by the tracking failure filter 
+process.goodVertices = cms.EDFilter(
+      "VertexSelector",
+        filter = cms.bool(False),
+        src = cms.InputTag("offlinePrimaryVertices"),
+        cut = cms.string("!isFake && ndof > 4 && abs(z) <= 24 && position.rho < 2")
+      )
+## The tracking failure filter 
+process.load('RecoMET.METFilters.trackingFailureFilter_cfi')
+process.trackingFailureFilter.taggingMode = cms.bool(True)
+
+
+#Bad EE SC filter, not needed but goot to have them
+process.load('RecoMET.METFilters.eeBadScFilter_cfi')
+process.eeBadScFilter.tagginMode = cms.bool(True)
+
+## The tracking POG filters
+process.load('RecoMET.METFilters.trackingPOGFilters_cff')
+## NOTE: to make tagging mode of the tracking POG filters (three of them), please do:
+process.manystripclus53X.taggedMode = cms.untracked.bool(True)
+process.manystripclus53X.forcedValue = cms.untracked.bool(False)
+process.toomanystripclus53X.taggedMode = cms.untracked.bool(True)
+process.toomanystripclus53X.forcedValue = cms.untracked.bool(False)
+process.logErrorTooManyClusters.taggedMode = cms.untracked.bool(True)
+process.logErrorTooManyClusters.forcedValue = cms.untracked.bool(False)
+## Also the stored boolean for the three filters is opposite to what we usually
+## have for other filters, i.e., true means rejected bad events while false means
+## good events.
+
 
 AllFilters = cms.Sequence(process.HBHENoiseFilterResultProducer
                           * process.hcalLaserEventFilter
                           * process.EcalDeadCellTriggerPrimitiveFilter
                           * process.EcalDeadCellBoundaryEnergyFilter
-                          #* process.trackingFailureFilter
-                            )
+                          * process.goodVertices * process.trackingFailureFilter
+                          * process.eeBadScFilter
+                          #* process.trkPOGFilters
+                          * ~process.manystripclus53X #trkPOGFilter1
+                          * ~process.toomanystripclus53X #trkPOGFilter2
+                          * ~process.logErrorTooManyClusters #trkPOGFilter 3
+                          )
 
 
 ##### END OF Noise Filters ############
@@ -275,7 +314,12 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   ecalBEFilterTag    =    cms.untracked.InputTag("EcalDeadCellBoundaryEnergyFilter",""),
   hcalHBHEFilterTag  =    cms.untracked.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResult"),
   hcalLaserFilterTag =    cms.untracked.InputTag("hcalLaserEventFilter",""),
-
+  trackingFailureTag =    cms.untracked.InputTag("trackingFailureFilter",""),
+  eeBadScFilterTag   =    cms.untracked.InputTag("eeBadScFilter",""),
+  trkPOGFiltersTag1  =    cms.untracked.InputTag("manystripclus53X",""),
+  trkPOGFiltersTag2  =    cms.untracked.InputTag("toomanystripclus53X",""),
+  trkPOGFiltersTag3  =    cms.untracked.InputTag("logErrorTooManyClusters",""),
+                                          
   hltName           =    cms.untracked.string("HLT"),
   triggers          =    cms.untracked.vstring(
                                                "HLT_Mu8_v",
@@ -332,6 +376,16 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_IsoMu15_eta2p1_MediumIsoPFTau20_v",
                                                "HLT_IsoMu15_eta2p1_TightIsoPFTau20_v",
                                                "HLT_Mu15_LooseIsoPFTau15_v"
+
+                                               "HLT_DiJet20_MJJ650_AllJets_DEta3p5_HT120_VBF_v"
+                                               "HLT_DiJet30_MJJ700_AllJets_DEta3p5_VBF_v"
+                                               "HLT_DiJet35_MJJ650_AllJets_DEta3p5_VBF_v"
+                                               "HLT_DiJet35_MJJ700_AllJets_DEta3p5_VBF_v"
+                                               "HLT_DiJet35_MJJ750_AllJets_DEta3p5_VBF_v"
+
+                                               "HLT_Photon30_R9Id90_CaloId_HE10_Iso40_EBOnly_Met25_HBHENoiseCleaned_v"
+                                               "HLT_Photon30_R9Id90_CaloId_HE10_Iso40_EBOnly_v"
+                                               "HLT_Photon30_v"
 )
 )
 

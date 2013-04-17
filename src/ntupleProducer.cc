@@ -36,7 +36,11 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
     ecalBEFilterTag_    = iConfig.getUntrackedParameter<edm::InputTag>("ecalBEFilterTag");
     hcalHBHEFilterTag_  = iConfig.getUntrackedParameter<edm::InputTag>("hcalHBHEFilterTag");
     hcalLaserFilterTag_ = iConfig.getUntrackedParameter<edm::InputTag>("hcalLaserFilterTag");
-
+    trackingFailureTag_ = iConfig.getUntrackedParameter<edm::InputTag>("trackingFailureTag");
+    eeBadScFilterTag_   = iConfig.getUntrackedParameter<edm::InputTag>("eeBadScFilterTag");
+    trkPOGFiltersTag1_  = iConfig.getUntrackedParameter<edm::InputTag>("trkPOGFiltersTag1");
+    trkPOGFiltersTag2_  = iConfig.getUntrackedParameter<edm::InputTag>("trkPOGFiltersTag2");
+    trkPOGFiltersTag3_  = iConfig.getUntrackedParameter<edm::InputTag>("trkPOGFiltersTag3");
     photonIsoCalcTag_ = iConfig.getParameter<edm::ParameterSet>("photonIsoCalcTag");
 }
 
@@ -746,6 +750,33 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     if (ecalBEFilterHandle.isValid())  myNoiseFilters.isNoiseEcalBE = !(Bool_t)(*ecalBEFilterHandle);
     else LogWarning("Filters")<<"Ecal BE NOT valid  ";
 
+    Handle<bool> trackingFailureHandle;
+    iEvent.getByLabel(trackingFailureTag_, trackingFailureHandle);
+    if(trackingFailureHandle.isValid()) myNoiseFilters.isNoiseTracking = !(Bool_t)(*trackingFailureHandle);
+    else LogWarning("Filters")<<"tracking Failure NOT valid  ";
+
+    Handle<bool> eeBadScFilterHandle;
+    iEvent.getByLabel(eeBadScFilterTag_, eeBadScFilterHandle);
+    if(eeBadScFilterHandle.isValid()) myNoiseFilters.isNoiseEEBadSc = !(Bool_t)(*eeBadScFilterHandle);
+    else LogWarning("Filters")<<"eeBadSc NOT valid  ";
+
+
+    Handle<bool> trkPOGFiltersHandle1;
+    iEvent.getByLabel(trkPOGFiltersTag1_, trkPOGFiltersHandle1);
+    if(trkPOGFiltersHandle1.isValid()) myNoiseFilters.isNoisetrkPOG1 = !(Bool_t)(*trkPOGFiltersHandle1);
+    else LogWarning("Filters")<<"trkPOG1 NOT valid  ";
+
+    Handle<bool> trkPOGFiltersHandle2;
+    iEvent.getByLabel(trkPOGFiltersTag2_, trkPOGFiltersHandle2);
+    if(trkPOGFiltersHandle2.isValid()) myNoiseFilters.isNoisetrkPOG2 = !(Bool_t)(*trkPOGFiltersHandle2);
+    else LogWarning("Filters")<<"trkPOG2 NOT valid  ";
+
+    Handle<bool> trkPOGFiltersHandle3;
+    iEvent.getByLabel(trkPOGFiltersTag3_, trkPOGFiltersHandle3);
+    if(trkPOGFiltersHandle3.isValid()) myNoiseFilters.isNoisetrkPOG3 = !(Bool_t)(*trkPOGFiltersHandle3);
+    else LogWarning("Filters")<<"trkPOG3 NOT valid  ";
+
+
     edm::Handle<BeamHaloSummary> TheBeamHaloSummary;
     iEvent.getByLabel("BeamHaloSummary",TheBeamHaloSummary);
     const BeamHaloSummary TheSummary = (*TheBeamHaloSummary.product() );
@@ -876,7 +907,7 @@ void  ntupleProducer::beginJob()
     eventTree->Branch("triggerStatus",&triggerStatus, "triggerStatus/l");
     eventTree->Branch("hltPrescale",hltPrescale, "hltPrescale[64]/i");
 
-    eventTree->Branch("NoiseFilters", &myNoiseFilters.isScraping, "isScraping/O:isNoiseHcalHBHE:isNoiseHcalLaser:isNoiseEcalTP:isNoiseEcalBE:isCSCTightHalo:isCSCLooseHalo");
+    eventTree->Branch("NoiseFilters", &myNoiseFilters.isScraping, "isScraping/O:isNoiseHcalHBHE:isNoiseHcalLaser:isNoiseEcalTP:isNoiseEcalBE:isCSCTightHalo:isCSCLooseHalo:isNoiseTracking:isNoiseEEBadSc:isNoisetrkPOG1:isNoisetrkPOG2:isNoisetrkPOG3");
 
     runTree->Branch("deliveredLumi",&deliveredLumi, "deliveredLumi/F");
     runTree->Branch("recordedLumi",&recordedLumi, "recordedLumi/F");

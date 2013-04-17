@@ -161,6 +161,11 @@ struct Filters {		//Filters
   Bool_t isNoiseEcalBE;
   Bool_t isCSCTightHalo;
   Bool_t isCSCLooseHalo;
+  Bool_t isNoiseTracking;
+  Bool_t isNoiseEEBadSc;
+  Bool_t isNoisetrkPOG1;
+  Bool_t isNoisetrkPOG2;
+  Bool_t isNoisetrkPOG3;
 };
 
 
@@ -222,6 +227,11 @@ class ntupleProducer : public edm::EDAnalyzer {
   edm::InputTag ecalTPFilterTag_;
   edm::InputTag ecalBEFilterTag_;
   edm::InputTag hcalLaserFilterTag_;
+  edm::InputTag trackingFailureTag_;
+  edm::InputTag eeBadScFilterTag_;
+  edm::InputTag trkPOGFiltersTag1_;
+  edm::InputTag trkPOGFiltersTag2_;
+  edm::InputTag trkPOGFiltersTag3_;
   edm::InputTag partFlowTag_;
   edm::ParameterSet photonIsoCalcTag_;
   edm::InputTag triggerEventTag_;
