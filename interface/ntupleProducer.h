@@ -187,6 +187,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   virtual bool  associateJetToVertex(reco::PFJet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet *outJet);   
   virtual void  electronMVA(const reco::GsfElectron* iElectron, TCElectron* eleCon, const edm::Event& iEvent,const edm::EventSetup& iSetup, const reco::PFCandidateCollection& PFCandidates, float Rho);
   virtual bool  isFilteredOutScraping(const edm::Event& iEvent, const edm::EventSetup& iSetup, int numtrack=10, double thresh=0.25);
+  virtual float MatchBTagsToJets(const reco::JetTagCollection, const reco::PFJet);
   void analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR, edm::Handle<trigger::TriggerEvent> &hltE, const std::string& triggerName, int* trigCount);                   
   // ----------member data ---------------------------
   

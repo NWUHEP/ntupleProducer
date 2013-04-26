@@ -148,7 +148,7 @@ process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
                                     )
 
 # event source
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(5))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
     #'/store/data/Run2012A/MuEG/AOD/13Jul2012-v1/0000/FEF59314-34D8-E111-8DF9-E0CB4E19F972.root'
@@ -300,7 +300,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
   partFlowTag       =    cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
 
-  saveJets          =    cms.untracked.bool(False),
+  saveJets          =    cms.untracked.bool(True),
   saveElectrons     =    cms.untracked.bool(True),
   saveMuons         =    cms.untracked.bool(True),
   saveTaus          =    cms.untracked.bool(False),
