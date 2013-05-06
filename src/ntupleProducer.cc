@@ -41,7 +41,7 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
     trkPOGFiltersTag1_  = iConfig.getUntrackedParameter<edm::InputTag>("trkPOGFiltersTag1");
     trkPOGFiltersTag2_  = iConfig.getUntrackedParameter<edm::InputTag>("trkPOGFiltersTag2");
     trkPOGFiltersTag3_  = iConfig.getUntrackedParameter<edm::InputTag>("trkPOGFiltersTag3");
-    photonIsoCalcTag_ = iConfig.getParameter<edm::ParameterSet>("photonIsoCalcTag");
+    photonIsoCalcTag_   = iConfig.getParameter<edm::ParameterSet>("photonIsoCalcTag");
 }
 
 ntupleProducer::~ntupleProducer()
@@ -883,12 +883,14 @@ void  ntupleProducer::beginJob()
 
     // Initialize Electron Regression
     myEleReg = new ElectronEnergyRegressionEvaluate();
+    //myEleReg->initialize(mvaPath+"/src/data/eleEnergyRegWeights_V1.root",
+
     string mvaPath = getenv("CMSSW_BASE");
     mvaPath = mvaPath+"/src/EGamma/EGammaAnalysisTools/data:"+getenv("CMSSW_SEARCH_PATH");
     setenv("CMSSW_SEARCH_PATH",mvaPath.c_str(),1);
-    //myEleReg->initialize(mvaPath+"/src/data/eleEnergyRegWeights_V1.root",
-    myEleReg->initialize("eleEnergyRegWeights_V1.root",
-            ElectronEnergyRegressionEvaluate::kNoTrkVar);
+
+    myEleReg->initialize("eleEnergyRegWeights_V1.root", ElectronEnergyRegressionEvaluate::kNoTrkVar);
+
     if (verboseMVAs) cout<<"mvaPath: "<<mvaPath<<endl;
     if (verboseMVAs) cout<<"MVA electron regression shit probably has initialized"<<endl;
 }
@@ -1336,10 +1338,7 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
            ) {
             preSelPassV2= true;
         }
-    }
-
-    //endcap
-    else {
+    } else { //endcap
         if ( (  
                     iElectron->sigmaIetaIeta()< 0.03
                     && fabs(iElectron->deltaEtaSuperClusterTrackAtVtx()) < 0.009
@@ -1402,10 +1401,7 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
            ) {
             preSelPassV3 = true;
         }
-    }
-
-    //endcap
-    else {
+    } else { //endcap
         if ( (  
                     iElectron->sigmaIetaIeta()< 0.035
                     && iElectron->hadronicOverEm() < 0.10
