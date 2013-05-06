@@ -5,7 +5,7 @@ from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 process = cms.Process("PAT")
 
 # real data or MC?
-isRealData = False
+isRealData = True
 
 # global tag
 process.load("Configuration.Geometry.GeometryIdeal_cff")
@@ -203,14 +203,14 @@ process.EcalDeadCellBoundaryEnergyFilter.limitDeadCellToChannelStatusEE = cms.vi
 # End of Boundary Energy filter configuration
 
 
-## The Good vertices collection needed by the tracking failure filter 
+## The Good vertices collection needed by the tracking failure filter
 process.goodVertices = cms.EDFilter(
       "VertexSelector",
         filter = cms.bool(False),
         src = cms.InputTag("offlinePrimaryVertices"),
         cut = cms.string("!isFake && ndof > 4 && abs(z) <= 24 && position.rho < 2")
       )
-## The tracking failure filter 
+## The tracking failure filter
 process.load('RecoMET.METFilters.trackingFailureFilter_cfi')
 process.trackingFailureFilter.taggingMode = cms.bool(True)
 
