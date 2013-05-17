@@ -2,10 +2,10 @@ import os
 import FWCore.ParameterSet.Config as cms
 from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 
-process = cms.Process("PAT")
+process = cms.Process("NTUPLE")
 
 # real data or MC?
-isRealData = True
+isRealData = False
 
 # global tag
 process.load("Configuration.Geometry.GeometryIdeal_cff")
@@ -24,9 +24,6 @@ process.goodOfflinePrimaryVertices = cms.EDFilter( "PrimaryVertexObjectFilter",
     filterParams = pvSelector.clone( minNdof = cms.double(4.0), maxZ = cms.double(24.0) ),
     src=cms.InputTag('offlinePrimaryVertices')
     )
-
-# tau reconstruction configuration
-#process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
 
 # jet energy corrections
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
@@ -147,19 +144,6 @@ process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
                                      SkipEvent = cms.untracked.vstring('ProductNotFound')
                                     )
 
-# event source
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
-process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring(
-    #'/store/data/Run2012A/MuEG/AOD/13Jul2012-v1/0000/FEF59314-34D8-E111-8DF9-E0CB4E19F972.root'
-    #'/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
-    #'/store/mc/Summer12_DR53X/GluGluToHToZG_M-125_8TeV-powheg-pythia6/AODSIM/PU_S10_START53_V7A-v1/0000/DEF04071-6EFA-E111-BA18-00266CFFC4D4.root'
-    #'/store/data/Run2012C/DoubleMu/AOD/24Aug2012-v1/00000/F2644055-AEEF-E111-BCBC-001EC9D81460.root'
-    '/store/data/Run2012D/DoubleMu/AOD/PromptReco-v1/000/208/341/285B355D-553D-E211-A3FC-BCAEC532971E.root'
-    #'file:/tmp/naodell/TTJetsToHqToWWq_M-145_TuneZ2_8TeV_pythia6_v2_1_1_GPf.root'
-)
-)
-
 # event counters
 process.startCounter = cms.EDProducer("EventCountProducer")
 process.endCounter = process.startCounter.clone()
@@ -203,14 +187,14 @@ process.EcalDeadCellBoundaryEnergyFilter.limitDeadCellToChannelStatusEE = cms.vi
 # End of Boundary Energy filter configuration
 
 
-## The Good vertices collection needed by the tracking failure filter
+## The Good vertices collection needed by the tracking failure filter 
 process.goodVertices = cms.EDFilter(
       "VertexSelector",
         filter = cms.bool(False),
         src = cms.InputTag("offlinePrimaryVertices"),
         cut = cms.string("!isFake && ndof > 4 && abs(z) <= 24 && position.rho < 2")
       )
-## The tracking failure filter
+## The tracking failure filter 
 process.load('RecoMET.METFilters.trackingFailureFilter_cfi')
 process.trackingFailureFilter.taggingMode = cms.bool(True)
 
@@ -245,6 +229,16 @@ AllFilters = cms.Sequence(process.HBHENoiseFilterResultProducer
                           * ~process.logErrorTooManyClusters #trkPOGFilter 3
                           )
 
+# event source
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
+process.source = cms.Source("PoolSource",
+    fileNames = cms.untracked.vstring(
+    '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
+    #'/store/data/Run2012D/DoubleMu/AOD/PromptReco-v1/000/208/341/285B355D-553D-E211-A3FC-BCAEC532971E.root'
+    #'file:/tmp/naodell/TTJetsToHqToWWq_M-125_TuneZ2_8TeV_pythia6_v2_1_1_p64.root'
+)
+)
+
 
 ##### END OF Noise Filters ############
 
@@ -253,8 +247,6 @@ print '\n\nCommence ntuplization...\n\n'
 ### TFile service!
 process.TFileService = cms.Service('TFileService',
                                   fileName = cms.string('nuTuple.root')
-                                  #fileName = cms.string('nuTupleData.root')
-                                  #fileName = cms.string('nuTupleMVA.root')
                                    )
 
 ### pfNoPU Sequence for electron MVA
@@ -287,15 +279,13 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
   JetTag            =    cms.untracked.InputTag('ak5PFJetsL1FastL2L3'),
   GenJetTag         =    cms.untracked.InputTag('ak5GenJets'),
-  #METTag            =    cms.untracked.InputTag('patMETsPFlow'),
   METTag            =    cms.untracked.InputTag('pfType1CorrectedMet'),
   ElectronTag       =    cms.untracked.InputTag('gsfElectrons'),
   MuonTag           =    cms.untracked.InputTag('muons'),
   PhotonTag         =    cms.untracked.InputTag('photons'),
-  TauTag            =    cms.untracked.InputTag('selectedPatTausPFlow'),
   PrimaryVtxTag     =    cms.untracked.InputTag('offlinePrimaryVertices'),
   rhoCorrTag        =    cms.untracked.InputTag('kt6PFJets', 'rho', 'RECO'),
-  rho25CorrTag      =    cms.untracked.InputTag('kt6PFJetsIso', 'rho', 'PAT'),
+  rho25CorrTag      =    cms.untracked.InputTag('kt6PFJetsIso', 'rho', 'NTUPLE'),
   rhoMuCorrTag      =    cms.untracked.InputTag('kt6PFJetsCentralNeutral', 'rho','RECO'),  # specifically for muon iso
 
   partFlowTag       =    cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
@@ -303,7 +293,6 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   saveJets          =    cms.untracked.bool(True),
   saveElectrons     =    cms.untracked.bool(True),
   saveMuons         =    cms.untracked.bool(True),
-  saveTaus          =    cms.untracked.bool(False),
   savePhotons       =    cms.untracked.bool(True),
   saveMET           =    cms.untracked.bool(True),
   saveGenJets       =    cms.untracked.bool(True),
@@ -319,7 +308,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   trkPOGFiltersTag2  =    cms.untracked.InputTag("toomanystripclus53X",""),
   trkPOGFiltersTag3  =    cms.untracked.InputTag("logErrorTooManyClusters",""),
 
-  hltName           =    cms.untracked.string("HLT"),
+  hltName           =    cms.untracked.string("RECO"),
   triggers          =    cms.untracked.vstring(
                                                "HLT_Mu8_v",
                                                "HLT_Mu15_v",
@@ -393,9 +382,7 @@ process.ntuplePath = cms.Path(
         * process.pfMEtSysShiftCorrSequence
         * process.producePFMETCorrections
         * process.pfNoPUSeq
-        #* process.PFTau
         #* process.patDefaultSequence
-        #* process.jpt
         * process.kt6PFJetsIso
         * process.ak5PFJetsL1FastL2L3
         * process.ak5JetTracksAssociatorAtVertex

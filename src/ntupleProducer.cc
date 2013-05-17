@@ -7,7 +7,6 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
     muonTag_          = iConfig.getUntrackedParameter<edm::InputTag>("MuonTag");
     electronTag_      = iConfig.getUntrackedParameter<edm::InputTag>("ElectronTag");
     photonTag_        = iConfig.getUntrackedParameter<edm::InputTag>("PhotonTag");
-    tauTag_           = iConfig.getUntrackedParameter<edm::InputTag>("TauTag");
     genJetTag_        = iConfig.getUntrackedParameter<edm::InputTag>("GenJetTag");
     primaryVtxTag_    = iConfig.getUntrackedParameter<edm::InputTag>("PrimaryVtxTag");
 
@@ -23,7 +22,6 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
     saveJets_         = iConfig.getUntrackedParameter<bool>("saveJets");
     saveElectrons_    = iConfig.getUntrackedParameter<bool>("saveElectrons");
     saveMuons_        = iConfig.getUntrackedParameter<bool>("saveMuons");
-    saveTaus_         = iConfig.getUntrackedParameter<bool>("saveTaus");
     savePhotons_      = iConfig.getUntrackedParameter<bool>("savePhotons");
     saveMET_          = iConfig.getUntrackedParameter<bool>("saveMET");
     saveGenJets_      = iConfig.getUntrackedParameter<bool>("saveGenJets");
@@ -69,8 +67,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     beamSpot->SetXYZ(vertexBeamSpot.x0(), vertexBeamSpot.y0(), vertexBeamSpot.z0());
 
-    int vtxCount, jetCount, jptCount, metCount, muCount, pfMuCount, eleCount, photonCount, pfPhotonCount, tauCount, genCount, genPartCount, trigCount;
-    vtxCount = jetCount = jptCount = metCount = muCount = pfMuCount = eleCount = photonCount = pfPhotonCount = tauCount = genCount = genPartCount = trigCount = 0;
+    int vtxCount, jetCount, jptCount, metCount, muCount, pfMuCount, eleCount, photonCount, pfPhotonCount, genCount, genPartCount, trigCount;
+    vtxCount = jetCount = jptCount = metCount = muCount = pfMuCount = eleCount = photonCount = pfPhotonCount = genCount = genPartCount = trigCount = 0;
 
 
     /////////////////////////////////////
@@ -231,7 +229,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         iEvent.getByLabel(muonTag_, muons);
 
         for (vector<reco::Muon>::const_iterator iMuon = muons->begin(); iMuon != muons->end(); ++iMuon) {
-            if (!iMuon->isGlobalMuon()) continue;
+            if (!iMuon->isGlobalMuon() || iMuon->pt() < 3.) continue;
+            //if (!iMuon->isGlobalMuon()) continue;
 
             TCMuon* muCon = new ((*recoMuons)[muCount]) TCMuon;
 
@@ -386,6 +385,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             reco::GsfElectron iElectronTmp = *iElectron;
             ElectronEnergyCalibrator myCalibrator("none",true,!isRealData,true,10,false);
             myCalibrator.correct(iElectronTmp, iElectronTmp.r9(), iEvent, iSetup, eleEngReg,eleEngRegErr);
+
             TLorentzVector tmpP4;
             tmpP4.SetPtEtaPhiE(iElectronTmp.pt(), iElectronTmp.eta(), iElectronTmp.phi(), iElectronTmp.energy());
             eleCon->SetRegressionMomCombP4(tmpP4);
@@ -454,105 +454,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             ++photonCount;
         }
     }
-
-
-    //////////////
-    // Get taus //
-    //////////////
-
-
-    if (saveTaus_) {
-
-        Handle<vector<pat::Tau> > taus;
-        iEvent.getByLabel(tauTag_, taus);
-
-        for (vector<pat::Tau>::const_iterator iTau = taus->begin(); iTau != taus->end(); ++iTau) {            
-
-            if (!iTau->isPFTau() 
-                    or iTau->signalPFChargedHadrCands().size() < 1 
-                    or iTau->pt() < 10
-               ) continue;
-
-            TCTau* tauCon = new ((*recoTaus)[tauCount]) TCTau;
-
-            tauCon->SetNChHad(iTau->signalPFChargedHadrCands().size());
-            tauCon->SetNGamma (iTau->signalPFGammaCands().size());
-            tauCon->SetNNeutrHad (iTau->signalPFNeutrHadrCands().size());
-            tauCon->SetCharge(iTau->charge());
-            tauCon->SetDecayMode(iTau->decayMode());
-
-            tauCon->SetPxPyPzE(iTau->px(),iTau->py(),iTau->pz(),iTau->energy());
-            tauCon->SetCharge(iTau->charge());
-
-            if (iTau->leadPFChargedHadrCand()->trackRef().isNonnull()) {
-                tauCon->SetLeadChHadP4(iTau->leadPFChargedHadrCand()->px(),
-                        iTau->leadPFChargedHadrCand()->py(),
-                        iTau->leadPFChargedHadrCand()->pz(),
-                        iTau->leadPFChargedHadrCand()->energy());
-
-                tauCon->SetPositionFromTrack(iTau->leadPFChargedHadrCand()->trackRef()->vx(),
-                        iTau->leadPFChargedHadrCand()->trackRef()->vy(),
-                        iTau->leadPFChargedHadrCand()->trackRef()->vz());
-            }
-
-
-            if (iTau->signalPFGammaCands().size()+iTau->signalPFNeutrHadrCands().size()>0) 
-                tauCon->SetLeadNeutrP4(iTau->leadPFNeutralCand()->px(),
-                        iTau->leadPFNeutralCand()->py(),
-                        iTau->leadPFNeutralCand()->pz(),
-                        iTau->leadPFNeutralCand()->energy());
-
-            tauCon->SetPositionFromTau(iTau->vx(),iTau->vy(), iTau->vz());
-
-            tauCon->SetIsoGammaEtSum(iTau->isolationPFGammaCandsEtSum());
-            tauCon->SetIsoChHadPtSum(iTau->isolationPFChargedHadrCandsPtSum());
-
-
-
-            // set the discriminators
-            // note that the strings for PAT and RECO are different. The names of the TCTau accessors are set following the RECO names
-            // the "mapping" is taken from  tauTools.py 
-
-            tauCon->SetHpsPFTauDiscriminationByDecayModeFinding(iTau->tauID("decayModeFinding"));  // "DiscriminationByDecayModeFinding"
-
-            // isolation
-            tauCon->SetHpsPFTauDiscriminationByVLooseIsolation(iTau->tauID("byVLooseIsolation")); // "DiscriminationByVLooseIsolation"
-            tauCon->SetHpsPFTauDiscriminationByLooseIsolation (iTau->tauID("byLooseIsolation"));  // "DiscriminationByLooseIsolation"
-            tauCon->SetHpsPFTauDiscriminationByMediumIsolation(iTau->tauID("byMediumIsolation")); // "DiscriminationByMediumIsolation"  
-            tauCon->SetHpsPFTauDiscriminationByTightIsolation (iTau->tauID("byTightIsolation"));  // "DiscriminationByTightIsolation"
-
-            // isolation with corrections
-            tauCon->SetHpsPFTauDiscriminationByVLooseIsolationDBSumPtCorr	     
-                (iTau->tauID("byVLooseIsolationDeltaBetaCorr")); // "DiscriminationByVLooseIsolationDBSumPtCorr"
-            tauCon->SetHpsPFTauDiscriminationByLooseIsolationDBSumPtCorr	     
-                (iTau->tauID("byLooseIsolationDeltaBetaCorr")); // "DiscriminationByLooseIsolationDBSumPtCorr"
-            tauCon->SetHpsPFTauDiscriminationByMediumIsolationDBSumPtCorr
-                (iTau->tauID("byMediumIsolationDeltaBetaCorr")); // "DiscriminationByMediumIsolationDBSumPtCorr"
-            tauCon->SetHpsPFTauDiscriminationByTightIsolationDBSumPtCorr
-                (iTau->tauID("byTightIsolationDeltaBetaCorr")); // "DiscriminationByTightIsolationDBSumPtCorr"
-
-            // combined isolation with corrections
-            tauCon->SetHpsPFTauDiscriminationByVLooseCombinedIsolationDBSumPtCorr
-                (iTau->tauID("byVLooseCombinedIsolationDeltaBetaCorr")); // "DiscriminationByVLooseCombinedIsolationDBSumPtCorr"
-            tauCon->SetHpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr
-                (iTau->tauID("byLooseCombinedIsolationDeltaBetaCorr")); // "DiscriminationByLooseCombinedIsolationDBSumPtCorr"
-            tauCon->SetHpsPFTauDiscriminationByMediumCombinedIsolationDBSumPtCorr
-                (iTau->tauID("byMediumCombinedIsolationDeltaBetaCorr")); // "DiscriminationByMediumCombinedIsolationDBSumPtCorr"
-            tauCon->SetHpsPFTauDiscriminationByTightCombinedIsolationDBSumPtCorr 
-                (iTau->tauID("byTightCombinedIsolationDeltaBetaCorr")); // "DiscriminationByTightCombinedIsolationDBSumPtCorr"
-
-            // anti e/mu discriminators
-            tauCon->SetHpsPFTauDiscriminationAgainstElectronLoose (iTau->tauID("againstElectronLoose")); // "DiscriminationByLooseElectronRejection"
-            tauCon->SetHpsPFTauDiscriminationAgainstElectronMedium(iTau->tauID("againstElectronMedium")); // "DiscriminationByMediumElectronRejection"
-            tauCon->SetHpsPFTauDiscriminationAgainstElectronTight (iTau->tauID("againstElectronTight")); // "DiscriminationByTightElectronRejection"
-
-            tauCon->SetHpsPFTauDiscriminationAgainstMuonLoose  (iTau->tauID("againstMuonLoose")); // "DiscriminationByLooseMuonRejection")
-            //	  tauCon->SetHpsPFTauDiscriminationAgainstMuonMediumt(iTau->tauID("againstMuonMedium")); // "DiscriminationByMediumMuonRejection" <- not in python
-            tauCon->SetHpsPFTauDiscriminationAgainstMuonTight  (iTau->tauID("againstMuonTight")); // "DiscriminationByTightMuonRejection"
-
-            tauCount++;
-        } 
-    } 
 
 
     ////////////////////////
@@ -678,7 +579,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     //if (isRealData) {
 
-    myNoiseFilters.isScraping = isFilteredOutScraping(iEvent, iSetup, 10, 0.25);
+    myNoiseFilters.isScraping = false; //isFilteredOutScraping(iEvent, iSetup, 10, 0.25);
 
     Handle<bool> hcalNoiseFilterHandle;
     iEvent.getByLabel(hcalHBHEFilterTag_, hcalNoiseFilterHandle);
@@ -756,7 +657,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     const TriggerNames & triggerNames = iEvent.triggerNames(*hltR);
     hlNames = triggerNames.triggerNames();   
 
-    triggerStatus   = 0x0;    
+    triggerStatus   = ULong64_t(0x0);    
 
     for (int i=0; i < (int)hlNames.size(); ++i) {      
         if (!triggerDecision(hltR, i)) continue;	
@@ -787,14 +688,13 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     ++nEvents;
 
-    eventTree -> Fill(); // possibly specify a cut in configuration
+    if (eleCount == 0 || muCount == 0) eventTree -> Fill(); // possibly specify a cut in configuration
 
     primaryVtx    -> Clear("C");
     recoJets      -> Clear("C");
     recoJPT       -> Clear("C");
     recoMuons     -> Clear("C");
     recoElectrons -> Clear("C");
-    recoTaus      -> Clear("C");
     recoPhotons   -> Clear("C");
     //pfPhotons   -> Clear("C");
     triggerObjects-> Clear("C");
@@ -806,7 +706,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 void  ntupleProducer::beginJob()
 {  
     eventTree      = fs->make<TTree>("eventTree","eventTree");
-    runTree        = fs->make<TTree>("runTree","runTree");
     jobTree        = fs->make<TTree>("jobTree", "jobTree");
 
     primaryVtx     = new TClonesArray("TCPrimaryVtx");
@@ -814,7 +713,6 @@ void  ntupleProducer::beginJob()
     recoJPT        = new TClonesArray("TCJet");
     recoElectrons  = new TClonesArray("TCElectron");
     recoMuons      = new TClonesArray("TCMuon");
-    recoTaus       = new TClonesArray("TCTau");
     recoPhotons    = new TClonesArray("TCPhoton");
     //pfPhotons      = new TClonesArray("TCPhoton");
     triggerObjects = new TClonesArray("TCTriggerObject");
@@ -829,7 +727,6 @@ void  ntupleProducer::beginJob()
     eventTree->Branch("recoJPT",&recoJPT, 6400, 0);
     eventTree->Branch("recoElectrons",&recoElectrons, 6400, 0);
     eventTree->Branch("recoMuons",&recoMuons, 6400, 0);
-    eventTree->Branch("recoTaus",&recoTaus, 6400, 0);
     eventTree->Branch("recoPhotons",&recoPhotons, 6400, 0);
     //eventTree->Branch("pfPhotons",&pfPhotons, 6400, 0);
     eventTree->Branch("recoMET", &recoMET, 6400, 0);
@@ -858,10 +755,6 @@ void  ntupleProducer::beginJob()
     eventTree->Branch("hltPrescale",hltPrescale, "hltPrescale[64]/i");
 
     eventTree->Branch("NoiseFilters", &myNoiseFilters.isScraping, "isScraping/O:isNoiseHcalHBHE:isNoiseHcalLaser:isNoiseEcalTP:isNoiseEcalBE:isCSCTightHalo:isCSCLooseHalo:isNoiseTracking:isNoiseEEBadSc:isNoisetrkPOG1:isNoisetrkPOG2:isNoisetrkPOG3");
-
-    runTree->Branch("deliveredLumi",&deliveredLumi, "deliveredLumi/F");
-    runTree->Branch("recordedLumi",&recordedLumi, "recordedLumi/F");
-    runTree->Branch("runNumber",&runNumber, "runNumber/i");
 
     jobTree->Branch("nEvents",&nEvents, "nEvents/i");
     jobTree->Branch("triggerNames", "vector<string>", &triggerPaths_);
@@ -918,7 +811,6 @@ void ntupleProducer::endLuminosityBlock(const edm::LuminosityBlock& iLumi, const
 
 void ntupleProducer::endRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
 {
-    runTree->Fill();
 }
 
 

@@ -211,7 +211,6 @@ class ntupleProducer : public edm::EDAnalyzer {
   
   edm::Service<TFileService> fs;
   TTree* eventTree;
-  TTree* runTree;
   TTree* jobTree;
 
   edm::InputTag jetTag_;
@@ -220,7 +219,6 @@ class ntupleProducer : public edm::EDAnalyzer {
   edm::InputTag muonTag_;
   edm::InputTag electronTag_;
   edm::InputTag photonTag_;
-  edm::InputTag tauTag_;
   edm::InputTag primaryVtxTag_;
   edm::InputTag triggerResultsTag_;
   edm::InputTag rhoCorrTag_, rho25CorrTag_, rhoMuCorrTag_;
@@ -241,7 +239,6 @@ class ntupleProducer : public edm::EDAnalyzer {
   bool saveElectrons_;
   bool saveMuons_;
   bool savePhotons_;
-  bool saveTaus_;
   bool saveMET_;
   bool saveGenJets_;
   bool saveGenParticles_;
@@ -254,7 +251,6 @@ class ntupleProducer : public edm::EDAnalyzer {
   TClonesArray* recoJPT;
   TClonesArray* recoMuons;
   TClonesArray* recoElectrons;
-  TClonesArray* recoTaus;
   TClonesArray* recoPhotons;
   TClonesArray* triggerObjects;
   TClonesArray* genJets;
