@@ -2,10 +2,10 @@ import os
 import FWCore.ParameterSet.Config as cms
 from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 
-process = cms.Process("PAT")
+process = cms.Process("NTUPLE")
 
 # real data or MC?
-isRealData = True
+isRealData = False
 
 # global tag
 process.load("Configuration.Geometry.GeometryIdeal_cff")
@@ -14,7 +14,7 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.load('Configuration.StandardSequences.Reconstruction_cff')
 
 if (isRealData):
-    process.GlobalTag.globaltag = 'GR_P_V42_AN3::All'
+    process.GlobalTag.globaltag = 'GR_P_V42_AN4::All'
 else:
     process.GlobalTag.globaltag = 'START53_V15::All'
 
@@ -25,19 +25,35 @@ process.goodOfflinePrimaryVertices = cms.EDFilter( "PrimaryVertexObjectFilter",
     src=cms.InputTag('offlinePrimaryVertices')
     )
 
-# tau reconstruction configuration
-#process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
-
 # jet energy corrections
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 process.load("CondCore.DBCommon.CondDBCommon_cfi")
 
-# MET corrections
+
+# Add MET collection for PAT
+#from PhysicsTools.PatAlgos.tools.metTools import *
+#addPfMET(process,'PF')
+#addTcMET(process,"TC")
+
+# MET corrections Type 1 and x,y corrections
 process.load('JetMETCorrections.Type1MET.pfMETCorrections_cff')
-skipEMfractionThreshold = cms.double(0.90)
-skipEM = cms.bool(True)
-skipMuonSelection = cms.string('isGlobalMuon | isStandAloneMuon')
-skipMuons = cms.bool(True)
+process.load("JetMETCorrections.Type1MET.pfMETsysShiftCorrections_cfi")
+
+# use for 2012 Data
+if (isRealData):
+    process.pfMEtSysShiftCorr.parameter = process.pfMEtSysShiftCorrParameters_2012runAvsNvtx_data
+# use for Spring'12 MC
+else:
+    process.pfMEtSysShiftCorr.parameter = process.pfMEtSysShiftCorrParameters_2012runAvsNvtx_mc
+
+process.pfType1CorrectedMet.srcType1Corrections = cms.VInputTag(
+    cms.InputTag('pfJetMETcorr', 'type1') ,
+    cms.InputTag('pfMEtSysShiftCorr')
+)
+process.pfType1p2CorrectedMet.srcType1Corrections = cms.VInputTag(
+    cms.InputTag('pfJetMETcorr', 'type1') ,
+    cms.InputTag('pfMEtSysShiftCorr')
+)
 
 if (isRealData):
     process.pfJetMETcorr.jetCorrLabel = cms.string("ak5PFL1FastL2L3Residual")
@@ -128,19 +144,6 @@ process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
                                      SkipEvent = cms.untracked.vstring('ProductNotFound')
                                     )
 
-# event source
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
-process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring(
-    #'/store/data/Run2012A/MuEG/AOD/13Jul2012-v1/0000/FEF59314-34D8-E111-8DF9-E0CB4E19F972.root'
-    #'/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
-    #'/store/mc/Summer12_DR53X/GluGluToHToZG_M-125_8TeV-powheg-pythia6/AODSIM/PU_S10_START53_V7A-v1/0000/DEF04071-6EFA-E111-BA18-00266CFFC4D4.root'
-    #'/store/data/Run2012C/DoubleMu/AOD/24Aug2012-v1/00000/F2644055-AEEF-E111-BCBC-001EC9D81460.root'
-    '/store/data/Run2012D/DoubleMu/AOD/PromptReco-v1/000/208/341/285B355D-553D-E211-A3FC-BCAEC532971E.root'
-    #'file:/tmp/naodell/TTJetsToHqToWWq_M-145_TuneZ2_8TeV_pythia6_v2_1_1_GPf.root'
-)
-)
-
 # event counters
 process.startCounter = cms.EDProducer("EventCountProducer")
 process.endCounter = process.startCounter.clone()
@@ -153,13 +156,16 @@ process.endCounter = process.startCounter.clone()
 ## Saving this boolean in the ntuples!
 ##############################################
 
+## The iso-based HBHE noise filter
 process.load('CommonTools/RecoAlgos/HBHENoiseFilterResultProducer_cfi')
+
+## This might need updating for the VBF Parked - waiting for the recommendation
 process.load("RecoMET.METFilters.hcalLaserEventFilter_cfi")
 process.hcalLaserEventFilter.vetoByRunEventNumber=cms.untracked.bool(False)
 process.hcalLaserEventFilter.vetoByHBHEOccupancy=cms.untracked.bool(True)
 process.hcalLaserEventFilter.taggingMode = cms.bool(True)
 
-
+## Ecal Dead Cell Filter
 process.load('RecoMET.METFilters.EcalDeadCellTriggerPrimitiveFilter_cfi')
 ## For AOD and RECO recommendation to use recovered rechits
 process.EcalDeadCellTriggerPrimitiveFilter.tpDigiCollection = cms.InputTag("ecalTPSkimNA")
@@ -180,16 +186,58 @@ process.EcalDeadCellBoundaryEnergyFilter.limitDeadCellToChannelStatusEB = cms.vi
 process.EcalDeadCellBoundaryEnergyFilter.limitDeadCellToChannelStatusEE = cms.vint32(12,14)
 # End of Boundary Energy filter configuration
 
-# This one is not working for some reason:
-#process.load('RecoMET.METFilters.trackingFailureFilter_cfi')
-#process.trackingFailureFilter.taggingMode = cms.bool(True)
+
+## The Good vertices collection needed by the tracking failure filter 
+process.goodVertices = cms.EDFilter(
+      "VertexSelector",
+        filter = cms.bool(False),
+        src = cms.InputTag("offlinePrimaryVertices"),
+        cut = cms.string("!isFake && ndof > 4 && abs(z) <= 24 && position.rho < 2")
+      )
+## The tracking failure filter 
+process.load('RecoMET.METFilters.trackingFailureFilter_cfi')
+process.trackingFailureFilter.taggingMode = cms.bool(True)
+
+
+#Bad EE SC filter, not needed but goot to have them
+process.load('RecoMET.METFilters.eeBadScFilter_cfi')
+process.eeBadScFilter.tagginMode = cms.bool(True)
+
+## The tracking POG filters
+process.load('RecoMET.METFilters.trackingPOGFilters_cff')
+## NOTE: to make tagging mode of the tracking POG filters (three of them), please do:
+process.manystripclus53X.taggedMode = cms.untracked.bool(True)
+process.manystripclus53X.forcedValue = cms.untracked.bool(False)
+process.toomanystripclus53X.taggedMode = cms.untracked.bool(True)
+process.toomanystripclus53X.forcedValue = cms.untracked.bool(False)
+process.logErrorTooManyClusters.taggedMode = cms.untracked.bool(True)
+process.logErrorTooManyClusters.forcedValue = cms.untracked.bool(False)
+## Also the stored boolean for the three filters is opposite to what we usually
+## have for other filters, i.e., true means rejected bad events while false means
+## good events.
+
 
 AllFilters = cms.Sequence(process.HBHENoiseFilterResultProducer
                           * process.hcalLaserEventFilter
                           * process.EcalDeadCellTriggerPrimitiveFilter
                           * process.EcalDeadCellBoundaryEnergyFilter
-                          #* process.trackingFailureFilter
-                            )
+                          * process.goodVertices * process.trackingFailureFilter
+                          * process.eeBadScFilter
+                          #* process.trkPOGFilters
+                          * ~process.manystripclus53X #trkPOGFilter1
+                          * ~process.toomanystripclus53X #trkPOGFilter2
+                          * ~process.logErrorTooManyClusters #trkPOGFilter 3
+                          )
+
+# event source
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
+process.source = cms.Source("PoolSource",
+    fileNames = cms.untracked.vstring(
+    '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
+    #'/store/data/Run2012D/DoubleMu/AOD/PromptReco-v1/000/208/341/285B355D-553D-E211-A3FC-BCAEC532971E.root'
+    #'file:/tmp/naodell/TTJetsToHqToWWq_M-125_TuneZ2_8TeV_pythia6_v2_1_1_p64.root'
+)
+)
 
 
 ##### END OF Noise Filters ############
@@ -199,8 +247,6 @@ print '\n\nCommence ntuplization...\n\n'
 ### TFile service!
 process.TFileService = cms.Service('TFileService',
                                   fileName = cms.string('nuTuple.root')
-                                  #fileName = cms.string('nuTupleData.root')
-                                  #fileName = cms.string('nuTupleMVA.root')
                                    )
 
 ### pfNoPU Sequence for electron MVA
@@ -226,41 +272,43 @@ process.pfNoPUSeq = cms.Sequence(process.pfPileUp + process.pfNoPileUp)
 ### ntuple producer
 process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
-  printalot         =    cms.untracked.bool(False),
+  verboseTrigs         =    cms.untracked.bool(False),
+  verboseMVAs          =    cms.untracked.bool(False),
 
   photonIsoCalcTag  =    cms.PSet(isolationSumsCalculator),
 
   JetTag            =    cms.untracked.InputTag('ak5PFJetsL1FastL2L3'),
   GenJetTag         =    cms.untracked.InputTag('ak5GenJets'),
-  #METTag            =    cms.untracked.InputTag('patMETsPFlow'),
   METTag            =    cms.untracked.InputTag('pfType1CorrectedMet'),
   ElectronTag       =    cms.untracked.InputTag('gsfElectrons'),
   MuonTag           =    cms.untracked.InputTag('muons'),
   PhotonTag         =    cms.untracked.InputTag('photons'),
-  TauTag            =    cms.untracked.InputTag('selectedPatTausPFlow'),
   PrimaryVtxTag     =    cms.untracked.InputTag('offlinePrimaryVertices'),
   rhoCorrTag        =    cms.untracked.InputTag('kt6PFJets', 'rho', 'RECO'),
-  rho25CorrTag      =    cms.untracked.InputTag('kt6PFJetsIso', 'rho', 'PAT'),
+  rho25CorrTag      =    cms.untracked.InputTag('kt6PFJetsIso', 'rho', 'NTUPLE'),
   rhoMuCorrTag      =    cms.untracked.InputTag('kt6PFJetsCentralNeutral', 'rho','RECO'),  # specifically for muon iso
 
   partFlowTag       =    cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
 
-  saveJets          =    cms.untracked.bool(False),
+  saveJets          =    cms.untracked.bool(True),
   saveElectrons     =    cms.untracked.bool(True),
   saveMuons         =    cms.untracked.bool(True),
-  saveTaus          =    cms.untracked.bool(False),
   savePhotons       =    cms.untracked.bool(True),
   saveMET           =    cms.untracked.bool(True),
   saveGenJets       =    cms.untracked.bool(True),
   saveGenParticles  =    cms.untracked.bool(True),
 
-
   ecalTPFilterTag    =    cms.untracked.InputTag("EcalDeadCellTriggerPrimitiveFilter",""),
   ecalBEFilterTag    =    cms.untracked.InputTag("EcalDeadCellBoundaryEnergyFilter",""),
   hcalHBHEFilterTag  =    cms.untracked.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResult"),
   hcalLaserFilterTag =    cms.untracked.InputTag("hcalLaserEventFilter",""),
+  trackingFailureTag =    cms.untracked.InputTag("trackingFailureFilter",""),
+  eeBadScFilterTag   =    cms.untracked.InputTag("eeBadScFilter",""),
+  trkPOGFiltersTag1  =    cms.untracked.InputTag("manystripclus53X",""),
+  trkPOGFiltersTag2  =    cms.untracked.InputTag("toomanystripclus53X",""),
+  trkPOGFiltersTag3  =    cms.untracked.InputTag("logErrorTooManyClusters",""),
 
-  hltName           =    cms.untracked.string("HLT"),
+  hltName           =    cms.untracked.string("RECO"),
   triggers          =    cms.untracked.vstring(
                                                "HLT_Mu8_v",
                                                "HLT_Mu15_v",
@@ -316,16 +364,25 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_IsoMu15_eta2p1_MediumIsoPFTau20_v",
                                                "HLT_IsoMu15_eta2p1_TightIsoPFTau20_v",
                                                "HLT_Mu15_LooseIsoPFTau15_v"
+
+                                               "HLT_DiJet20_MJJ650_AllJets_DEta3p5_HT120_VBF_v"
+                                               "HLT_DiJet30_MJJ700_AllJets_DEta3p5_VBF_v"
+                                               "HLT_DiJet35_MJJ650_AllJets_DEta3p5_VBF_v"
+                                               "HLT_DiJet35_MJJ700_AllJets_DEta3p5_VBF_v"
+                                               "HLT_DiJet35_MJJ750_AllJets_DEta3p5_VBF_v"
+
+                                               "HLT_Photon30_R9Id90_CaloId_HE10_Iso40_EBOnly_Met25_HBHENoiseCleaned_v"
+                                               "HLT_Photon30_R9Id90_CaloId_HE10_Iso40_EBOnly_v"
+                                               "HLT_Photon30_v"
 )
 )
 
 process.ntuplePath = cms.Path(
         process.goodOfflinePrimaryVertices
+        * process.pfMEtSysShiftCorrSequence
         * process.producePFMETCorrections
         * process.pfNoPUSeq
-        #* process.PFTau
         #* process.patDefaultSequence
-        #* process.jpt
         * process.kt6PFJetsIso
         * process.ak5PFJetsL1FastL2L3
         * process.ak5JetTracksAssociatorAtVertex

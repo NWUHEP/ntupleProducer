@@ -161,6 +161,11 @@ struct Filters {		//Filters
   Bool_t isNoiseEcalBE;
   Bool_t isCSCTightHalo;
   Bool_t isCSCLooseHalo;
+  Bool_t isNoiseTracking;
+  Bool_t isNoiseEEBadSc;
+  Bool_t isNoisetrkPOG1;
+  Bool_t isNoisetrkPOG2;
+  Bool_t isNoisetrkPOG3;
 };
 
 
@@ -182,6 +187,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   virtual bool  associateJetToVertex(reco::PFJet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet *outJet);   
   virtual void  electronMVA(const reco::GsfElectron* iElectron, TCElectron* eleCon, const edm::Event& iEvent,const edm::EventSetup& iSetup, const reco::PFCandidateCollection& PFCandidates, float Rho);
   virtual bool  isFilteredOutScraping(const edm::Event& iEvent, const edm::EventSetup& iSetup, int numtrack=10, double thresh=0.25);
+  virtual float MatchBTagsToJets(const reco::JetTagCollection, const reco::PFJet);
   void analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR, edm::Handle<trigger::TriggerEvent> &hltE, const std::string& triggerName, int* trigCount);                   
   // ----------member data ---------------------------
   
@@ -205,7 +211,6 @@ class ntupleProducer : public edm::EDAnalyzer {
   
   edm::Service<TFileService> fs;
   TTree* eventTree;
-  TTree* runTree;
   TTree* jobTree;
 
   edm::InputTag jetTag_;
@@ -214,7 +219,6 @@ class ntupleProducer : public edm::EDAnalyzer {
   edm::InputTag muonTag_;
   edm::InputTag electronTag_;
   edm::InputTag photonTag_;
-  edm::InputTag tauTag_;
   edm::InputTag primaryVtxTag_;
   edm::InputTag triggerResultsTag_;
   edm::InputTag rhoCorrTag_, rho25CorrTag_, rhoMuCorrTag_;
@@ -222,6 +226,11 @@ class ntupleProducer : public edm::EDAnalyzer {
   edm::InputTag ecalTPFilterTag_;
   edm::InputTag ecalBEFilterTag_;
   edm::InputTag hcalLaserFilterTag_;
+  edm::InputTag trackingFailureTag_;
+  edm::InputTag eeBadScFilterTag_;
+  edm::InputTag trkPOGFiltersTag1_;
+  edm::InputTag trkPOGFiltersTag2_;
+  edm::InputTag trkPOGFiltersTag3_;
   edm::InputTag partFlowTag_;
   edm::ParameterSet photonIsoCalcTag_;
   edm::InputTag triggerEventTag_;
@@ -230,19 +239,18 @@ class ntupleProducer : public edm::EDAnalyzer {
   bool saveElectrons_;
   bool saveMuons_;
   bool savePhotons_;
-  bool saveTaus_;
   bool saveMET_;
   bool saveGenJets_;
   bool saveGenParticles_;
   bool isRealData;
-  bool printalot;
+  bool verboseTrigs;
+  bool verboseMVAs;
   
   //Physics object containers
   TClonesArray* recoJets;
   TClonesArray* recoJPT;
   TClonesArray* recoMuons;
   TClonesArray* recoElectrons;
-  TClonesArray* recoTaus;
   TClonesArray* recoPhotons;
   TClonesArray* triggerObjects;
   TClonesArray* genJets;
