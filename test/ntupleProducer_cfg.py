@@ -16,7 +16,7 @@ process.load('Configuration.StandardSequences.Reconstruction_cff')
 if (isRealData):
     process.GlobalTag.globaltag = 'GR_P_V42_AN4::All'
 else:
-    process.GlobalTag.globaltag = 'START53_V15::All'
+    process.GlobalTag.globaltag = 'START53_V19D::All'
 
 # Create good primary vertices for PF association
 from PhysicsTools.SelectorUtils.pvSelector_cfi import pvSelector
@@ -187,14 +187,14 @@ process.EcalDeadCellBoundaryEnergyFilter.limitDeadCellToChannelStatusEE = cms.vi
 # End of Boundary Energy filter configuration
 
 
-## The Good vertices collection needed by the tracking failure filter 
+## The Good vertices collection needed by the tracking failure filter
 process.goodVertices = cms.EDFilter(
       "VertexSelector",
         filter = cms.bool(False),
         src = cms.InputTag("offlinePrimaryVertices"),
         cut = cms.string("!isFake && ndof > 4 && abs(z) <= 24 && position.rho < 2")
       )
-## The tracking failure filter 
+## The tracking failure filter
 process.load('RecoMET.METFilters.trackingFailureFilter_cfi')
 process.trackingFailureFilter.taggingMode = cms.bool(True)
 
@@ -230,10 +230,13 @@ AllFilters = cms.Sequence(process.HBHENoiseFilterResultProducer
                           )
 
 # event source
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(10000))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-    '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
+      '/store/user/bpollack/POWHEG_PYTHIA8_H_Zg_8TeV_cff_py_GEN_SIM_test/POWHEG_PYTHIA8_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_test/fc2433b7e79d5e0440261850868ad62f/POWHEG_PYTHIA8_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_test_1_1_cJt.root'
+      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU.root'
+      #'/store/data/Run2012A/SingleMu/AOD/13Jul2012-v1/00000/82CD2186-C7D0-E111-8F3C-0017A4771018.root'
+      #'/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
     #'/store/data/Run2012D/DoubleMu/AOD/PromptReco-v1/000/208/341/285B355D-553D-E211-A3FC-BCAEC532971E.root'
     #'file:/tmp/naodell/TTJetsToHqToWWq_M-125_TuneZ2_8TeV_pythia6_v2_1_1_p64.root'
 )
@@ -308,10 +311,10 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   trkPOGFiltersTag2  =    cms.untracked.InputTag("toomanystripclus53X",""),
   trkPOGFiltersTag3  =    cms.untracked.InputTag("logErrorTooManyClusters",""),
 
-  hltName           =    cms.untracked.string("RECO"),
+  hltName           =    cms.untracked.string("HLT"),
   triggers          =    cms.untracked.vstring(
-                                               "HLT_Mu8_v",
-                                               "HLT_Mu15_v",
+                                               "HLT_IsoMu24_v",
+                                               "HLT_IsoMu24_eta2p1_v",
                                                "HLT_Mu8_Jet40_v",
                                                "HLT_Mu13_Mu8_v",
                                                "HLT_Mu17_Mu8_v",
