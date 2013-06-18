@@ -503,7 +503,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
                 ////  Leptons and photons and b's, (oh my)
                 if (
-                        myParticle.pt() > 8 
+                        myParticle.pt() > 3 
                         && (
                             (abs(myParticle.pdgId()) >= 11 && abs(myParticle.pdgId()) <= 16) 
                             || myParticle.pdgId() == 22 
@@ -647,20 +647,21 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     // get trigger information//
     ////////////////////////////
 
-    edm::Handle<TriggerResults> hltR;
+    edm::Handle<TriggerResults> hltResults;
     triggerResultsTag_ = InputTag(hlTriggerResults_,"",hltProcess_);
-    iEvent.getByLabel(triggerResultsTag_,hltR);
-    triggerEventTag_ = InputTag("hltTriggerSummaryAOD","",hltProcess_);
-    edm::Handle<trigger::TriggerEvent> hltE;                           
-    iEvent.getByLabel(triggerEventTag_,hltE);                          
+    iEvent.getByLabel(triggerResultsTag_,hltResults);
 
-    const TriggerNames & triggerNames = iEvent.triggerNames(*hltR);
+    edm::Handle<trigger::TriggerEvent> hltEvent;                           
+    triggerEventTag_ = InputTag("hltTriggerSummaryAOD","",hltProcess_);
+    iEvent.getByLabel(triggerEventTag_,hltEvent);                          
+
+    const TriggerNames & triggerNames = iEvent.triggerNames(*hltResults);
     hlNames = triggerNames.triggerNames();   
 
     triggerStatus   = ULong64_t(0x0);    
 
     for (int i=0; i < (int)hlNames.size(); ++i) {      
-        if (!triggerDecision(hltR, i)) continue;	
+        if (!triggerDecision(hltResults, i)) continue;	
 
         for (int j = 0; j < (int)triggerPaths_.size(); ++j){
             if (triggerPaths_[j] == "") continue;
@@ -668,22 +669,19 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             if (hlNames[i].compare(0, triggerPaths_[j].length(),triggerPaths_[j]) == 0) {
                 //cout << hlNames[i] << " ?= " << triggerPaths_[j] << endl;
                 triggerStatus |= ULong64_t(0x01) << j;
+                hltPrescale[j] = 1;
 
-                /*
-                   if (isRealData) {
+                /* if (isRealData) {
                    pair<int, int> preScales;
                    preScales = hltConfig_.prescaleValues(iEvent, iSetup, hlNames[i]); 
                    hltPrescale[j] = preScales.first*preScales.second;
-                   } else {
-                 */
-                hltPrescale[j] = 1;
-                //}
+                   } */
             }
         }
     } 
 
     for(unsigned int t = 1; t<hlNames.size();t++){  
-        analyzeTrigger(hltR, hltE, hlNames[t], &trigCount);       
+        analyzeTrigger(hltResults, hltEvent, hlNames[t], &trigCount);       
     }                                               
 
     ++nEvents;
@@ -696,7 +694,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     recoMuons     -> Clear("C");
     recoElectrons -> Clear("C");
     recoPhotons   -> Clear("C");
-    //pfPhotons   -> Clear("C");
     triggerObjects-> Clear("C");
     genJets       -> Clear("C");
     genParticles  -> Clear("C");
@@ -714,7 +711,6 @@ void  ntupleProducer::beginJob()
     recoElectrons  = new TClonesArray("TCElectron");
     recoMuons      = new TClonesArray("TCMuon");
     recoPhotons    = new TClonesArray("TCPhoton");
-    //pfPhotons      = new TClonesArray("TCPhoton");
     triggerObjects = new TClonesArray("TCTriggerObject");
     genJets        = new TClonesArray("TCGenJet");
     genParticles   = new TClonesArray("TCGenParticle");
@@ -728,7 +724,6 @@ void  ntupleProducer::beginJob()
     eventTree->Branch("recoElectrons",&recoElectrons, 6400, 0);
     eventTree->Branch("recoMuons",&recoMuons, 6400, 0);
     eventTree->Branch("recoPhotons",&recoPhotons, 6400, 0);
-    //eventTree->Branch("pfPhotons",&pfPhotons, 6400, 0);
     eventTree->Branch("recoMET", &recoMET, 6400, 0);
     eventTree->Branch("triggerObjects", &triggerObjects, 6400, 0);
     eventTree->Branch("genJets",&genJets, 6400, 0);
@@ -822,12 +817,12 @@ void ntupleProducer::endJob()
 }
 
 
-bool ntupleProducer::triggerDecision(edm::Handle<edm::TriggerResults> &hltR, int iTrigger)
+bool ntupleProducer::triggerDecision(edm::Handle<edm::TriggerResults> &hltResults, int iTrigger)
 {
     bool triggerPassed = false;
-    if(hltR->wasrun(iTrigger) &&
-            hltR->accept(iTrigger) &&
-            !hltR->error(iTrigger) ){
+    if(hltResults->wasrun(iTrigger) &&
+            hltResults->accept(iTrigger) &&
+            !hltResults->error(iTrigger) ){
         triggerPassed = true;
     }
     return triggerPassed;
@@ -1312,7 +1307,7 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
     return;
 }
 
-void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR, edm::Handle<trigger::TriggerEvent> &hltE, const std::string& triggerName, int* trigCount) {
+void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults, edm::Handle<trigger::TriggerEvent> &hltEvent, const std::string& triggerName, int* trigCount) {
 
     using namespace trigger;
 
@@ -1348,8 +1343,8 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR, edm:
     }
 
     // modules on this trigger path
-    // const unsigned int moduleIndex(hltR->index(triggerIndex));
-    const unsigned int moduleIndex(hltR->index(triggerIndex));
+    // const unsigned int moduleIndex(hltResults->index(triggerIndex));
+    const unsigned int moduleIndex(hltResults->index(triggerIndex));
     const unsigned int m(hltConfig_.size(triggerIndex));
     const vector<string>& moduleLabels(hltConfig_.moduleLabels(triggerIndex));
     if (moduleIndex != m-1) return;
@@ -1362,9 +1357,9 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR, edm:
 
         // Results from TriggerResults product
         cout << " Trigger path status:"
-            << " WasRun=" << hltR->wasrun(triggerIndex)
-            << " Accept=" << hltR->accept(triggerIndex)
-            << " Error =" << hltR->error(triggerIndex)
+            << " WasRun=" << hltResults->wasrun(triggerIndex)
+            << " Accept=" << hltResults->accept(triggerIndex)
+            << " Error =" << hltResults->error(triggerIndex)
             << endl;
         cout << " Last active module - label/type: "
             << moduleLabels[moduleIndex] << "/" << hltConfig_.moduleType(moduleLabels[moduleIndex])
@@ -1381,24 +1376,24 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR, edm:
         const string  moduleType(hltConfig_.moduleType(moduleLabel));
 
         // check whether the module is packed up in TriggerEvent product
-        //cout<<hltE->filterIndex(InputTag(moduleLabel,"",hltProcess_))<<endl;
+        //cout<<hltEvent->filterIndex(InputTag(moduleLabel,"",hltProcess_))<<endl;
 
-        const unsigned int filterIndex(hltE->filterIndex(InputTag(moduleLabel,"",hltProcess_)));
+        const unsigned int filterIndex(hltEvent->filterIndex(InputTag(moduleLabel,"",hltProcess_)));
 
         //  if ( (moduleLabel.find("Calo") == string::npos) )continue;
-        //  if ( (moduleLabel.find("hltEle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoDZ") == string::npos)
-        //      && (moduleLabel.find("hltEle17CaloId") == string::npos)
-        //      && (moduleLabel.find("hltEle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoDoubleFilter") == string::npos) ) continue;
+        //  if ( (moduleLabel.find("hltEventle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoDZ") == string::npos)
+        //      && (moduleLabel.find("hltEventle17CaloId") == string::npos)
+        //      && (moduleLabel.find("hltEventle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoDoubleFilter") == string::npos) ) continue;
 
         if(verboseTrigs){
-            std::cout<<" j = "<<j<<" modLabel/moduleType = "<<moduleLabel<<"/"<<moduleType<<" filterIndex = "<<filterIndex<<" sizeF = "<<hltE->sizeFilters()<<std::endl;
+            std::cout<<" j = "<<j<<" modLabel/moduleType = "<<moduleLabel<<"/"<<moduleType<<" filterIndex = "<<filterIndex<<" sizeF = "<<hltEvent->sizeFilters()<<std::endl;
         }
-        if (filterIndex<hltE->sizeFilters()) {
+        if (filterIndex<hltEvent->sizeFilters()) {
             if(verboseTrigs){
                 cout << " 'L3' (or 'L1', 'L2') filter in slot " << j << " - label/type " << moduleLabel << "/" << moduleType << endl;
             }
-            const Vids& VIDS (hltE->filterIds(filterIndex));
-            const Keys& KEYS(hltE->filterKeys(filterIndex));
+            const Vids& VIDS (hltEvent->filterIds(filterIndex));
+            const Keys& KEYS(hltEvent->filterKeys(filterIndex));
             const size_type nI(VIDS.size());
             const size_type nK(KEYS.size());
             assert(nI==nK);
@@ -1406,7 +1401,7 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR, edm:
             if(verboseTrigs){
                 cout << "   " << n  << " accepted 'L3' (or 'L1', 'L2') objects found: " << endl;
             }
-            const TriggerObjectCollection& TOC(hltE->getObjects());
+            const TriggerObjectCollection& TOC(hltEvent->getObjects());
             for (size_type i=0; i!=n; ++i) {
                 if(0==i){
                     passMomenta.clear();

@@ -308,7 +308,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   trkPOGFiltersTag2  =    cms.untracked.InputTag("toomanystripclus53X",""),
   trkPOGFiltersTag3  =    cms.untracked.InputTag("logErrorTooManyClusters",""),
 
-  hltName           =    cms.untracked.string("RECO"),
+  hltName           =    cms.untracked.string("HLT"),
   triggers          =    cms.untracked.vstring(
                                                "HLT_Mu8_v",
                                                "HLT_Mu15_v",
@@ -330,50 +330,14 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
                                                "HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_v",
 
-                                               "HLT_Photon20_CaloIdVL_IsoL_v",
-                                               "HLT_Photon20_CaloIdVL_v",
-                                               "HLT_Photon30_CaloIdVL_IsoL_v",
-                                               "HLT_Photon30_CaloIdVL_v",
-                                               "HLT_Photon50_CaloIdVL_IsoL_v",
-                                               "HLT_Photon50_CaloIdVL_v",
-                                               "HLT_Photon75_CaloIdVL_IsoL_v",
-                                               "HLT_Photon75_CaloIdVL_v",
-                                               "HLT_Photon90_CaloIdVL_IsoL_v",
-                                               "HLT_Photon90_CaloIdVL_v",
-                                               "HLT_Photon135_v",
-                                               "HLT_Photon150_v",
-                                               "HLT_Photon22_R9Id90_HE10_Iso40_EBOnly_v",
-                                               "HLT_Photon36_R9Id90_HE10_Iso40_EBOnly_v",
-                                               "HLT_Photon50_R9Id90_HE10_Iso40_EBOnly_v",
-                                               "HLT_Photon75_R9Id90_HE10_Iso40_EBOnly_v",
-                                               "HLT_Photon90_R9Id90_HE10_Iso40_EBOnly_v",
-
                                                "HLT_Mu17_Ele8_CaloIdL_v",
                                                "HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v",
                                                "HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
                                                "HLT_Mu3_Ele8_CaloIdT_CaloIsoVL_v",
                                                "HLT_Mu8_Ele17_CaloIdL_v",
                                                "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v",
-                                               "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
+                                               "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v"
 
-                                               "HLT_Ele18_CaloIdVT_TrkIdT_MediumIsoPFTau20_v",
-                                               "HLT_Ele20_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_MediumIsoPFTau20_v",
-                                               "HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_MediumIsoPFTau25_v",
-                                               "HLT_HT400_DoubleIsoPFTau10_Trk3_PFMHT50_v",
-                                               "HLT_IsoMu15_eta2p1_LooseIsoPFTau20_v",
-                                               "HLT_IsoMu15_eta2p1_MediumIsoPFTau20_v",
-                                               "HLT_IsoMu15_eta2p1_TightIsoPFTau20_v",
-                                               "HLT_Mu15_LooseIsoPFTau15_v"
-
-                                               "HLT_DiJet20_MJJ650_AllJets_DEta3p5_HT120_VBF_v"
-                                               "HLT_DiJet30_MJJ700_AllJets_DEta3p5_VBF_v"
-                                               "HLT_DiJet35_MJJ650_AllJets_DEta3p5_VBF_v"
-                                               "HLT_DiJet35_MJJ700_AllJets_DEta3p5_VBF_v"
-                                               "HLT_DiJet35_MJJ750_AllJets_DEta3p5_VBF_v"
-
-                                               "HLT_Photon30_R9Id90_CaloId_HE10_Iso40_EBOnly_Met25_HBHENoiseCleaned_v"
-                                               "HLT_Photon30_R9Id90_CaloId_HE10_Iso40_EBOnly_v"
-                                               "HLT_Photon30_v"
 )
 )
 
