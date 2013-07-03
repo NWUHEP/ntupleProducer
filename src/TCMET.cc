@@ -38,6 +38,9 @@ float TCMET::ChargedEMFraction() const {
   return _chargedEMFraction;
 }
 
+float TCMET::UnCorPhi() const {
+  return _unCorPhi;
+}
     // "set" methods ---------
 
 void TCMET::SetSumEt(float n) {
@@ -64,3 +67,6 @@ void TCMET::SetChargedEMFraction(float n) {
   _chargedEMFraction = n;
 }
 
+void TCMET::SetUnCorPhi(float n) {
+  _unCorPhi = n;
+}

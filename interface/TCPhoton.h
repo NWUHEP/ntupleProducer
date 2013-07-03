@@ -22,19 +22,14 @@ private:
     bool  _trackVeto;
 
     // supercluster information
-    float _dPhiSC;
-    float _dEtaSC;
-    float _etaSC;
-    float _energySC;
+    float _SCdPhi;
+    float _SCdEta;
+    float _SCeta;
+    float _SCphi;
+    float _SCenergy;
 
     //conversion info
-    int   _nConversions; //
-    float _conversionDz; //
-    float _conversionDxy; //
-
-    // vertex-by-vertex iso
-    vector<float> _trkIsoVtxDR03;
-    vector<float> _trkIsoVtxDR04;
+    bool    _convVeto;
 
 public:
     TCPhoton();
@@ -50,40 +45,32 @@ public:
     float E2OverE9() const; 
     bool  TrackVeto() const;
 
-    float DPhiSC() const;
-    float DEtaSC() const;
-    float EnergySC() const;
-    float EtaSC() const;
+    float SCDPhi() const;
+    float SCDEta() const;
+    float SCEnergy() const;
+    float SCEta() const;
+    float SCPhi() const;
 
-    int    NumberOfConversions() const;
-    float  ConversionDz() const;
-    float  ConversionDxy() const;
-
-    float TrkIsoVtxDR03(int);
-    float TrkIsoVtxDR04(int);
+    bool  ConversionVeto() const;
 
     // "set" methods ---------
 
-    void SetNormChi2(float c);
-    void SetHadOverEm(float h);
-    void SetSigmaIEtaIEta(float s);
-    void SetSigmaIPhiIPhi(float s);
-    void SetR9(float r);
-    void SetE2OverE9(float e);
-    void SetTrackVeto(bool t);
+    void SetNormChi2(float);
+    void SetHadOverEm(float);
+    void SetSigmaIEtaIEta(float);
+    void SetSigmaIPhiIPhi(float);
+    void SetR9(float);
+    void SetE2OverE9(float);
+    void SetTrackVeto(bool);
 
-    void SetDPhiSC(float d);
-    void SetDEtaSC(float d);
-    void SetEtaSC(float e);
-    void SetEnergySC(float e);
+    void SetSCDPhi(float);
+    void SetSCDEta(float);
+    void SetSCEta(float);
+    void SetSCPhi(float);
+    void SetSCEnergy(float);
 
-    void SetNumberOfConversions(int n);
-    void SetConversionDz(float d);
-    void SetConversionDxy(float d);
+    void SetConversionVeto(bool);
 
-    void SetTRKIsoVtxDR04(float);
-    void SetTRKIsoVtxDR03(float);
- 
     ClassDef(TCPhoton, 1);
 };
 

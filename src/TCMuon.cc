@@ -14,12 +14,23 @@ float TCMuon::PtError() const {
    return _ptError;
 }
 
+bool TCMuon::IsGLB() const {
+   return _isGLB;
+}
 bool TCMuon::IsTRK() const {
    return _isTRK;
 }
 
-bool TCMuon::IsGLB() const {
-   return _isGLB;
+bool TCMuon::IsPF() const {
+   return _isPF;
+}
+
+int TCMuon::NumberOfMatchedStations() const {
+  return _numberOfMatchedStations;
+}
+
+int TCMuon::TrackLayersWithMeasurement() const {
+  return _trackLayersWithMeasurement;
 }
 
 int TCMuon::NumberOfValidPixelHits() const {
@@ -59,6 +70,13 @@ float TCMuon::SegComp() const {
 }
 
 // "set" methods ---------------------------------------------
+void TCMuon::SetNumberOfMatchedStations(int n){
+  _numberOfMatchedStations = n;
+}
+
+void TCMuon::SetTrackLayersWithMeasurement(int n) {
+  _trackLayersWithMeasurement = n;
+}
 
 void TCMuon::SetPtError(float er){
    _ptError = er;
@@ -70,6 +88,9 @@ void TCMuon::SetIsGLB(bool t){
 
 void TCMuon::SetIsTRK(bool t){
    _isTRK = t;
+}
+void TCMuon::SetIsPF(bool t){
+   _isPF = t;
 }
 
 void TCMuon::SetNumberOfValidMuonHits(int n) {

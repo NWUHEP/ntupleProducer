@@ -21,6 +21,7 @@
 #include "DataFormats/Math/interface/Vector3D.h"
 #include "DataFormats/Math/interface/LorentzVector.h"
 #include "DataFormats/Math/interface/deltaPhi.h"
+#include "DataFormats/Math/interface/deltaR.h"
 
 // Libraries for objects
 #include "DataFormats/ParticleFlowCandidate/interface/PFCandidate.h"
@@ -95,13 +96,19 @@
 #include "RecoJets/JetAssociationAlgorithms/interface/JetTracksAssociationDRCalo.h"
 #include "RecoJets/JetAssociationAlgorithms/interface/JetTracksAssociationDRVertex.h"
 
-// Photon isolation
+// EGamma tools
 #include "RecoEgamma/PhotonIdentification/interface/PhotonIsolationCalculator.h"
-
+#include "RecoEgamma/EgammaTools/interface/ConversionTools.h"
+#include "EGamma/EGammaAnalysisTools/interface/ElectronEffectiveArea.h"
+#include "EGamma/EGammaAnalysisTools/src/PFIsolationEstimator.cc"
+//#include "EGamma/EGammaAnalysisTools/interface/EGammaMvaEleEstimator.h"
+#include "TrackingTools/Records/interface/TransientTrackRecord.h"
+#include "TrackingTools/TransientTrack/interface/TransientTrackBuilder.h"
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
-
 #include "DataFormats/METReco/interface/BeamHaloSummary.h"
+#include "EGamma/EGammaAnalysisTools/interface/ElectronEnergyRegressionEvaluate.h"
+#include "EgammaAnalysis/ElectronTools/interface/PatElectronEnergyCalibrator.h"
 
 // ntuple storage classes
 #include "TCPrimaryVtx.h"
@@ -146,112 +153,137 @@ using namespace reco;
 // class declaration
 //
 
+struct Filters {		//Filters 
+  Bool_t isScraping;
+  Bool_t isNoiseHcalHBHE;
+  Bool_t isNoiseHcalLaser;
+  Bool_t isNoiseEcalTP;
+  Bool_t isNoiseEcalBE;
+  Bool_t isCSCTightHalo;
+  Bool_t isCSCLooseHalo;
+  Bool_t isNoiseTracking;
+  Bool_t isNoiseEEBadSc;
+  Bool_t isNoisetrkPOG1;
+  Bool_t isNoisetrkPOG2;
+  Bool_t isNoisetrkPOG3;
+};
+
+
 class ntupleProducer : public edm::EDAnalyzer {
-	public:
-		explicit ntupleProducer(const edm::ParameterSet&);
-		~ntupleProducer();
+ public:
+  explicit ntupleProducer(const edm::ParameterSet&);
+  ~ntupleProducer();
+  
+ private:
+  virtual void beginJob() ;
+  virtual void beginRun(const edm::Run&, const edm::EventSetup&) ;
+  virtual void analyze(const edm::Event&, const edm::EventSetup&);
+  virtual void endLuminosityBlock(const edm::LuminosityBlock&,const edm::EventSetup&);
+  virtual void endRun(const edm::Run&, const edm::EventSetup&);
+  virtual void endJob() ;
+  
+  virtual bool  triggerDecision(edm::Handle<edm::TriggerResults>& hltR, int iTrigger);
+  virtual float sumPtSquared(const Vertex& v);
+  virtual bool  associateJetToVertex(reco::PFJet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet *outJet);   
+  virtual void  electronMVA(const reco::GsfElectron* iElectron, TCElectron* eleCon, const edm::Event& iEvent,const edm::EventSetup& iSetup, const reco::PFCandidateCollection& PFCandidates, float Rho);
+  virtual bool  isFilteredOutScraping(const edm::Event& iEvent, const edm::EventSetup& iSetup, int numtrack=10, double thresh=0.25);
+  virtual float MatchBTagsToJets(const reco::JetTagCollection, const reco::PFJet);
+  void analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR, edm::Handle<trigger::TriggerEvent> &hltE, const std::string& triggerName, int* trigCount);                   
+  // ----------member data ---------------------------
+  
+  struct JetCompare :
+    public std::binary_function<reco::Jet, reco::Jet, bool> {
+    inline bool operator () (const reco::Jet &j1,
+			     const reco::Jet &j2) const
+    { return (j1.p4().Pt() > j2.p4().Pt()); }
+  };
+  
+  typedef std::map<reco::Jet, unsigned int, JetCompare> flavourMap;
+  typedef reco::JetTagCollection::const_iterator tag_iter;
+  
+  //Standard event info
+  ULong64_t   eventNumber;
+  UInt_t      runNumber, lumiSection, bunchCross, nEvents;
+  float ptHat, qScale, evtWeight;
+  float deliveredLumi, recordedLumi, lumiDeadTime;
+  float rhoFactor, rho25Factor, rhoMuFactor,;
+  vector<string>  savedTriggerNames;
+  
+  edm::Service<TFileService> fs;
+  TTree* eventTree;
+  TTree* jobTree;
 
-	private:
-		virtual void beginJob() ;
-		virtual void beginRun(const edm::Run&, const edm::EventSetup&) ;
-		virtual void analyze(const edm::Event&, const edm::EventSetup&);
-		virtual void endLuminosityBlock(const edm::LuminosityBlock&,const edm::EventSetup&);
-		virtual void endRun(const edm::Run&, const edm::EventSetup&);
-		virtual void endJob() ;
+  edm::InputTag jetTag_;
+  edm::InputTag metTag_;
+  edm::InputTag genJetTag_;
+  edm::InputTag muonTag_;
+  edm::InputTag electronTag_;
+  edm::InputTag photonTag_;
+  edm::InputTag primaryVtxTag_;
+  edm::InputTag triggerResultsTag_;
+  edm::InputTag rhoCorrTag_, rho25CorrTag_, rhoMuCorrTag_;
+  edm::InputTag hcalHBHEFilterTag_;
+  edm::InputTag ecalTPFilterTag_;
+  edm::InputTag ecalBEFilterTag_;
+  edm::InputTag hcalLaserFilterTag_;
+  edm::InputTag trackingFailureTag_;
+  edm::InputTag eeBadScFilterTag_;
+  edm::InputTag trkPOGFiltersTag1_;
+  edm::InputTag trkPOGFiltersTag2_;
+  edm::InputTag trkPOGFiltersTag3_;
+  edm::InputTag partFlowTag_;
+  edm::ParameterSet photonIsoCalcTag_;
+  edm::InputTag triggerEventTag_;
 
-		virtual bool  triggerDecision(edm::Handle<edm::TriggerResults>& hltR, int iTrigger);
-		virtual float sumPtSquared(const Vertex& v);
-		virtual bool  associateJetToVertex(pat::Jet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet *outJet);   
-        virtual bool  electronMVA(Handle<reco::VertexCollection> vtxCollection, vector<pat::Electron>::const_iterator iElectron);
-		virtual bool  isFilteredOutScraping(const edm::Event& iEvent, const edm::EventSetup& iSetup, int numtrack=10, double thresh=0.25);
-		// ----------member data ---------------------------
+  bool saveJets_;
+  bool saveElectrons_;
+  bool saveMuons_;
+  bool savePhotons_;
+  bool saveMET_;
+  bool saveGenJets_;
+  bool saveGenParticles_;
+  bool isRealData;
+  bool verboseTrigs;
+  bool verboseMVAs;
+  
+  //Physics object containers
+  TClonesArray* recoJets;
+  TClonesArray* recoJPT;
+  TClonesArray* recoMuons;
+  TClonesArray* recoElectrons;
+  TClonesArray* recoPhotons;
+  TClonesArray* triggerObjects;
+  TClonesArray* genJets;
+  TClonesArray* genParticles;
+  TCMET*        recoMET;
+  TCMET*        recoMET_corr;
+  
+  //Vertex info
+  TClonesArray* primaryVtx;
+  TVector3*     beamSpot;
+  unsigned      nPUVertices;
+  float         nPUVerticesTrue;
+  
+  //Triggers
+  HLTConfigProvider hltConfig_;
+  string            hlTriggerResults_, hltProcess_, triggerName_;
+  TriggerNames      triggerNames;
+  vector<string>    hlNames;
+  vector<string>    triggerPaths_;
+  ULong64_t         triggerStatus;
+  unsigned          hltPrescale[64];
+  
+  // Technical filters
+  Filters myNoiseFilters;
 
-        struct JetCompare :
-            public std::binary_function<reco::Jet, reco::Jet, bool> {
-                inline bool operator () (const reco::Jet &j1,
-                        const reco::Jet &j2) const
-                { return (j1.p4().Pt() > j2.p4().Pt()); }
-            };
+  //Isolator
+  PFIsolationEstimator phoIsolator;
+  PFIsolationEstimator eleIsolator;
 
-        typedef std::map<reco::Jet, unsigned int, JetCompare> flavourMap;
+  // Histograms
+  TH1F * h1_numOfEvents;
 
-		//Standard event info
-        ULong64_t   eventNumber;
-		UInt_t      runNumber, lumiSection, bunchCross, nEvents;
-		float ptHat, qScale, evtWeight;
-		float deliveredLumi, recordedLumi, lumiDeadTime;
-		float rhoFactor;
-		string  savedTriggerNames[64];
-
-		edm::Service<TFileService> fs;
-		TTree* eventTree;
-		TTree* runTree;
-		TTree* jobTree;
-		edm::InputTag jetTag_;
-		edm::InputTag metTag_;
-		edm::InputTag metNoPUTag_;
-		edm::InputTag genJetTag_;
-		edm::InputTag muonTag_;
-		edm::InputTag pfMuonTag_;
-		edm::InputTag electronTag_;
-		edm::InputTag photonTag_;
-		edm::InputTag tauTag_;
-		edm::InputTag primaryVtxTag_;
-		edm::InputTag triggerResultsTag_;
-		edm::InputTag rhoCorrTag_;
-		edm::InputTag hcalFilterTag_;
-		edm::InputTag partFlowTag_;
-        edm::ParameterSet photonIsoCalcTag_;
-
-		bool saveJets_;
-		bool saveElectrons_;
-		bool saveMuons_;
-		bool savePhotons_;
-		bool saveTaus_;
-		bool saveMET_;
-		bool saveGenJets_;
-		bool saveGenParticles_;
-		bool isRealData;
-
-		//Physics object containers
-		TClonesArray* recoJets;
-		TClonesArray* recoJPT;
-		TClonesArray* recoMuons;
-		//TClonesArray* pfMuons;
-		TClonesArray* recoElectrons;
-		TClonesArray* recoTaus;
-		TClonesArray* recoPhotons;
-		//TClonesArray* pfPhotons;
-		TClonesArray* triggerObjects;
-		TClonesArray* genJets;
-		TClonesArray* genParticles;
-		TCMET*        recoMET;
-		TCMET*        recoMETNoPU;
-
-		//Vertex info
-		TClonesArray* primaryVtx;
-		TVector3*     beamSpot;
-		unsigned      nPUVertices;
-		float         nPUVerticesTrue;
-
-		//Triggers
-		HLTConfigProvider hltConfig_;
-		string            hlTriggerResults_, hltProcess_, triggerName_;
-		TriggerNames      triggerNames;
-		vector<string>    hlNames;
-		vector<string>    triggerPaths_;
-		ULong64_t         triggerStatus;
-		unsigned          hltPrescale[64];
-
-		//Filters 
-		Bool_t isNoiseHcal;
-		Bool_t isCSCTightHalo, isCSCLooseHalo, isHcalTightHalo, isHcalLooseHalo, isEcalTightHalo, isEcalLooseHalo;
-		Bool_t isGlobalTightHalo, isGlobalLooseHalo;
-		Bool_t isScraping;
-
-		//Histograms
-		TH1D * h1_ptHat;
-
-        // For map variables
-        vector<string> muonIsoMap;
+  // Electron Regression
+  ElectronEnergyRegressionEvaluate* myEleReg;
+  
 };

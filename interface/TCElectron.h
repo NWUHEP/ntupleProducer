@@ -15,12 +15,12 @@ class TCElectron : public TCPhysObject {
         float _sigmaIetaIeta;
         float _eOverP;
         float _fBrem;
+        float _r9;
 
+        float _scEta;
 
-        float _convDist;
-        float _convDcot;
-        float _convRad;
-        int _convFlag;
+        bool  _convVeto;
+        short _convMissHits;
 
         bool _isEB;        // true if particle is in ECAL Barrel
         bool _isEE;        // true if particle is in ECAL Endcaps
@@ -39,6 +39,8 @@ class TCElectron : public TCPhysObject {
         int _cut70;
         int _cut60;
 
+        TLorentzVector _regressionMomCombP4;
+
 
     public:
         TCElectron();
@@ -51,15 +53,16 @@ class TCElectron : public TCPhysObject {
         float HadOverEm() const;
         float DphiSuperCluster() const;
         float DetaSuperCluster() const;
-        float SigmaIetaIeta() const;
+        float SigmaIEtaIEta() const;
         float FBrem() const;
         float EOverP() const;
         float NormalizedChi2() const;
 
-        int ConversionFlag() const;
-        float ConversionDist() const;
-        float ConversionDcot() const;
-        float ConversionRad() const;
+        float SCEta() const;
+        float R9() const; 
+
+        bool  ConversionVeto() const;
+        short ConversionMissHits() const;
 
         bool IsEB() const;
         bool IsEE() const;
@@ -75,27 +78,31 @@ class TCElectron : public TCPhysObject {
         bool PassConversion(int lvl) const;
         bool PassIsolation(int lvl) const;
 
+        TLorentzVector RegressionMomCombP4() const;
+
         //--------------------------
         // "set" methods ---------
         //--------------------------
-	void SetPtError(float e);
+
+        void SetPtError(float e);
         void SetHadOverEm(float h);
         void SetDphiSuperCluster(float dp);
         void SetDetaSuperCluster(float de);
-        void SetSigmaIetaIeta(float sieie);
+        void SetSigmaIEtaIEta(float sieie);
         void SetEOverP(float e);
         void SetFBrem(float fb);
 
-        void SetConversionDist(float d);
-        void SetConversionDcot(float d);
-        void SetConversionRad(float r);
-        void SetConversionFlag(int f);
+        void SetSCEta(float);
+
+        void SetConversionVeto(bool);
+        void SetConversionMissHits(short);
 
         void SetNumberOfValidPixelHits(int n);
         void SetNumberOfValidTrackerHits(int n);
         void SetNumberOfLostPixelHits(int n);
         void SetNumberOfLostTrackerHits(int n);
         void SetNormalizedChi2(float n);
+        void SetR9(float r);
 
         void SetIsEB(bool b);
         void SetIsEE(bool b);
@@ -103,8 +110,9 @@ class TCElectron : public TCPhysObject {
 
         void SetCutLevel(int cut, int lvl);
 
-        ClassDef(TCElectron, 1);
+        void SetRegressionMomCombP4(TLorentzVector tmpP4);
 
+        ClassDef(TCElectron, 1);
 };
 
 #endif	/* _TCELECTRON_H */
