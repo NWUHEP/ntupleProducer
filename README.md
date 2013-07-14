@@ -74,7 +74,9 @@ Once compiled, we are ready to run it
   cmsRun ntupleProducer_cfg.py
 ```
 
-*NB* For now, the ntuples require that there be at least one lepton with pT > 10 GeV in order for an event to be saved. In the case that this is not desired (for instance, in jet or photon based studies), you should modify the following line in the ntupleProducer.cc file,
+*NB* 
+For now, the ntuples require that there be at least one lepton with pT > 10 GeV in order for an event to be saved. In the case that this is not desired (for instance, in jet or photon based studies), you should modify the following line in the ntupleProducer.cc file
+
 ```if (eleCount > 0 || muCount > 0) eventTree -> Fill();```
 
 In addition to this, there is a flag in the configuration file, ntupleProducer_cfg.py
