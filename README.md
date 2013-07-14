@@ -114,6 +114,7 @@ Instructions for Developers
 ```
   git checkout master
   git merge dev1
+  git push
 ```
 
 If the changes don't conflict, you're done. 
