@@ -110,16 +110,15 @@ Instructions for Developers
   git push origin dev1
 ```
 
- * When you are satisfied with you new code, merge it with master branch. For that:  
-
+ * When you are satisfied with you new code, merge it with master branch. For that:
 ```
   git checkout master
   git merge dev1
 ```
 
 If the changes don't conflict, you're done. 
-If there are conflicts, markers will be left in the problematic files showing the conflict; ```git diff``` will show this. 
-Once you've edited the files to resolve the conflicts, ```git commit -a``.
+If there are conflicts, markers will be left in the problematic files showing the conflict; `git diff` will show this. 
+Once you've edited the files to resolve the conflicts, `git commit -a`.
  
 ### Tagging policy
 At any time you can tag your code:
