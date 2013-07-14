@@ -91,26 +91,32 @@ In addition to this, there is a flag in the configuration file, ntupleProducer_c
 
 Instructions for Developers
 --------------------------
+
  * First, make sure you are on master branch and have the latest code:
 ```
   git checkout master
   git pull
 ```
+
  * Then create a new branch and swich to it:
 ```
   git branch dev1
   git checkout dev1
 ```
+
  * Now you can make any changes you want. Once you're done, commit it and push your branch.
 ```
   git commit -a
   git push origin dev1
 ```
+
  * When you are satisfied with you new code, merge it with master branch. For that:  
+
 ```
   git checkout master
   git merge dev1
 ```
+
 If the changes don't conflict, you're done. 
 If there are conflicts, markers will be left in the problematic files showing the conflict; ```git diff``` will show this. 
 Once you've edited the files to resolve the conflicts, ```git commit -a``.
