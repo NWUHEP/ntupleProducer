@@ -103,7 +103,7 @@ Instructions for Developers
 ```
  * Now you can make any changes you want. Once you're done, commit it and push your branch.
 ```
-  git commit
+  git commit -a
   git push origin dev1
 ```
  * When you are satisfied with you new code, merge it with master branch. For that:  
