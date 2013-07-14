@@ -14,8 +14,9 @@ Instructions for Users
 ```
 
  * Check out the ntuple producer code
-
-```git clone git@github.com:NWUHEP/ntupleProducer.git NWU/ntupleProducer```
+```
+git clone git@github.com:NWUHEP/ntupleProducer.git NWU/ntupleProducer
+```
 
  * Additional packages for running PF2PAT and MET corrections in 53X
 ```
@@ -66,10 +67,13 @@ Instructions for Users
 ```
 
  * Finally, compile this mess (takes a while... coffee time!)  
- ```scram b -j 9```
+```
+ scram b -j 9
+```
 
 Once compiled, we are ready to run it
 ### Runnning the code
+
 ```
   cd test
   cmsRun ntupleProducer_cfg.py
