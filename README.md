@@ -121,15 +121,19 @@ If there are conflicts, markers will be left in the problematic files showing th
 Once you've edited the files to resolve the conflicts, `git commit -a`.
  
 ### Tagging policy
-At any time you can tag your code:
+At any time you can tag your code, and push your tags to remote:
 ```
   git tag -a test1 -m "my tag"
+  git push origin --tags
 ```
-you can use any tags you want. Later those can be deleted.
+You can use any tags you want, later those can be deleted.
 
-For the global production though, we should stick with a convention.
+For the global production though, we should stick with a tagging convention.
 Tags should be **vX.Y** and I am starting them with **v6.1**. 
 Such that the tag correspond to the nutuple_v6 name of ntuple production. 
+If the new code changes the format of the ntuples (adding new varibles etc.) then the tag number should be incremented 
+(to v7.1 etc) and the the ntuple production path name should changed correspondingly. 
+
 
 
 [1]: https://twiki.cern.ch/twiki/bin/view/CMS/UserCodeNWUntupleProducer
