@@ -91,8 +91,40 @@ In addition to this, there is a flag in the configuration file, ntupleProducer_c
 
 Instructions for Developers
 --------------------------
-
+ * First, make sure you are on master branch and have the latest code:
+```
+  git checkout master
+  git pull
+```
+ * Then create a new branch and swich to it:
+```
+  git branch dev1
+  git checkout dev1
+```
+ * Now you can make any changes you want. Once you're done, commit it and push your branch.
+```
+  git commit
+  git push origin dev1
+```
+ * When you are satisfied with you new code, merge it with master branch. For that:  
+```
+  git checkout master
+  git merge dev1
+```
+If the changes don't conflict, you're done. 
+If there are conflicts, markers will be left in the problematic files showing the conflict; ```git diff``` will show this. 
+Once you've edited the files to resolve the conflicts, ```git commit -a``.
+ 
 ### Tagging policy
+At any time you can tag your code:
+```
+  git tag -a test1 -m "my tag"
+```
+you can use any tags you want. Later those can be deleted.
+
+For the global production though, we should stick with a convention.
+Tags should be **vX.Y** and I am starting them with **v6.1**. 
+Such that the tag correspond to the nutuple_v6 name of ntuple production. 
 
 
 [1]: https://twiki.cern.ch/twiki/bin/view/CMS/UserCodeNWUntupleProducer
