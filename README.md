@@ -1,6 +1,7 @@
 The Ntuple Producer code
 ========================
 This is a CMSSW code for creating small ROOT ntuples from CMS data/MC samples.
+Check out this twiki for more details: [CMS/UserCodeNWUntupleProducer][1]
 
 Instructions for Users
 ---------------------
@@ -66,8 +67,19 @@ Instructions for Users
  * Finally, compile this mess (takes a while... coffee time!)  
  ```scram b -j 9```
 
+Once compiled, we are ready to run it
+### Runnning the code
+```
+  cd test
+  cmsRun ntupleProducer_cfg.py
+```
 
-Check out this twiki for more details: [CMS/UserCodeNWUntupleProducer][1]
+*NB* For now, the ntuples require that there be at least one lepton with pT > 10 GeV in order for an event to be saved. In the case that this is not desired (for instance, in jet or photon based studies), you should modify the following line in the ntupleProducer.cc file,
+```if (eleCount > 0 || muCount > 0) eventTree -> Fill();```
+
+In addition to this, there is a flag in the configuration file, ntupleProducer_cfg.py
+
+#### Running with CRAB
 
 
 Instructions for Developers
