@@ -129,11 +129,10 @@ At any time you can tag your code, and push your tags to remote:
 You can use any tags you want, later those can be deleted.
 
 For the global production though, we should stick with a tagging convention.
-Tags should be **vX.Y** and I am starting them with **v6.1**. 
-Such that the tag correspond to the nutuple_v6 name of ntuple production. 
-If the new code changes the format of the ntuples (adding new varibles etc.) then the tag number should be incremented 
-(to v7.1 etc) and the the ntuple production path name should changed correspondingly. 
-
+Tags should be **vX.Y** and I am starting them with **v6.1**. Such that the tag corresponds to the **nutuple_v6** name 
+of ntuple production. 
+If the new code changes the format of the ntuples (adding new varibles etc.) then the first number of a tag should be incremented 
+(to v7.1 etc.) and the the ntuple production path-name should changed correspondingly. 
 
 
 [1]: https://twiki.cern.ch/twiki/bin/view/CMS/UserCodeNWUntupleProducer
