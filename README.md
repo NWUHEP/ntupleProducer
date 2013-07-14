@@ -40,7 +40,7 @@ Instructions for Users
   addpkg DataFormats/PatCandidates V06-05-06-07
 ```            
 
- * Noise, MET, tracker filters, following instructions here: CMS/MissingETOptionalFilters:
+ * Noise, MET, tracker filters, following instructions here: [CMS/MissingETOptionalFilters][2]:
 ```
   cvs co -r V00-00-13 RecoMET/METFilters
   cvs co -r V00-00-08 RecoMET/METAnalyzers
@@ -91,3 +91,4 @@ Instructions for Developers
 
 
 [1]: https://twiki.cern.ch/twiki/bin/view/CMS/UserCodeNWUntupleProducer
+[2]: https://twiki.cern.ch/twiki/bin/view/CMS/MissingETOptionalFilters
