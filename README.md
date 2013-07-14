@@ -13,9 +13,12 @@ Instructions for Users
   cmsenv
 ```
 
- * Check out the ntuple producer code
+ * Check out the ntuple producer code and then the specific tag of the code that is known to work
 ```
-git clone git@github.com:NWUHEP/ntupleProducer.git NWU/ntupleProducer
+ git clone git@github.com:NWUHEP/ntupleProducer.git NWU/ntupleProducer
+ cd NWU/ntupleProducer
+ git checkout v6.3
+ cd ../..
 ```
 
  * Additional packages for running PF2PAT and MET corrections in 53X
