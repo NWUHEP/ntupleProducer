@@ -239,7 +239,6 @@ process.source = cms.Source("PoolSource",
 )
 )
 
-
 ##### END OF Noise Filters ############
 
 print '\n\nCommence ntuplization...\n\n'

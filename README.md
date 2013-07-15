@@ -15,7 +15,7 @@ Instructions for Users
 
  * Check out the ntuple producer code and then the specific tag of the code that is known to work
 ```
- git clone git@github.com:NWUHEP/ntupleProducer.git NWU/ntupleProducer
+ git clone git@github.com:NWUHEP/ntupleProducer.git NWU/ntupleProducer <-- This does not seem to work for me...
  cd NWU/ntupleProducer
  git checkout v6.3
  cd ../..
@@ -33,7 +33,7 @@ Instructions for Users
   addpkg DataFormats/VertexReco V02-00-04-01
 ```
 
- * Do we need this?? Since we don't use PAT anymore, perhaps, those are not needed:
+ * Do we need this?? Since we do not use PAT anymore, perhaps, those are not needed:
 ```
   addpkg PhysicsTools/PatAlgos V08-09-52  
   cvs up -r V08-09-07-05 PhysicsTools/PatAlgos/python/patTemplate_cfg.py   
@@ -107,7 +107,7 @@ Instructions for Developers
   git checkout dev1
 ```
 
- * Now you can make any changes you want. Once you're done, commit it and push your branch.
+ * Now you can make any changes you want. Once you are done, commit it and push your branch.
 ```
   git commit -a
   git push origin dev1
@@ -120,9 +120,9 @@ Instructions for Developers
   git push
 ```
 
-If the changes don't conflict, you're done. 
+If the changes do not conflict, you are done. 
 If there are conflicts, markers will be left in the problematic files showing the conflict; `git diff` will show this. 
-Once you've edited the files to resolve the conflicts, `git commit -a`.
+Once you have edited the files to resolve the conflicts, `git commit -a`.
  
 ### Tagging policy
 At any time you can tag your code, and push your tags to remote:
@@ -135,8 +135,8 @@ You can use any tags you want, later those can be deleted.
 For the global production though, we should stick with a tagging convention.
 Tags should be **vX.Y** and I am starting them with **v6.1**. Such that the tag corresponds to the **nutuple_v6** name 
 of ntuple production. 
-If the new code changes the format of the ntuples (adding new varibles etc.) then the first number of a tag should be incremented 
-(to v7.1 etc.) and the the ntuple production path-name should changed correspondingly. 
+If the new code significantly changes the format of the ntuples (substantial changes to class definitions etc.) then the first number of a tag should be incremented 
+(to v7.1 etc.) and the the ntuple production path-name should changed correspondingly.  Otherwise, incremental changes should be reflected in changes to the second digit
 
 
 [1]: https://twiki.cern.ch/twiki/bin/view/CMS/UserCodeNWUntupleProducer
