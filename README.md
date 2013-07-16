@@ -13,12 +13,9 @@ Instructions for Users
   cmsenv
 ```
 
- * In order to be able to checkout the code from git using ssh you first need to generate the ssh-key and add it to your account, following the instructions on
-https://help.github.com/articles/generating-ssh-keys
-
  * Check out the ntuple producer code and then the specific tag of the code that is known to work
 ```
- git clone git@github.com:NWUHEP/ntupleProducer.git NWU/ntupleProducer
+ git clone https:NWUHEP/ntupleProducer NWU/ntupleProducer
  cd NWU/ntupleProducer
  git checkout v6.3
  cd ../..
