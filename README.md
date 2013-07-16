@@ -15,7 +15,7 @@ Instructions for Users
 
  * Check out the ntuple producer code and then the specific tag of the code that is known to work
 ```
- git clone https:NWUHEP/ntupleProducer NWU/ntupleProducer
+ git clone https://github.com/NWUHEP/ntupleProducer NWU/ntupleProducer
  cd NWU/ntupleProducer
  git checkout v6.3
  cd ../..
