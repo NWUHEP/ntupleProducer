@@ -320,6 +320,8 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_Mu17_TkMu8_v",
                                                "HLT_Mu22_TkMu8_v",
                                                "HLT_Mu22_TkMu22_v",
+                                               "HLT_IsoMu24_v",
+                                               "HLT_IsoMu24_eta2p1_v",
 
                                                "HLT_Ele8_CaloIdL_CaloIsoVL_v",
                                                "HLT_Ele17_CaloIdL_CaloIsoVL_v",
@@ -332,13 +334,48 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_Mu17_Ele8_CaloIdL_v",
                                                "HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v",
                                                "HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
-                                               "HLT_Mu3_Ele8_CaloIdT_CaloIsoVL_v",
                                                "HLT_Mu8_Ele17_CaloIdL_v",
                                                "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v",
                                                "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v"
-
-)
-)
+                                               
+                                               "HLT_Mu22_Photon22_CaloIdL_v",                                               
+                                                                                              
+                                               "HLT_Photon90_CaloIdVL_IsoL_v",
+                                               "HLT_Photon90_CaloIdVL_v",
+                                               "HLT_Photon22_R9Id90_HE10_Iso40_EBOnly_v",
+                                               "HLT_Photon36_R9Id90_HE10_Iso40_EBOnly_v",
+                                               "HLT_Photon50_R9Id90_HE10_Iso40_EBOnly_v",
+                                               
+                                               
+                                               "HLT_Ele18_CaloIdVT_TrkIdT_MediumIsoPFTau20_v",	
+                                               "HLT_Ele20_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_MediumIsoPFTau20_v",
+                                               "HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_MediumIsoPFTau25_v",
+                                               
+                                               "HLT_Ele27_WP80_v",
+                                               "HLT_Ele22_CaloIdL_CaloIsoVL_v",
+                                               
+                                               "HLT_Ele20_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC4_Mass50",
+                                               "HLT_Ele32_CaloIdT_CaloIsoT_TrkIdT_TrkIsoT_SC17_Mass50",
+                                               "HLT_Ele15_Ele8_Ele5_CaloIdL_TrkIdVL",
+                                               "HLT_DoubleEle10_CaloIdL_TrkIdVL_Ele10_CaloIdT_TrkIdVL ",
+                                               "HLT_TripleEle10_CaloIdL_TrkIdVL",
+                                               "HLT_Ele30_CaloIdVT_TrkIdT_PFJet100_PFJet25",
+                                               "HLT_Ele8_CaloIdL_CaloIsoVL_Jet40_v",
+                                               "HLT_DoubleEle8_CaloIdT_TrkIdVL_Mass8_PFHT175",
+                                               "HLT_Photon26_R9Id85_OR_CaloId10_Iso50_Photon18_R9Id85_OR_CaloId10_Iso50_Mass60",
+                                               "HLT_Photon26_R9Id85_OR_CaloId10_Iso50_Photon18_R9Id85_OR_CaloId10_Iso50_Mass70",
+                                               "HLT_Photon26_CaloId10_Iso50_Photon18_CaloId10_Iso50_Mass60",
+                                               "HLT_Photon26_CaloId10_Iso50_Photon18_R9Id85_Mass60",
+                                               "HLT_Photon26_R9Id85_Photon18_CaloId10_Iso50_Mass60",
+                                               "HLT_Photon26_R9Id85_Photon18_R9Id85_Mass60",
+                                               "HLT_Photon36_CaloId10_Iso50_Photon22_CaloId10_Iso50",
+                                               "HLT_Photon36_CaloId10_Iso50_Photon22_R9Id85",
+                                               "HLT_Photon36_R9Id85_OR_CaloId10_Iso50_Photon22_R9Id85_OR_CaloId10_Iso50",
+                                               "HLT_Photon36_R9Id85_Photon22_CaloId10_Iso50",
+                                               "HLT_Photon36_R9Id85_Photon22_R9Id85",
+                                               
+                                               )
+                                          )
 
 process.ntuplePath = cms.Path(
         process.goodOfflinePrimaryVertices
