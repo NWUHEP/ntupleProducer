@@ -268,6 +268,8 @@ process.pfNoPileUp = cms.EDProducer("TPPFCandidatesOnPFCandidates",
 process.pfNoPUSeq = cms.Sequence(process.pfPileUp + process.pfNoPileUp)
 
 
+myTier = "RECO"
+myTierHLT = "RECO"
 ### ntuple producer
 process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
@@ -283,9 +285,9 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   MuonTag           =    cms.untracked.InputTag('muons'),
   PhotonTag         =    cms.untracked.InputTag('photons'),
   PrimaryVtxTag     =    cms.untracked.InputTag('offlinePrimaryVertices'),
-  rhoCorrTag        =    cms.untracked.InputTag('kt6PFJets', 'rho', 'RECO'),
+  rhoCorrTag        =    cms.untracked.InputTag('kt6PFJets', 'rho', myTier),
   rho25CorrTag      =    cms.untracked.InputTag('kt6PFJetsIso', 'rho', 'NTUPLE'),
-  rhoMuCorrTag      =    cms.untracked.InputTag('kt6PFJetsCentralNeutral', 'rho','RECO'),  # specifically for muon iso
+  rhoMuCorrTag      =    cms.untracked.InputTag('kt6PFJetsCentralNeutral', 'rho',myTier),  # specifically for muon iso
 
   partFlowTag       =    cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
 
@@ -307,7 +309,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   trkPOGFiltersTag2  =    cms.untracked.InputTag("toomanystripclus53X",""),
   trkPOGFiltersTag3  =    cms.untracked.InputTag("logErrorTooManyClusters",""),
 
-  hltName           =    cms.untracked.string("HLT"),
+  hltName           =    cms.untracked.string(myTierHLT),
   triggers          =    cms.untracked.vstring(
                                                "HLT_Mu8_v",
                                                "HLT_Mu15_v",
@@ -374,8 +376,9 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_Photon36_R9Id85_Photon22_CaloId10_Iso50",
                                                "HLT_Photon36_R9Id85_Photon22_R9Id85",
                                                
-                                               )
-                                          )
+                                               ),
+                                          
+                                          
 
 process.ntuplePath = cms.Path(
         process.goodOfflinePrimaryVertices
