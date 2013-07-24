@@ -667,7 +667,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             if (triggerPaths_[j] == "") continue;
 
             if (hlNames[i].compare(0, triggerPaths_[j].length(),triggerPaths_[j]) == 0) {
-                //cout << hlNames[i] << " ?= " << triggerPaths_[j] << endl;
+                cout << hlNames[i] << " ?= " << triggerPaths_[j] << endl;
                 triggerStatus |= ULong64_t(0x01) << j;
                 hltPrescale[j] = 1;
 
