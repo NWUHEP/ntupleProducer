@@ -15,7 +15,7 @@ Instructions for Users
 
  * Check out the ntuple producer code and then the specific tag of the code that is known to work
 ```
- git clone git@github.com:NWUHEP/ntupleProducer.git NWU/ntupleProducer <-- This does not seem to work for me...
+ git clone https://github.com/NWUHEP/ntupleProducer NWU/ntupleProducer
  cd NWU/ntupleProducer
  git checkout v6.3
  cd ../..
@@ -136,7 +136,7 @@ For the global production though, we should stick with a tagging convention.
 Tags should be **vX.Y** and I am starting them with **v6.1**. Such that the tag corresponds to the **nutuple_v6** name 
 of ntuple production. 
 If the new code significantly changes the format of the ntuples (substantial changes to class definitions etc.) then the first number of a tag should be incremented 
-(to v7.1 etc.) and the the ntuple production path-name should changed correspondingly.  Otherwise, incremental changes should be reflected in changes to the second digit
+(to v7.1 etc.) and the ntuple production path-name should be changed correspondingly.  Otherwise, incremental changes should be reflected in changes to the second digit.
 
 
 [1]: https://twiki.cern.ch/twiki/bin/view/CMS/UserCodeNWUntupleProducer
