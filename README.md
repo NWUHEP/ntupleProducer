@@ -90,7 +90,6 @@ that will set up an appropriate global tag etc.
 By defualt, the ntuples require that there be at least one muon(electron) with pT > 3(5) GeV in order for an event to be saved. 
 In the case that this is not desired (for instance, in jet or photon based studies), 
 you should modify switch off the ```skimLeptons``` option in ntupleProducer_cfg.py
-```
 
 In addition to this, there are various flags the configuration file, ntupleProducer_cfg.py, that allow to save/not save certain objects (muons, jets, etc). All are saved by default.  
 
