@@ -235,6 +235,8 @@ class ntupleProducer : public edm::EDAnalyzer {
   edm::ParameterSet photonIsoCalcTag_;
   edm::InputTag triggerEventTag_;
 
+  bool skimLepton_;
+
   bool saveJets_;
   bool saveElectrons_;
   bool saveMuons_;
@@ -286,4 +288,6 @@ class ntupleProducer : public edm::EDAnalyzer {
   // Electron Regression
   ElectronEnergyRegressionEvaluate* myEleReg;
   
+
+  int ele27;
 };

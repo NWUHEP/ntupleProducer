@@ -1,11 +1,28 @@
 import os
 import FWCore.ParameterSet.Config as cms
+import FWCore.ParameterSet.VarParsing as VarParsing
 from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 
 process = cms.Process("NTUPLE")
 
+options = VarParsing.VarParsing ('analysis')
+options.maxEvents = 200
+options.inputFiles = '/store/data/Run2012C/SingleMu/AOD/22Jan2013-v1/30010/C0E05558-9078-E211-9E02-485B39800B65.root', \
+                     '/store/data/Run2012D/DoubleMu/AOD/PromptReco-v1/000/208/341/285B355D-553D-E211-A3FC-BCAEC532971E.root',\
+                     #'/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
+#'file:/tmp/naodell/TTJetsToHqToWWq_M-125_TuneZ2_8TeV_pythia6_v2_1_1_p64.root'\
+#'/store/user/andrey/hzgamma_pythia8_153_8TeV_v2_HLT/hzgamma_pythia8_153_8TeV_v2_HLT/53f675467979b3dab12ab0598ae228db/hzgamma_pythia8_py_GEN_SIM_DIGI_L1_DIGI2RAW_HLT_RAW2DIGI_RECO_PU_100_1_82E.root'
+
+options.register("isRealData",
+                 0,
+                 VarParsing.VarParsing.multiplicity.singleton,
+                 VarParsing.VarParsing.varType.int,
+                 "0 if running on MC and 1 if running on Data")
+
+options.parseArguments()
+
 # real data or MC?
-isRealData = False
+isRealData = options.isRealData
 
 # global tag
 process.load("Configuration.Geometry.GeometryIdeal_cff")
@@ -14,7 +31,8 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.load('Configuration.StandardSequences.Reconstruction_cff')
 
 if (isRealData):
-    process.GlobalTag.globaltag = 'GR_P_V42_AN4::All'
+    #process.GlobalTag.globaltag = 'GR_P_V42_AN4::All'
+    process.GlobalTag.globaltag = 'FT_53_V21_AN5::All'
 else:
     process.GlobalTag.globaltag = 'START53_V15::All'
 
@@ -230,13 +248,9 @@ AllFilters = cms.Sequence(process.HBHENoiseFilterResultProducer
                           )
 
 # event source
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(options.maxEvents))
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring(
-    '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
-    #'/store/data/Run2012D/DoubleMu/AOD/PromptReco-v1/000/208/341/285B355D-553D-E211-A3FC-BCAEC532971E.root'
-    #'file:/tmp/naodell/TTJetsToHqToWWq_M-125_TuneZ2_8TeV_pythia6_v2_1_1_p64.root'
-)
+    fileNames = cms.untracked.vstring(options.inputFiles)
 )
 
 ##### END OF Noise Filters ############
@@ -268,12 +282,15 @@ process.pfNoPileUp = cms.EDProducer("TPPFCandidatesOnPFCandidates",
 process.pfNoPUSeq = cms.Sequence(process.pfPileUp + process.pfNoPileUp)
 
 
-myTier = "RECO"
-myTierHLT = "RECO"
+## In case you are running over a privately produced MC sample, that is generatet in _one step_,
+## you probably need to use "HLT" for both recoTier and hltTier.
+## Unless you changed the name of your process. In that case it should be that name.
+recoTier = "RECO"
+hltTier  = "HLT"
 ### ntuple producer
 process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
-  verboseTrigs         =    cms.untracked.bool(False),
+  verboseTrigs         =    cms.untracked.bool(True),
   verboseMVAs          =    cms.untracked.bool(False),
 
   photonIsoCalcTag  =    cms.PSet(isolationSumsCalculator),
@@ -285,11 +302,14 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   MuonTag           =    cms.untracked.InputTag('muons'),
   PhotonTag         =    cms.untracked.InputTag('photons'),
   PrimaryVtxTag     =    cms.untracked.InputTag('offlinePrimaryVertices'),
-  rhoCorrTag        =    cms.untracked.InputTag('kt6PFJets', 'rho', myTier),
+  rhoCorrTag        =    cms.untracked.InputTag('kt6PFJets', 'rho', recoTier),
   rho25CorrTag      =    cms.untracked.InputTag('kt6PFJetsIso', 'rho', 'NTUPLE'),
-  rhoMuCorrTag      =    cms.untracked.InputTag('kt6PFJetsCentralNeutral', 'rho',myTier),  # specifically for muon iso
+  rhoMuCorrTag      =    cms.untracked.InputTag('kt6PFJetsCentralNeutral', 'rho',recoTier),  # specifically for muon iso
 
   partFlowTag       =    cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
+
+  skimLepton        =  cms.untracked.bool(True),
+  #skimSomethingElse   =    cms.untracked.bool(True), you need to implement it though
 
   saveJets          =    cms.untracked.bool(True),
   saveElectrons     =    cms.untracked.bool(True),
@@ -309,7 +329,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   trkPOGFiltersTag2  =    cms.untracked.InputTag("toomanystripclus53X",""),
   trkPOGFiltersTag3  =    cms.untracked.InputTag("logErrorTooManyClusters",""),
 
-  hltName           =    cms.untracked.string(myTierHLT),
+  hltName           =    cms.untracked.string(hltTier),
   triggers          =    cms.untracked.vstring(
                                                "HLT_Mu8_v",
                                                "HLT_Mu15_v",
@@ -332,53 +352,47 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_Ele17_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_Ele8_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_v",
                                                "HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
                                                "HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_v",
-
                                                "HLT_Mu17_Ele8_CaloIdL_v",
                                                "HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v",
                                                "HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
                                                "HLT_Mu8_Ele17_CaloIdL_v",
                                                "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v",
-                                               "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v"
-                                               
-                                               "HLT_Mu22_Photon22_CaloIdL_v",                                               
-                                                                                              
+                                               "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
+                                               "HLT_Mu22_Photon22_CaloIdL_v",
                                                "HLT_Photon90_CaloIdVL_IsoL_v",
                                                "HLT_Photon90_CaloIdVL_v",
+                                               "HLT_Photon135_v",
                                                "HLT_Photon22_R9Id90_HE10_Iso40_EBOnly_v",
                                                "HLT_Photon36_R9Id90_HE10_Iso40_EBOnly_v",
                                                "HLT_Photon50_R9Id90_HE10_Iso40_EBOnly_v",
-                                               
-                                               
                                                "HLT_Ele18_CaloIdVT_TrkIdT_MediumIsoPFTau20_v",	
                                                "HLT_Ele20_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_MediumIsoPFTau20_v",
                                                "HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_MediumIsoPFTau25_v",
-                                               
                                                "HLT_Ele27_WP80_v",
                                                "HLT_Ele22_CaloIdL_CaloIsoVL_v",
-                                               
-                                               "HLT_Ele20_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC4_Mass50",
-                                               "HLT_Ele32_CaloIdT_CaloIsoT_TrkIdT_TrkIsoT_SC17_Mass50",
-                                               "HLT_Ele15_Ele8_Ele5_CaloIdL_TrkIdVL",
-                                               "HLT_DoubleEle10_CaloIdL_TrkIdVL_Ele10_CaloIdT_TrkIdVL ",
-                                               "HLT_TripleEle10_CaloIdL_TrkIdVL",
-                                               "HLT_Ele30_CaloIdVT_TrkIdT_PFJet100_PFJet25",
+                                               "HLT_Ele20_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC4_Mass50_v",
+                                               "HLT_Ele32_CaloIdT_CaloIsoT_TrkIdT_TrkIsoT_SC17_Mass50_v",
+                                               "HLT_Ele15_Ele8_Ele5_CaloIdL_TrkIdVL_v",
+                                               "HLT_DoubleEle10_CaloIdL_TrkIdVL_Ele10_CaloIdT_TrkIdVL_v",
+                                               "HLT_TripleEle10_CaloIdL_TrkIdVL_v",
+                                               "HLT_Ele30_CaloIdVT_TrkIdT_PFJet100_PFJet25_v",
                                                "HLT_Ele8_CaloIdL_CaloIsoVL_Jet40_v",
-                                               "HLT_DoubleEle8_CaloIdT_TrkIdVL_Mass8_PFHT175",
-                                               "HLT_Photon26_R9Id85_OR_CaloId10_Iso50_Photon18_R9Id85_OR_CaloId10_Iso50_Mass60",
-                                               "HLT_Photon26_R9Id85_OR_CaloId10_Iso50_Photon18_R9Id85_OR_CaloId10_Iso50_Mass70",
-                                               "HLT_Photon26_CaloId10_Iso50_Photon18_CaloId10_Iso50_Mass60",
-                                               "HLT_Photon26_CaloId10_Iso50_Photon18_R9Id85_Mass60",
-                                               "HLT_Photon26_R9Id85_Photon18_CaloId10_Iso50_Mass60",
-                                               "HLT_Photon26_R9Id85_Photon18_R9Id85_Mass60",
-                                               "HLT_Photon36_CaloId10_Iso50_Photon22_CaloId10_Iso50",
-                                               "HLT_Photon36_CaloId10_Iso50_Photon22_R9Id85",
-                                               "HLT_Photon36_R9Id85_OR_CaloId10_Iso50_Photon22_R9Id85_OR_CaloId10_Iso50",
-                                               "HLT_Photon36_R9Id85_Photon22_CaloId10_Iso50",
-                                               "HLT_Photon36_R9Id85_Photon22_R9Id85",
+                                               "HLT_DoubleEle8_CaloIdT_TrkIdVL_Mass8_PFHT175_v",
+                                               "HLT_Photon26_R9Id85_OR_CaloId10_Iso50_Photon18_R9Id85_OR_CaloId10_Iso50_Mass60_v",
+                                               "HLT_Photon26_R9Id85_OR_CaloId10_Iso50_Photon18_R9Id85_OR_CaloId10_Iso50_Mass70_v",
+                                               "HLT_Photon26_CaloId10_Iso50_Photon18_CaloId10_Iso50_Mass60_v",
+                                               "HLT_Photon26_CaloId10_Iso50_Photon18_R9Id85_Mass60_v",
+                                               "HLT_Photon26_R9Id85_Photon18_CaloId10_Iso50_Mass60_v",
+                                               "HLT_Photon26_R9Id85_Photon18_R9Id85_Mass60_v",
+                                               "HLT_Photon36_CaloId10_Iso50_Photon22_CaloId10_Iso50_v",
+                                               "HLT_Photon36_CaloId10_Iso50_Photon22_R9Id85_v",
+                                               "HLT_Photon36_R9Id85_OR_CaloId10_Iso50_Photon22_R9Id85_OR_CaloId10_Iso50_v",
+                                               "HLT_Photon36_R9Id85_Photon22_CaloId10_Iso50_v",
+                                               "HLT_Photon36_R9Id85_Photon22_R9Id85_v",
                                                
                                                ),
                                           
-                                          
+                                          )                                          
 
 process.ntuplePath = cms.Path(
         process.goodOfflinePrimaryVertices

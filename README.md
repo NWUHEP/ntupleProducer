@@ -80,17 +80,22 @@ Once compiled, we are ready to run it
   cd test
   cmsRun ntupleProducer_cfg.py
 ```
+By default it assumes you are running it over MC sample. If you want to run on data, do:
+```
+  cmsRun ntupleProducer_cfg.py isRealData=1
+``` 
+that will set up an appropriate global tag etc.
 
 *NB* 
-For now, the ntuples require that there be at least one lepton with pT > 10 GeV in order for an event to be saved. In the case that this is not desired (for instance, in jet or photon based studies), you should modify the following line in the ntupleProducer.cc file
-```c++ 
-if (eleCount > 0 || muCount > 0) eventTree -> Fill();
+By defualt, the ntuples require that there be at least one muon(electron) with pT > 3(5) GeV in order for an event to be saved. 
+In the case that this is not desired (for instance, in jet or photon based studies), 
+you should modify switch off the ```skimLeptons``` option in ntupleProducer_cfg.py
 ```
 
-In addition to this, there is a flag in the configuration file, ntupleProducer_cfg.py
+In addition to this, there are various flags the configuration file, ntupleProducer_cfg.py, that allow to save/not save certain objects (muons, jets, etc). All are saved by default.  
 
 #### Running with CRAB
-
+Look into ```crabNtuples_MC.cfg``` and ```crabNtuples_MC.cfg``` scripts.
 
 Instructions for Developers
 --------------------------
