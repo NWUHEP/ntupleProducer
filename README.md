@@ -80,7 +80,7 @@ Once compiled, we are ready to run it
   cd test
   cmsRun ntupleProducer_cfg.py
 ```
-By default it assumes you are running it over MC sample. If you want to run on data, do:
+it assumes you are running over an MC sample. If you want to run on data, do:
 ```
   cmsRun ntupleProducer_cfg.py isRealData=1
 ``` 
@@ -94,7 +94,9 @@ you should modify switch off the ```skimLeptons``` option in ntupleProducer_cfg.
 In addition to this, there are various flags the configuration file, ntupleProducer_cfg.py, that allow to save/not save certain objects (muons, jets, etc). All are saved by default.  
 
 #### Running with CRAB
-Look into ```crabNtuples_MC.cfg``` and ```crabNtuples_MC.cfg``` scripts.
+Look into ```crabNtuples_MC.cfg``` and ```crabNtuples_Data.cfg``` scripts.
+
+Will incorporate multicrab soon.
 
 Instructions for Developers
 --------------------------
