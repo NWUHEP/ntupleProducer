@@ -7,9 +7,14 @@ process = cms.Process("NTUPLE")
 
 options = VarParsing.VarParsing ('analysis')
 options.maxEvents = 200
-options.inputFiles = '/store/data/Run2012C/SingleMu/AOD/22Jan2013-v1/30010/C0E05558-9078-E211-9E02-485B39800B65.root', \
-                     '/store/data/Run2012D/DoubleMu/AOD/PromptReco-v1/000/208/341/285B355D-553D-E211-A3FC-BCAEC532971E.root',\
-                     #'/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
+#options.inputFiles= 'temp_mg5_short.txt'
+#temp_mg5_short.txt
+options.loadFromFile('inputFiles','temp_mg5_full.txt') 
+#"/store/user/stoyan/MC/MG5_pp_mumug/SIMRECO_START53_V5_20.07.13/stoynev/MG5_pp_mumug_SIMRECO_START53_V5/MG5_pp_mumug_SIMRECO_START53_V5/abf2cea0333a5a4aadd0172f40b40a40/ppTOllg_20.07.13_744_1_vSV.root"
+#'/store/data/Run2012C/SingleMu/AOD/22Jan2013-v1/30010/C0E05558-9078-E211-9E02-485B39800B65.root', \
+#                    '/store/data/Run2012D/DoubleMu/AOD/PromptReco-v1/000/208/341/285B355D-553D-E211-A3FC-BCAEC532971E.root',\
+
+#'/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
 #'file:/tmp/naodell/TTJetsToHqToWWq_M-125_TuneZ2_8TeV_pythia6_v2_1_1_p64.root'\
 #'/store/user/andrey/hzgamma_pythia8_153_8TeV_v2_HLT/hzgamma_pythia8_153_8TeV_v2_HLT/53f675467979b3dab12ab0598ae228db/hzgamma_pythia8_py_GEN_SIM_DIGI_L1_DIGI2RAW_HLT_RAW2DIGI_RECO_PU_100_1_82E.root'
 
@@ -285,7 +290,7 @@ process.pfNoPUSeq = cms.Sequence(process.pfPileUp + process.pfNoPileUp)
 ## In case you are running over a privately produced MC sample, that is generatet in _one step_,
 ## you probably need to use "HLT" for both recoTier and hltTier.
 ## Unless you changed the name of your process. In that case it should be that name.
-recoTier = "RECO"
+recoTier = "HLT"
 hltTier  = "HLT"
 ### ntuple producer
 process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
