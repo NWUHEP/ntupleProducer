@@ -19,6 +19,8 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
 
     partFlowTag_      = iConfig.getUntrackedParameter<edm::InputTag>("partFlowTag");
 
+    skimLepton_      = iConfig.getUntrackedParameter<bool>("skimLepton");
+
     saveJets_         = iConfig.getUntrackedParameter<bool>("saveJets");
     saveElectrons_    = iConfig.getUntrackedParameter<bool>("saveElectrons");
     saveMuons_        = iConfig.getUntrackedParameter<bool>("saveMuons");
@@ -40,6 +42,7 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
     trkPOGFiltersTag2_  = iConfig.getUntrackedParameter<edm::InputTag>("trkPOGFiltersTag2");
     trkPOGFiltersTag3_  = iConfig.getUntrackedParameter<edm::InputTag>("trkPOGFiltersTag3");
     photonIsoCalcTag_   = iConfig.getParameter<edm::ParameterSet>("photonIsoCalcTag");
+
 }
 
 ntupleProducer::~ntupleProducer()
@@ -303,7 +306,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         iEvent.getByLabel(electronTag_, electrons);
 
         for (vector<reco::GsfElectron>::const_iterator iElectron = electrons->begin(); iElectron != electrons->end(); ++iElectron) {
-            if (iElectron->pt() < 10) continue;
+            if (iElectron->pt() < 5) continue;
 
             TCElectron* eleCon = new ((*recoElectrons)[eleCount]) TCElectron;
 
@@ -660,33 +663,39 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     triggerStatus   = ULong64_t(0x0);    
 
+
     for (int i=0; i < (int)hlNames.size(); ++i) {      
         if (!triggerDecision(hltResults, i)) continue;	
 
         for (int j = 0; j < (int)triggerPaths_.size(); ++j){
             if (triggerPaths_[j] == "") continue;
 
-            if (hlNames[i].compare(0, triggerPaths_[j].length(),triggerPaths_[j]) == 0) {
-                cout << hlNames[i] << " ?= " << triggerPaths_[j] << endl;
-                triggerStatus |= ULong64_t(0x01) << j;
-                hltPrescale[j] = 1;
+            if (hlNames[i].find(triggerPaths_[j]) != std::string::npos) {
 
-                /* if (isRealData) {
-                   pair<int, int> preScales;
-                   preScales = hltConfig_.prescaleValues(iEvent, iSetup, hlNames[i]); 
-                   hltPrescale[j] = preScales.first*preScales.second;
-                   } */
+              
+              triggerStatus |= ULong64_t(0x01) << j;
+              hltPrescale[j] = 1;
+              
+              //if (triggerPaths_[j]=="HLT_Ele27_WP80_v"){
+              // ele27++;
+              //cout<<"\t\t **Contains  HLT_Ele27_WP80_v **"<<endl;
+              //analyzeTrigger(hltResults, hltEvent, hlNames[i], &trigCount);       
+                //}
+
+              /* if (isRealData) {
+                 pair<int, int> preScales;
+                 preScales = hltConfig_.prescaleValues(iEvent, iSetup, hlNames[i]); 
+                 hltPrescale[j] = preScales.first*preScales.second;
+                 } */
             }
         }
     } 
-
-    for(unsigned int t = 1; t<hlNames.size();t++){  
-        analyzeTrigger(hltResults, hltEvent, hlNames[t], &trigCount);       
-    }                                               
-
+    
+ 
     ++nEvents;
 
-    if (eleCount > 0 || muCount > 0) eventTree -> Fill(); // possibly specify a cut in configuration
+    if (skimLepton_ && (eleCount > 0 || muCount > 0))
+      eventTree -> Fill(); // possibly specify a cut in configuration
 
     primaryVtx    -> Clear("C");
     recoJets      -> Clear("C");
@@ -697,6 +706,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     triggerObjects-> Clear("C");
     genJets       -> Clear("C");
     genParticles  -> Clear("C");
+
+
+    //cout<<"\n \t *Ele27 "<<ele27<<endl;
 }
 
 // ------------ method called once each job just before starting event loop  ------------
@@ -821,9 +833,9 @@ bool ntupleProducer::triggerDecision(edm::Handle<edm::TriggerResults> &hltResult
 {
     bool triggerPassed = false;
     if(hltResults->wasrun(iTrigger) &&
-            hltResults->accept(iTrigger) &&
-            !hltResults->error(iTrigger) ){
-        triggerPassed = true;
+       hltResults->accept(iTrigger) &&
+       !hltResults->error(iTrigger) ){
+      triggerPassed = true;
     }
     return triggerPassed;
 }
@@ -1328,11 +1340,10 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults
 
     if(!goodTrigger) return;
 
-    //if(verboseTrigs){
-    //  std::cout<<" n = "<<n<<" triggerIndex = "<<triggerIndex<<" size = "<<hltConfig_.size()<<std::endl;
-    //  std::cout<<" Analyze triggerName : "<<triggerName<<std::endl;
-    //}
-    //std::cout<<" Analyze triggerName : "<<triggerName<<std::endl;
+    if(verboseTrigs){
+      std::cout<<" n = "<<n<<" triggerIndex = "<<triggerIndex<<" size = "<<hltConfig_.size()<<std::endl;
+      std::cout<<" Analyze triggerName : "<<triggerName<<std::endl;
+    }
 
     if (triggerIndex>=n) {
         if(verboseTrigs){
