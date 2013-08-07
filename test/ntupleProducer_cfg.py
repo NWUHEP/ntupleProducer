@@ -38,6 +38,9 @@ process.load("CondCore.DBCommon.CondDBCommon_cfi")
 #addPfMET(process,'PF')
 #addTcMET(process,"TC")
 
+##Testing MET significance
+process.load("RecoMET.METProducers.PFMET_cfi")
+process.pfMet1 = process.pfMet.clone(alias="PFMET1")
 
 #################################################################
 #################################################################
@@ -387,6 +390,11 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_Photon30_R9Id90_CaloId_HE10_Iso40_EBOnly_Met25_HBHENoiseCleaned",
                                                "HLT_Photon30_R9Id90_CaloId_HE10_Iso40_EBOnly",
                                                "HLT_Photon30"
+                                               "HLT_DiJet20_MJJ650_AllJets_DEta3p5_HT120_VBF",
+                                               "HLT_DiJet30_MJJ700_AllJets_DEta3p5_VBF",
+                                               "HLT_DiJet35_MJJ650_AllJets_DEta3p5_VBF",
+                                               "HLT_DiJet35_MJJ700_AllJets_DEta3p5_VBF",
+                                               "HLT_DiJet35_MJJ750_AllJets_DEta3p5_VBF"
 )
 )
 
@@ -406,6 +414,7 @@ process.ntuplePath = cms.Path(
     * process.btagging
     * AllFilters
     * process.pfMEtMVAsequence
+    * process.pfMet1
     * process.ntupleProducer
 )
 

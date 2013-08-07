@@ -222,6 +222,12 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             T0MET->SetChargedHadronFraction(t0met->ChargedHadEtFraction());
             T0MET->SetChargedEMFraction(t0met->ChargedEMEtFraction());
 
+	    //Significance
+	    float significance = (t0MET->front()).significance();
+	    float sigmaX2 = (t0MET->front()).getSignificanceMatrix()(0,0);
+            T0MET->SetSignificance( significance );
+            T0MET->SetSigmaX2( sigmaX2 );
+
         }
     }
     /////////////// Added by Rafael on July 3rd 2013
@@ -270,6 +276,14 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             recoMET->SetChargedEMFraction(met->ChargedEMEtFraction());
 
         }
+
+        edm::Handle< edm::View<reco::PFMET> > pfMEThandle;
+        iEvent.getByLabel("pfMet", pfMEThandle);
+        //Significance
+        float significance = (pfMEThandle->front()).significance();
+        float sigmaX2 = (pfMEThandle->front()).getSignificanceMatrix()(0,0);
+        recoMET->SetSignificance( significance );
+        recoMET->SetSigmaX2( sigmaX2 );
     }
 
     //////////////////
