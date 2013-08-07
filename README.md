@@ -94,6 +94,7 @@ Instructions for Users
   cp NWU/ntupleProducer/patches/pfMETCorrections_cff.py JetMETCorrections/Type1MET/python/pfMETCorrections_cff.py
   cp NWU/ntupleProducer/patches/mvaPFMET_leptons_data_cff.py JetMETCorrections/METPUSubtraction/python/mvaPFMET_leptons_data_cff.py
   cp NWU/ntupleProducer/patches/mvaPFMET_leptons_cff.py JetMETCorrections/METPUSubtraction/python/mvaPFMET_leptons_cff.py
+  cp NWU/ntupleProducer/patches/mvaPFMET_leptons_cfi.py JetMETCorrections/METPUSubtraction/python/mvaPFMET_leptons_cfi.py
   cp NWU/ntupleProducer/patches/PATMHTProducer.h PhysicsTools/PatAlgos/plugins/PATMHTProducer.h
   cp NWU/ntupleProducer/patches/classes.h DataFormats/StdDictionaries/src/classes.h
   cp NWU/ntupleProducer/patches/classes_def.xml DataFormats/StdDictionaries/src/classes_def.xml
