@@ -8,8 +8,8 @@ Instructions for Users
  * Set up the environment
 ```
   setenv SCRAM_ARCH slc5_amd64_gcc462
-  cmsrel CMSSW_5_3_8
-  cd CMSSW_5_3_8/src
+  cmsrel CMSSW_5_3_8_patch1
+  cd CMSSW_5_3_8_patch1/src
   cmsenv
 ```
 
@@ -17,11 +17,11 @@ Instructions for Users
 ```
  git clone https://github.com/NWUHEP/ntupleProducer NWU/ntupleProducer
  cd NWU/ntupleProducer
- git checkout v6.3
+ git checkout v7.0
  cd ../..
 ```
 
- * Additional packages for running PF2PAT and MET corrections in 53X
+ * NWU Code (along for the ride from v6.X):
 ```
   addpkg CommonTools/ParticleFlow   V00-03-16
   addpkg RecoParticleFlow/PFProducer V15-01-11 
@@ -31,22 +31,13 @@ Instructions for Users
   addpkg DataFormats/ParticleFlowCandidate V15-03-04-01
   addpkg DataFormats/TrackReco V10-02-02-01
   addpkg DataFormats/VertexReco V02-00-04-01
-```
-
- * Do we need this?? Since we do not use PAT anymore, perhaps, those are not needed:
-```
   addpkg PhysicsTools/PatAlgos V08-09-52  
   cvs up -r V08-09-07-05 PhysicsTools/PatAlgos/python/patTemplate_cfg.py   
   addpkg PhysicsTools/PatUtils V03-09-28
-
   addpkg DataFormats/StdDictionaries V00-02-14
   addpkg FWCore/GuiBrowsers V00-00-70
   addpkg RecoMET/METProducers V03-03-12-02
   addpkg DataFormats/PatCandidates V06-05-06-07
-```            
-
- * Noise, MET, tracker filters, following instructions here: [CMS/MissingETOptionalFilters][2]:
-```
   cvs co -r V00-00-13 RecoMET/METFilters
   cvs co -r V00-00-08 RecoMET/METAnalyzers
   cvs co -r V00-03-23 CommonTools/RecoAlgos
@@ -54,19 +45,58 @@ Instructions for Users
   cvs co -r V00-11-17 DPGAnalysis/SiStripTools
   cvs co -r V00-00-08 DataFormats/TrackerCommon
   cvs co -r V01-09-05 RecoLocalTracker/SubCollectionProducers
-```
-
- * For calculation PFIso for EGamma objects,
-```
   cvs co -r V00-00-30-02 -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
   cvs up -r 1.13 EGamma/EGammaAnalysisTools/interface/PFIsolationEstimator.h
   cvs up -r 1.20 EGamma/EGammaAnalysisTools/src/PFIsolationEstimator.cc
+  cvs co -r HCP2012_V05 EgammaAnalysis/ElectronTools
+  cvs co -r V09-00-01 RecoEgamma/EgammaTools
 ```
 
- * Also this for the electron MVA ID and Regression
+ * Track MET Code:
 ```
-  cvs co -r HCP2012_V05 EgammaAnalysis/ElectronTools
-  cvs co -r V09-00-01   RecoEgamma/EgammaTools
+  cvs co -r 1.2 RecoMET/METProducers/src/ParticleFlowForChargedMETProducer.cc
+  cvs co -r 1.1 RecoMET/METProducers/src/TrackMETProducer.cc
+  cvs co -r 1.2 RecoMET/METProducers/interface/ParticleFlowForChargedMETProducer.h
+  cvs co -r 1.1 RecoMET/METProducers/interface/TrackMETProducer.h
+  cvs up -r 1.17 RecoMET/METProducers/src/SealModule.cc
+  cvs co -r 1.1 RecoMET/METProducers/python/TrackMET_cfi.py
+  cvs co -r 1.2 RecoMET/METProducers/python/pfChargedMET_cfi.py
+```
+
+ * MVA MET Code:
+```
+  cvs co -r METPU_5_3_X_v12 JetMETCorrections/METPUSubtraction
+  cvs co -r HEAD -d pharrisTmp UserCode/pharris/MVAMet/data
+  cp  -d pharrisTmp/*June2013*.root           JetMETCorrections/METPUSubtraction/data/
+  cp  -d pharrisTmp/*Dec2012*.root           JetMETCorrections/METPUSubtraction/data/
+  rm -rf pharrisTmp
+  cvs co -r METPU_5_3_X_v4 RecoJets/JetProducers
+  cvs up -r HEAD RecoJets/JetProducers/data/
+  cvs up -r HEAD RecoJets/JetProducers/python/PileupJetIDCutParams_cfi.py                     
+  cvs up -r HEAD RecoJets/JetProducers/python/PileupJetIDParams_cfi.py                     
+  cvs up -r HEAD RecoJets/JetProducers/python/PileupJetID_cfi.py     
+  cvs co -r b5_3_X_cvMEtCorr_2013Feb22            DataFormats/METReco
+  cvs co -r V05-00-16                             DataFormats/JetReco
+  cvs co -r V01-04-25                             RecoTauTag/RecoTau 
+  cvs co -r V03-04-07                             RecoMET/METAlgorithms
+  cvs co -r V01-04-13                             RecoTauTag/Configuration
+```
+
+ * Files that needs to be updated:
+```
+  cvs co -r V03-04-07 DataFormats/METReco/interface/CorrMETData.h
+  cvs co -r HEAD JetMETCorrections/Type1MET/plugins/Type0PFMETcorrInputProducer.h
+  cvs co -r HEAD JetMETCorrections/Type1MET/plugins/Type0PFMETcorrInputProducer.cc
+```
+
+ * Patches to checked folders:
+```
+  cp NWU/ntupleProducer/patches/pfMETCorrections_cff.py JetMETCorrections/Type1MET/python/pfMETCorrections_cff.py
+  cp NWU/ntupleProducer/patches/mvaPFMET_leptons_data_cff.py JetMETCorrections/METPUSubtraction/python/mvaPFMET_leptons_data_cff.py
+  cp NWU/ntupleProducer/patches/mvaPFMET_leptons_cff.py JetMETCorrections/METPUSubtraction/python/mvaPFMET_leptons_cff.py
+  cp NWU/ntupleProducer/patches/PATMHTProducer.h PhysicsTools/PatAlgos/plugins/PATMHTProducer.h
+  cp NWU/ntupleProducer/patches/classes.h DataFormats/StdDictionaries/src/classes.h
+  cp NWU/ntupleProducer/patches/classes_def.xml DataFormats/StdDictionaries/src/classes_def.xml
 ```
 
  * Finally, compile this mess (takes a while... coffee time!)  

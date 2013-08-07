@@ -31,7 +31,11 @@
 <use   name="CondFormats/JetMETObjects"/>
 <use   name="HLTrigger/HLTcore"/>
 <use   name="RecoEgamma/PhotonIdentification"/>
+<use   name="RecoEgamma/EgammaTools"/>
 <use   name="EGamma/EGammaAnalysisTools"/>
 <use   name="EgammaAnalysis/ElectronTools"/>
 <use   name="RecoEgamma/EgammaTools"/>
+<use   name="JetMETCorrections/Algorithms"/>
+<use   name="RecoMET/METAlgorithms"/>
+<use   name="RecoJets/JetProducers"/>
 <flags   EDM_PLUGIN="1"/>

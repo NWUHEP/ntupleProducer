@@ -1,31 +1,11 @@
 import os
 import FWCore.ParameterSet.Config as cms
-import FWCore.ParameterSet.VarParsing as VarParsing
 from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 
 process = cms.Process("NTUPLE")
 
-options = VarParsing.VarParsing ('analysis')
-options.maxEvents = 200
-options.inputFiles= '/store/data/Run2012C/SingleMu/AOD/22Jan2013-v1/30010/C0E05558-9078-E211-9E02-485B39800B65.root'
-#options.loadFromFile('inputFiles','temp_mg5_full.txt') 
-#"/store/user/stoyan/MC/MG5_pp_mumug/SIMRECO_START53_V5_20.07.13/stoynev/MG5_pp_mumug_SIMRECO_START53_V5/MG5_pp_mumug_SIMRECO_START53_V5/abf2cea0333a5a4aadd0172f40b40a40/ppTOllg_20.07.13_744_1_vSV.root"
-#'/store/data/Run2012C/SingleMu/AOD/22Jan2013-v1/30010/C0E05558-9078-E211-9E02-485B39800B65.root', \
-
-#'/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
-#'file:/tmp/naodell/TTJetsToHqToWWq_M-125_TuneZ2_8TeV_pythia6_v2_1_1_p64.root'\
-#'/store/user/andrey/hzgamma_pythia8_153_8TeV_v2_HLT/hzgamma_pythia8_153_8TeV_v2_HLT/53f675467979b3dab12ab0598ae228db/hzgamma_pythia8_py_GEN_SIM_DIGI_L1_DIGI2RAW_HLT_RAW2DIGI_RECO_PU_100_1_82E.root'
-
-options.register("isRealData",
-                 0,
-                 VarParsing.VarParsing.multiplicity.singleton,
-                 VarParsing.VarParsing.varType.int,
-                 "0 if running on MC and 1 if running on Data")
-
-options.parseArguments()
-
 # real data or MC?
-isRealData = options.isRealData
+isRealData = False
 
 # global tag
 process.load("Configuration.Geometry.GeometryIdeal_cff")
@@ -34,16 +14,18 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.load('Configuration.StandardSequences.Reconstruction_cff')
 
 if (isRealData):
-    #process.GlobalTag.globaltag = 'GR_P_V42_AN4::All'
-    process.GlobalTag.globaltag = 'FT_53_V21_AN5::All'
+    process.GlobalTag.globaltag = 'GR_P_V42_AN4::All'
+    process.load('JetMETCorrections.METPUSubtraction.mvaPFMET_leptons_data_cff')
 else:
     process.GlobalTag.globaltag = 'START53_V15::All'
+    process.load('JetMETCorrections.METPUSubtraction.mvaPFMET_leptons_cff')
 
 # Create good primary vertices for PF association
 from PhysicsTools.SelectorUtils.pvSelector_cfi import pvSelector
 process.goodOfflinePrimaryVertices = cms.EDFilter( "PrimaryVertexObjectFilter",
     filterParams = pvSelector.clone( minNdof = cms.double(4.0), maxZ = cms.double(24.0) ),
-    src=cms.InputTag('offlinePrimaryVertices')
+    src=cms.InputTag('offlinePrimaryVertices') #Standard Primary Vertex Collection
+#    src=cms.InputTag('offlinePrimaryVerticesWithBS') #Primary Vertices Collection constrained by beamspot
     )
 
 # jet energy corrections
@@ -56,9 +38,15 @@ process.load("CondCore.DBCommon.CondDBCommon_cfi")
 #addPfMET(process,'PF')
 #addTcMET(process,"TC")
 
+
+#################################################################
+#################################################################
+
 # MET corrections Type 1 and x,y corrections
 process.load('JetMETCorrections.Type1MET.pfMETCorrections_cff')
 process.load("JetMETCorrections.Type1MET.pfMETsysShiftCorrections_cfi")
+process.load("JetMETCorrections.Type1MET.pfMETCorrectionType0_cfi") #Added by Rafael on July 3rd
+
 
 # use for 2012 Data
 if (isRealData):
@@ -75,6 +63,34 @@ process.pfType1p2CorrectedMet.srcType1Corrections = cms.VInputTag(
     cms.InputTag('pfJetMETcorr', 'type1') ,
     cms.InputTag('pfMEtSysShiftCorr')
 )
+
+#################################################################
+#################################################################
+process.pfType1CorrectedMetType0.srcType1Corrections = cms.VInputTag(
+    cms.InputTag('pfMETcorrType0'),
+    cms.InputTag('pfJetMETcorr', 'type1') ,
+    cms.InputTag('pfMEtSysShiftCorr')
+)
+
+#Added by Rafael on May 28th
+###################################################################################################################
+###################################################################################################################
+process.load("RecoMET.METProducers.pfChargedMET_cfi")
+process.load("RecoMET.METProducers.TrackMET_cfi")
+
+###################################################################################################################
+###################################################################################################################
+
+#Added by Rafael on June 4th (GEN MET Information)
+###################################################################################################################
+###################################################################################################################
+#if (isRealData == False):
+#process.load("RecoMET.Configuration.GenMETParticles_cff")
+#process.load("RecoMET.METProducers.genMetCalo_cfi")
+#process.load("RecoMET.METProducers.MetMuonCorrections_cff")
+
+###################################################################################################################
+###################################################################################################################
 
 if (isRealData):
     process.pfJetMETcorr.jetCorrLabel = cms.string("ak5PFL1FastL2L3Residual")
@@ -121,6 +137,7 @@ process.kt6PFJetsIso.Rho_EtaMax = cms.double(2.5)
 process.ak5JPTL1Offset.algorithm = 'AK5JPT'
 process.ak5JetTracksAssociatorAtVertex.useAssigned = cms.bool(True)
 process.ak5JetTracksAssociatorAtVertex.pvSrc = cms.InputTag("offlinePrimaryVertices")
+#process.ak5JetTracksAssociatorAtVertex.pvSrc = cms.InputTag("offlinePrimaryVerticesWithBS")
 
 process.jpt = cms.Sequence(
                         process.ak5JTA
@@ -208,14 +225,15 @@ process.EcalDeadCellBoundaryEnergyFilter.limitDeadCellToChannelStatusEE = cms.vi
 # End of Boundary Energy filter configuration
 
 
-## The Good vertices collection needed by the tracking failure filter 
+## The Good vertices collection needed by the tracking failure filter
 process.goodVertices = cms.EDFilter(
       "VertexSelector",
         filter = cms.bool(False),
         src = cms.InputTag("offlinePrimaryVertices"),
+#        src = cms.InputTag("offlinePrimaryVerticesWithBS"),
         cut = cms.string("!isFake && ndof > 4 && abs(z) <= 24 && position.rho < 2")
       )
-## The tracking failure filter 
+## The tracking failure filter
 process.load('RecoMET.METFilters.trackingFailureFilter_cfi')
 process.trackingFailureFilter.taggingMode = cms.bool(True)
 
@@ -251,10 +269,18 @@ AllFilters = cms.Sequence(process.HBHENoiseFilterResultProducer
                           )
 
 # event source
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(options.maxEvents))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring(options.inputFiles)
+    fileNames = cms.untracked.vstring(
+	#'/store/mc/Summer12_DR53X/GluGluToHToWWTo2LAndTau2Nu_M-125_8TeV-powheg-pythia6/AODSIM/PU_S10_START53_V7A-v1/0000/DE5F727F-8BFC-E111-8576-002618FDA263.root'
+#	'root://eoscms//eos/cms/store/user/cmkuo/GluGluToHToZG_M-125_8TeV-powheg-pythia6/HZg_nunug_ggH_m125_RECO_v1/3664d28163503ca8171ba37083c39fc9/STEP2_RAW2DIGI_L1Reco_RECO_PU_100_1_fXq.root'
+    '/store/data/Run2012D/SinglePhotonParked/AOD/22Jan2013-v1/30004/144D7268-4086-E211-9DC1-001E673984C1.root'
+#    '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
+    #'/store/data/Run2012D/DoubleMu/AOD/PromptReco-v1/000/208/341/285B355D-553D-E211-A3FC-BCAEC532971E.root'
+    #'file:/tmp/naodell/TTJetsToHqToWWq_M-125_TuneZ2_8TeV_pythia6_v2_1_1_p64.root'
 )
+)
+
 
 ##### END OF Noise Filters ############
 
@@ -272,6 +298,7 @@ process.pfPileUp = cms.EDProducer("PFPileUp",
     checkClosestZVertex = cms.bool(True),
     verbose = cms.untracked.bool(False),
     Vertices = cms.InputTag("offlinePrimaryVertices")
+#    Vertices = cms.InputTag("offlinePrimaryVerticesWithBS")
 )
 
 process.pfNoPileUp = cms.EDProducer("TPPFCandidatesOnPFCandidates",
@@ -285,11 +312,6 @@ process.pfNoPileUp = cms.EDProducer("TPPFCandidatesOnPFCandidates",
 process.pfNoPUSeq = cms.Sequence(process.pfPileUp + process.pfNoPileUp)
 
 
-## In case you are running over a privately produced MC sample, that is generatet in _one step_,
-## you probably need to use "HLT" for both recoTier and hltTier.
-## Unless you changed the name of your process. In that case it should be that name.
-recoTier = "RECO"
-hltTier  = "HLT"
 ### ntuple producer
 process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
@@ -301,18 +323,21 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   JetTag            =    cms.untracked.InputTag('ak5PFJetsL1FastL2L3'),
   GenJetTag         =    cms.untracked.InputTag('ak5GenJets'),
   METTag            =    cms.untracked.InputTag('pfType1CorrectedMet'),
+  TrackMETTag       =    cms.untracked.InputTag('trackMet'), #Added by Rafael on May 28th
   ElectronTag       =    cms.untracked.InputTag('gsfElectrons'),
   MuonTag           =    cms.untracked.InputTag('muons'),
   PhotonTag         =    cms.untracked.InputTag('photons'),
   PrimaryVtxTag     =    cms.untracked.InputTag('offlinePrimaryVertices'),
-  rhoCorrTag        =    cms.untracked.InputTag('kt6PFJets', 'rho', recoTier),
+  rhoCorrTag        =    cms.untracked.InputTag('kt6PFJets', 'rho', 'RECO'),
   rho25CorrTag      =    cms.untracked.InputTag('kt6PFJetsIso', 'rho', 'NTUPLE'),
-  rhoMuCorrTag      =    cms.untracked.InputTag('kt6PFJetsCentralNeutral', 'rho',recoTier),  # specifically for muon iso
+  rhoMuCorrTag      =    cms.untracked.InputTag('kt6PFJetsCentralNeutral', 'rho','RECO'),  # specifically for muon iso
+
+## New corrections to MET being saved: Added by Rafael on July 3rd 2013
+  T0METTag	    =	 cms.untracked.InputTag('pfType1CorrectedMetType0'),
+  T2METTag	    =	 cms.untracked.InputTag('pfType1p2CorrectedMet'),
+##End
 
   partFlowTag       =    cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
-
-  skimLepton        =  cms.untracked.bool(True),
-  #skimSomethingElse   =    cms.untracked.bool(True), you need to implement it though
 
   saveJets          =    cms.untracked.bool(True),
   saveElectrons     =    cms.untracked.bool(True),
@@ -321,6 +346,11 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   saveMET           =    cms.untracked.bool(True),
   saveGenJets       =    cms.untracked.bool(True),
   saveGenParticles  =    cms.untracked.bool(True),
+  saveTrackMET      =    cms.untracked.bool(True), #Added by Rafael on May 28th
+##New Met Corrections, Added by Rafael on July 3rd 2013
+  saveT0MET	    =    cms.untracked.bool(True),
+  saveT2MET	    =    cms.untracked.bool(True),
+##End
 
   ecalTPFilterTag    =    cms.untracked.InputTag("EcalDeadCellTriggerPrimitiveFilter",""),
   ecalBEFilterTag    =    cms.untracked.InputTag("EcalDeadCellBoundaryEnergyFilter",""),
@@ -332,83 +362,71 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   trkPOGFiltersTag2  =    cms.untracked.InputTag("toomanystripclus53X",""),
   trkPOGFiltersTag3  =    cms.untracked.InputTag("logErrorTooManyClusters",""),
 
-  hltName           =    cms.untracked.string(hltTier),
+  hltName           =    cms.untracked.string("HLT"),
   triggers          =    cms.untracked.vstring(
-                                               "HLT_Mu8_v",
-                                               "HLT_Mu15_v",
-                                               "HLT_Mu8_Jet40_v",
                                                "HLT_Mu13_Mu8_v",
                                                "HLT_Mu17_Mu8_v",
-                                               "HLT_DoubleMu3_v",
-                                               "HLT_DoubleMu6_v",
                                                "HLT_DoubleMu7_v",
                                                "HLT_Mu17_TkMu8_v",
                                                "HLT_Mu22_TkMu8_v",
                                                "HLT_Mu22_TkMu22_v",
-                                               "HLT_IsoMu24_v",
-                                               "HLT_IsoMu24_eta2p1_v",
 
-                                               "HLT_Ele8_CaloIdL_CaloIsoVL_v",
-                                               "HLT_Ele17_CaloIdL_CaloIsoVL_v",
-                                               "HLT_Ele8_CaloIdL_CaloIsoVL_Jet40_v",
                                                "HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL_v",
                                                "HLT_Ele17_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_Ele8_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_v",
                                                "HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
                                                "HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_v",
+
                                                "HLT_Mu17_Ele8_CaloIdL_v",
                                                "HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v",
                                                "HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
                                                "HLT_Mu8_Ele17_CaloIdL_v",
                                                "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v",
-                                               "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
-                                               "HLT_Mu22_Photon22_CaloIdL_v",
-                                               "HLT_Photon90_CaloIdVL_IsoL_v",
-                                               "HLT_Photon90_CaloIdVL_v",
-                                               "HLT_Photon135_v",
-                                               "HLT_Photon22_R9Id90_HE10_Iso40_EBOnly_v",
-                                               "HLT_Photon36_R9Id90_HE10_Iso40_EBOnly_v",
-                                               "HLT_Photon50_R9Id90_HE10_Iso40_EBOnly_v",
-                                               "HLT_Ele18_CaloIdVT_TrkIdT_MediumIsoPFTau20_v",	
-                                               "HLT_Ele20_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_MediumIsoPFTau20_v",
-                                               "HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_MediumIsoPFTau25_v",
-                                               "HLT_Ele27_WP80_v",
-                                               "HLT_Ele22_CaloIdL_CaloIsoVL_v",
-                                               "HLT_Ele20_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC4_Mass50_v",
-                                               "HLT_Ele32_CaloIdT_CaloIsoT_TrkIdT_TrkIsoT_SC17_Mass50_v",
-                                               "HLT_Ele15_Ele8_Ele5_CaloIdL_TrkIdVL_v",
-                                               "HLT_DoubleEle10_CaloIdL_TrkIdVL_Ele10_CaloIdT_TrkIdVL_v",
-                                               "HLT_TripleEle10_CaloIdL_TrkIdVL_v",
-                                               "HLT_Ele30_CaloIdVT_TrkIdT_PFJet100_PFJet25_v",
-                                               "HLT_Ele8_CaloIdL_CaloIsoVL_Jet40_v",
-                                               "HLT_DoubleEle8_CaloIdT_TrkIdVL_Mass8_PFHT175_v",
-                                               "HLT_Photon26_R9Id85_OR_CaloId10_Iso50_Photon18_R9Id85_OR_CaloId10_Iso50_Mass60_v",
-                                               "HLT_Photon26_R9Id85_OR_CaloId10_Iso50_Photon18_R9Id85_OR_CaloId10_Iso50_Mass70_v",
-                                               "HLT_Photon26_CaloId10_Iso50_Photon18_CaloId10_Iso50_Mass60_v",
-                                               "HLT_Photon26_CaloId10_Iso50_Photon18_R9Id85_Mass60_v",
-                                               "HLT_Photon26_R9Id85_Photon18_CaloId10_Iso50_Mass60_v",
-                                               "HLT_Photon26_R9Id85_Photon18_R9Id85_Mass60_v",
-                                               "HLT_Photon36_CaloId10_Iso50_Photon22_CaloId10_Iso50_v",
-                                               "HLT_Photon36_CaloId10_Iso50_Photon22_R9Id85_v",
-                                               "HLT_Photon36_R9Id85_OR_CaloId10_Iso50_Photon22_R9Id85_OR_CaloId10_Iso50_v",
-                                               "HLT_Photon36_R9Id85_Photon22_CaloId10_Iso50_v",
-                                               "HLT_Photon36_R9Id85_Photon22_R9Id85_v",
-                                               
-                                               ),
-                                          
-                                          )                                          
+                                               "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v"
+
+
+                                               "HLT_Photon30_R9Id90_CaloId_HE10_Iso40_EBOnly_Met25_HBHENoiseCleaned",
+                                               "HLT_Photon30_R9Id90_CaloId_HE10_Iso40_EBOnly",
+                                               "HLT_Photon30"
+)
+)
 
 process.ntuplePath = cms.Path(
-        process.goodOfflinePrimaryVertices
-        * process.pfMEtSysShiftCorrSequence
-        * process.producePFMETCorrections
-        * process.pfNoPUSeq
-        #* process.patDefaultSequence
-        * process.kt6PFJetsIso
-        * process.ak5PFJetsL1FastL2L3
-        * process.ak5JetTracksAssociatorAtVertex
-        * process.btagging
-        * AllFilters
-        * process.ntupleProducer
-        )
+      process.goodOfflinePrimaryVertices
+		* process.type0PFMEtCorrection #Added by Rafael on July 3rd 2013
+    * process.pfMEtSysShiftCorrSequence
+    * process.producePFMETCorrections
+    * process.pfNoPUSeq
+		* process.particleFlowForChargedMET
+		* process.pfChargedMET
+		* process.trackMet
+   #* process.patDefaultSequence
+    * process.kt6PFJetsIso
+    * process.ak5PFJetsL1FastL2L3
+    * process.ak5JetTracksAssociatorAtVertex
+    * process.btagging
+    * AllFilters
+    * process.pfMEtMVAsequence
+    * process.ntupleProducer
+)
 
+#if (isRealData == False):
+#	process.ntuplePath = cms.Path(
+#        	process.goodOfflinePrimaryVertices
+#		* process.genCandidatesForMET
+#		* process.corMetGlobalMuons
+#		* process.genMetCalo
+#	        * process.pfMEtSysShiftCorrSequence
+#	        * process.producePFMETCorrections
+#	        * process.pfNoPUSeq
+#		* process.particleFlowForChargedMET
+#		* process.pfChargedMET
+#		* process.trackMet
+#	        #* process.patDefaultSequence
+#	        * process.kt6PFJetsIso
+#	        * process.ak5PFJetsL1FastL2L3
+#	        * process.ak5JetTracksAssociatorAtVertex
+#	        * process.btagging
+#	        * AllFilters
+#	        * process.ntupleProducer
+#	        )
 #process.outpath = cms.EndPath(process.out)

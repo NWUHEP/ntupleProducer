@@ -44,6 +44,8 @@
 #include "DataFormats/METReco/interface/MET.h"
 #include "DataFormats/METReco/interface/METCollection.h"
 #include "DataFormats/METReco/interface/METFwd.h"
+//#include "DataFormats/METReco/interface/GenMET.h" //Added by Rafael on June 3rd
+//#include "DataFormats/METReco/interface/GenMETCollection.h" //Added by Rafael on June 3rd
 
 #include "DataFormats/MuonReco/interface/Muon.h"
 #include "DataFormats/MuonReco/interface/MuonFwd.h"
@@ -110,6 +112,10 @@
 #include "EGamma/EGammaAnalysisTools/interface/ElectronEnergyRegressionEvaluate.h"
 #include "EgammaAnalysis/ElectronTools/interface/PatElectronEnergyCalibrator.h"
 
+// Track MET Tools - Added by Rafael on May 28th
+#include "RecoMET/METProducers/interface/TrackMETProducer.h"
+#include "RecoMET/METProducers/interface/ParticleFlowForChargedMETProducer.h"
+
 // ntuple storage classes
 #include "TCPrimaryVtx.h"
 #include "TCJet.h"
@@ -168,6 +174,19 @@ struct Filters {		//Filters
   Bool_t isNoisetrkPOG3;
 };
 
+/*
+struct CrystalInfo{
+  uint32_t rawId;
+  int ieta;
+  int iphi;
+  int ix;
+  int iy;
+  double energy;
+  double time;
+  double timeErr;
+  int recoFlag;
+};
+*/
 
 class ntupleProducer : public edm::EDAnalyzer {
  public:
@@ -198,6 +217,10 @@ class ntupleProducer : public edm::EDAnalyzer {
     { return (j1.p4().Pt() > j2.p4().Pt()); }
   };
   
+    static bool EnergySortCriterium( const TCPhoton::CrystalInfo p1,const TCPhoton::CrystalInfo p2 ){
+      return p1.energy > p2.energy;
+    };
+    
   typedef std::map<reco::Jet, unsigned int, JetCompare> flavourMap;
   typedef reco::JetTagCollection::const_iterator tag_iter;
   
@@ -215,6 +238,9 @@ class ntupleProducer : public edm::EDAnalyzer {
 
   edm::InputTag jetTag_;
   edm::InputTag metTag_;
+  edm::InputTag trackmetTag_; //Added by Rafael on May 28th
+  edm::InputTag t0metTag_; //Added by Rafael on July 3rd 2013
+  edm::InputTag t2metTag_; //Added by Rafael on July 3rd 2013
   edm::InputTag genJetTag_;
   edm::InputTag muonTag_;
   edm::InputTag electronTag_;
@@ -235,13 +261,14 @@ class ntupleProducer : public edm::EDAnalyzer {
   edm::ParameterSet photonIsoCalcTag_;
   edm::InputTag triggerEventTag_;
 
-  bool skimLepton_;
-
   bool saveJets_;
   bool saveElectrons_;
   bool saveMuons_;
   bool savePhotons_;
   bool saveMET_;
+  bool saveTrackMET_; //Added by Rafael on May 28th
+  bool saveT0MET_; //Added by Rafael on July 3rd 2013
+  bool saveT2MET_; //Added by Rafael on July 3rd 2013
   bool saveGenJets_;
   bool saveGenParticles_;
   bool isRealData;
@@ -258,8 +285,12 @@ class ntupleProducer : public edm::EDAnalyzer {
   TClonesArray* genJets;
   TClonesArray* genParticles;
   TCMET*        recoMET;
+  TCMET*	track_MET; //Added by Rafael on May 28th
+  TCMET*	T0MET; //Added by Rafael on July 3rd
+  TCMET*	T2MET; //Added by Rafael on July 3rd
   TCMET*        recoMET_corr;
-  
+  TCMET*        mva_MET;
+
   //Vertex info
   TClonesArray* primaryVtx;
   TVector3*     beamSpot;
@@ -288,6 +319,4 @@ class ntupleProducer : public edm::EDAnalyzer {
   // Electron Regression
   ElectronEnergyRegressionEvaluate* myEleReg;
   
-
-  int ele27;
 };

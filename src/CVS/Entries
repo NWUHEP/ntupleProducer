@@ -1,0 +1,25 @@
+/Dummy.cc/1.1/Tue Jul  5 18:32:32 2011//TB12-12
+/TCElectron.cc/1.11.2.4/Mon Jan  7 15:48:53 2013//TB12-12
+/TCElectronLinkDef.h/1.3/Wed Sep 19 19:48:55 2012//TB12-12
+/TCGenJet.cc/1.3/Wed Sep 19 19:48:55 2012//TB12-12
+/TCGenJetLinkDef.h/1.3/Wed Sep 19 19:48:55 2012//TB12-12
+/TCGenParticle.cc/1.5/Wed Sep 19 19:48:55 2012//TB12-12
+/TCGenParticleLinkDef.h/1.3/Wed Sep 19 19:48:55 2012//TB12-12
+/TCJet.cc/1.7/Wed Sep 19 19:48:55 2012//TB12-12
+/TCJetLinkDef.h/1.3/Wed Sep 19 19:48:55 2012//TB12-12
+/TCMET.cc/1.7.8.1/Sat Apr 13 15:12:21 2013//TB12-12
+/TCMETLinkDef.h/1.3/Wed Sep 19 19:48:55 2012//TB12-12
+/TCMuon.cc/1.8.2.2/Wed Dec 19 20:13:02 2012//TB12-12
+/TCMuonLinkDef.h/1.3/Wed Sep 19 19:48:55 2012//TB12-12
+/TCPhoton.cc/1.11.2.3/Wed Dec 19 20:13:02 2012//TB12-12
+/TCPhotonLinkDef.h/1.3/Wed Sep 19 19:48:55 2012//TB12-12
+/TCPhysObject.cc/1.2.2.2/Mon Oct  1 23:02:06 2012//TB12-12
+/TCPhysObjectLinkDef.h/1.2/Wed Sep 19 19:48:55 2012//TB12-12
+/TCPrimaryVtx.cc/1.4/Wed Sep 19 19:48:55 2012//TB12-12
+/TCPrimaryVtxLinkDef.h/1.3/Wed Sep 19 19:48:56 2012//TB12-12
+/TCTau.cc/1.4/Wed Sep 19 19:48:56 2012//TB12-12
+/TCTauLinkDef.h/1.3/Wed Sep 19 19:48:56 2012//TB12-12
+/TCTriggerObject.cc/1.5.2.1/Wed Dec 26 20:13:47 2012//TB12-12
+/TCTriggerObjectLinkDef.h/1.3/Wed Sep 19 19:48:56 2012//TB12-12
+/ntupleProducer.cc/1.68.2.28.2.1.2.1.4.4.2.1/Mon Jun 10 13:51:04 2013//TB12-12
+D
