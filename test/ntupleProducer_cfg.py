@@ -14,10 +14,10 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.load('Configuration.StandardSequences.Reconstruction_cff')
 
 if (isRealData):
-    process.GlobalTag.globaltag = 'GR_P_V42_AN4::All'
+    process.GlobalTag.globaltag = 'FT_53_V21_AN3::All'
     process.load('JetMETCorrections.METPUSubtraction.mvaPFMET_leptons_data_cff')
 else:
-    process.GlobalTag.globaltag = 'START53_V15::All'
+    process.GlobalTag.globaltag = 'START53_V27::All'
     process.load('JetMETCorrections.METPUSubtraction.mvaPFMET_leptons_cff')
 
 # Create good primary vertices for PF association
@@ -384,12 +384,12 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
                                                "HLT_Mu8_Ele17_CaloIdL_v",
                                                "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v",
-                                               "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v"
+                                               "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
 
 
                                                "HLT_Photon30_R9Id90_CaloId_HE10_Iso40_EBOnly_Met25_HBHENoiseCleaned",
                                                "HLT_Photon30_R9Id90_CaloId_HE10_Iso40_EBOnly",
-                                               "HLT_Photon30"
+                                               "HLT_Photon30",
                                                "HLT_DiJet20_MJJ650_AllJets_DEta3p5_HT120_VBF",
                                                "HLT_DiJet30_MJJ700_AllJets_DEta3p5_VBF",
                                                "HLT_DiJet35_MJJ650_AllJets_DEta3p5_VBF",
