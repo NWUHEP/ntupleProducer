@@ -691,8 +691,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
                 ////  Leptons and photons and b's, (oh my)
                 if (
-                        myParticle.pt() > 8 
-                        && (
+                         (
                             (abs(myParticle.pdgId()) >= 11 && abs(myParticle.pdgId()) <= 16) 
                             || myParticle.pdgId() == 22 
                             || abs(myParticle.pdgId()) == 5 
