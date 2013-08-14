@@ -241,7 +241,6 @@ process.logErrorTooManyClusters.forcedValue = cms.untracked.bool(False)
 ## good events.
 
 
-
 AllFilters = cms.Sequence(process.HBHENoiseFilterResultProducer
                           * process.hcalLaserEventFilter
                           * process.EcalDeadCellTriggerPrimitiveFilter
@@ -276,23 +275,25 @@ process.pfNoPileUp = cms.EDProducer("TPPFCandidatesOnPFCandidates",
 
 process.pfNoPUSeq = cms.Sequence(process.pfPileUp + process.pfNoPileUp)
 
-
+############################
 ### b-tag truth matching ###
+############################
+
 process.load("PhysicsTools.JetMCAlgos.CaloJetsMCFlavour_cfi")
 
-# Flavour byReference 
+# Flavour by reference 
 process.GenJetbyRef = cms.EDProducer("JetPartonMatcher", 
                                      jets = cms.InputTag("ak5GenJets"), 
                                      coneSizeToAssociate = cms.double(0.3), 
                                      partons = cms.InputTag("myPartons") 
                                      ) 
-# Flavour byValue PhysDef 
+# Flavour by value PhysDef 
 process.GenJetbyValPhys = cms.EDProducer("JetFlavourIdentifier", 
                                          srcByReference = cms.InputTag("GenJetbyRef"), 
                                          physicsDefinition = cms.bool(True), 
                                          leptonInfo = cms.bool(True) 
                                          ) 
-# Flavour byValue AlgoDef 
+# Flavour by value AlgoDef 
 process.GenJetbyValAlgo = cms.EDProducer("JetFlavourIdentifier", 
                                          srcByReference = cms.InputTag("GenJetbyRef"), 
                                          physicsDefinition = cms.bool(False), 
@@ -301,18 +302,19 @@ process.GenJetbyValAlgo = cms.EDProducer("JetFlavourIdentifier",
 process.GenJetFlavour = cms.Sequence(process.GenJetbyRef*process.GenJetbyValPhys*process.GenJetbyValAlgo)
 
 
+# Flavour by reference
 process.JetbyRef = cms.EDProducer("JetPartonMatcher",
-                                  jets = cms.InputTag("ak5PFJets"),
+                                  jets = cms.InputTag("ak5PFJetsL1FastL2L3"),
                                   coneSizeToAssociate = cms.double(0.3),
                                   partons = cms.InputTag("myPartons")
                                   )
-# Flavour byValue PhysDef
+# Flavour by value PhysDef
 process.JetbyValPhys = cms.EDProducer("JetFlavourIdentifier",
                                       srcByReference = cms.InputTag("JetbyRef"),
                                       physicsDefinition = cms.bool(True),
                                       leptonInfo = cms.bool(True)
                                       )
-# Flavour byValue AlgoDef
+# Flavour by value AlgoDef
 process.JetbyValAlgo = cms.EDProducer("JetFlavourIdentifier",
                                       srcByReference = cms.InputTag("JetbyRef"),
                                       physicsDefinition = cms.bool(False),
@@ -418,14 +420,14 @@ process.ntuplePath = cms.Path(
     * process.ak5PFJetsL1FastL2L3
     * process.ak5JetTracksAssociatorAtVertex
     * process.btagging
+    * AllFilters
+    * process.pfMEtMVAsequence
+    * process.pfMet1
 
     * process.myPartons #<-- For genJet flavors, only in MC
     * process.GenJetFlavour
     * process.JetFlavour # end for MC only
 
-    * AllFilters
-    * process.pfMEtMVAsequence
-    * process.pfMet1
     * process.ntupleProducer
 )
 
