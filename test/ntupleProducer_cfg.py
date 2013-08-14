@@ -1,4 +1,3 @@
-import os
 import FWCore.ParameterSet.Config as cms
 from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 
@@ -6,6 +5,7 @@ process = cms.Process("NTUPLE")
 
 # real data or MC?
 isRealData = False
+
 
 # global tag
 process.load("Configuration.Geometry.GeometryIdeal_cff")
@@ -20,6 +20,7 @@ else:
     process.GlobalTag.globaltag = 'START53_V27::All'
     process.load('JetMETCorrections.METPUSubtraction.mvaPFMET_leptons_cff')
 
+
 # Create good primary vertices for PF association
 from PhysicsTools.SelectorUtils.pvSelector_cfi import pvSelector
 process.goodOfflinePrimaryVertices = cms.EDFilter( "PrimaryVertexObjectFilter",
@@ -27,6 +28,7 @@ process.goodOfflinePrimaryVertices = cms.EDFilter( "PrimaryVertexObjectFilter",
     src=cms.InputTag('offlinePrimaryVertices') #Standard Primary Vertex Collection
 #    src=cms.InputTag('offlinePrimaryVerticesWithBS') #Primary Vertices Collection constrained by beamspot
     )
+
 
 # jet energy corrections
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
@@ -38,17 +40,15 @@ process.load("CondCore.DBCommon.CondDBCommon_cfi")
 #addPfMET(process,'PF')
 #addTcMET(process,"TC")
 
+
 ##Testing MET significance
 process.load("RecoMET.METProducers.PFMET_cfi")
 process.pfMet1 = process.pfMet.clone(alias="PFMET1")
 
-#################################################################
-#################################################################
-
 # MET corrections Type 1 and x,y corrections
 process.load('JetMETCorrections.Type1MET.pfMETCorrections_cff')
 process.load("JetMETCorrections.Type1MET.pfMETsysShiftCorrections_cfi")
-process.load("JetMETCorrections.Type1MET.pfMETCorrectionType0_cfi") #Added by Rafael on July 3rd
+process.load("JetMETCorrections.Type1MET.pfMETCorrectionType0_cfi")
 
 
 # use for 2012 Data
@@ -62,38 +62,20 @@ process.pfType1CorrectedMet.srcType1Corrections = cms.VInputTag(
     cms.InputTag('pfJetMETcorr', 'type1') ,
     cms.InputTag('pfMEtSysShiftCorr')
 )
+
 process.pfType1p2CorrectedMet.srcType1Corrections = cms.VInputTag(
     cms.InputTag('pfJetMETcorr', 'type1') ,
     cms.InputTag('pfMEtSysShiftCorr')
 )
 
-#################################################################
-#################################################################
 process.pfType1CorrectedMetType0.srcType1Corrections = cms.VInputTag(
     cms.InputTag('pfMETcorrType0'),
     cms.InputTag('pfJetMETcorr', 'type1') ,
     cms.InputTag('pfMEtSysShiftCorr')
 )
 
-#Added by Rafael on May 28th
-###################################################################################################################
-###################################################################################################################
 process.load("RecoMET.METProducers.pfChargedMET_cfi")
 process.load("RecoMET.METProducers.TrackMET_cfi")
-
-###################################################################################################################
-###################################################################################################################
-
-#Added by Rafael on June 4th (GEN MET Information)
-###################################################################################################################
-###################################################################################################################
-#if (isRealData == False):
-#process.load("RecoMET.Configuration.GenMETParticles_cff")
-#process.load("RecoMET.METProducers.genMetCalo_cfi")
-#process.load("RecoMET.METProducers.MetMuonCorrections_cff")
-
-###################################################################################################################
-###################################################################################################################
 
 if (isRealData):
     process.pfJetMETcorr.jetCorrLabel = cms.string("ak5PFL1FastL2L3Residual")
@@ -259,6 +241,7 @@ process.logErrorTooManyClusters.forcedValue = cms.untracked.bool(False)
 ## good events.
 
 
+
 AllFilters = cms.Sequence(process.HBHENoiseFilterResultProducer
                           * process.hcalLaserEventFilter
                           * process.EcalDeadCellTriggerPrimitiveFilter
@@ -271,28 +254,7 @@ AllFilters = cms.Sequence(process.HBHENoiseFilterResultProducer
                           * ~process.logErrorTooManyClusters #trkPOGFilter 3
                           )
 
-# event source
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
-process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring(
-	#'/store/mc/Summer12_DR53X/GluGluToHToWWTo2LAndTau2Nu_M-125_8TeV-powheg-pythia6/AODSIM/PU_S10_START53_V7A-v1/0000/DE5F727F-8BFC-E111-8576-002618FDA263.root'
-#	'root://eoscms//eos/cms/store/user/cmkuo/GluGluToHToZG_M-125_8TeV-powheg-pythia6/HZg_nunug_ggH_m125_RECO_v1/3664d28163503ca8171ba37083c39fc9/STEP2_RAW2DIGI_L1Reco_RECO_PU_100_1_fXq.root'
-    '/store/data/Run2012D/SinglePhotonParked/AOD/22Jan2013-v1/30004/144D7268-4086-E211-9DC1-001E673984C1.root'
-#    '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
-    #'/store/data/Run2012D/DoubleMu/AOD/PromptReco-v1/000/208/341/285B355D-553D-E211-A3FC-BCAEC532971E.root'
-    #'file:/tmp/naodell/TTJetsToHqToWWq_M-125_TuneZ2_8TeV_pythia6_v2_1_1_p64.root'
-)
-)
-
-
 ##### END OF Noise Filters ############
-
-print '\n\nCommence ntuplization...\n\n'
-
-### TFile service!
-process.TFileService = cms.Service('TFileService',
-                                  fileName = cms.string('nuTuple.root')
-                                   )
 
 ### pfNoPU Sequence for electron MVA
 process.pfPileUp = cms.EDProducer("PFPileUp",
@@ -315,55 +277,100 @@ process.pfNoPileUp = cms.EDProducer("TPPFCandidatesOnPFCandidates",
 process.pfNoPUSeq = cms.Sequence(process.pfPileUp + process.pfNoPileUp)
 
 
+### b-tag truth matching ###
+process.load("PhysicsTools.JetMCAlgos.CaloJetsMCFlavour_cfi")
+
+# Flavour byReference 
+process.GenJetbyRef = cms.EDProducer("JetPartonMatcher", 
+                                     jets = cms.InputTag("ak5GenJets"), 
+                                     coneSizeToAssociate = cms.double(0.3), 
+                                     partons = cms.InputTag("myPartons") 
+                                     ) 
+# Flavour byValue PhysDef 
+process.GenJetbyValPhys = cms.EDProducer("JetFlavourIdentifier", 
+                                         srcByReference = cms.InputTag("GenJetbyRef"), 
+                                         physicsDefinition = cms.bool(True), 
+                                         leptonInfo = cms.bool(True) 
+                                         ) 
+# Flavour byValue AlgoDef 
+process.GenJetbyValAlgo = cms.EDProducer("JetFlavourIdentifier", 
+                                         srcByReference = cms.InputTag("GenJetbyRef"), 
+                                         physicsDefinition = cms.bool(False), 
+                                         leptonInfo = cms.bool(True) 
+                                         ) 
+process.GenJetFlavour = cms.Sequence(process.GenJetbyRef*process.GenJetbyValPhys*process.GenJetbyValAlgo)
+
+
+process.JetbyRef = cms.EDProducer("JetPartonMatcher",
+                                  jets = cms.InputTag("ak5PFJets"),
+                                  coneSizeToAssociate = cms.double(0.3),
+                                  partons = cms.InputTag("myPartons")
+                                  )
+# Flavour byValue PhysDef
+process.JetbyValPhys = cms.EDProducer("JetFlavourIdentifier",
+                                      srcByReference = cms.InputTag("JetbyRef"),
+                                      physicsDefinition = cms.bool(True),
+                                      leptonInfo = cms.bool(True)
+                                      )
+# Flavour byValue AlgoDef
+process.JetbyValAlgo = cms.EDProducer("JetFlavourIdentifier",
+                                      srcByReference = cms.InputTag("JetbyRef"),
+                                      physicsDefinition = cms.bool(False),
+                                      leptonInfo = cms.bool(True)
+                                      )
+process.JetFlavour = cms.Sequence(process.JetbyRef*process.JetbyValPhys*process.JetbyValAlgo)
+
+# event source for running interactively
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
+process.source = cms.Source("PoolSource",
+    fileNames = cms.untracked.vstring(
+	#'/store/mc/Summer12_DR53X/GluGluToHToWWTo2LAndTau2Nu_M-125_8TeV-powheg-pythia6/AODSIM/PU_S10_START53_V7A-v1/0000/DE5F727F-8BFC-E111-8576-002618FDA263.root'
+    #'root://eoscms//eos/cms/store/user/cmkuo/GluGluToHToZG_M-125_8TeV-powheg-pythia6/HZg_nunug_ggH_m125_RECO_v1/3664d28163503ca8171ba37083c39fc9/STEP2_RAW2DIGI_L1Reco_RECO_PU_100_1_fXq.root'
+    #'/store/data/Run2012D/SinglePhotonParked/AOD/22Jan2013-v1/30004/144D7268-4086-E211-9DC1-001E673984C1.root'
+    '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
+    #'/store/data/Run2012D/DoubleMu/AOD/PromptReco-v1/000/208/341/285B355D-553D-E211-A3FC-BCAEC532971E.root'
+    #'file:/tmp/naodell/TTJetsToHqToWWq_M-125_TuneZ2_8TeV_pythia6_v2_1_1_p64.root'
+)
+)
+
+### TFile service for output 
+process.TFileService = cms.Service('TFileService',
+                                  fileName = cms.string('nuTuple.root')
+                                   )
+
+
+print '\n\nCommence ntuplization...\n\n'
+
+
 ### ntuple producer
 process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
-  verboseTrigs         =    cms.untracked.bool(False),
-  verboseMVAs          =    cms.untracked.bool(False),
+  verboseTrigs      =   cms.untracked.bool(False),
+  verboseMVAs       =   cms.untracked.bool(False),
 
-  photonIsoCalcTag  =    cms.PSet(isolationSumsCalculator),
+  photonIsoCalcTag  =   cms.PSet(isolationSumsCalculator),
 
-  JetTag            =    cms.untracked.InputTag('ak5PFJetsL1FastL2L3'),
-  GenJetTag         =    cms.untracked.InputTag('ak5GenJets'),
-  METTag            =    cms.untracked.InputTag('pfType1CorrectedMet'),
-  TrackMETTag       =    cms.untracked.InputTag('trackMet'), #Added by Rafael on May 28th
-  ElectronTag       =    cms.untracked.InputTag('gsfElectrons'),
-  MuonTag           =    cms.untracked.InputTag('muons'),
-  PhotonTag         =    cms.untracked.InputTag('photons'),
-  PrimaryVtxTag     =    cms.untracked.InputTag('offlinePrimaryVertices'),
-  rhoCorrTag        =    cms.untracked.InputTag('kt6PFJets', 'rho', 'RECO'),
-  rho25CorrTag      =    cms.untracked.InputTag('kt6PFJetsIso', 'rho', 'NTUPLE'),
-  rhoMuCorrTag      =    cms.untracked.InputTag('kt6PFJetsCentralNeutral', 'rho','RECO'),  # specifically for muon iso
+  JetTag            =   cms.untracked.InputTag('ak5PFJetsL1FastL2L3'),
+  GenJetTag         =   cms.untracked.InputTag('ak5GenJets'),
+  METTag            =   cms.untracked.InputTag('pfType1CorrectedMet'),
+  ElectronTag       =   cms.untracked.InputTag('gsfElectrons'),
+  MuonTag           =   cms.untracked.InputTag('muons'),
+  PhotonTag         =   cms.untracked.InputTag('photons'),
+  PrimaryVtxTag     =   cms.untracked.InputTag('offlinePrimaryVertices'),
 
-## New corrections to MET being saved: Added by Rafael on July 3rd 2013
-  T0METTag	    =	 cms.untracked.InputTag('pfType1CorrectedMetType0'),
-  T2METTag	    =	 cms.untracked.InputTag('pfType1p2CorrectedMet'),
-##End
+  rhoCorrTag        =   cms.untracked.InputTag('kt6PFJets', 'rho', 'RECO'),
+  rho25CorrTag      =   cms.untracked.InputTag('kt6PFJetsIso', 'rho', 'NTUPLE'),
+  rhoMuCorrTag      =   cms.untracked.InputTag('kt6PFJetsCentralNeutral', 'rho','RECO'),  # specifically for muon iso
 
-  partFlowTag       =    cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
+  saveJets          =   cms.untracked.bool(True),
+  saveElectrons     =   cms.untracked.bool(True),
+  saveMuons         =   cms.untracked.bool(True),
+  savePhotons       =   cms.untracked.bool(True),
+  saveMET           =   cms.untracked.bool(True),
+  saveGenJets       =   cms.untracked.bool(True),
+  saveGenParticles  =   cms.untracked.bool(True),
 
-  saveJets          =    cms.untracked.bool(True),
-  saveElectrons     =    cms.untracked.bool(True),
-  saveMuons         =    cms.untracked.bool(True),
-  savePhotons       =    cms.untracked.bool(True),
-  saveMET           =    cms.untracked.bool(True),
-  saveGenJets       =    cms.untracked.bool(True),
-  saveGenParticles  =    cms.untracked.bool(True),
-  saveTrackMET      =    cms.untracked.bool(True), #Added by Rafael on May 28th
-##New Met Corrections, Added by Rafael on July 3rd 2013
-  saveT0MET	    =    cms.untracked.bool(True),
-  saveT2MET	    =    cms.untracked.bool(True),
-##End
-
-  ecalTPFilterTag    =    cms.untracked.InputTag("EcalDeadCellTriggerPrimitiveFilter",""),
-  ecalBEFilterTag    =    cms.untracked.InputTag("EcalDeadCellBoundaryEnergyFilter",""),
   hcalHBHEFilterTag  =    cms.untracked.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResult"),
-  hcalLaserFilterTag =    cms.untracked.InputTag("hcalLaserEventFilter",""),
-  trackingFailureTag =    cms.untracked.InputTag("trackingFailureFilter",""),
-  eeBadScFilterTag   =    cms.untracked.InputTag("eeBadScFilter",""),
-  trkPOGFiltersTag1  =    cms.untracked.InputTag("manystripclus53X",""),
-  trkPOGFiltersTag2  =    cms.untracked.InputTag("toomanystripclus53X",""),
-  trkPOGFiltersTag3  =    cms.untracked.InputTag("logErrorTooManyClusters",""),
 
   hltName           =    cms.untracked.string("HLT"),
   triggers          =    cms.untracked.vstring(
@@ -386,7 +393,6 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v",
                                                "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
 
-
                                                "HLT_Photon30_R9Id90_CaloId_HE10_Iso40_EBOnly_Met25_HBHENoiseCleaned",
                                                "HLT_Photon30_R9Id90_CaloId_HE10_Iso40_EBOnly",
                                                "HLT_Photon30",
@@ -400,42 +406,26 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
 process.ntuplePath = cms.Path(
       process.goodOfflinePrimaryVertices
-		* process.type0PFMEtCorrection #Added by Rafael on July 3rd 2013
+    * process.type0PFMEtCorrection 
     * process.pfMEtSysShiftCorrSequence
     * process.producePFMETCorrections
     * process.pfNoPUSeq
-		* process.particleFlowForChargedMET
-		* process.pfChargedMET
-		* process.trackMet
+    * process.particleFlowForChargedMET
+    * process.pfChargedMET
+    * process.trackMet
    #* process.patDefaultSequence
     * process.kt6PFJetsIso
     * process.ak5PFJetsL1FastL2L3
     * process.ak5JetTracksAssociatorAtVertex
     * process.btagging
+
+    * process.myPartons #<-- For genJet flavors, only in MC
+    * process.GenJetFlavour
+    * process.JetFlavour # end for MC only
+
     * AllFilters
     * process.pfMEtMVAsequence
     * process.pfMet1
     * process.ntupleProducer
 )
 
-#if (isRealData == False):
-#	process.ntuplePath = cms.Path(
-#        	process.goodOfflinePrimaryVertices
-#		* process.genCandidatesForMET
-#		* process.corMetGlobalMuons
-#		* process.genMetCalo
-#	        * process.pfMEtSysShiftCorrSequence
-#	        * process.producePFMETCorrections
-#	        * process.pfNoPUSeq
-#		* process.particleFlowForChargedMET
-#		* process.pfChargedMET
-#		* process.trackMet
-#	        #* process.patDefaultSequence
-#	        * process.kt6PFJetsIso
-#	        * process.ak5PFJetsL1FastL2L3
-#	        * process.ak5JetTracksAssociatorAtVertex
-#	        * process.btagging
-#	        * AllFilters
-#	        * process.ntupleProducer
-#	        )
-#process.outpath = cms.EndPath(process.out)

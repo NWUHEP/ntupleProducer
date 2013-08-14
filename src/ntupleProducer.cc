@@ -1,53 +1,38 @@
 #include "../interface/ntupleProducer.h"
 #include "DataFormats/EcalRecHit/interface/EcalRecHitCollections.h"
 
-ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
+ntupleProducer::ntupleProducer(const ParameterSet& iConfig)
 {
-    jetTag_           = iConfig.getUntrackedParameter<edm::InputTag>("JetTag");
-    metTag_           = iConfig.getUntrackedParameter<edm::InputTag>("METTag");
-    trackmetTag_      = iConfig.getUntrackedParameter<edm::InputTag>("TrackMETTag"); //Added by Rafael on May 28th
-    t0metTag_         = iConfig.getUntrackedParameter<edm::InputTag>("T0METTag"); //Added by Rafael on July 3rd
-    t2metTag_         = iConfig.getUntrackedParameter<edm::InputTag>("T2METTag"); //Added by Rafael on July 3rd
-    muonTag_          = iConfig.getUntrackedParameter<edm::InputTag>("MuonTag");
-    electronTag_      = iConfig.getUntrackedParameter<edm::InputTag>("ElectronTag");
-    photonTag_        = iConfig.getUntrackedParameter<edm::InputTag>("PhotonTag");
-    genJetTag_        = iConfig.getUntrackedParameter<edm::InputTag>("GenJetTag");
-    primaryVtxTag_    = iConfig.getUntrackedParameter<edm::InputTag>("PrimaryVtxTag");
+    jetTag_           = iConfig.getUntrackedParameter<InputTag>("JetTag");
+    metTag_           = iConfig.getUntrackedParameter<InputTag>("METTag");
+    muonTag_          = iConfig.getUntrackedParameter<InputTag>("MuonTag");
+    electronTag_      = iConfig.getUntrackedParameter<InputTag>("ElectronTag");
+    photonTag_        = iConfig.getUntrackedParameter<InputTag>("PhotonTag");
+    genJetTag_        = iConfig.getUntrackedParameter<InputTag>("GenJetTag");
+    primaryVtxTag_    = iConfig.getUntrackedParameter<InputTag>("PrimaryVtxTag");
 
-    rhoCorrTag_       = iConfig.getUntrackedParameter<edm::InputTag>("rhoCorrTag");
-    rho25CorrTag_     = iConfig.getUntrackedParameter<edm::InputTag>("rho25CorrTag");
-    rhoMuCorrTag_     = iConfig.getUntrackedParameter<edm::InputTag>("rhoMuCorrTag");
+    rhoCorrTag_       = iConfig.getUntrackedParameter<InputTag>("rhoCorrTag");
+    rho25CorrTag_     = iConfig.getUntrackedParameter<InputTag>("rho25CorrTag");
+    rhoMuCorrTag_     = iConfig.getUntrackedParameter<InputTag>("rhoMuCorrTag");
+
     hlTriggerResults_ = iConfig.getUntrackedParameter<string>("HLTriggerResults","TriggerResults");
     hltProcess_       = iConfig.getUntrackedParameter<string>("hltName");
     triggerPaths_     = iConfig.getUntrackedParameter<vector<string> >("triggers");
-
-    partFlowTag_      = iConfig.getUntrackedParameter<edm::InputTag>("partFlowTag");
 
     saveJets_         = iConfig.getUntrackedParameter<bool>("saveJets");
     saveElectrons_    = iConfig.getUntrackedParameter<bool>("saveElectrons");
     saveMuons_        = iConfig.getUntrackedParameter<bool>("saveMuons");
     savePhotons_      = iConfig.getUntrackedParameter<bool>("savePhotons");
     saveMET_          = iConfig.getUntrackedParameter<bool>("saveMET");
-    saveTrackMET_     = iConfig.getUntrackedParameter<bool>("saveTrackMET"); //Added by Rafael on May 28th
-    saveT0MET_        = iConfig.getUntrackedParameter<bool>("saveT0MET"); //Added by Rafael on July 3rd
-    saveT2MET_        = iConfig.getUntrackedParameter<bool>("saveT2MET"); //Added by Rafael on July 3rd
-	
+
     saveGenJets_      = iConfig.getUntrackedParameter<bool>("saveGenJets");
     saveGenParticles_ = iConfig.getUntrackedParameter<bool>("saveGenParticles");
 
     verboseTrigs       = iConfig.getUntrackedParameter<bool>("verboseTrigs");
     verboseMVAs        = iConfig.getUntrackedParameter<bool>("verboseMVAs");
 
-    ecalTPFilterTag_    = iConfig.getUntrackedParameter<edm::InputTag>("ecalTPFilterTag");
-    ecalBEFilterTag_    = iConfig.getUntrackedParameter<edm::InputTag>("ecalBEFilterTag");
-    hcalHBHEFilterTag_  = iConfig.getUntrackedParameter<edm::InputTag>("hcalHBHEFilterTag");
-    hcalLaserFilterTag_ = iConfig.getUntrackedParameter<edm::InputTag>("hcalLaserFilterTag");
-    trackingFailureTag_ = iConfig.getUntrackedParameter<edm::InputTag>("trackingFailureTag");
-    eeBadScFilterTag_   = iConfig.getUntrackedParameter<edm::InputTag>("eeBadScFilterTag");
-    trkPOGFiltersTag1_  = iConfig.getUntrackedParameter<edm::InputTag>("trkPOGFiltersTag1");
-    trkPOGFiltersTag2_  = iConfig.getUntrackedParameter<edm::InputTag>("trkPOGFiltersTag2");
-    trkPOGFiltersTag3_  = iConfig.getUntrackedParameter<edm::InputTag>("trkPOGFiltersTag3");
-    photonIsoCalcTag_   = iConfig.getParameter<edm::ParameterSet>("photonIsoCalcTag");
+    hcalHBHEFilterTag_  = iConfig.getUntrackedParameter<InputTag>("hcalHBHEFilterTag");
+    photonIsoCalcTag_   = iConfig.getParameter<ParameterSet>("photonIsoCalcTag");
 }
 
 ntupleProducer::~ntupleProducer()
@@ -60,7 +45,7 @@ ntupleProducer::~ntupleProducer()
 //
 
 // ------------ method called to for each event  ------------
-void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
+void ntupleProducer::analyze(const Event& iEvent, const EventSetup& iSetup)
 {
     // this is for CVS check test
     eventNumber  = iEvent.id().event(); 
@@ -69,7 +54,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     bunchCross   = (unsigned int)iEvent.bunchCrossing();
     isRealData   = iEvent.isRealData();
 
-    edm::Handle<reco::BeamSpot> beamSpotHandle;
+    Handle<reco::BeamSpot> beamSpotHandle;
     iEvent.getByLabel("offlineBeamSpot", beamSpotHandle);
     reco::BeamSpot vertexBeamSpot = *beamSpotHandle;
 
@@ -85,7 +70,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 
     Handle<PFCandidateCollection> pfCands;
-    iEvent.getByLabel(partFlowTag_,pfCands);
+    iEvent.getByLabel("particleFlow",pfCands);
     const  PFCandidateCollection thePfColl = *(pfCands.product());
 
     Handle<PFCandidateCollection> pfCandsEleIso;
@@ -137,29 +122,34 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     if(saveJets_){
 
-        edm::Handle<reco::JetTagCollection> bTagCollectionTCHE;
+        Handle<reco::JetTagCollection> bTagCollectionTCHE;
         iEvent.getByLabel("trackCountingHighEffBJetTags", bTagCollectionTCHE);
         const reco::JetTagCollection & bTagsTCHE = *(bTagCollectionTCHE.product());
 
-        edm::Handle<reco::JetTagCollection> bTagCollectionTCHP;
+        Handle<reco::JetTagCollection> bTagCollectionTCHP;
         iEvent.getByLabel("trackCountingHighPurBJetTags", bTagCollectionTCHP);
         const reco::JetTagCollection & bTagsTCHP = *(bTagCollectionTCHP.product()); 
 
-        edm::Handle<reco::JetTagCollection> bTagCollectionSSVHE;
+        Handle<reco::JetTagCollection> bTagCollectionSSVHE;
         iEvent.getByLabel("simpleSecondaryVertexHighEffBJetTags", bTagCollectionSSVHE);
         const reco::JetTagCollection & bTagsSSVHE = *(bTagCollectionSSVHE.product());
 
-        edm::Handle<reco::JetTagCollection> bTagCollectionJBP;
+        Handle<reco::JetTagCollection> bTagCollectionJBP;
         iEvent.getByLabel("jetBProbabilityBJetTags", bTagCollectionJBP);
         const reco::JetTagCollection & bTagsJBP = *(bTagCollectionJBP.product());
 
-        edm::Handle<reco::JetTagCollection> bTagCollectionCSV;
+        Handle<reco::JetTagCollection> bTagCollectionCSV;
         iEvent.getByLabel("combinedSecondaryVertexBJetTags", bTagCollectionCSV);
         const reco::JetTagCollection & bTagsCSV = *(bTagCollectionCSV.product());
 
-        edm::Handle<reco::JetTagCollection> bTagCollectionCSVMVA;
-        iEvent.getByLabel("combinedSecondaryVertexBJetTags", bTagCollectionCSVMVA);
-        const reco::JetTagCollection & bTagsCSVMVA = *(bTagCollectionCSVMVA.product());
+        Handle<reco::JetFlavourMatchingCollection> bJetFlavourMC;
+        flavourMap flavours;
+        if (!isRealData) {
+            iEvent.getByLabel("JetbyValAlgo", bJetFlavourMC);
+            for (reco::JetFlavourMatchingCollection::const_iterator iFlavor = bJetFlavourMC->begin(); iFlavor != bJetFlavourMC->end(); iFlavor++) {
+                flavours.insert(flavourMap::value_type(*((iFlavor->first).get()), abs(iFlavor->second.getFlavour())));
+            }
+        }
 
         Handle<vector<reco::PFJet> > jets;
         iEvent.getByLabel(jetTag_, jets);
@@ -179,7 +169,18 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             jetCon->SetNumConstit(iJet->chargedMultiplicity() + iJet->neutralMultiplicity());
             jetCon->SetNumChPart(iJet->chargedMultiplicity());
 
-            //jetCon->SetJetFlavor(iJet->partonFlavour());
+            if (!isRealData) {
+                reco::Jet refJet(iJet->p4(),iJet->vertex());
+                if (flavours.find(refJet) != flavours.end()) {
+                    jetCon->SetJetFlavor(flavours[refJet]);
+                    cout << flavours[refJet] << endl;
+                } else {
+                    jetCon->SetJetFlavor(0);
+                }
+            } else {
+                jetCon->SetJetFlavor(0);
+            }
+
 
             jetCon->SetUncertaintyJES(-1);
 
@@ -188,7 +189,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             jetCon->SetBDiscriminatorMap("SSVHE", MatchBTagsToJets(bTagsSSVHE, *iJet));
             jetCon->SetBDiscriminatorMap("JBP", MatchBTagsToJets(bTagsJBP, *iJet));
             jetCon->SetBDiscriminatorMap("CSV", MatchBTagsToJets(bTagsCSV, *iJet));
-            jetCon->SetBDiscriminatorMap("CSVMVA", MatchBTagsToJets(bTagsCSVMVA, *iJet));
 
 
             /////////////////////////
@@ -201,58 +201,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         }   
     }
 
-    /////////////// Added by Rafael on July 3rd 2013
-    // Get T0MET //
-    ///////////////
-
-    if (saveT0MET_) {
-
-        Handle<PFMETCollection> t0MET;
-        iEvent.getByLabel(t0metTag_, t0MET);
-        PFMETCollection::const_iterator t0met = t0MET->begin();
-
-        if (t0MET->begin() != t0MET->end()) {
-            T0MET->SetSumEt(t0met->sumEt());
-            T0MET->SetMagPhi(t0met->et(), t0met->phi());
-
-            // PF specififc methods
-            T0MET->SetMuonFraction(t0met->MuonEtFraction());
-            T0MET->SetNeutralHadronFraction(t0met->NeutralHadEtFraction());
-            T0MET->SetNeutralEMFraction(t0met->NeutralEMFraction());
-            T0MET->SetChargedHadronFraction(t0met->ChargedHadEtFraction());
-            T0MET->SetChargedEMFraction(t0met->ChargedEMEtFraction());
-
-	    //Significance
-	    float significance = (t0MET->front()).significance();
-	    float sigmaX2 = (t0MET->front()).getSignificanceMatrix()(0,0);
-            T0MET->SetSignificance( significance );
-            T0MET->SetSigmaX2( sigmaX2 );
-
-        }
-    }
-    /////////////// Added by Rafael on July 3rd 2013
-    // Get T2MET //
-    ///////////////
-
-    if (saveT2MET_) {
-
-        Handle<PFMETCollection> t2MET;
-        iEvent.getByLabel(t2metTag_, t2MET);
-        PFMETCollection::const_iterator t2met = t2MET->begin();
-
-        if (t2MET->begin() != t2MET->end()) {
-            T2MET->SetSumEt(t2met->sumEt());
-            T2MET->SetMagPhi(t2met->et(), t2met->phi());
-
-            // PF specififc methods
-            T2MET->SetMuonFraction(t2met->MuonEtFraction());
-            T2MET->SetNeutralHadronFraction(t2met->NeutralHadEtFraction());
-            T2MET->SetNeutralEMFraction(t2met->NeutralEMFraction());
-            T2MET->SetChargedHadronFraction(t2met->ChargedHadEtFraction());
-            T2MET->SetChargedEMFraction(t2met->ChargedEMEtFraction());
-
-        }
-    }
 
     /////////////
     // Get MET //
@@ -277,52 +225,96 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
         }
 
-        edm::Handle< edm::View<reco::PFMET> > pfMEThandle;
-        iEvent.getByLabel("pfMet", pfMEThandle);
-        //Significance
-        float significance = (pfMEThandle->front()).significance();
-        float sigmaX2 = (pfMEThandle->front()).getSignificanceMatrix()(0,0);
-        recoMET->SetSignificance( significance );
-        recoMET->SetSigmaX2( sigmaX2 );
-    }
+        recoMET->SetSignificance(MET->front().significance());
+        recoMET->SetSigmaX2(MET->front().getSignificanceMatrix()(0,0));
 
-    //////////////////
-    // Get TrackMET //  Added by Rafael on May 28th
-    //////////////////
+        //Handle<View<reco::PFMET>> pfMEThandle;
+        //iEvent.getByLabel("pfMet", pfMEThandle);
+        //recoMET->SetSignificance(pfMEThandle->front().significance());
+        //recoMET->SetSigmaX2(pfMEThandle->front().getSignificanceMatrix()(0,0));
 
-    if (saveTrackMET_) {
+
+        ///////////////
+        // Get T0MET //
+        ///////////////
+
+
+        Handle<PFMETCollection> t0MET;
+        iEvent.getByLabel("pfType1CorrectedMetType0", t0MET);
+        PFMETCollection::const_iterator t0met = t0MET->begin();
+
+        if (t0MET->begin() != t0MET->end()) {
+            T0MET->SetSumEt(t0met->sumEt());
+            T0MET->SetMagPhi(t0met->et(), t0met->phi());
+
+            // PF specififc methods
+            T0MET->SetMuonFraction(t0met->MuonEtFraction());
+            T0MET->SetNeutralHadronFraction(t0met->NeutralHadEtFraction());
+            T0MET->SetNeutralEMFraction(t0met->NeutralEMFraction());
+            T0MET->SetChargedHadronFraction(t0met->ChargedHadEtFraction());
+            T0MET->SetChargedEMFraction(t0met->ChargedEMEtFraction());
+
+            //Significance
+            float significance = (t0MET->front()).significance();
+            float sigmaX2 = (t0MET->front()).getSignificanceMatrix()(0,0);
+            T0MET->SetSignificance( significance );
+            T0MET->SetSigmaX2( sigmaX2 );
+
+        }
+
+        ///////////////
+        // Get T2MET //
+        ///////////////
+
+
+        Handle<PFMETCollection> t2MET;
+        iEvent.getByLabel("pfType1p2CorrectedMet", t2MET);
+        PFMETCollection::const_iterator t2met = t2MET->begin();
+
+        if (t2MET->begin() != t2MET->end()) {
+            T2MET->SetSumEt(t2met->sumEt());
+            T2MET->SetMagPhi(t2met->et(), t2met->phi());
+
+            // PF specififc methods
+            T2MET->SetMuonFraction(t2met->MuonEtFraction());
+            T2MET->SetNeutralHadronFraction(t2met->NeutralHadEtFraction());
+            T2MET->SetNeutralEMFraction(t2met->NeutralEMFraction());
+            T2MET->SetChargedHadronFraction(t2met->ChargedHadEtFraction());
+            T2MET->SetChargedEMFraction(t2met->ChargedEMEtFraction());
+
+        }
+
+        //////////////////
+        // Get TrackMET //  
+        //////////////////
+
 
         Handle<METCollection> trkMET;
-        iEvent.getByLabel(trackmetTag_, trkMET);
+        iEvent.getByLabel("trackMet", trkMET);
         METCollection::const_iterator trkmet = trkMET->begin();
 
         if (trkMET->begin() != trkMET->end()) {
             track_MET->SetSumEt(trkmet->sumEt());
             track_MET->SetMagPhi(trkmet->et(), trkmet->phi());
         }
+
+        ////////////////
+        // Get MVAMET // 
+        //////////////// 
+
+        Handle<vector<reco::PFMET> > mvaMET;
+        iEvent.getByLabel("pfMEtMVA", mvaMET);
+        vector<reco::PFMET>::const_iterator mvamet = mvaMET->begin();
+
+        if (mvaMET->begin() != mvaMET->end()) {
+            //std::cout << "sumET: " << mvamet->sumEt()<<std::endl;
+            //std::cout << "et: " << mvamet->et() << std::endl;
+            //std::cout << "phi: " << mvamet->phi() << std::endl;
+            mva_MET->SetSumEt(mvamet->sumEt());
+            mva_MET->SetMagPhi(mvamet->et(), mvamet->phi());
+        }
     }
 
-    
-    
-    //////////////////                                                                                                                                                          
-    // Get MVAMET   // 
-    ////////////////// 
-                                                                                                                                                         
-    //   if (saveTrackMET_) {
-
-    Handle<vector<reco::PFMET> > mvaMET;
-    iEvent.getByLabel("pfMEtMVA", mvaMET);
-    vector<reco::PFMET>::const_iterator mvamet = mvaMET->begin();
-
-    if (mvaMET->begin() != mvaMET->end()) {
-      //std::cout << "sumET: " << mvamet->sumEt()<<std::endl;
-      //std::cout << "et: " << mvamet->et() << std::endl;
-      //std::cout << "phi: " << mvamet->phi() << std::endl;
-      mva_MET->SetSumEt(mvamet->sumEt());
-      mva_MET->SetMagPhi(mvamet->et(), mvamet->phi());
-    }
-
-    
 
 
     ///////////////
@@ -402,7 +394,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     ///////////////////
 
 
-    edm::Handle<reco::ConversionCollection> hConversions;
+    Handle<reco::ConversionCollection> hConversions;
     iEvent.getByLabel("allConversions", hConversions);
 
     if (saveElectrons_) {
@@ -511,96 +503,96 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 
 
-      Handle<EcalRecHitCollection> Brechit;
+        Handle<EcalRecHitCollection> Brechit;
 
-      iEvent.getByLabel("reducedEcalRecHitsEB",Brechit);
+        iEvent.getByLabel("reducedEcalRecHitsEB",Brechit);
 
-      const EcalRecHitCollection* barrelRecHits= Brechit.product();
+        const EcalRecHitCollection* barrelRecHits= Brechit.product();
 
         Handle<vector<reco::Photon> > photons;
         iEvent.getByLabel(photonTag_, photons);
 
 
 
-        edm::Handle<reco::GsfElectronCollection> hElectrons;
+        Handle<reco::GsfElectronCollection> hElectrons;
         iEvent.getByLabel("gsfElectrons", hElectrons);
 
 
         for (vector<reco::Photon>::const_iterator iPhoton = photons->begin(); iPhoton != photons->end() ; ++iPhoton) {
 
 
-	  TCPhoton* myPhoton = new ((*recoPhotons)[photonCount]) TCPhoton();
+            TCPhoton* myPhoton = new ((*recoPhotons)[photonCount]) TCPhoton();
 
-	    //Crystal Info:
-	    std::vector< std::pair<DetId, float> >  PhotonHit_DetIds  = iPhoton->superCluster()->hitsAndFractions();
-	    std::vector<TCPhoton::CrystalInfo> crystalinfo_container;
-	    crystalinfo_container.clear();
-	    TCPhoton::CrystalInfo crystal = {};
-	    float timing_avg =0.0;
-	    int ncrys   = 0;
-	    int ncrysPhoton = 0;
-	    vector< std::pair<DetId, float> >::const_iterator detitr;
+            //Crystal Info:
+            std::vector< std::pair<DetId, float> >  PhotonHit_DetIds  = iPhoton->superCluster()->hitsAndFractions();
+            std::vector<TCPhoton::CrystalInfo> crystalinfo_container;
+            crystalinfo_container.clear();
+            TCPhoton::CrystalInfo crystal = {};
+            float timing_avg =0.0;
+            int ncrys   = 0;
+            int ncrysPhoton = 0;
+            vector< std::pair<DetId, float> >::const_iterator detitr;
 
-	    for(detitr = PhotonHit_DetIds.begin(); detitr != PhotonHit_DetIds.end(); ++detitr)
-	      {
-		     
-		if (((*detitr).first).det() == DetId::Ecal && ((*detitr).first).subdetId() == EcalBarrel) {
-		  EcalRecHitCollection::const_iterator j= Brechit->find(((*detitr).first));
-		  EcalRecHitCollection::const_iterator thishit;
-		  if ( j!= Brechit->end())  thishit = j;
-		  if ( j== Brechit->end()){
-		    continue;
-		  }
+            for(detitr = PhotonHit_DetIds.begin(); detitr != PhotonHit_DetIds.end(); ++detitr)
+            {
 
-		  EBDetId detId  = (EBDetId)((*detitr).first);
-		  crystal.rawId  = thishit->id().rawId();
-		  crystal.energy = thishit->energy();
-		  crystal.time   = thishit->time();
-		  crystal.timeErr= thishit->timeError();
-		  crystal.recoFlag = thishit->recoFlag();
-		  crystal.ieta   = detId.ieta();
-		  crystal.iphi   = detId.iphi();
-		  if(crystal.energy > 0.1){
-		    timing_avg  = timing_avg + crystal.time;
-		    ncrys++;
-		  }  
-		}//end of if ((*detitr).det() == DetId::Ecal && (*detitr).subdetId() == EcalBarrel)
-		crystalinfo_container.push_back(crystal);  
-	      }//End loop over detids
-	    std::sort(crystalinfo_container.begin(),crystalinfo_container.end(),EnergySortCriterium);
+                if (((*detitr).first).det() == DetId::Ecal && ((*detitr).first).subdetId() == EcalBarrel) {
+                    EcalRecHitCollection::const_iterator j= Brechit->find(((*detitr).first));
+                    EcalRecHitCollection::const_iterator thishit;
+                    if ( j!= Brechit->end())  thishit = j;
+                    if ( j== Brechit->end()){
+                        continue;
+                    }
 
-
-	    //Without taking into account uncertainty, this time makes no sense.
-	    if (ncrys !=0) timing_avg = timing_avg/(float)ncrys;
-	    else timing_avg = -99.;
-	    ncrysPhoton = crystalinfo_container.size(); 
-	    int pho_timingavg_xtal      = timing_avg;
-
-      myPhoton->SetNCrystals(crystalinfo_container.size());
-
-	    for (unsigned int y =0; y < crystalinfo_container.size() && y < 100;y++){ 
-	      
-	      myPhoton->SetCrystal(y,crystalinfo_container[y]);
+                    EBDetId detId  = (EBDetId)((*detitr).first);
+                    crystal.rawId  = thishit->id().rawId();
+                    crystal.energy = thishit->energy();
+                    crystal.time   = thishit->time();
+                    crystal.timeErr= thishit->timeError();
+                    crystal.recoFlag = thishit->recoFlag();
+                    crystal.ieta   = detId.ieta();
+                    crystal.iphi   = detId.iphi();
+                    if(crystal.energy > 0.1){
+                        timing_avg  = timing_avg + crystal.time;
+                        ncrys++;
+                    }  
+                }//end of if ((*detitr).det() == DetId::Ecal && (*detitr).subdetId() == EcalBarrel)
+                crystalinfo_container.push_back(crystal);  
+            }//End loop over detids
+            std::sort(crystalinfo_container.begin(),crystalinfo_container.end(),EnergySortCriterium);
 
 
-	    }//end of for (unsigned int y =0; y < crystalinfo_container.size();y++
-      TCPhoton::CrystalInfo * savedCrystals = myPhoton->GetCrystalArray();
-      /*
-      for (int y = 0; y< myPhoton->GetNCrystals();y++){
-	      std::cout << "savedCrystals[y].time : " << savedCrystals[y].time << std::endl; 
-	      std::cout << "savedCrystals[y].timeErr : " << savedCrystals[y].timeErr << std::endl;
-	      std::cout << "savedCrystals[y].energy : " << savedCrystals[y].energy <<std::endl;
-	      std::cout << "savedCrystals[y].ieta: " << savedCrystals[y].ieta << std::endl;
+            //Without taking into account uncertainty, this time makes no sense.
+            if (ncrys !=0) timing_avg = timing_avg/(float)ncrys;
+            else timing_avg = -99.;
+            ncrysPhoton = crystalinfo_container.size(); 
+            int pho_timingavg_xtal      = timing_avg;
 
-	      std::cout << "savedCrystals[y].rawId: " << savedCrystals[y].rawId <<std::endl;
-      }
-      */
+            myPhoton->SetNCrystals(crystalinfo_container.size());
 
-	    const reco::BasicCluster& seedClus = *(iPhoton->superCluster()->seed());
+            for (unsigned int y =0; y < crystalinfo_container.size() && y < 100;y++){ 
+
+                myPhoton->SetCrystal(y,crystalinfo_container[y]);
 
 
+            }//end of for (unsigned int y =0; y < crystalinfo_container.size();y++
+            TCPhoton::CrystalInfo * savedCrystals = myPhoton->GetCrystalArray();
+            /*
+               for (int y = 0; y< myPhoton->GetNCrystals();y++){
+               std::cout << "savedCrystals[y].time : " << savedCrystals[y].time << std::endl; 
+               std::cout << "savedCrystals[y].timeErr : " << savedCrystals[y].timeErr << std::endl;
+               std::cout << "savedCrystals[y].energy : " << savedCrystals[y].energy <<std::endl;
+               std::cout << "savedCrystals[y].ieta: " << savedCrystals[y].ieta << std::endl;
 
-	    myPhoton->SetPxPyPzE(iPhoton->px(), iPhoton->py(), iPhoton->pz(), iPhoton->p());
+               std::cout << "savedCrystals[y].rawId: " << savedCrystals[y].rawId <<std::endl;
+               }
+             */
+
+            const reco::BasicCluster& seedClus = *(iPhoton->superCluster()->seed());
+
+
+
+            myPhoton->SetPxPyPzE(iPhoton->px(), iPhoton->py(), iPhoton->pz(), iPhoton->p());
             myPhoton->SetVtx(iPhoton->vx(), iPhoton->vy(), iPhoton->vz());
 
             // ID variables
@@ -668,7 +660,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         ////////////////////
 
         Handle<std::vector< PileupSummaryInfo > >  PUInfo;
-        iEvent.getByLabel(edm::InputTag("addPileupInfo"), PUInfo);
+        iEvent.getByLabel(InputTag("addPileupInfo"), PUInfo);
         std::vector<PileupSummaryInfo>::const_iterator iPV;
 
         for(iPV = PUInfo->begin(); iPV != PUInfo->end(); ++iPV){
@@ -691,11 +683,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
                 ////  Leptons and photons and b's, (oh my)
                 if (
-                         (
-                            (abs(myParticle.pdgId()) >= 11 && abs(myParticle.pdgId()) <= 16) 
-                            || myParticle.pdgId() == 22 
-                            || abs(myParticle.pdgId()) == 5 
-                           )
+                        (
+                         (abs(myParticle.pdgId()) >= 11 && abs(myParticle.pdgId()) <= 16) 
+                         || myParticle.pdgId() == 22 
+                         || abs(myParticle.pdgId()) == 5 
+                        )
                    ) {
 
                     TCGenParticle* genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
@@ -764,81 +756,102 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     // Noise filters //
     ///////////////////
 
-    //if (isRealData) {
+    if (isRealData) {
 
-    myNoiseFilters.isScraping = false; //isFilteredOutScraping(iEvent, iSetup, 10, 0.25);
+        // Beam scraping filter
+        myNoiseFilters.isScraping = isFilteredOutScraping(iEvent, iSetup, 10, 0.25);
 
-    Handle<bool> hcalNoiseFilterHandle;
-    iEvent.getByLabel(hcalHBHEFilterTag_, hcalNoiseFilterHandle);
-    if (hcalNoiseFilterHandle.isValid())  myNoiseFilters.isNoiseHcalHBHE = !(Bool_t)(*hcalNoiseFilterHandle);
-    else LogWarning("Filters")<<"hcal noise NOT valid  ";
+        // ECAL filters
+        Handle<bool> ecalTPFilterHandle;
+        iEvent.getByLabel("EcalDeadCellTriggerPrimitiveFilter", ecalTPFilterHandle);
+        if (ecalTPFilterHandle.isValid())  
+            myNoiseFilters.isNoiseEcalTP = !(Bool_t)(*ecalTPFilterHandle);
+        else 
+            LogWarning("Filters")<<"Ecal TP NOT valid  ";
 
-    Handle<bool> hcalLaserFilterHandle;
-    iEvent.getByLabel(hcalLaserFilterTag_, hcalLaserFilterHandle);
-    if (hcalLaserFilterHandle.isValid())  myNoiseFilters.isNoiseHcalLaser = !(Bool_t)(*hcalLaserFilterHandle);
-    else LogWarning("Filters")<<"hcal Laser NOT valid  ";
+        Handle<bool> ecalBEFilterHandle;
+        iEvent.getByLabel("EcalDeadCellBoundaryEnergyFilter", ecalBEFilterHandle);
+        if (ecalBEFilterHandle.isValid())  
+            myNoiseFilters.isNoiseEcalBE = !(Bool_t)(*ecalBEFilterHandle);
+        else 
+            LogWarning("Filters")<<"Ecal BE NOT valid  ";
 
-    Handle<bool> ecalTPFilterHandle;
-    iEvent.getByLabel(ecalTPFilterTag_, ecalTPFilterHandle);
-    if (ecalTPFilterHandle.isValid())  myNoiseFilters.isNoiseEcalTP = !(Bool_t)(*ecalTPFilterHandle);
-    else LogWarning("Filters")<<"Ecal TP NOT valid  ";
+        // HCAL
+        Handle<bool> hcalNoiseFilterHandle;
+        iEvent.getByLabel(hcalHBHEFilterTag_, hcalNoiseFilterHandle);
+        if (hcalNoiseFilterHandle.isValid())  
+            myNoiseFilters.isNoiseHcalHBHE = !(Bool_t)(*hcalNoiseFilterHandle);
+        else 
+            LogWarning("Filters")<<"hcal noise NOT valid  ";
 
-    Handle<bool> ecalBEFilterHandle;
-    iEvent.getByLabel(ecalBEFilterTag_, ecalBEFilterHandle);
-    if (ecalBEFilterHandle.isValid())  myNoiseFilters.isNoiseEcalBE = !(Bool_t)(*ecalBEFilterHandle);
-    else LogWarning("Filters")<<"Ecal BE NOT valid  ";
+        Handle<bool> hcalLaserFilterHandle;
+        iEvent.getByLabel("hcalLaserEventFilter", hcalLaserFilterHandle);
+        if (hcalLaserFilterHandle.isValid())  
+            myNoiseFilters.isNoiseHcalLaser = !(Bool_t)(*hcalLaserFilterHandle);
+        else 
+            LogWarning("Filters")<<"hcal Laser NOT valid  ";
 
-    Handle<bool> trackingFailureHandle;
-    iEvent.getByLabel(trackingFailureTag_, trackingFailureHandle);
-    if(trackingFailureHandle.isValid()) myNoiseFilters.isNoiseTracking = !(Bool_t)(*trackingFailureHandle);
-    else LogWarning("Filters")<<"tracking Failure NOT valid  ";
+        Handle<bool> trackingFailureHandle;
+        iEvent.getByLabel("trackingFailureFilter", trackingFailureHandle);
+        if(trackingFailureHandle.isValid()) 
+            myNoiseFilters.isNoiseTracking = !(Bool_t)(*trackingFailureHandle);
+        else 
+            LogWarning("Filters")<<"tracking Failure NOT valid  ";
 
-    Handle<bool> eeBadScFilterHandle;
-    iEvent.getByLabel(eeBadScFilterTag_, eeBadScFilterHandle);
-    if(eeBadScFilterHandle.isValid()) myNoiseFilters.isNoiseEEBadSc = !(Bool_t)(*eeBadScFilterHandle);
-    else LogWarning("Filters")<<"eeBadSc NOT valid  ";
-
-
-    Handle<bool> trkPOGFiltersHandle1;
-    iEvent.getByLabel(trkPOGFiltersTag1_, trkPOGFiltersHandle1);
-    if(trkPOGFiltersHandle1.isValid()) myNoiseFilters.isNoisetrkPOG1 = !(Bool_t)(*trkPOGFiltersHandle1);
-    else LogWarning("Filters")<<"trkPOG1 NOT valid  ";
-
-    Handle<bool> trkPOGFiltersHandle2;
-    iEvent.getByLabel(trkPOGFiltersTag2_, trkPOGFiltersHandle2);
-    if(trkPOGFiltersHandle2.isValid()) myNoiseFilters.isNoisetrkPOG2 = !(Bool_t)(*trkPOGFiltersHandle2);
-    else LogWarning("Filters")<<"trkPOG2 NOT valid  ";
-
-    Handle<bool> trkPOGFiltersHandle3;
-    iEvent.getByLabel(trkPOGFiltersTag3_, trkPOGFiltersHandle3);
-    if(trkPOGFiltersHandle3.isValid()) myNoiseFilters.isNoisetrkPOG3 = !(Bool_t)(*trkPOGFiltersHandle3);
-    else LogWarning("Filters")<<"trkPOG3 NOT valid  ";
-
-
-    edm::Handle<BeamHaloSummary> TheBeamHaloSummary;
-    iEvent.getByLabel("BeamHaloSummary",TheBeamHaloSummary);
-    const BeamHaloSummary TheSummary = (*TheBeamHaloSummary.product() );
-    if (!TheBeamHaloSummary.isValid()) LogWarning("Filters")<<"The Summary (for CSC halo) NOT valid  ";
-
-    myNoiseFilters.isCSCTightHalo = TheSummary.CSCTightHaloId();
-    myNoiseFilters.isCSCLooseHalo = TheSummary.CSCLooseHaloId();
+        Handle<bool> eeBadScFilterHandle;
+        iEvent.getByLabel("eeBadScFilter", eeBadScFilterHandle);
+        if (eeBadScFilterHandle.isValid()) 
+            myNoiseFilters.isNoiseEEBadSc = !(Bool_t)(*eeBadScFilterHandle);
+        else 
+            LogWarning("Filters")<<"eeBadSc NOT valid  ";
 
 
-    //LogWarning("Filters")<<"\n csc1  "<< myNoiseFilters.isCSCTightHalo<<"  csc2  "<<myNoiseFilters.isCSCLooseHalo
-    //  <<" isNoiseHcal HBHE "<<myNoiseFilters.isNoiseHcalHBHE<<"  laser "<<myNoiseFilters.isNoiseHcalLaser<<"\n"
-    //  <<" ecal TP  "<<myNoiseFilters.isNoiseEcalTP<<"   ecal BE  "<<myNoiseFilters.isNoiseEcalBE;
+        Handle<bool> trkPOGFiltersHandle1;
+        iEvent.getByLabel("manystripclus53X", trkPOGFiltersHandle1);
+        if (trkPOGFiltersHandle1.isValid()) 
+            myNoiseFilters.isNoisetrkPOG1 = !(Bool_t)(*trkPOGFiltersHandle1);
+        else 
+            LogWarning("Filters")<<"trkPOG1 NOT valid  ";
 
-    //}
+        Handle<bool> trkPOGFiltersHandle2;
+        iEvent.getByLabel("toomanystripclus53X", trkPOGFiltersHandle2);
+        if (trkPOGFiltersHandle2.isValid()) 
+            myNoiseFilters.isNoisetrkPOG2 = !(Bool_t)(*trkPOGFiltersHandle2);
+        else 
+            LogWarning("Filters")<<"trkPOG2 NOT valid  ";
+
+        Handle<bool> trkPOGFiltersHandle3;
+        iEvent.getByLabel("logErrorTooManyClusters", trkPOGFiltersHandle3);
+        if (trkPOGFiltersHandle3.isValid()) 
+            myNoiseFilters.isNoisetrkPOG3 = !(Bool_t)(*trkPOGFiltersHandle3);
+        else 
+            LogWarning("Filters")<<"trkPOG3 NOT valid  ";
+
+
+        Handle<BeamHaloSummary> TheBeamHaloSummary;
+        iEvent.getByLabel("BeamHaloSummary",TheBeamHaloSummary);
+        const BeamHaloSummary TheSummary = (*TheBeamHaloSummary.product() );
+        if (!TheBeamHaloSummary.isValid()) LogWarning("Filters")<<"The Summary (for CSC halo) NOT valid  ";
+
+        myNoiseFilters.isCSCTightHalo = TheSummary.CSCTightHaloId();
+        myNoiseFilters.isCSCLooseHalo = TheSummary.CSCLooseHaloId();
+
+
+        //LogWarning("Filters")<<"\n csc1  "<< myNoiseFilters.isCSCTightHalo<<"  csc2  "<<myNoiseFilters.isCSCLooseHalo
+        //  <<" isNoiseHcal HBHE "<<myNoiseFilters.isNoiseHcalHBHE<<"  laser "<<myNoiseFilters.isNoiseHcalLaser<<"\n"
+        //  <<" ecal TP  "<<myNoiseFilters.isNoiseEcalTP<<"   ecal BE  "<<myNoiseFilters.isNoiseEcalBE;
+
+    }
 
     ////////////////////////////  
     // get trigger information//
     ////////////////////////////
 
-    edm::Handle<TriggerResults> hltR;
+    Handle<TriggerResults> hltR;
     triggerResultsTag_ = InputTag(hlTriggerResults_,"",hltProcess_);
     iEvent.getByLabel(triggerResultsTag_,hltR);
     triggerEventTag_ = InputTag("hltTriggerSummaryAOD","",hltProcess_);
-    edm::Handle<trigger::TriggerEvent> hltE;                           
+    Handle<trigger::TriggerEvent> hltE;                           
     iEvent.getByLabel(triggerEventTag_,hltE);                          
 
     const TriggerNames & triggerNames = iEvent.triggerNames(*hltR);
@@ -879,7 +892,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     primaryVtx    -> Clear("C");
     recoJets      -> Clear("C");
-    recoJPT       -> Clear("C");
     recoMuons     -> Clear("C");
     recoElectrons -> Clear("C");
     recoPhotons   -> Clear("C");
@@ -897,7 +909,6 @@ void  ntupleProducer::beginJob()
 
     primaryVtx     = new TClonesArray("TCPrimaryVtx");
     recoJets       = new TClonesArray("TCJet");
-    recoJPT        = new TClonesArray("TCJet");
     recoElectrons  = new TClonesArray("TCElectron");
     recoMuons      = new TClonesArray("TCMuon");
     recoPhotons    = new TClonesArray("TCPhoton");
@@ -907,24 +918,21 @@ void  ntupleProducer::beginJob()
     genParticles   = new TClonesArray("TCGenParticle");
     beamSpot       = new TVector3();
     recoMET        = 0;
-    track_MET      = 0; //Added by Rafael on May 28th
-    T0MET          = 0; //Added by Rafael on July 3rd
-    T2MET          = 0; //Added by Rafael on July 3rd
+    track_MET      = 0; 
+    T0MET          = 0; 
+    T2MET          = 0;
     mva_MET        = 0;
 
-    h1_numOfEvents = fs->make<TH1F>("numOfEvents", "total number of events, unskimmed", 1,0,1);
-
     eventTree->Branch("recoJets",&recoJets, 6400, 0);
-    eventTree->Branch("recoJPT",&recoJPT, 6400, 0);
     eventTree->Branch("recoElectrons",&recoElectrons, 6400, 0);
     eventTree->Branch("recoMuons",&recoMuons, 6400, 0);
     eventTree->Branch("recoPhotons",&recoPhotons, 6400, 0);
     //eventTree->Branch("pfPhotons",&pfPhotons, 6400, 0);
     eventTree->Branch("recoMET", &recoMET, 6400, 0);
     eventTree->Branch("mva_MET", &mva_MET, 6400, 0);
-    eventTree->Branch("track_MET", &track_MET, 6400, 0); //Added by Rafael on May 28th
-    eventTree->Branch("T0MET", &T0MET, 6400, 0); //Added by Rafael on May 28th
-    eventTree->Branch("T2MET", &T2MET, 6400, 0); //Added by Rafael on May 28th
+    eventTree->Branch("track_MET", &track_MET, 6400, 0);
+    eventTree->Branch("T0MET", &T0MET, 6400, 0);
+    eventTree->Branch("T2MET", &T2MET, 6400, 0);
     eventTree->Branch("triggerObjects", &triggerObjects, 6400, 0);
     eventTree->Branch("genJets",&genJets, 6400, 0);
     eventTree->Branch("genParticles",&genParticles, 6400, 0);
@@ -983,7 +991,7 @@ void  ntupleProducer::beginJob()
     if (verboseMVAs) cout<<"MVA electron regression shit probably has initialized"<<endl;
 }
 
-void ntupleProducer::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
+void ntupleProducer::beginRun(const Run& iRun, const EventSetup& iSetup)
 {
     bool changed = true; 
     hltConfig_.init(iRun, iSetup, hltProcess_, changed);
@@ -991,20 +999,12 @@ void ntupleProducer::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetu
     recordedLumi  = 0;
 }
 
-void ntupleProducer::endLuminosityBlock(const edm::LuminosityBlock& iLumi, const edm::EventSetup& iSetup)
+void ntupleProducer::endLuminosityBlock(const LuminosityBlock& iLumi, const EventSetup& iSetup)
 {
-    //if (isRealData) {
-    if (false) {
-        edm::Handle<LumiSummary> lumiSummary;
-        iLumi.getByLabel("lumiProducer", lumiSummary);
-
-        deliveredLumi  += lumiSummary->avgInsDelLumi()*93.244;
-        recordedLumi   += deliveredLumi*lumiSummary->liveFrac();
-    }
 }
 
 
-void ntupleProducer::endRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
+void ntupleProducer::endRun(const Run& iRun, const EventSetup& iSetup)
 {
 }
 
@@ -1012,12 +1012,11 @@ void ntupleProducer::endRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
 void ntupleProducer::endJob() 
 {
     cout<<nEvents<<endl;
-    h1_numOfEvents->SetBinContent(1,nEvents);
     jobTree->Fill();
 }
 
 
-bool ntupleProducer::triggerDecision(edm::Handle<edm::TriggerResults> &hltR, int iTrigger)
+bool ntupleProducer::triggerDecision(Handle<TriggerResults> &hltR, int iTrigger)
 {
     bool triggerPassed = false;
     if(hltR->wasrun(iTrigger) &&
@@ -1043,14 +1042,14 @@ float ntupleProducer::sumPtSquared(const Vertex & v)
 }
 
 
-bool ntupleProducer::isFilteredOutScraping( const edm::Event& iEvent, const edm::EventSetup& iSetup, int numtrack, double thresh)
+bool ntupleProducer::isFilteredOutScraping( const Event& iEvent, const EventSetup& iSetup, int numtrack, double thresh)
 {
 
     bool  accepted = false;
     float fraction = 0;  
     // get GeneralTracks collection
 
-    edm::Handle<reco::TrackCollection> tkRef;
+    Handle<reco::TrackCollection> tkRef;
     iEvent.getByLabel("generalTracks",tkRef);    
     const reco::TrackCollection* tkColl = tkRef.product();
 
@@ -1075,7 +1074,7 @@ bool ntupleProducer::isFilteredOutScraping( const edm::Event& iEvent, const edm:
 
 bool ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet *outJet)
 {
-    if(fabs(inJet.eta()) > 2.5){
+    if (fabs(inJet.eta()) > 2.5 || !inJet.getTrackRefs()) {
         outJet->SetVtxSumPtFrac(-1);
         outJet->SetVtxSumPt(-1);
         outJet->SetVtxTrackFrac(-1);
@@ -1095,7 +1094,6 @@ bool ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::Vertex
 
     sumTrackX = sumTrackY = sumTrackZ  = sumTrackPt = 0;
 
-    //const reco::TrackRefVector &tracks = inJet.associatedTracks(); 
     const reco::TrackRefVector &tracks = inJet.getTrackRefs(); 
 
     for (TrackRefVector::const_iterator iTrack = tracks.begin(); iTrack != tracks.end(); ++iTrack) {
@@ -1127,7 +1125,7 @@ bool ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::Vertex
             associatedTrackCount.push_back(0);            
 
             for(Vertex::trackRef_iterator iTrackRef = myVtx.tracks_begin(); iTrackRef != myVtx.tracks_end(); ++iTrackRef){
-                const edm::RefToBase<reco::Track> &myTrackRef = *iTrackRef; 
+                const RefToBase<reco::Track> &myTrackRef = *iTrackRef; 
 
                 if(myTrackRef.isAvailable()){
                     const reco::Track &myVertexTrack = *myTrackRef.get();		
@@ -1171,7 +1169,7 @@ bool ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::Vertex
 
 
 void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron* eleCon, 
-        const edm::Event& iEvent, const edm::EventSetup& iSetup, const reco::PFCandidateCollection& PFCandidates, float Rho)
+        const Event& iEvent, const EventSetup& iSetup, const reco::PFCandidateCollection& PFCandidates, float Rho)
 {
     if (verboseMVAs) cout<<"loading up electron MVA values"<<endl;
     //**********************************************************
@@ -1236,7 +1234,7 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
     float fMVAVar_ip3d      = -999.0; 
     float fMVAVar_ip3dSig   = 0.0;
 
-    edm::ESHandle<TransientTrackBuilder> builder;
+    ESHandle<TransientTrackBuilder> builder;
     iSetup.get<TransientTrackRecord>().get("TransientTrackBuilder", builder);
     TransientTrackBuilder thebuilder = *(builder.product());
 
@@ -1507,7 +1505,7 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
     return;
 }
 
-void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR, edm::Handle<trigger::TriggerEvent> &hltE, const std::string& triggerName, int* trigCount) {
+void ntupleProducer::analyzeTrigger(Handle<TriggerResults> &hltR, Handle<trigger::TriggerEvent> &hltE, const std::string& triggerName, int* trigCount) {
 
     using namespace trigger;
 
@@ -1642,12 +1640,12 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR, edm:
 float ntupleProducer::MatchBTagsToJets(const reco::JetTagCollection bTags,const reco::PFJet jet)
 {
     float discrValue = -999;
-        for (tag_iter iTag = bTags.begin(); iTag != bTags.end(); iTag++) {
-            if (sqrt(pow(iTag->first->eta() - jet.eta(), 2) + pow(deltaPhi(iTag->first->phi(),jet.phi()), 2)) == 0.) {
-                discrValue = iTag->second;
-                break;
-            }
+    for (tag_iter iTag = bTags.begin(); iTag != bTags.end(); iTag++) {
+        if (sqrt(pow(iTag->first->eta() - jet.eta(), 2) + pow(deltaPhi(iTag->first->phi(),jet.phi()), 2)) == 0.) {
+            discrValue = iTag->second;
+            break;
         }
+    }
 
     return discrValue;
 }

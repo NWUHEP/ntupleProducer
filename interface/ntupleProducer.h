@@ -35,8 +35,6 @@
 #include "DataFormats/JetReco/interface/PFJet.h"
 #include "DataFormats/JetReco/interface/PFJetCollection.h"
 #include "DataFormats/JetReco/interface/JetID.h"
-#include "DataFormats/JetReco/interface/JPTJetCollection.h"
-#include "DataFormats/JetReco/interface/JPTJet.h"
 
 #include "DataFormats/METReco/interface/PFMET.h"
 #include "DataFormats/METReco/interface/PFMETCollection.h"
@@ -44,8 +42,6 @@
 #include "DataFormats/METReco/interface/MET.h"
 #include "DataFormats/METReco/interface/METCollection.h"
 #include "DataFormats/METReco/interface/METFwd.h"
-//#include "DataFormats/METReco/interface/GenMET.h" //Added by Rafael on June 3rd
-//#include "DataFormats/METReco/interface/GenMETCollection.h" //Added by Rafael on June 3rd
 
 #include "DataFormats/MuonReco/interface/Muon.h"
 #include "DataFormats/MuonReco/interface/MuonFwd.h"
@@ -188,26 +184,26 @@ struct CrystalInfo{
 };
 */
 
-class ntupleProducer : public edm::EDAnalyzer {
+class ntupleProducer : public EDAnalyzer {
  public:
-  explicit ntupleProducer(const edm::ParameterSet&);
+  explicit ntupleProducer(const ParameterSet&);
   ~ntupleProducer();
   
  private:
   virtual void beginJob() ;
-  virtual void beginRun(const edm::Run&, const edm::EventSetup&) ;
-  virtual void analyze(const edm::Event&, const edm::EventSetup&);
-  virtual void endLuminosityBlock(const edm::LuminosityBlock&,const edm::EventSetup&);
-  virtual void endRun(const edm::Run&, const edm::EventSetup&);
+  virtual void beginRun(const Run&, const EventSetup&) ;
+  virtual void analyze(const Event&, const EventSetup&);
+  virtual void endLuminosityBlock(const LuminosityBlock&,const EventSetup&);
+  virtual void endRun(const Run&, const EventSetup&);
   virtual void endJob() ;
   
-  virtual bool  triggerDecision(edm::Handle<edm::TriggerResults>& hltR, int iTrigger);
+  virtual bool  triggerDecision(Handle<TriggerResults>& hltR, int iTrigger);
   virtual float sumPtSquared(const Vertex& v);
   virtual bool  associateJetToVertex(reco::PFJet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet *outJet);   
-  virtual void  electronMVA(const reco::GsfElectron* iElectron, TCElectron* eleCon, const edm::Event& iEvent,const edm::EventSetup& iSetup, const reco::PFCandidateCollection& PFCandidates, float Rho);
-  virtual bool  isFilteredOutScraping(const edm::Event& iEvent, const edm::EventSetup& iSetup, int numtrack=10, double thresh=0.25);
+  virtual void  electronMVA(const reco::GsfElectron* iElectron, TCElectron* eleCon, const Event& iEvent,const EventSetup& iSetup, const reco::PFCandidateCollection& PFCandidates, float Rho);
+  virtual bool  isFilteredOutScraping(const Event& iEvent, const EventSetup& iSetup, int numtrack=10, double thresh=0.25);
   virtual float MatchBTagsToJets(const reco::JetTagCollection, const reco::PFJet);
-  void analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR, edm::Handle<trigger::TriggerEvent> &hltE, const std::string& triggerName, int* trigCount);                   
+  void analyzeTrigger(Handle<TriggerResults> &hltR, Handle<trigger::TriggerEvent> &hltE, const std::string& triggerName, int* trigCount);                   
   // ----------member data ---------------------------
   
   struct JetCompare :
@@ -232,43 +228,35 @@ class ntupleProducer : public edm::EDAnalyzer {
   float rhoFactor, rho25Factor, rhoMuFactor,;
   vector<string>  savedTriggerNames;
   
-  edm::Service<TFileService> fs;
+  Service<TFileService> fs;
   TTree* eventTree;
   TTree* jobTree;
 
-  edm::InputTag jetTag_;
-  edm::InputTag metTag_;
-  edm::InputTag trackmetTag_; //Added by Rafael on May 28th
-  edm::InputTag t0metTag_; //Added by Rafael on July 3rd 2013
-  edm::InputTag t2metTag_; //Added by Rafael on July 3rd 2013
-  edm::InputTag genJetTag_;
-  edm::InputTag muonTag_;
-  edm::InputTag electronTag_;
-  edm::InputTag photonTag_;
-  edm::InputTag primaryVtxTag_;
-  edm::InputTag triggerResultsTag_;
-  edm::InputTag rhoCorrTag_, rho25CorrTag_, rhoMuCorrTag_;
-  edm::InputTag hcalHBHEFilterTag_;
-  edm::InputTag ecalTPFilterTag_;
-  edm::InputTag ecalBEFilterTag_;
-  edm::InputTag hcalLaserFilterTag_;
-  edm::InputTag trackingFailureTag_;
-  edm::InputTag eeBadScFilterTag_;
-  edm::InputTag trkPOGFiltersTag1_;
-  edm::InputTag trkPOGFiltersTag2_;
-  edm::InputTag trkPOGFiltersTag3_;
-  edm::InputTag partFlowTag_;
-  edm::ParameterSet photonIsoCalcTag_;
-  edm::InputTag triggerEventTag_;
+  InputTag jetTag_;
+  InputTag metTag_;
+  InputTag genJetTag_;
+  InputTag muonTag_;
+  InputTag electronTag_;
+  InputTag photonTag_;
+  InputTag primaryVtxTag_;
+  InputTag triggerResultsTag_;
+  InputTag rhoCorrTag_, rho25CorrTag_, rhoMuCorrTag_;
+  InputTag hcalHBHEFilterTag_;
+  InputTag hcalLaserFilterTag_;
+  InputTag trackingFailureTag_;
+  InputTag eeBadScFilterTag_;
+  InputTag trkPOGFiltersTag1_;
+  InputTag trkPOGFiltersTag2_;
+  InputTag trkPOGFiltersTag3_;
+  InputTag partFlowTag_;
+  ParameterSet photonIsoCalcTag_;
+  InputTag triggerEventTag_;
 
   bool saveJets_;
   bool saveElectrons_;
   bool saveMuons_;
   bool savePhotons_;
   bool saveMET_;
-  bool saveTrackMET_; //Added by Rafael on May 28th
-  bool saveT0MET_; //Added by Rafael on July 3rd 2013
-  bool saveT2MET_; //Added by Rafael on July 3rd 2013
   bool saveGenJets_;
   bool saveGenParticles_;
   bool isRealData;
@@ -277,7 +265,6 @@ class ntupleProducer : public edm::EDAnalyzer {
   
   //Physics object containers
   TClonesArray* recoJets;
-  TClonesArray* recoJPT;
   TClonesArray* recoMuons;
   TClonesArray* recoElectrons;
   TClonesArray* recoPhotons;
@@ -285,9 +272,9 @@ class ntupleProducer : public edm::EDAnalyzer {
   TClonesArray* genJets;
   TClonesArray* genParticles;
   TCMET*        recoMET;
-  TCMET*	track_MET; //Added by Rafael on May 28th
-  TCMET*	T0MET; //Added by Rafael on July 3rd
-  TCMET*	T2MET; //Added by Rafael on July 3rd
+  TCMET*	    track_MET; 
+  TCMET*	    T0MET; 
+  TCMET*	    T2MET; 
   TCMET*        recoMET_corr;
   TCMET*        mva_MET;
 
@@ -312,9 +299,6 @@ class ntupleProducer : public edm::EDAnalyzer {
   //Isolator
   PFIsolationEstimator phoIsolator;
   PFIsolationEstimator eleIsolator;
-
-  // Histograms
-  TH1F * h1_numOfEvents;
 
   // Electron Regression
   ElectronEnergyRegressionEvaluate* myEleReg;
