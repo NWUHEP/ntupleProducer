@@ -154,7 +154,7 @@ void ntupleProducer::analyze(const Event& iEvent, const EventSetup& iSetup)
 
         for (vector<PFJet>::const_iterator iJet = jets->begin(); iJet != jets->end(); ++iJet) {
 
-            if (iJet->pt() < 10.) continue;
+            if (iJet->pt() < 15.) continue;
 
             TCJet* jetCon = new ((*recoJets)[jetCount]) TCJet;
 
@@ -168,13 +168,13 @@ void ntupleProducer::analyze(const Event& iEvent, const EventSetup& iSetup)
             jetCon->SetNumChPart(iJet->chargedMultiplicity());
 
             if (!isRealData) {
-                unsigned jetFlavor = 0;
+                int jetFlavor = 0;
                 for (JetFlavourMatchingCollection::const_iterator iFlavor = bJetFlavourMC->begin(); iFlavor != bJetFlavourMC->end(); iFlavor++) {
-                    if (iFlavor->first.get()->pt() == iJet->pt()) {
+                    if (iFlavor->first.get()->pt() > 10 && iFlavor->first.get()->pt() == iJet->pt()) {
                         jetFlavor = iFlavor->second.getFlavour();
                     }
                 }
-                cout << iJet->pt() << "\t" << jetFlavor << endl;
+                //cout << iJet->pt() << "\t" << jetFlavor << endl;
 
                 jetCon->SetJetFlavor(jetFlavor);
             } else {

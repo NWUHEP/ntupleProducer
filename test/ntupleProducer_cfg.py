@@ -20,6 +20,32 @@ else:
     process.GlobalTag.globaltag = 'START53_V27::All'
     process.load('JetMETCorrections.METPUSubtraction.mvaPFMET_leptons_cff')
 
+# global options
+process.load("FWCore.MessageLogger.MessageLogger_cfi")
+process.MessageLogger.cerr.threshold = 'INFO'
+process.MessageLogger.cerr.FwkReport.reportEvery = 100
+
+'''
+process.MessageLogger.categories = cms.untracked.vstring('FwkJob', 'FwkReport', 'FwkSummary', 'Root_NoDictionary', 'DataNotAvailable', 'HLTConfigData')
+process.MessageLogger.destinations = cms.untracked.vstring('myOutput')
+process.MessageLogger.myOutput = cms.untracked.PSet(
+                FwkJob              = cms.untracked.PSet(limit = cms.untracked.int32(0)),
+                FwkReport           = cms.untracked.PSet(limit = cms.untracked.int32(0)),
+                FwkSummary          = cms.untracked.PSet(limit = cms.untracked.int32(0)),
+                Root_NoDictionary   = cms.untracked.PSet(limit = cms.untracked.int32(0)),
+                DataNotAvailable    = cms.untracked.PSet(limit = cms.untracked.int32(0)),
+                HLTConfigData       = cms.untracked.PSet(limit = cms.untracked.int32(0))
+                )
+'''
+
+process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
+                                     SkipEvent = cms.untracked.vstring('ProductNotFound')
+                                    )
+
+# event counters
+process.startCounter = cms.EDProducer("EventCountProducer")
+process.endCounter = process.startCounter.clone()
+
 
 # Create good primary vertices for PF association
 from PhysicsTools.SelectorUtils.pvSelector_cfi import pvSelector
@@ -34,14 +60,16 @@ process.goodOfflinePrimaryVertices = cms.EDFilter( "PrimaryVertexObjectFilter",
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 process.load("CondCore.DBCommon.CondDBCommon_cfi")
 
+# kt6 PFJets for rho corrections (possibly obsolete)
+#process.load("RecoJets.Configuration.RecoPFJets_cff")
+#process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
+#process.load('JetMETCorrections.Configuration.JetCorrectionServices_cff')
 
-# Add MET collection for PAT
-#from PhysicsTools.PatAlgos.tools.metTools import *
-#addPfMET(process,'PF')
-#addTcMET(process,"TC")
+process.kt6PFJetsIso = process.kt6PFJets.clone()
+process.kt6PFJetsIso.doRhoFastjet = True
+process.kt6PFJetsIso.Rho_EtaMax = cms.double(2.5)
 
-
-##Testing MET significance
+# MET significance
 process.load("RecoMET.METProducers.PFMET_cfi")
 process.pfMet1 = process.pfMet.clone(alias="PFMET1")
 
@@ -106,70 +134,6 @@ process.ak5JetTracksAssociatorAtVertex.jets = cms.InputTag("ak5PFJetsL1FastL2L3"
 process.ak5JetTracksAssociatorAtCaloFace.jets = cms.InputTag("ak5PFJetsL1FastL2L3")
 process.ak5JetExtender.jets = cms.InputTag("ak5PFJetsL1FastL2L3")
 
-# jpt extras
-process.load("RecoJets.Configuration.RecoPFJets_cff")
-process.load("RecoJets.Configuration.RecoJPTJets_cff")
-process.load("RecoJets.JetAssociationProducers.ak5JTA_cff")
-process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
-process.load('JetMETCorrections.Configuration.JetCorrectionServices_cff')
-
-
-process.kt6PFJetsIso = process.kt6PFJets.clone()
-process.kt6PFJetsIso.doRhoFastjet = True
-process.kt6PFJetsIso.Rho_EtaMax = cms.double(2.5)
-
-
-process.ak5JPTL1Offset.algorithm = 'AK5JPT'
-process.ak5JetTracksAssociatorAtVertex.useAssigned = cms.bool(True)
-process.ak5JetTracksAssociatorAtVertex.pvSrc = cms.InputTag("offlinePrimaryVertices")
-#process.ak5JetTracksAssociatorAtVertex.pvSrc = cms.InputTag("offlinePrimaryVerticesWithBS")
-
-process.jpt = cms.Sequence(
-                        process.ak5JTA
-                        * process.recoJPTJets
-                        * process.ak5JPTJetsL1L2L3
-                        * process.kt6PFJets
-                        * process.ak5PFJetsL1FastL2L3
-                        )
-
-# pat sequences
-process.load("PhysicsTools.PatAlgos.patSequences_cff")
-from PhysicsTools.PatAlgos.patEventContent_cff import patEventContent
-process.out = cms.OutputModule("PoolOutputModule",
-                               fileName = cms.untracked.string('/tmp/patTuple.root'),
-                               SelectEvents   = cms.untracked.PSet( SelectEvents = cms.vstring('ntuplePath')),
-                               outputCommands = cms.untracked.vstring('keep *')#, *patEventContent )
-                               )
-
-from NWU.ntupleProducer.PatSequences_cff import addPatSequence
-#addPatSequence(process, not isRealData, addPhotons = True)
-
-
-# global options
-process.load("FWCore.MessageLogger.MessageLogger_cfi")
-process.MessageLogger.cerr.threshold = 'INFO'
-process.MessageLogger.cerr.FwkReport.reportEvery = 100
-
-'''
-process.MessageLogger.categories = cms.untracked.vstring('FwkJob', 'FwkReport', 'FwkSummary', 'Root_NoDictionary', 'DataNotAvailable', 'HLTConfigData')
-process.MessageLogger.destinations = cms.untracked.vstring('myOutput')
-process.MessageLogger.myOutput = cms.untracked.PSet(
-                FwkJob              = cms.untracked.PSet(limit = cms.untracked.int32(0)),
-                FwkReport           = cms.untracked.PSet(limit = cms.untracked.int32(0)),
-                FwkSummary          = cms.untracked.PSet(limit = cms.untracked.int32(0)),
-                Root_NoDictionary   = cms.untracked.PSet(limit = cms.untracked.int32(0)),
-                DataNotAvailable    = cms.untracked.PSet(limit = cms.untracked.int32(0)),
-                HLTConfigData       = cms.untracked.PSet(limit = cms.untracked.int32(0))
-                )
-'''
-
-process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False),
-                                     SkipEvent = cms.untracked.vstring('ProductNotFound')
-                                    )
-
-# event counters
-process.startCounter = cms.EDProducer("EventCountProducer")
-process.endCounter = process.startCounter.clone()
 
 #############################################
 #### Met/Noise/BeamHalo filters  #############
@@ -416,7 +380,6 @@ process.ntuplePath = cms.Path(
     * process.particleFlowForChargedMET
     * process.pfChargedMET
     * process.trackMet
-   #* process.patDefaultSequence
     * process.kt6PFJetsIso
     * process.ak5PFJetsL1FastL2L3
     * process.ak5JetTracksAssociatorAtVertex
@@ -425,8 +388,8 @@ process.ntuplePath = cms.Path(
     * process.pfMEtMVAsequence
     * process.pfMet1
 
-    * process.myPartons #<-- For genJet flavors, only in MC
-    * process.GenJetFlavour
+    * process.myPartons #<-- For flavors, only in MC
+    #* process.GenJetFlavour
     * process.JetFlavour # end for MC only
 
     * process.ntupleProducer
