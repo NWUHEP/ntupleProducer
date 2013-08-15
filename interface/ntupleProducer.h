@@ -199,27 +199,24 @@ class ntupleProducer : public EDAnalyzer {
   
   virtual bool  triggerDecision(Handle<TriggerResults>& hltR, int iTrigger);
   virtual float sumPtSquared(const Vertex& v);
-  virtual bool  associateJetToVertex(reco::PFJet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet *outJet);   
-  virtual void  electronMVA(const reco::GsfElectron* iElectron, TCElectron* eleCon, const Event& iEvent,const EventSetup& iSetup, const reco::PFCandidateCollection& PFCandidates, float Rho);
+  virtual bool  associateJetToVertex(PFJet inJet, Handle<VertexCollection> vtxCollection, TCJet *outJet);   
+  virtual void  electronMVA(const GsfElectron* iElectron, TCElectron* eleCon, const Event& iEvent,const EventSetup& iSetup, const PFCandidateCollection& PFCandidates, float Rho);
   virtual bool  isFilteredOutScraping(const Event& iEvent, const EventSetup& iSetup, int numtrack=10, double thresh=0.25);
-  virtual float MatchBTagsToJets(const reco::JetTagCollection, const reco::PFJet);
+  virtual float MatchBTagsToJets(const JetTagCollection, const PFJet);
   void analyzeTrigger(Handle<TriggerResults> &hltR, Handle<trigger::TriggerEvent> &hltE, const std::string& triggerName, int* trigCount);                   
   // ----------member data ---------------------------
-  
+
   struct JetCompare :
-    public std::binary_function<reco::Jet, reco::Jet, bool> {
-    inline bool operator () (const reco::Jet &j1,
-			     const reco::Jet &j2) const
-    { return (j1.p4().Pt() > j2.p4().Pt()); }
-  };
-  
-    static bool EnergySortCriterium( const TCPhoton::CrystalInfo p1,const TCPhoton::CrystalInfo p2 ){
+      public binary_function<Jet, Jet, bool> {
+          inline bool operator () (const Jet &j1, const Jet &j2) const { 
+              return (j1.p4().Pt() > j2.p4().Pt()); 
+          }
+      };
+
+  static bool EnergySortCriterium(const TCPhoton::CrystalInfo p1,const TCPhoton::CrystalInfo p2) {
       return p1.energy > p2.energy;
-    };
-    
-  typedef std::map<reco::Jet, unsigned int, JetCompare> flavourMap;
-  typedef reco::JetTagCollection::const_iterator tag_iter;
-  
+  };
+
   //Standard event info
   ULong64_t   eventNumber;
   UInt_t      runNumber, lumiSection, bunchCross, nEvents;
@@ -227,7 +224,7 @@ class ntupleProducer : public EDAnalyzer {
   float deliveredLumi, recordedLumi, lumiDeadTime;
   float rhoFactor, rho25Factor, rhoMuFactor,;
   vector<string>  savedTriggerNames;
-  
+
   Service<TFileService> fs;
   TTree* eventTree;
   TTree* jobTree;

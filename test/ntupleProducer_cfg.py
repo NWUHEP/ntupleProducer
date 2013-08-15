@@ -329,7 +329,8 @@ process.source = cms.Source("PoolSource",
 	#'/store/mc/Summer12_DR53X/GluGluToHToWWTo2LAndTau2Nu_M-125_8TeV-powheg-pythia6/AODSIM/PU_S10_START53_V7A-v1/0000/DE5F727F-8BFC-E111-8576-002618FDA263.root'
     #'root://eoscms//eos/cms/store/user/cmkuo/GluGluToHToZG_M-125_8TeV-powheg-pythia6/HZg_nunug_ggH_m125_RECO_v1/3664d28163503ca8171ba37083c39fc9/STEP2_RAW2DIGI_L1Reco_RECO_PU_100_1_fXq.root'
     #'/store/data/Run2012D/SinglePhotonParked/AOD/22Jan2013-v1/30004/144D7268-4086-E211-9DC1-001E673984C1.root'
-    '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
+    #'/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
+    '/store/mc/Summer12_DR53X/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/AODSIM/PU_S10_START53_V7C-v1/00000/FE7C71D8-DB25-E211-A93B-0025901D4C74.root'
     #'/store/data/Run2012D/DoubleMu/AOD/PromptReco-v1/000/208/341/285B355D-553D-E211-A3FC-BCAEC532971E.root'
     #'file:/tmp/naodell/TTJetsToHqToWWq_M-125_TuneZ2_8TeV_pythia6_v2_1_1_p64.root'
 )
