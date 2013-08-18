@@ -411,7 +411,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     iEvent.getByLabel(electronTag_, electrons);
 
     for (vector<reco::GsfElectron>::const_iterator iElectron = electrons->begin(); iElectron != electrons->end(); ++iElectron) {
-      if (iElectron->pt() < 10) continue;
+      if (iElectron->pt() < 5) continue;
 
       TCElectron* eleCon = new ((*recoElectrons)[eleCount]) TCElectron;
 

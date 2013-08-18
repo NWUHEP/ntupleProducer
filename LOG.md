@@ -1,5 +1,11 @@
  Log of changes 
 ---------------
+2013-Aug-18
+ * Added back a few of the minor changes from Aug-01.  It was a waste of my time.  skimLepton was not even fully implemented into the analyzer,
+ it was just floating around unused and uninitialized.  VarParser is still removed, looks like its more complicated then useful in
+ its v6.4 iteration.  Trigger names still need to be readded for H->llgamma
+
+
 2013-Aug-01
  * Using VarParser for selection isRealData option. Now one can run it with: ```cmsRun isRealData=1```
 without editing the config file. One can also specify other option, or add (register) more.
