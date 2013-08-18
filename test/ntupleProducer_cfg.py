@@ -42,13 +42,11 @@ process.load("CondCore.DBCommon.CondDBCommon_cfi")
 process.load("RecoMET.METProducers.PFMET_cfi")
 process.pfMet1 = process.pfMet.clone(alias="PFMET1")
 
-#################################################################
-#################################################################
 
 # MET corrections Type 1 and x,y corrections
 process.load('JetMETCorrections.Type1MET.pfMETCorrections_cff')
 process.load("JetMETCorrections.Type1MET.pfMETsysShiftCorrections_cfi")
-process.load("JetMETCorrections.Type1MET.pfMETCorrectionType0_cfi") #Added by Rafael on July 3rd
+process.load("JetMETCorrections.Type1MET.pfMETCorrectionType0_cfi")
 
 
 # use for 2012 Data
@@ -67,33 +65,19 @@ process.pfType1p2CorrectedMet.srcType1Corrections = cms.VInputTag(
     cms.InputTag('pfMEtSysShiftCorr')
 )
 
-#################################################################
-#################################################################
 process.pfType1CorrectedMetType0.srcType1Corrections = cms.VInputTag(
     cms.InputTag('pfMETcorrType0'),
     cms.InputTag('pfJetMETcorr', 'type1') ,
     cms.InputTag('pfMEtSysShiftCorr')
 )
 
-#Added by Rafael on May 28th
-###################################################################################################################
-###################################################################################################################
 process.load("RecoMET.METProducers.pfChargedMET_cfi")
 process.load("RecoMET.METProducers.TrackMET_cfi")
 
-###################################################################################################################
-###################################################################################################################
-
-#Added by Rafael on June 4th (GEN MET Information)
-###################################################################################################################
-###################################################################################################################
 #if (isRealData == False):
 #process.load("RecoMET.Configuration.GenMETParticles_cff")
 #process.load("RecoMET.METProducers.genMetCalo_cfi")
 #process.load("RecoMET.METProducers.MetMuonCorrections_cff")
-
-###################################################################################################################
-###################################################################################################################
 
 if (isRealData):
     process.pfJetMETcorr.jetCorrLabel = cms.string("ak5PFL1FastL2L3Residual")
@@ -326,7 +310,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   JetTag            =    cms.untracked.InputTag('ak5PFJetsL1FastL2L3'),
   GenJetTag         =    cms.untracked.InputTag('ak5GenJets'),
   METTag            =    cms.untracked.InputTag('pfType1CorrectedMet'),
-  TrackMETTag       =    cms.untracked.InputTag('trackMet'), #Added by Rafael on May 28th
+  TrackMETTag       =    cms.untracked.InputTag('trackMet'),
   ElectronTag       =    cms.untracked.InputTag('gsfElectrons'),
   MuonTag           =    cms.untracked.InputTag('muons'),
   PhotonTag         =    cms.untracked.InputTag('photons'),
@@ -335,10 +319,8 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   rho25CorrTag      =    cms.untracked.InputTag('kt6PFJetsIso', 'rho', 'NTUPLE'),
   rhoMuCorrTag      =    cms.untracked.InputTag('kt6PFJetsCentralNeutral', 'rho','RECO'),  # specifically for muon iso
 
-## New corrections to MET being saved: Added by Rafael on July 3rd 2013
   T0METTag	    =	 cms.untracked.InputTag('pfType1CorrectedMetType0'),
   T2METTag	    =	 cms.untracked.InputTag('pfType1p2CorrectedMet'),
-##End
 
   partFlowTag       =    cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
 
@@ -349,11 +331,9 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   saveMET           =    cms.untracked.bool(True),
   saveGenJets       =    cms.untracked.bool(True),
   saveGenParticles  =    cms.untracked.bool(True),
-  saveTrackMET      =    cms.untracked.bool(True), #Added by Rafael on May 28th
-##New Met Corrections, Added by Rafael on July 3rd 2013
+  saveTrackMET      =    cms.untracked.bool(True),
   saveT0MET	    =    cms.untracked.bool(True),
   saveT2MET	    =    cms.untracked.bool(True),
-##End
 
   ecalTPFilterTag    =    cms.untracked.InputTag("EcalDeadCellTriggerPrimitiveFilter",""),
   ecalBEFilterTag    =    cms.untracked.InputTag("EcalDeadCellBoundaryEnergyFilter",""),
@@ -400,7 +380,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
 process.ntuplePath = cms.Path(
       process.goodOfflinePrimaryVertices
-		* process.type0PFMEtCorrection #Added by Rafael on July 3rd 2013
+		* process.type0PFMEtCorrection
     * process.pfMEtSysShiftCorrSequence
     * process.producePFMETCorrections
     * process.pfNoPUSeq
