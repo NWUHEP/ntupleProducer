@@ -307,9 +307,9 @@ void ntupleProducer::analyze(const Event& iEvent, const EventSetup& iSetup)
         vector<PFMET>::const_iterator mvamet = mvaMET->begin();
 
         if (mvaMET->begin() != mvaMET->end()) {
-            //std::cout << "sumET: " << mvamet->sumEt()<<std::endl;
-            //std::cout << "et: " << mvamet->et() << std::endl;
-            //std::cout << "phi: " << mvamet->phi() << std::endl;
+            //cout << "sumET: " << mvamet->sumEt()<<endl;
+            //cout << "et: " << mvamet->et() << endl;
+            //cout << "phi: " << mvamet->phi() << endl;
             mva_MET->SetSumEt(mvamet->sumEt());
             mva_MET->SetMagPhi(mvamet->et(), mvamet->phi());
         }
@@ -498,14 +498,12 @@ void ntupleProducer::analyze(const Event& iEvent, const EventSetup& iSetup)
     /////////////////
     // Get photons //
     /////////////////
+
+
     if (savePhotons_) {
 
-
-
         Handle<EcalRecHitCollection> Brechit;
-
         iEvent.getByLabel("reducedEcalRecHitsEB",Brechit);
-
         const EcalRecHitCollection* barrelRecHits= Brechit.product();
 
         Handle<vector<Photon> > photons;
@@ -523,14 +521,14 @@ void ntupleProducer::analyze(const Event& iEvent, const EventSetup& iSetup)
             TCPhoton* myPhoton = new ((*recoPhotons)[photonCount]) TCPhoton();
 
             //Crystal Info:
-            std::vector< std::pair<DetId, float> >  PhotonHit_DetIds  = iPhoton->superCluster()->hitsAndFractions();
-            std::vector<TCPhoton::CrystalInfo> crystalinfo_container;
+            vector< pair<DetId, float> >  PhotonHit_DetIds  = iPhoton->superCluster()->hitsAndFractions();
+            vector<TCPhoton::CrystalInfo> crystalinfo_container;
             crystalinfo_container.clear();
             TCPhoton::CrystalInfo crystal = {};
-            float timing_avg =0.0;
+            float timing_avg = 0.;
             int ncrys   = 0;
             int ncrysPhoton = 0;
-            vector< std::pair<DetId, float> >::const_iterator detitr;
+            vector< pair<DetId, float> >::const_iterator detitr;
 
             for(detitr = PhotonHit_DetIds.begin(); detitr != PhotonHit_DetIds.end(); ++detitr)
             {
@@ -558,7 +556,7 @@ void ntupleProducer::analyze(const Event& iEvent, const EventSetup& iSetup)
                 }//end of if ((*detitr).det() == DetId::Ecal && (*detitr).subdetId() == EcalBarrel)
                 crystalinfo_container.push_back(crystal);  
             }//End loop over detids
-            std::sort(crystalinfo_container.begin(),crystalinfo_container.end(),EnergySortCriterium);
+            sort(crystalinfo_container.begin(),crystalinfo_container.end(),EnergySortCriterium);
 
 
             //Without taking into account uncertainty, this time makes no sense.
@@ -578,12 +576,12 @@ void ntupleProducer::analyze(const Event& iEvent, const EventSetup& iSetup)
             TCPhoton::CrystalInfo * savedCrystals = myPhoton->GetCrystalArray();
             /*
                for (int y = 0; y< myPhoton->GetNCrystals();y++){
-               std::cout << "savedCrystals[y].time : " << savedCrystals[y].time << std::endl; 
-               std::cout << "savedCrystals[y].timeErr : " << savedCrystals[y].timeErr << std::endl;
-               std::cout << "savedCrystals[y].energy : " << savedCrystals[y].energy <<std::endl;
-               std::cout << "savedCrystals[y].ieta: " << savedCrystals[y].ieta << std::endl;
+               cout << "savedCrystals[y].time : " << savedCrystals[y].time << endl; 
+               cout << "savedCrystals[y].timeErr : " << savedCrystals[y].timeErr << endl;
+               cout << "savedCrystals[y].energy : " << savedCrystals[y].energy <<endl;
+               cout << "savedCrystals[y].ieta: " << savedCrystals[y].ieta << endl;
 
-               std::cout << "savedCrystals[y].rawId: " << savedCrystals[y].rawId <<std::endl;
+               cout << "savedCrystals[y].rawId: " << savedCrystals[y].rawId <<endl;
                }
              */
 
@@ -658,9 +656,9 @@ void ntupleProducer::analyze(const Event& iEvent, const EventSetup& iSetup)
         // PU information //
         ////////////////////
 
-        Handle<std::vector< PileupSummaryInfo > >  PUInfo;
+        Handle<vector< PileupSummaryInfo > >  PUInfo;
         iEvent.getByLabel(InputTag("addPileupInfo"), PUInfo);
-        std::vector<PileupSummaryInfo>::const_iterator iPV;
+        vector<PileupSummaryInfo>::const_iterator iPV;
 
         for(iPV = PUInfo->begin(); iPV != PUInfo->end(); ++iPV){
             if (iPV->getBunchCrossing() == 0){
@@ -1238,7 +1236,7 @@ void ntupleProducer::electronMVA(const GsfElectron* iElectron, TCElectron* eleCo
         const double gsfsign   = ( (-iElectron->gsfTrack()->dxy(pv->position()))   >=0 ) ? 1. : -1.;
 
         const TransientTrack &tt = thebuilder.build(iElectron->gsfTrack()); 
-        const std::pair<bool,Measurement1D> &ip3dpv =  IPTools::absoluteImpactParameter3D(tt,*pv);
+        const pair<bool,Measurement1D> &ip3dpv =  IPTools::absoluteImpactParameter3D(tt,*pv);
         if (ip3dpv.first) {
             double ip3d = gsfsign*ip3dpv.second.value();
             double ip3derr = ip3dpv.second.error();  
@@ -1491,7 +1489,7 @@ void ntupleProducer::electronMVA(const GsfElectron* iElectron, TCElectron* eleCo
     return;
 }
 
-void ntupleProducer::analyzeTrigger(Handle<TriggerResults> &hltR, Handle<trigger::TriggerEvent> &hltE, const std::string& triggerName, int* trigCount) {
+void ntupleProducer::analyzeTrigger(Handle<TriggerResults> &hltR, Handle<trigger::TriggerEvent> &hltE, const string& triggerName, int* trigCount) {
 
     using namespace trigger;
 
@@ -1513,10 +1511,10 @@ void ntupleProducer::analyzeTrigger(Handle<TriggerResults> &hltR, Handle<trigger
     if(!goodTrigger) return;
 
     //if(verboseTrigs){
-    //  std::cout<<" n = "<<n<<" triggerIndex = "<<triggerIndex<<" size = "<<hltConfig_.size()<<std::endl;
-    //  std::cout<<" Analyze triggerName : "<<triggerName<<std::endl;
+    //  cout<<" n = "<<n<<" triggerIndex = "<<triggerIndex<<" size = "<<hltConfig_.size()<<endl;
+    //  cout<<" Analyze triggerName : "<<triggerName<<endl;
     //}
-    //std::cout<<" Analyze triggerName : "<<triggerName<<std::endl;
+    //cout<<" Analyze triggerName : "<<triggerName<<endl;
 
     if (triggerIndex>=n) {
         if(verboseTrigs){
@@ -1536,8 +1534,8 @@ void ntupleProducer::analyzeTrigger(Handle<TriggerResults> &hltR, Handle<trigger
         cout << "DimuonAna::analyzeTrigger: path "
             << triggerName << " [" << triggerIndex << "]" << endl;
 
-        std::cout<<"  n = "<< n<<" triggerIndex = "<<triggerIndex<<" m = "<<m<<std::endl;
-        std::cout<<" moduleLabels = "<<moduleLabels.size()<<" moduleIndex = "<<moduleIndex<<std::endl;
+        cout<<"  n = "<< n<<" triggerIndex = "<<triggerIndex<<" m = "<<m<<endl;
+        cout<<" moduleLabels = "<<moduleLabels.size()<<" moduleIndex = "<<moduleIndex<<endl;
 
         // Results from TriggerResults product
         cout << " Trigger path status:"
@@ -1554,7 +1552,7 @@ void ntupleProducer::analyzeTrigger(Handle<TriggerResults> &hltR, Handle<trigger
 
     // Results from TriggerEvent product - Attention: must look only for
     // modules actually run in this path for this event!
-    std::vector < GlobalVector > passMomenta; 
+    vector < GlobalVector > passMomenta; 
     for (unsigned int j=0; j<=moduleIndex; ++j) {
         const string& moduleLabel(moduleLabels[j]);
         const string  moduleType(hltConfig_.moduleType(moduleLabel));
@@ -1570,7 +1568,7 @@ void ntupleProducer::analyzeTrigger(Handle<TriggerResults> &hltR, Handle<trigger
         //      && (moduleLabel.find("hltEle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoDoubleFilter") == string::npos) ) continue;
 
         if(verboseTrigs){
-            std::cout<<" j = "<<j<<" modLabel/moduleType = "<<moduleLabel<<"/"<<moduleType<<" filterIndex = "<<filterIndex<<" sizeF = "<<hltE->sizeFilters()<<std::endl;
+            cout<<" j = "<<j<<" modLabel/moduleType = "<<moduleLabel<<"/"<<moduleType<<" filterIndex = "<<filterIndex<<" sizeF = "<<hltE->sizeFilters()<<endl;
         }
         if (filterIndex<hltE->sizeFilters()) {
             if(verboseTrigs){
@@ -1595,14 +1593,14 @@ void ntupleProducer::analyzeTrigger(Handle<TriggerResults> &hltR, Handle<trigger
                 if (TO.pt() < 10) continue;
                 TCTriggerObject* trigObj = new ((*triggerObjects)[*trigCount]) TCTriggerObject;
 
-                //std::cout<<" i_KEY = "<<i<<" id = "<<TO.id()<<" typ = "<<moduleType<<std::endl;
+                //cout<<" i_KEY = "<<i<<" id = "<<TO.id()<<" typ = "<<moduleType<<endl;
                 //if("HLTLevel1GTSeed"==moduleType){
                 //allMuL1TriggerVectors.push_back(momentumT0);
-                ////std::cout<<" L1 object found"<<std::endl;
+                ////cout<<" L1 object found"<<endl;
                 //}
 
                 if(verboseTrigs){
-                    std::cout<<" i = "<<i<<" moduleLabel/moduleType : "<<moduleLabel<<"/"<<moduleType<<std::endl;
+                    cout<<" i = "<<i<<" moduleLabel/moduleType : "<<moduleLabel<<"/"<<moduleType<<endl;
                     cout << "   " << i << " " << VIDS[i] << "/" << KEYS[i] << ": "
                         << TO.id() << " " << TO.pt() << " " << TO.eta() << " " << TO.phi() << " " << TO.mass()
                         << endl;
