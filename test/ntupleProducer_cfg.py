@@ -332,10 +332,10 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   saveJets          =   cms.untracked.bool(True),
   saveElectrons     =   cms.untracked.bool(True),
   saveMuons         =   cms.untracked.bool(True),
-  savePhotons       =   cms.untracked.bool(False),
+  savePhotons       =   cms.untracked.bool(True),
   saveMET           =   cms.untracked.bool(True),
-  saveGenJets       =   cms.untracked.bool(False),
-  saveGenParticles  =   cms.untracked.bool(False),
+  saveGenJets       =   cms.untracked.bool(True),
+  saveGenParticles  =   cms.untracked.bool(True),
 
   hcalHBHEFilterTag  =    cms.untracked.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResult"),
 
