@@ -1,5 +1,4 @@
 #include "../interface/ntupleProducer.h"
-#include "DataFormats/EcalRecHit/interface/EcalRecHitCollections.h"
 
 ntupleProducer::ntupleProducer(const ParameterSet& iConfig)
 {
@@ -683,6 +682,13 @@ void ntupleProducer::analyze(const Event& iEvent, const EventSetup& iSetup)
                         (
                          (abs(myParticle.pdgId()) >= 11 && abs(myParticle.pdgId()) <= 16) 
                          || myParticle.pdgId() == 22 
+                         || abs(myParticle.pdgId()) == 23 
+                         || abs(myParticle.pdgId()) == 24 
+                         || abs(myParticle.pdgId()) == 25 
+                         || abs(myParticle.pdgId()) == 35 
+                         || abs(myParticle.pdgId()) == 36 
+                         || abs(myParticle.pdgId()) == 39
+                         || abs(myParticle.pdgId()) == 6 
                          || abs(myParticle.pdgId()) == 5 
                         )
                    ) {
@@ -694,28 +700,10 @@ void ntupleProducer::analyze(const Event& iEvent, const EventSetup& iSetup)
                     genCon->SetPDGId(myParticle.pdgId());
                     genCon->SetMother(myParticle.mother()->pdgId());
                     genCon->SetStatus(myParticle.status());
-                    if (myParticle.mother()->numberOfMothers() != 0) genCon->SetGrandmother(myParticle.mother()->mother()->pdgId());
-                    ++genPartCount;
-                }
 
-                //// Z's, W's, H's, and now big juicy Gravitons
-                if (
-                        abs(myParticle.pdgId()) == 23 
-                        || abs(myParticle.pdgId()) == 24 
-                        || abs(myParticle.pdgId()) == 25 
-                        || abs(myParticle.pdgId()) == 35 
-                        || abs(myParticle.pdgId()) == 36 
-                        || abs(myParticle.pdgId()) == 39
-                   ){
+                    if (myParticle.mother()->numberOfMothers() != 0) 
+                        genCon->SetGrandmother(myParticle.mother()->mother()->pdgId());
 
-
-                    TCGenParticle* genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
-                    genCon->SetPxPyPzE(myParticle.px(), myParticle.py(), myParticle.pz(), myParticle.energy() );
-                    genCon->SetVtx(myParticle.vx(), myParticle.vy(), myParticle.vz() );
-                    genCon->SetCharge(myParticle.charge());
-                    genCon->SetPDGId(myParticle.pdgId());
-                    genCon->SetMother(myParticle.mother()->pdgId());
-                    genCon->SetStatus(myParticle.status());
                     ++genPartCount;
                 }
             }
@@ -848,6 +836,7 @@ void ntupleProducer::analyze(const Event& iEvent, const EventSetup& iSetup)
     triggerResultsTag_ = InputTag(hlTriggerResults_,"",hltProcess_);
     iEvent.getByLabel(triggerResultsTag_,hltR);
     triggerEventTag_ = InputTag("hltTriggerSummaryAOD","",hltProcess_);
+
     Handle<trigger::TriggerEvent> hltE;                           
     iEvent.getByLabel(triggerEventTag_,hltE);                          
 
@@ -866,26 +855,24 @@ void ntupleProducer::analyze(const Event& iEvent, const EventSetup& iSetup)
                 //cout << hlNames[i] << " ?= " << triggerPaths_[j] << endl;
                 triggerStatus |= ULong64_t(0x01) << j;
 
-                /*
-                   if (isRealData) {
-                   pair<int, int> preScales;
-                   preScales = hltConfig_.prescaleValues(iEvent, iSetup, hlNames[i]); 
-                   hltPrescale[j] = preScales.first*preScales.second;
-                   } else {
-                 */
-                hltPrescale[j] = 1;
-                //}
+                if (isRealData) {
+                    pair<int, int> preScales;
+                    preScales = hltConfig_.prescaleValues(iEvent, iSetup, hlNames[i]); 
+                    hltPrescale[j] = preScales.first*preScales.second;
+                } else {
+                    hltPrescale[j] = 1;
+                }
             }
         }
     } 
 
-    for(unsigned int t = 1; t<hlNames.size();t++){  
-        analyzeTrigger(hltR, hltE, hlNames[t], &trigCount);       
-    }                                               
+    //for(unsigned int t = 1; t<hlNames.size();t++){  
+    //    analyzeTrigger(hltR, hltE, hlNames[t], &trigCount);       
+    //}                                               
 
     ++nEvents;
 
-    /*if (eleCount == 0 || muCount == 0)*/  eventTree -> Fill(); // possibly specify a cut in configuration
+    if (eleCount == 0 || muCount == 0)  eventTree -> Fill(); // possibly specify a cut in configuration
 
     primaryVtx    -> Clear("C");
     recoJets      -> Clear("C");
@@ -957,32 +944,35 @@ void  ntupleProducer::beginJob()
     jobTree->Branch("triggerNames", "vector<string>", &triggerPaths_);
 
     // Initialize HLT prescales //
-
     for (int i = 0; i < (int)(sizeof(hltPrescale)/sizeof(int)); ++i) hltPrescale[i] = 1;
 
     // Start counting number of events per job //
     nEvents = 0;
 
-    // Photon Iso maker init
-    phoIsolator.initializePhotonIsolation(kTRUE);
-    phoIsolator.setConeSize(0.3);
+    if (savePhotons_) {
+        // Photon Iso maker init
+        phoIsolator.initializePhotonIsolation(kTRUE);
+        phoIsolator.setConeSize(0.3);
+    }
 
-    // Initialize Electron MVA nonsense
-    eleIsolator.initializeElectronIsolation(kTRUE);
-    eleIsolator.setConeSize(0.4);
+    if (saveElectrons_) {
+        // Initialize Electron MVA nonsense
+        eleIsolator.initializeElectronIsolation(kTRUE);
+        eleIsolator.setConeSize(0.4);
 
-    // Initialize Electron Regression
-    myEleReg = new ElectronEnergyRegressionEvaluate();
-    //myEleReg->initialize(mvaPath+"/src/data/eleEnergyRegWeights_V1.root",
+        // Initialize Electron Regression
+        myEleReg = new ElectronEnergyRegressionEvaluate();
+        //myEleReg->initialize(mvaPath+"/src/data/eleEnergyRegWeights_V1.root",
 
-    string mvaPath = getenv("CMSSW_BASE");
-    mvaPath = mvaPath+"/src/EGamma/EGammaAnalysisTools/data:"+getenv("CMSSW_SEARCH_PATH");
-    setenv("CMSSW_SEARCH_PATH",mvaPath.c_str(),1);
+        string mvaPath = getenv("CMSSW_BASE");
+        mvaPath = mvaPath+"/src/EGamma/EGammaAnalysisTools/data:"+getenv("CMSSW_SEARCH_PATH");
+        setenv("CMSSW_SEARCH_PATH",mvaPath.c_str(),1);
 
-    myEleReg->initialize("eleEnergyRegWeights_V1.root", ElectronEnergyRegressionEvaluate::kNoTrkVar);
+        myEleReg->initialize("eleEnergyRegWeights_V1.root", ElectronEnergyRegressionEvaluate::kNoTrkVar);
 
-    if (verboseMVAs) cout<<"mvaPath: "<<mvaPath<<endl;
-    if (verboseMVAs) cout<<"MVA electron regression shit probably has initialized"<<endl;
+        if (verboseMVAs) cout<<"mvaPath: "<<mvaPath<<endl;
+        if (verboseMVAs) cout<<"MVA electron regression shit probably has initialized"<<endl;
+    }
 }
 
 void ntupleProducer::beginRun(const Run& iRun, const EventSetup& iSetup)
