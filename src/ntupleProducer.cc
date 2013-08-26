@@ -39,10 +39,6 @@ ntupleProducer::~ntupleProducer()
 
 }
 
-//
-// member functions
-//
-
 // ------------ method called to for each event  ------------
 void ntupleProducer::analyze(const Event& iEvent, const EventSetup& iSetup)
 {
@@ -215,22 +211,16 @@ void ntupleProducer::analyze(const Event& iEvent, const EventSetup& iSetup)
             recoMET->SetSumEt(met->sumEt());
             recoMET->SetMagPhi(met->et(), met->phi());
 
+            recoMET->SetSignificance(MET->front().significance());
+            recoMET->SetSigmaX2(MET->front().getSignificanceMatrix()(0,0));
+
             // PF specififc methods
             recoMET->SetMuonFraction(met->MuonEtFraction());
             recoMET->SetNeutralHadronFraction(met->NeutralHadEtFraction());
             recoMET->SetNeutralEMFraction(met->NeutralEMFraction());
             recoMET->SetChargedHadronFraction(met->ChargedHadEtFraction());
             recoMET->SetChargedEMFraction(met->ChargedEMEtFraction());
-
         }
-
-        recoMET->SetSignificance(MET->front().significance());
-        recoMET->SetSigmaX2(MET->front().getSignificanceMatrix()(0,0));
-
-        //Handle<View<PFMET>> pfMEThandle;
-        //iEvent.getByLabel("pfMet", pfMEThandle);
-        //recoMET->SetSignificance(pfMEThandle->front().significance());
-        //recoMET->SetSigmaX2(pfMEThandle->front().getSignificanceMatrix()(0,0));
 
 
         ///////////////
@@ -240,24 +230,21 @@ void ntupleProducer::analyze(const Event& iEvent, const EventSetup& iSetup)
 
         Handle<PFMETCollection> t0MET;
         iEvent.getByLabel("pfType1CorrectedMetType0", t0MET);
-        PFMETCollection::const_iterator t0met = t0MET->begin();
+        met = t0MET->begin();
 
         if (t0MET->begin() != t0MET->end()) {
-            T0MET->SetSumEt(t0met->sumEt());
-            T0MET->SetMagPhi(t0met->et(), t0met->phi());
+            T0MET->SetSumEt(met->sumEt());
+            T0MET->SetMagPhi(met->et(), met->phi());
+
+            T0MET->SetSignificance(t0MET->front().significance());
+            T0MET->SetSigmaX2(t0MET->front().getSignificanceMatrix()(0,0));
 
             // PF specififc methods
-            T0MET->SetMuonFraction(t0met->MuonEtFraction());
-            T0MET->SetNeutralHadronFraction(t0met->NeutralHadEtFraction());
-            T0MET->SetNeutralEMFraction(t0met->NeutralEMFraction());
-            T0MET->SetChargedHadronFraction(t0met->ChargedHadEtFraction());
-            T0MET->SetChargedEMFraction(t0met->ChargedEMEtFraction());
-
-            //Significance
-            float significance = (t0MET->front()).significance();
-            float sigmaX2 = (t0MET->front()).getSignificanceMatrix()(0,0);
-            T0MET->SetSignificance( significance );
-            T0MET->SetSigmaX2( sigmaX2 );
+            T0MET->SetMuonFraction(met->MuonEtFraction());
+            T0MET->SetNeutralHadronFraction(met->NeutralHadEtFraction());
+            T0MET->SetNeutralEMFraction(met->NeutralEMFraction());
+            T0MET->SetChargedHadronFraction(met->ChargedHadEtFraction());
+            T0MET->SetChargedEMFraction(met->ChargedEMEtFraction());
 
         }
 
@@ -268,19 +255,21 @@ void ntupleProducer::analyze(const Event& iEvent, const EventSetup& iSetup)
 
         Handle<PFMETCollection> t2MET;
         iEvent.getByLabel("pfType1p2CorrectedMet", t2MET);
-        PFMETCollection::const_iterator t2met = t2MET->begin();
+        met = t2MET->begin();
 
         if (t2MET->begin() != t2MET->end()) {
-            T2MET->SetSumEt(t2met->sumEt());
-            T2MET->SetMagPhi(t2met->et(), t2met->phi());
+            T2MET->SetSumEt(met->sumEt());
+            T2MET->SetMagPhi(met->et(), met->phi());
+
+            T2MET->SetSignificance(t2MET->front().significance());
+            T2MET->SetSigmaX2(t2MET->front().getSignificanceMatrix()(0,0));
 
             // PF specififc methods
-            T2MET->SetMuonFraction(t2met->MuonEtFraction());
-            T2MET->SetNeutralHadronFraction(t2met->NeutralHadEtFraction());
-            T2MET->SetNeutralEMFraction(t2met->NeutralEMFraction());
-            T2MET->SetChargedHadronFraction(t2met->ChargedHadEtFraction());
-            T2MET->SetChargedEMFraction(t2met->ChargedEMEtFraction());
-
+            T2MET->SetMuonFraction(met->MuonEtFraction());
+            T2MET->SetNeutralHadronFraction(met->NeutralHadEtFraction());
+            T2MET->SetNeutralEMFraction(met->NeutralEMFraction());
+            T2MET->SetChargedHadronFraction(met->ChargedHadEtFraction());
+            T2MET->SetChargedEMFraction(met->ChargedEMEtFraction());
         }
 
         //////////////////
@@ -303,14 +292,15 @@ void ntupleProducer::analyze(const Event& iEvent, const EventSetup& iSetup)
 
         Handle<vector<PFMET> > mvaMET;
         iEvent.getByLabel("pfMEtMVA", mvaMET);
-        vector<PFMET>::const_iterator mvamet = mvaMET->begin();
+        //vector<PFMET>::const_iterator mvamet = mvaMET->begin();
+        met = mvaMET->begin();
 
         if (mvaMET->begin() != mvaMET->end()) {
             //cout << "sumET: " << mvamet->sumEt()<<endl;
             //cout << "et: " << mvamet->et() << endl;
             //cout << "phi: " << mvamet->phi() << endl;
-            mva_MET->SetSumEt(mvamet->sumEt());
-            mva_MET->SetMagPhi(mvamet->et(), mvamet->phi());
+            mva_MET->SetSumEt(met->sumEt());
+            mva_MET->SetMagPhi(met->et(), met->phi());
         }
     }
 
@@ -677,14 +667,10 @@ void ntupleProducer::analyze(const Event& iEvent, const EventSetup& iSetup)
             for (GenParticleCollection::const_iterator iGenPart = genParticleColl->begin(); iGenPart != genParticleColl->end(); ++iGenPart) {
                 const GenParticle myParticle = GenParticle(*iGenPart);
 
-                ////  Leptons and photons and b's, (oh my)
                 if (
                         (
                          (abs(myParticle.pdgId()) >= 11 && abs(myParticle.pdgId()) <= 16) 
-                         || myParticle.pdgId() == 22 
-                         || abs(myParticle.pdgId()) == 23 
-                         || abs(myParticle.pdgId()) == 24 
-                         || abs(myParticle.pdgId()) == 25 
+                         || (abs(myParticle.pdgId()) >= 22 && abs(myParticle.pdgId()) <= 25) 
                          || abs(myParticle.pdgId()) == 35 
                          || abs(myParticle.pdgId()) == 36 
                          || abs(myParticle.pdgId()) == 39
@@ -872,7 +858,7 @@ void ntupleProducer::analyze(const Event& iEvent, const EventSetup& iSetup)
 
     ++nEvents;
 
-    if (eleCount == 0 || muCount == 0)  eventTree -> Fill(); // possibly specify a cut in configuration
+    if ((eleCount + muCount) > 1)  eventTree -> Fill(); // possibly specify a cut in configuration
 
     primaryVtx    -> Clear("C");
     recoJets      -> Clear("C");
