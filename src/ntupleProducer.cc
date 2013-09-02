@@ -168,7 +168,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
       if (iJet->pt() < 10.) continue;
 
-      TCJet* jetCon = new ((*recoJets)[jetCount]) TCJet;
+      //TCJet* jetCon = new ((*recoJets)[jetCount]) TCJet;
+      auto_ptr<TCJet> jetCon (new ((*recoJets)[jetCount]) TCJet);
 
       jetCon->SetPxPyPzE(iJet->px(), iJet->py(), iJet->pz(), iJet->energy());
       jetCon->SetVtx(0., 0., 0.);
@@ -584,17 +585,17 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 
       }//end of for (unsigned int y =0; y < crystalinfo_container.size();y++
-      TCPhoton::CrystalInfo * savedCrystals = myPhoton->GetCrystalArray();
       /*
-         for (int y = 0; y< myPhoton->GetNCrystals();y++){
+      TCPhoton::CrystalInfo * savedCrystals = myPhoton->GetCrystalArray();
+      for (int y = 0; y< myPhoton->GetNCrystals();y++){
          std::cout << "savedCrystals[y].time : " << savedCrystals[y].time << std::endl; 
          std::cout << "savedCrystals[y].timeErr : " << savedCrystals[y].timeErr << std::endl;
          std::cout << "savedCrystals[y].energy : " << savedCrystals[y].energy <<std::endl;
          std::cout << "savedCrystals[y].ieta: " << savedCrystals[y].ieta << std::endl;
 
          std::cout << "savedCrystals[y].rawId: " << savedCrystals[y].rawId <<std::endl;
-         }
-         */
+      }
+      */
 
       const reco::BasicCluster& seedClus = *(iPhoton->superCluster()->seed());
 
@@ -884,6 +885,16 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
   triggerObjects-> Clear("C");
   genJets       -> Clear("C");
   genParticles  -> Clear("C");
+
+ //delete primaryVtx;
+ //delete recoJets;
+ //delete recoJPT;
+ //delete recoMuons;
+ //delete recoElectrons;
+ //delete recoPhotons;
+ //delete triggerObjects;
+ //delete genJets;
+ //delete genParticles;
 }
 
 // ------------ method called once each job just before starting event loop  ------------

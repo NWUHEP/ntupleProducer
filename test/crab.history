@@ -1,0 +1,16 @@
+130818_080614: /uscmst1/prod/grid/CRAB_2_8_8/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+130818_080716: /uscmst1/prod/grid/CRAB_2_8_8/python/crab.py -status -c ggHZG_M155/
+130818_085446: /uscmst1/prod/grid/CRAB_2_8_8/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+130818_085843: /uscmst1/prod/grid/CRAB_2_8_8/python/crab.py -status -c ggHZG_M155/
+130818_085913: /uscmst1/prod/grid/CRAB_2_8_8/python/crab.py -status -c ggHZG_M155/
+130818_091055: /uscmst1/prod/grid/CRAB_2_8_8/python/crab.py -status -c ggHZG_M155/
+130818_093536: /uscmst1/prod/grid/CRAB_2_8_8/python/crab.py -status -c ggHZG_M155/
+130818_093557: /uscmst1/prod/grid/CRAB_2_8_8/python/crab.py -get -c ggHZG_M155/
+130818_093603: /uscmst1/prod/grid/CRAB_2_8_8/python/crab.py -status -c ggHZG_M155/
+130818_094121: /uscmst1/prod/grid/CRAB_2_8_8/python/crab.py -status -c ggHZG_M155/
+130818_095723: /uscmst1/prod/grid/CRAB_2_8_8/python/crab.py -status -c ggHZG_M155/
+130818_100508: /uscmst1/prod/grid/CRAB_2_8_8/python/crab.py -status -c ggHZG_M155/
+130818_101934: /uscmst1/prod/grid/CRAB_2_8_8/python/crab.py -status -c ggHZG_M155/
+130819_041307: /uscmst1/prod/grid/CRAB_2_8_8/python/crab.py -status -c ggHZG_M155/
+130819_041329: /uscmst1/prod/grid/CRAB_2_8_8/python/crab.py -get -c ggHZG_M155/
+130819_041347: /uscmst1/prod/grid/CRAB_2_8_8/python/crab.py -status -c ggHZG_M155/
