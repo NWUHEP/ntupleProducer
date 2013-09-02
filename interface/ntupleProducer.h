@@ -44,8 +44,6 @@
 #include "DataFormats/METReco/interface/MET.h"
 #include "DataFormats/METReco/interface/METCollection.h"
 #include "DataFormats/METReco/interface/METFwd.h"
-//#include "DataFormats/METReco/interface/GenMET.h" //Added by Rafael on June 3rd
-//#include "DataFormats/METReco/interface/GenMETCollection.h" //Added by Rafael on June 3rd
 
 #include "DataFormats/MuonReco/interface/Muon.h"
 #include "DataFormats/MuonReco/interface/MuonFwd.h"
@@ -203,7 +201,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   
   virtual bool  triggerDecision(edm::Handle<edm::TriggerResults>& hltR, int iTrigger);
   virtual float sumPtSquared(const Vertex& v);
-  virtual bool  associateJetToVertex(reco::PFJet inJet, Handle<reco::VertexCollection> vtxCollection, auto_ptr<TCJet> outJet);   
+  virtual bool  associateJetToVertex(reco::PFJet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet* outJet);   
   virtual void  electronMVA(const reco::GsfElectron* iElectron, TCElectron* eleCon, const edm::Event& iEvent,const edm::EventSetup& iSetup, const reco::PFCandidateCollection& PFCandidates, float Rho);
   virtual bool  isFilteredOutScraping(const edm::Event& iEvent, const edm::EventSetup& iSetup, int numtrack=10, double thresh=0.25);
   virtual float MatchBTagsToJets(const reco::JetTagCollection, const reco::PFJet);
@@ -284,12 +282,12 @@ class ntupleProducer : public edm::EDAnalyzer {
   TClonesArray* triggerObjects;
   TClonesArray* genJets;
   TClonesArray* genParticles;
-  TCMET*        recoMET;
-  TCMET*	track_MET; //Added by Rafael on May 28th
-  TCMET*	T0MET; //Added by Rafael on July 3rd
-  TCMET*	T2MET; //Added by Rafael on July 3rd
-  TCMET*        recoMET_corr;
-  TCMET*        mva_MET;
+  auto_ptr<TCMET>   recoMET;
+  auto_ptr<TCMET>   track_MET;
+  auto_ptr<TCMET>	  T0MET; 
+  auto_ptr<TCMET>	  T2MET;
+  auto_ptr<TCMET>   recoMET_corr;
+  auto_ptr<TCMET>   mva_MET;
 
   //Vertex info
   TClonesArray* primaryVtx;

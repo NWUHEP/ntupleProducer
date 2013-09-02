@@ -28,7 +28,7 @@ TCPhoton::TCPhoton() {
 }
 
 
-TCPhoton::~TCPhoton() { }
+TCPhoton::~TCPhoton() { delete _crysArray; }
 
 // "get" methods -------------------------------------
 

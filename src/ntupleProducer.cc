@@ -168,8 +168,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
       if (iJet->pt() < 10.) continue;
 
-      //TCJet* jetCon = new ((*recoJets)[jetCount]) TCJet;
-      auto_ptr<TCJet> jetCon (new ((*recoJets)[jetCount]) TCJet);
+      TCJet* jetCon (new ((*recoJets)[jetCount]) TCJet);
 
       jetCon->SetPxPyPzE(iJet->px(), iJet->py(), iJet->pz(), iJet->energy());
       jetCon->SetVtx(0., 0., 0.);
@@ -876,6 +875,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
   /*if (eleCount == 0 || muCount == 0)*/  eventTree -> Fill(); // possibly specify a cut in configuration
 
+  beamSpot->Clear();
   primaryVtx    -> Clear("C");
   recoJets      -> Clear("C");
   recoJPT       -> Clear("C");
@@ -886,15 +886,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
   genJets       -> Clear("C");
   genParticles  -> Clear("C");
 
- //delete primaryVtx;
- //delete recoJets;
- //delete recoJPT;
- //delete recoMuons;
- //delete recoElectrons;
- //delete recoPhotons;
- //delete triggerObjects;
- //delete genJets;
- //delete genParticles;
 }
 
 // ------------ method called once each job just before starting event loop  ------------
@@ -913,11 +904,11 @@ void  ntupleProducer::beginJob()
   genJets        = new TClonesArray("TCGenJet");
   genParticles   = new TClonesArray("TCGenParticle");
   beamSpot       = new TVector3();
-  recoMET        = 0;
-  track_MET      = 0; //Added by Rafael on May 28th
-  T0MET          = 0; //Added by Rafael on July 3rd
-  T2MET          = 0; //Added by Rafael on July 3rd
-  mva_MET        = 0;
+  recoMET.reset(new TCMET);
+  track_MET.reset(new TCMET);
+  T0MET.reset(new TCMET);
+  T2MET.reset(new TCMET);
+  mva_MET.reset(new TCMET);
 
   h1_numOfEvents = fs->make<TH1F>("numOfEvents", "total number of events, unskimmed", 1,0,1);
 
@@ -926,11 +917,11 @@ void  ntupleProducer::beginJob()
   eventTree->Branch("recoElectrons",&recoElectrons, 6400, 0);
   eventTree->Branch("recoMuons",&recoMuons, 6400, 0);
   eventTree->Branch("recoPhotons",&recoPhotons, 6400, 0);
-  eventTree->Branch("recoMET", &recoMET, 6400, 0);
-  eventTree->Branch("mva_MET", &mva_MET, 6400, 0);
-  eventTree->Branch("track_MET", &track_MET, 6400, 0); //Added by Rafael on May 28th
-  eventTree->Branch("T0MET", &T0MET, 6400, 0); //Added by Rafael on May 28th
-  eventTree->Branch("T2MET", &T2MET, 6400, 0); //Added by Rafael on May 28th
+  eventTree->Branch("recoMET", recoMET.get(), 6400, 0);
+  eventTree->Branch("mva_MET", mva_MET.get(), 6400, 0);
+  eventTree->Branch("track_MET", track_MET.get(), 6400, 0); 
+  eventTree->Branch("T0MET", T0MET.get(), 6400, 0); 
+  eventTree->Branch("T2MET", T2MET.get(), 6400, 0); 
   eventTree->Branch("triggerObjects", &triggerObjects, 6400, 0);
   eventTree->Branch("genJets",&genJets, 6400, 0);
   eventTree->Branch("genParticles",&genParticles, 6400, 0);
@@ -1079,7 +1070,7 @@ bool ntupleProducer::isFilteredOutScraping( const edm::Event& iEvent, const edm:
 }
 
 
-bool ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet *outJet)
+bool ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet* outJet)
 {
   if(fabs(inJet.eta()) > 2.5){
     outJet->SetVtxSumPtFrac(-1);
