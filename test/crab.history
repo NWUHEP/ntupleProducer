@@ -33,3 +33,5 @@
 130903_025743: /uscmst1/prod/grid/CRAB_2_9_0/python/crab.py -status -c StressTest/
 130903_033653: /uscmst1/prod/grid/CRAB_2_9_0/python/crab.py -status -c StressTest/
 130903_072911: /uscmst1/prod/grid/CRAB_2_9_0/python/crab.py -status -c StressTest/
+130903_092737: /uscmst1/prod/grid/CRAB_2_9_0/python/crab.py -status -c StressTest/
+130903_092806: /uscmst1/prod/grid/CRAB_2_9_0/python/crab.py -get -c StressTest/
