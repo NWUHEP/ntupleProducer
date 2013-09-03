@@ -1,0 +1,31 @@
+Universe  = vanilla
+Environment = CONDOR_ID=$(Cluster).$(Process);JobRunCount=$$([ ifThenElse(isUndefined(JobRunCount),0,JobRunCount) ]);GlideinMemory=$$([ ifThenElse(isUndefined(ImageSize_RAW),0,ImageSize_RAW) ]);Glidein_MonitorID=$$([ ifThenElse(isUndefined(Glidein_MonitorID),0,Glidein_MonitorID) ]) 
+since=(CurrentTime-EnteredCurrentStatus)
+Periodic_Remove = ((JobStatus == 2) && (((CurrentTime - JobCurrentStartDate) > (MaxWallTimeMins*60)) =?= True)) || (JobStatus==5 && $(since)>691200) || (JobStatus==1 && $(since)>691200)
+x509userproxy = x509up_u44397
+stream_output = false
+stream_error  = false
+notification  = never
+should_transfer_files   = YES
+when_to_transfer_output = ON_EXIT
+copy_to_spool           = false
++DESIRED_SEs = "srm.ciemat.es,cmssrm.fnal.gov,cit-se.ultralight.org,storm-fe-cms.cr.cnaf.infn.it,srm.unl.edu,srm-eoscms.cern.ch,dcache-se-cms.desy.de,ganymede.hep.kbfi.ee"
++DESIRED_CMSDataset ="/SingleMu/Run2012D-22Jan2013-v1/AOD"
++DESIRED_CMSVersion ="CMSSW_5_3_8_patch1"
++DESIRED_CMSVersionNr ="50308"
++DESIRED_CMSScramArch ="slc5_amd64_gcc462"
++AccountingGroup ="bpollack"
++Glidein_MonitorID = "https://vocms20.cern.ch//130902//$(Cluster).$(Process)"
++MaxWallTimeMins = 1315
+request_memory = 2000
+transfer_input_files = default.tgz,arguments.xml,CMSSW.sh
+Executable = CMSSW.sh
+log     = condor.log
+
++BLTaskID = "bpollack_StressTest_1zyp89"
+Arguments  = 1 1
+output  = CMSSW_1.stdout
+error   = CMSSW_1.stderr
+transfer_output_remaps   = "CMSSW_1.stderr=/dev/null; CMSSW_1.stdout=/dev/null"
+transfer_output_files   = out_files_1.tgz,crab_fjr_1.xml
+Queue 1

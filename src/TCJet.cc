@@ -80,6 +80,14 @@ int TCJet::JetFlavor() const {
     return _jetFlavor;
 }
 
+// Hgg style Jet Id vars
+float TCJet::BetaStarClassic() const {
+  return _betaStarClassic;
+}
+float TCJet::DR2Mean() const {
+  return _dR2Mean;
+}
+
 // "set" methods ---------------------------------------------
 
 
@@ -142,4 +150,12 @@ void TCJet::SetBDiscriminatorMap(string key, float value) {
 
 void TCJet::SetJetFlavor(float f) {
     _jetFlavor = f;
+}
+
+// Hgg style Jet Id vars
+void TCJet::SetBetaStarClassic(float b) {
+  _betaStarClassic = b;
+}
+void TCJet::SetDR2Mean(float d) {
+  _dR2Mean = d;
 }

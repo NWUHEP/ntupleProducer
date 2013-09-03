@@ -134,6 +134,9 @@ process.jpt = cms.Sequence(
                         * process.ak5PFJetsL1FastL2L3
                         )
 
+# for jet pileup ID variables
+from RecoJets.JetProducers.PileupJetIDParams_cfi import *
+
 # pat sequences
 process.load("PhysicsTools.PatAlgos.patSequences_cff")
 from PhysicsTools.PatAlgos.patEventContent_cff import patEventContent
@@ -306,6 +309,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   verboseMVAs          =    cms.untracked.bool(False),
 
   photonIsoCalcTag  =    cms.PSet(isolationSumsCalculator),
+  jetPUIdAlgo       =    cms.PSet(full_5x),
 
   JetTag            =    cms.untracked.InputTag('ak5PFJetsL1FastL2L3'),
   GenJetTag         =    cms.untracked.InputTag('ak5GenJets'),

@@ -55,6 +55,7 @@
 #include "DataFormats/EgammaCandidates/interface/PhotonFwd.h"
 #include "DataFormats/EgammaCandidates/interface/Conversion.h"
 #include "DataFormats/EgammaReco/interface/SuperCluster.h"
+#include "DataFormats/EcalRecHit/interface/EcalRecHitCollections.h"
 
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "DataFormats/TrackReco/interface/TrackFwd.h"
@@ -95,6 +96,7 @@
 // Jet associators
 #include "RecoJets/JetAssociationAlgorithms/interface/JetTracksAssociationDRCalo.h"
 #include "RecoJets/JetAssociationAlgorithms/interface/JetTracksAssociationDRVertex.h"
+#include "RecoJets/JetProducers/interface/PileupJetIdAlgo.h"
 
 // EGamma tools
 #include "RecoEgamma/PhotonIdentification/interface/PhotonIsolationCalculator.h"
@@ -257,6 +259,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   edm::InputTag trkPOGFiltersTag3_;
   edm::InputTag partFlowTag_;
   edm::ParameterSet photonIsoCalcTag_;
+  edm::ParameterSet jetPUIdAlgo_;
   edm::InputTag triggerEventTag_;
 
   bool saveJets_;
@@ -316,5 +319,8 @@ class ntupleProducer : public edm::EDAnalyzer {
 
   // Electron Regression
   ElectronEnergyRegressionEvaluate* myEleReg;
+
+  // PU Jet Id Algo
+  PileupJetIdAlgo* myPUJetID;
   
 };

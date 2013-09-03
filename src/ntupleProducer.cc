@@ -1,5 +1,4 @@
 #include "../interface/ntupleProducer.h"
-#include "DataFormats/EcalRecHit/interface/EcalRecHitCollections.h"
 
 ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
 {
@@ -48,6 +47,7 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
   trkPOGFiltersTag2_  = iConfig.getUntrackedParameter<edm::InputTag>("trkPOGFiltersTag2");
   trkPOGFiltersTag3_  = iConfig.getUntrackedParameter<edm::InputTag>("trkPOGFiltersTag3");
   photonIsoCalcTag_   = iConfig.getParameter<edm::ParameterSet>("photonIsoCalcTag");
+  jetPUIdAlgo_        = iConfig.getParameter<edm::ParameterSet>("jetPUIdAlgo");
 }
 
 ntupleProducer::~ntupleProducer()
@@ -190,6 +190,24 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       jetCon->SetBDiscriminatorMap("CSV", MatchBTagsToJets(bTagsCSV, *iJet));
       jetCon->SetBDiscriminatorMap("CSVMVA", MatchBTagsToJets(bTagsCSVMVA, *iJet));
 
+      /////////////////////
+      // Get Hgg Id vars //
+      /////////////////////
+     
+      PileupJetIdentifier puIdentifier;
+      // giving uncorrected input, must double check on this
+      float jec = 1.;
+      VertexCollection::const_iterator vtx;
+      const VertexCollection & vertexes = *(primaryVtcs.product());
+      vtx = vertexes.begin();
+      while( vtx != vertexes.end() && ( vtx->isFake() || vtx->ndof() < 4 ) ) {
+        ++vtx;
+      }
+      if( vtx == vertexes.end() ) { vtx = vertexes.begin(); }
+      puIdentifier = myPUJetID->computeIdVariables(&(*iJet), jec,  &(*vtx),  vertexes, false);
+      //PileupJetIdAlgo::variables_list_t puJetIdOut = myPUJetID->getVariables();
+      //cout<<"betaStarClassic:\t"<<puJetIdOut["betaStarClassic"].second<<"\t"<<"dR2Mean:\t"<<puJetIdOut["dR2Mean"].second<<"\t"<<"someBullshit:\t"<<puJetIdOut["someBullshit"].second<<endl;
+      cout<<"betaStarClassic:\t"<<puIdentifier.betaStarClassic()<<"\t"<<"dR2Mean:\t"<<puIdentifier.dR2Mean()<<endl;
 
       /////////////////////////
       // Associate to vertex //
@@ -978,6 +996,9 @@ void  ntupleProducer::beginJob()
 
   if (verboseMVAs) cout<<"mvaPath: "<<mvaPath<<endl;
   if (verboseMVAs) cout<<"MVA electron regression shit probably has initialized"<<endl;
+
+  // Initialize Jet PU ID
+  myPUJetID = new PileupJetIdAlgo(jetPUIdAlgo_);
 }
 
 void ntupleProducer::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
