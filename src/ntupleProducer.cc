@@ -205,9 +205,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       }
       if( vtx == vertexes.end() ) { vtx = vertexes.begin(); }
       puIdentifier = myPUJetID->computeIdVariables(&(*iJet), jec,  &(*vtx),  vertexes, false);
-      //PileupJetIdAlgo::variables_list_t puJetIdOut = myPUJetID->getVariables();
-      //cout<<"betaStarClassic:\t"<<puJetIdOut["betaStarClassic"].second<<"\t"<<"dR2Mean:\t"<<puJetIdOut["dR2Mean"].second<<"\t"<<"someBullshit:\t"<<puJetIdOut["someBullshit"].second<<endl;
-      cout<<"betaStarClassic:\t"<<puIdentifier.betaStarClassic()<<"\t"<<"dR2Mean:\t"<<puIdentifier.dR2Mean()<<endl;
+      //cout<<"betaStarClassic:\t"<<puIdentifier.betaStarClassic()<<"\t"<<"dR2Mean:\t"<<puIdentifier.dR2Mean()<<endl;
+      jetCon->SetBetaStarClassic(puIdentifier.betaStarClassic());
+      jetCon->SetDR2Mean(puIdentifier.dR2Mean());
 
       /////////////////////////
       // Associate to vertex //
