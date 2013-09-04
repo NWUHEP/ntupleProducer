@@ -3,6 +3,7 @@
 ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
 {
   jetTag_           = iConfig.getUntrackedParameter<edm::InputTag>("JetTag");
+  jecTag_           = iConfig.getParameter<std::string>("JecTag");
   metTag_           = iConfig.getUntrackedParameter<edm::InputTag>("METTag");
   trackmetTag_      = iConfig.getUntrackedParameter<edm::InputTag>("TrackMETTag"); 
   t0metTag_         = iConfig.getUntrackedParameter<edm::InputTag>("T0METTag"); 
@@ -197,6 +198,16 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       PileupJetIdentifier puIdentifier;
       // giving uncorrected input, must double check on this
       float jec = 1.;
+      // jet corrector
+      if( jecCor.get() == 0 ) {
+        initJetEnergyCorrector( iSetup, iEvent.isRealData() );
+      }
+      jecCor->setJetPt(iJet->pt());
+      jecCor->setJetEta(iJet->eta());
+      jecCor->setJetA(iJet->jetArea());
+      jecCor->setRho(rhoFactor);
+      jec = jecCor->getCorrection();
+      //cout<<"jec:\t"<<jec<<endl;
       VertexCollection::const_iterator vtx;
       const VertexCollection & vertexes = *(primaryVtcs.product());
       vtx = vertexes.begin();
@@ -985,7 +996,7 @@ void  ntupleProducer::beginJob()
   eleIsolator.setConeSize(0.4);
 
   // Initialize Electron Regression
-  myEleReg = new ElectronEnergyRegressionEvaluate();
+  myEleReg.reset(new ElectronEnergyRegressionEvaluate());
   //myEleReg->initialize(mvaPath+"/src/data/eleEnergyRegWeights_V1.root",
 
   string mvaPath = getenv("CMSSW_BASE");
@@ -998,7 +1009,8 @@ void  ntupleProducer::beginJob()
   if (verboseMVAs) cout<<"MVA electron regression shit probably has initialized"<<endl;
 
   // Initialize Jet PU ID
-  myPUJetID = new PileupJetIdAlgo(jetPUIdAlgo_);
+  myPUJetID.reset(new PileupJetIdAlgo(jetPUIdAlgo_));
+
 }
 
 void ntupleProducer::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
@@ -1670,5 +1682,27 @@ float ntupleProducer::MatchBTagsToJets(const reco::JetTagCollection bTags,const 
   return discrValue;
 }
 
+void ntupleProducer::initJetEnergyCorrector(const edm::EventSetup &iSetup, bool isData)
+{
+  //jet energy correction levels to apply on raw jet
+  std::vector<JetCorrectorParameters> jetCorPars_;
+  std::vector<std::string> jecLevels;
+  jecLevels.push_back("L1FastJet");
+  jecLevels.push_back("L2Relative");
+  jecLevels.push_back("L3Absolute");
+  if(isData) jecLevels.push_back("L2L3Residual");
+
+  //check the corrector parameters needed according to the correction levels
+  edm::ESHandle<JetCorrectorParametersCollection> parameters;
+  iSetup.get<JetCorrectionsRecord>().get(jecTag_,parameters);
+  for(std::vector<std::string>::const_iterator ll = jecLevels.begin(); ll != jecLevels.end(); ++ll)
+  { 
+    const JetCorrectorParameters& ip = (*parameters)[*ll];
+    jetCorPars_.push_back(ip); 
+  } 
+
+  //instantiate the jet corrector
+  jecCor.reset(new FactorizedJetCorrector(jetCorPars_));
+}
 //define this as a plug-in
 DEFINE_FWK_MODULE(ntupleProducer);

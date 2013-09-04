@@ -92,6 +92,7 @@
 #include "JetMETCorrections/Objects/interface/JetCorrectionsRecord.h"
 #include "CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h"
 #include "CondFormats/JetMETObjects/interface/JetCorrectorParameters.h"
+#include "CondFormats/JetMETObjects/interface/FactorizedJetCorrector.h"
 
 // Jet associators
 #include "RecoJets/JetAssociationAlgorithms/interface/JetTracksAssociationDRCalo.h"
@@ -208,6 +209,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   virtual bool  isFilteredOutScraping(const edm::Event& iEvent, const edm::EventSetup& iSetup, int numtrack=10, double thresh=0.25);
   virtual float MatchBTagsToJets(const reco::JetTagCollection, const reco::PFJet);
   void analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR, edm::Handle<trigger::TriggerEvent> &hltE, const std::string& triggerName, int* trigCount);                   
+  void initJetEnergyCorrector(const edm::EventSetup &iSetup, bool isData);
   // ----------member data ---------------------------
   
   struct JetCompare :
@@ -237,6 +239,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   TTree* jobTree;
 
   edm::InputTag jetTag_;
+  string        jecTag_;
   edm::InputTag metTag_;
   edm::InputTag trackmetTag_; //Added by Rafael on May 28th
   edm::InputTag t0metTag_; //Added by Rafael on July 3rd 2013
@@ -318,9 +321,10 @@ class ntupleProducer : public edm::EDAnalyzer {
   TH1F * h1_numOfEvents;
 
   // Electron Regression
-  ElectronEnergyRegressionEvaluate* myEleReg;
+  auto_ptr<ElectronEnergyRegressionEvaluate> myEleReg;
 
   // PU Jet Id Algo
-  PileupJetIdAlgo* myPUJetID;
+  auto_ptr<PileupJetIdAlgo> myPUJetID;
+  auto_ptr<FactorizedJetCorrector> jecCor;
   
 };

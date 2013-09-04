@@ -312,6 +312,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   jetPUIdAlgo       =    cms.PSet(full_5x),
 
   JetTag            =    cms.untracked.InputTag('ak5PFJetsL1FastL2L3'),
+  JecTag            =    cms.string("AK5PF"),
   GenJetTag         =    cms.untracked.InputTag('ak5GenJets'),
   METTag            =    cms.untracked.InputTag('pfType1CorrectedMet'),
   TrackMETTag       =    cms.untracked.InputTag('trackMet'),
