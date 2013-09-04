@@ -31,7 +31,6 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
 
     verboseTrigs       = iConfig.getUntrackedParameter<bool>("verboseTrigs");
     verboseMVAs        = iConfig.getUntrackedParameter<bool>("verboseMVAs");
-
     ecalTPFilterTag_    = iConfig.getUntrackedParameter<edm::InputTag>("ecalTPFilterTag");
     ecalBEFilterTag_    = iConfig.getUntrackedParameter<edm::InputTag>("ecalBEFilterTag");
     hcalHBHEFilterTag_  = iConfig.getUntrackedParameter<edm::InputTag>("hcalHBHEFilterTag");
