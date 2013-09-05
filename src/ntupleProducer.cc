@@ -19,7 +19,7 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
 
     partFlowTag_      = iConfig.getUntrackedParameter<edm::InputTag>("partFlowTag");
 
-    skimLepton_      = iConfig.getUntrackedParameter<bool>("skimLepton");
+    skimLepton_       = iConfig.getUntrackedParameter<bool>("skimLepton");
 
     saveJets_         = iConfig.getUntrackedParameter<bool>("saveJets");
     saveElectrons_    = iConfig.getUntrackedParameter<bool>("saveElectrons");
@@ -29,8 +29,8 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
     saveGenJets_      = iConfig.getUntrackedParameter<bool>("saveGenJets");
     saveGenParticles_ = iConfig.getUntrackedParameter<bool>("saveGenParticles");
 
-    verboseTrigs       = iConfig.getUntrackedParameter<bool>("verboseTrigs");
-    verboseMVAs        = iConfig.getUntrackedParameter<bool>("verboseMVAs");
+    verboseTrigs        = iConfig.getUntrackedParameter<bool>("verboseTrigs");
+    verboseMVAs         = iConfig.getUntrackedParameter<bool>("verboseMVAs");
     ecalTPFilterTag_    = iConfig.getUntrackedParameter<edm::InputTag>("ecalTPFilterTag");
     ecalBEFilterTag_    = iConfig.getUntrackedParameter<edm::InputTag>("ecalBEFilterTag");
     hcalHBHEFilterTag_  = iConfig.getUntrackedParameter<edm::InputTag>("hcalHBHEFilterTag");
@@ -226,39 +226,51 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     if (saveMuons_) {
 
-
         Handle<vector<reco::Muon> > muons;
         iEvent.getByLabel(muonTag_, muons);
 
         for (vector<reco::Muon>::const_iterator iMuon = muons->begin(); iMuon != muons->end(); ++iMuon) {
-            if (!iMuon->isGlobalMuon() || iMuon->pt() < 3.) continue;
-            //if (!iMuon->isGlobalMuon()) continue;
+          //if (!iMuon->isGlobalMuon() || iMuon->pt() < 3.) continue;
+          //if (iMuon->pt() < 3.) continue;
+          //if (!iMuon->isGlobalMuon()) continue;
 
             TCMuon* muCon = new ((*recoMuons)[muCount]) TCMuon;
 
             muCon->SetPxPyPzE(iMuon->px(), iMuon->py(), iMuon->pz(), iMuon->energy());
-            muCon->SetVtx(iMuon->globalTrack()->vx(),iMuon->globalTrack()->vy(),iMuon->globalTrack()->vz());
-            muCon->SetPtError(iMuon->globalTrack()->ptError());
             muCon->SetCharge(iMuon->charge());
 
             // Muon ID variables
             muCon->SetIsPF(iMuon->isPFMuon());
             muCon->SetIsGLB(iMuon->isGlobalMuon());
             muCon->SetIsTRK(iMuon->isTrackerMuon());
-            muCon->SetNormalizedChi2(iMuon->globalTrack()->normalizedChi2());
+
             muCon->SetCaloComp(iMuon->caloCompatibility());
             muCon->SetSegComp(muon::segmentCompatibility(*iMuon));
-
-            muCon->SetTrackLayersWithMeasurement(iMuon->track()->hitPattern().trackerLayersWithMeasurement());
             muCon->SetNumberOfMatchedStations(iMuon->numberOfMatchedStations());
             muCon->SetNumberOfMatches(iMuon->numberOfMatches());
-            muCon->SetNumberOfValidPixelHits(iMuon->globalTrack()->hitPattern().numberOfValidPixelHits());
-            muCon->SetNumberOfValidTrackerHits(iMuon->globalTrack()->hitPattern().numberOfValidTrackerHits());
-            muCon->SetNumberOfValidMuonHits(iMuon->globalTrack()->hitPattern().numberOfValidMuonHits());
-            muCon->SetNumberOfLostPixelHits(iMuon->globalTrack()->hitPattern().numberOfLostPixelHits());
-            muCon->SetNumberOfLostTrackerHits(iMuon->globalTrack()->hitPattern().numberOfLostTrackerHits());
 
+            if (iMuon->isGlobalMuon()){
+              muCon->SetVtx(iMuon->globalTrack()->vx(),iMuon->globalTrack()->vy(),iMuon->globalTrack()->vz());
+              muCon->SetPtError(iMuon->globalTrack()->ptError());
 
+              muCon->SetTrackLayersWithMeasurement(iMuon->track()->hitPattern().trackerLayersWithMeasurement());
+              muCon->SetNormalizedChi2(          iMuon->globalTrack()->normalizedChi2());
+              muCon->SetNumberOfValidPixelHits(  iMuon->globalTrack()->hitPattern().numberOfValidPixelHits());
+              muCon->SetNumberOfValidTrackerHits(iMuon->globalTrack()->hitPattern().numberOfValidTrackerHits());
+              muCon->SetNumberOfValidMuonHits(   iMuon->globalTrack()->hitPattern().numberOfValidMuonHits());
+              muCon->SetNumberOfLostPixelHits(   iMuon->globalTrack()->hitPattern().numberOfLostPixelHits());
+              muCon->SetNumberOfLostTrackerHits( iMuon->globalTrack()->hitPattern().numberOfLostTrackerHits());
+            }
+            else{
+              muCon->SetVtx(-1,-1,-1);
+              muCon->SetTrackLayersWithMeasurement(-1);
+              muCon->SetNormalizedChi2(-1);
+              muCon->SetNumberOfValidPixelHits(-1);
+              muCon->SetNumberOfValidTrackerHits(-1);
+              muCon->SetNumberOfValidMuonHits(-1);
+              muCon->SetNumberOfLostPixelHits(-1);
+              muCon->SetNumberOfLostTrackerHits(-1);
+            }
             // Set isolation map values
             // Detector-based isolation
 
@@ -503,23 +515,20 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             for (GenParticleCollection::const_iterator iGenPart = genParticleColl->begin(); iGenPart != genParticleColl->end(); ++iGenPart) {
                 const reco::GenParticle myParticle = reco::GenParticle(*iGenPart);
 
-                if ( (myParticle.pt() > 3 && 
-                      (
-                       ////  Leptons and photons and b's, (oh my)
-                       (abs(myParticle.pdgId()) >= 11 && abs(myParticle.pdgId()) <= 16)
-                       || myParticle.pdgId() == 22
-                       || abs(myParticle.pdgId()) == 5
-                       )
-                      ) ||
+                if ( 
+                    ////  Leptons and photons and b's, (oh my)
+                    (abs(myParticle.pdgId()) >= 11 && abs(myParticle.pdgId()) <= 16)
+                    || myParticle.pdgId()      == 22
+                    || abs(myParticle.pdgId()) == 5
                     //// Z's, W's, H's, and now big juicy Gravitons
-                     (abs(myParticle.pdgId()) == 23
-                      || abs(myParticle.pdgId()) == 24
-                      || abs(myParticle.pdgId()) == 25
-                      || abs(myParticle.pdgId()) == 35
-                      || abs(myParticle.pdgId()) == 36
-                      || abs(myParticle.pdgId()) == 39
-                      )
-                     ){
+                    ||abs(myParticle.pdgId())  == 23
+                    || abs(myParticle.pdgId()) == 24
+                    || abs(myParticle.pdgId()) == 25
+                    || abs(myParticle.pdgId()) == 35
+                    || abs(myParticle.pdgId()) == 36
+                    || abs(myParticle.pdgId()) == 39
+                    
+                    ){
                   
                   TCGenParticle* genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
                   genCon->SetPxPyPzE(myParticle.px(), myParticle.py(), myParticle.pz(), myParticle.energy() );
@@ -681,9 +690,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     ++nEvents;
 
-    if (skimLepton_ && (eleCount > 0 || muCount > 0))
-      eventTree -> Fill(); // possibly specify a cut in configuration
-
+    if (!skimLepton_)
+      eventTree -> Fill();
+    else if(skimLepton_ && (eleCount > 0 || muCount > 0)) // possibly specify a cut in configuration
+      eventTree -> Fill();
+      
     primaryVtx    -> Clear("C");
     recoJets      -> Clear("C");
     recoJPT       -> Clear("C");
