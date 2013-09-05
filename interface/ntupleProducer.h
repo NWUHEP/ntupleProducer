@@ -110,6 +110,7 @@
 #include "EGamma/EGammaAnalysisTools/interface/ElectronEnergyRegressionEvaluate.h"
 #include "EgammaAnalysis/ElectronTools/interface/PatElectronEnergyCalibrator.h"
 
+#include "DataFormats/MuonReco/interface/MuonSelectors.h"
 // ntuple storage classes
 #include "TCPrimaryVtx.h"
 #include "TCJet.h"

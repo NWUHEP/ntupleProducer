@@ -239,35 +239,53 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             muCon->SetPxPyPzE(iMuon->px(), iMuon->py(), iMuon->pz(), iMuon->energy());
             muCon->SetCharge(iMuon->charge());
 
-            // Muon ID variables
             muCon->SetIsPF(iMuon->isPFMuon());
             muCon->SetIsGLB(iMuon->isGlobalMuon());
             muCon->SetIsTRK(iMuon->isTrackerMuon());
+
+            if (primaryVtcs->size()>0){
+              muCon->SetIsTight(muon::isTightMuon(*iMuon, *primaryVtcs->begin()));
+              //isSoftMuon is not available in CMSSW_5_3_8, where I'm working, will include it in a later versions
+              //muCon->SetIsSoft( muon::isSoftMuon( *iMuon, *primaryVtcs->begin()));
+              muCon->SetIsSoft(0);                
+            }
+            else{
+              muCon->SetIsTight(0);
+              muCon->SetIsSoft(0);
+            }
 
             muCon->SetCaloComp(iMuon->caloCompatibility());
             muCon->SetSegComp(muon::segmentCompatibility(*iMuon));
             muCon->SetNumberOfMatchedStations(iMuon->numberOfMatchedStations());
             muCon->SetNumberOfMatches(iMuon->numberOfMatches());
-
+            
             if (iMuon->isGlobalMuon()){
-              muCon->SetVtx(iMuon->globalTrack()->vx(),iMuon->globalTrack()->vy(),iMuon->globalTrack()->vz());
-              muCon->SetPtError(iMuon->globalTrack()->ptError());
+              muCon->SetNormalizedChi2(       iMuon->globalTrack()->normalizedChi2());
+              muCon->SetNumberOfValidMuonHits(iMuon->globalTrack()->hitPattern().numberOfValidMuonHits());
+            }
+            else{
+              muCon->SetNormalizedChi2(-1);
+              muCon->SetNumberOfValidMuonHits(-1);
+            }
 
+            if (iMuon->isTrackerMuon()){
+              muCon->SetVtx(iMuon->track()->vx(),iMuon->track()->vy(),iMuon->track()->vz());
+              muCon->SetPtError(iMuon->track()->ptError());
+              
               muCon->SetTrackLayersWithMeasurement(iMuon->track()->hitPattern().trackerLayersWithMeasurement());
-              muCon->SetNormalizedChi2(          iMuon->globalTrack()->normalizedChi2());
-              muCon->SetNumberOfValidPixelHits(  iMuon->globalTrack()->hitPattern().numberOfValidPixelHits());
-              muCon->SetNumberOfValidTrackerHits(iMuon->globalTrack()->hitPattern().numberOfValidTrackerHits());
-              muCon->SetNumberOfValidMuonHits(   iMuon->globalTrack()->hitPattern().numberOfValidMuonHits());
-              muCon->SetNumberOfLostPixelHits(   iMuon->globalTrack()->hitPattern().numberOfLostPixelHits());
-              muCon->SetNumberOfLostTrackerHits( iMuon->globalTrack()->hitPattern().numberOfLostTrackerHits());
+              muCon->SetNumberOfValidPixelHits(    iMuon->innerTrack()->hitPattern().numberOfValidPixelHits());
+              muCon->SetNormalizedChi2_tracker(    iMuon->innerTrack()->normalizedChi2());
+              muCon->SetNumberOfValidTrackerHits(iMuon->track()->hitPattern().numberOfValidTrackerHits());
+              muCon->SetNumberOfLostPixelHits(   iMuon->track()->hitPattern().numberOfLostPixelHits());
+              muCon->SetNumberOfLostTrackerHits( iMuon->track()->hitPattern().numberOfLostTrackerHits());
             }
             else{
               muCon->SetVtx(-1,-1,-1);
+              muCon->SetPtError(-1);
               muCon->SetTrackLayersWithMeasurement(-1);
-              muCon->SetNormalizedChi2(-1);
               muCon->SetNumberOfValidPixelHits(-1);
+              muCon->SetNormalizedChi2_tracker(-1);
               muCon->SetNumberOfValidTrackerHits(-1);
-              muCon->SetNumberOfValidMuonHits(-1);
               muCon->SetNumberOfLostPixelHits(-1);
               muCon->SetNumberOfLostTrackerHits(-1);
             }
