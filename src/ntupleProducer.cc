@@ -715,49 +715,29 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       Handle<GenParticleCollection> genParticleColl;
       iEvent.getByLabel("genParticles", genParticleColl);
 
-      for (GenParticleCollection::const_iterator iGenPart = genParticleColl->begin(); iGenPart != genParticleColl->end(); ++iGenPart) {
-        const reco::GenParticle myParticle = reco::GenParticle(*iGenPart);
+      map<const reco::GenParticle*, TCGenParticle*> genMap;
+      TCGenParticle* genCon;
+      for (GenParticleCollection::const_iterator myParticle= genParticleColl->begin(); myParticle != genParticleColl->end(); ++myParticle) {
 
         ////  Leptons and photons and b's, (oh my)
-        if (
-            (
-             (abs(myParticle.pdgId()) >= 11 && abs(myParticle.pdgId()) <= 16) 
-             || myParticle.pdgId() == 22 
-             || abs(myParticle.pdgId()) == 5 
-            )
-           ) {
-
-          TCGenParticle* genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
-          genCon->SetPxPyPzE(myParticle.px(), myParticle.py(), myParticle.pz(), myParticle.energy() );
-          genCon->SetVtx(myParticle.vx(), myParticle.vy(), myParticle.vz());
-          genCon->SetCharge(myParticle.charge());
-          genCon->SetPDGId(myParticle.pdgId());
-          genCon->SetMother(myParticle.mother()->pdgId());
-          genCon->SetStatus(myParticle.status());
-          if (myParticle.mother()->numberOfMothers() != 0) genCon->SetGrandmother(myParticle.mother()->mother()->pdgId());
-          ++genPartCount;
-        }
-
         //// Z's, W's, H's, and now big juicy Gravitons
         if (
-            abs(myParticle.pdgId()) == 23 
-            || abs(myParticle.pdgId()) == 24 
-            || abs(myParticle.pdgId()) == 25 
-            || abs(myParticle.pdgId()) == 35 
-            || abs(myParticle.pdgId()) == 36 
-            || abs(myParticle.pdgId()) == 39
-           ){
+            (
+             (abs(myParticle->pdgId()) >= 11 && abs(myParticle->pdgId()) <= 16) 
+             || myParticle->pdgId() == 22 
+             || abs(myParticle->pdgId()) == 5 
+             || abs(myParticle->pdgId()) == 23 
+             || abs(myParticle->pdgId()) == 24 
+             || abs(myParticle->pdgId()) == 25 
+             || abs(myParticle->pdgId()) == 35 
+             || abs(myParticle->pdgId()) == 36 
+             || abs(myParticle->pdgId()) == 39
+            )
+           ) {
+          genCon = addGenParticle(&(*myParticle), genPartCount, genMap);
 
-
-          TCGenParticle* genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
-          genCon->SetPxPyPzE(myParticle.px(), myParticle.py(), myParticle.pz(), myParticle.energy() );
-          genCon->SetVtx(myParticle.vx(), myParticle.vy(), myParticle.vz() );
-          genCon->SetCharge(myParticle.charge());
-          genCon->SetPDGId(myParticle.pdgId());
-          genCon->SetMother(myParticle.mother()->pdgId());
-          genCon->SetStatus(myParticle.status());
-          ++genPartCount;
         }
+
       }
     }
 
@@ -1704,5 +1684,39 @@ void ntupleProducer::initJetEnergyCorrector(const edm::EventSetup &iSetup, bool 
   //instantiate the jet corrector
   jecCor.reset(new FactorizedJetCorrector(jetCorPars_));
 }
+
+
+TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticle, int genPartCount, std::map<const reco::GenParticle*,TCGenParticle*> genMap)
+{
+  TCGenParticle* genCon;
+  map<const reco::GenParticle*,TCGenParticle*>::iterator it;
+  it = genMap.find(myParticle);
+  if (it == genMap.end()){
+    genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
+    ++genPartCount;
+    genMap[myParticle] = genCon;
+    genCon->SetPxPyPzE(myParticle->px(), myParticle->py(), myParticle->pz(), myParticle->energy() );
+    genCon->SetVtx(myParticle->vx(), myParticle->vy(), myParticle->vz());
+    genCon->SetCharge(myParticle->charge());
+    genCon->SetPDGId(myParticle->pdgId());
+    genCon->SetStatus(myParticle->status());
+    map<const reco::GenParticle*,TCGenParticle*>::iterator momIt;
+    if (myParticle->numberOfMothers() == 0){
+      genCon->SetMother(0);
+    }else{
+      momIt = genMap.find((const reco::GenParticle*)myParticle->mother());
+      if (momIt == genMap.end()){
+        genCon->SetMother(addGenParticle((const reco::GenParticle*)myParticle->mother(), genPartCount, genMap));
+      }else{
+        genCon->SetMother(momIt->second);
+      }
+    }
+  }else{
+    genCon = it->second;
+  }
+  return genCon;
+}
+
+
 //define this as a plug-in
 DEFINE_FWK_MODULE(ntupleProducer);

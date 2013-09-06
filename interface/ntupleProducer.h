@@ -1,6 +1,7 @@
 // system include files
 #include <memory>
 #include <string>
+#include <map>
 
 // user include files
 #include "FWCore/Framework/interface/Frameworkfwd.h"
@@ -210,6 +211,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   virtual float MatchBTagsToJets(const reco::JetTagCollection, const reco::PFJet);
   void analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR, edm::Handle<trigger::TriggerEvent> &hltE, const std::string& triggerName, int* trigCount);                   
   void initJetEnergyCorrector(const edm::EventSetup &iSetup, bool isData);
+  TCGenParticle* addGenParticle(const reco::GenParticle* myParticle, int genPartCount, std::map<const reco::GenParticle*,TCGenParticle*> genMap);
   // ----------member data ---------------------------
   
   struct JetCompare :
