@@ -1686,7 +1686,7 @@ void ntupleProducer::initJetEnergyCorrector(const edm::EventSetup &iSetup, bool 
 }
 
 
-TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticle, int genPartCount, std::map<const reco::GenParticle*,TCGenParticle*> genMap)
+TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticle, int& genPartCount, map<const reco::GenParticle*,TCGenParticle*>& genMap)
 {
   TCGenParticle* genCon;
   map<const reco::GenParticle*,TCGenParticle*>::iterator it;

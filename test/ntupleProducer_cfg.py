@@ -109,11 +109,11 @@ process.ak5JetTracksAssociatorAtCaloFace.jets = cms.InputTag("ak5PFJetsL1FastL2L
 process.ak5JetExtender.jets = cms.InputTag("ak5PFJetsL1FastL2L3")
 
 # jpt extras
-process.load("RecoJets.Configuration.RecoPFJets_cff")
-process.load("RecoJets.Configuration.RecoJPTJets_cff")
-process.load("RecoJets.JetAssociationProducers.ak5JTA_cff")
-process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
-process.load('JetMETCorrections.Configuration.JetCorrectionServices_cff')
+#process.load("RecoJets.Configuration.RecoPFJets_cff")
+#process.load("RecoJets.Configuration.RecoJPTJets_cff")
+#process.load("RecoJets.JetAssociationProducers.ak5JTA_cff")
+#process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
+#process.load('JetMETCorrections.Configuration.JetCorrectionServices_cff')
 
 
 process.kt6PFJetsIso = process.kt6PFJets.clone()
@@ -121,18 +121,18 @@ process.kt6PFJetsIso.doRhoFastjet = True
 process.kt6PFJetsIso.Rho_EtaMax = cms.double(2.5)
 
 
-process.ak5JPTL1Offset.algorithm = 'AK5JPT'
-process.ak5JetTracksAssociatorAtVertex.useAssigned = cms.bool(True)
-process.ak5JetTracksAssociatorAtVertex.pvSrc = cms.InputTag("offlinePrimaryVertices")
+#process.ak5JPTL1Offset.algorithm = 'AK5JPT'
+#process.ak5JetTracksAssociatorAtVertex.useAssigned = cms.bool(True)
+#process.ak5JetTracksAssociatorAtVertex.pvSrc = cms.InputTag("offlinePrimaryVertices")
 #process.ak5JetTracksAssociatorAtVertex.pvSrc = cms.InputTag("offlinePrimaryVerticesWithBS")
 
-process.jpt = cms.Sequence(
-                        process.ak5JTA
-                        * process.recoJPTJets
-                        * process.ak5JPTJetsL1L2L3
-                        * process.kt6PFJets
-                        * process.ak5PFJetsL1FastL2L3
-                        )
+#process.jpt = cms.Sequence(
+#                        process.ak5JTA
+#                        * process.recoJPTJets
+#                        * process.ak5JPTJetsL1L2L3
+#                        * process.kt6PFJets
+#                        * process.ak5PFJetsL1FastL2L3
+#                        )
 
 # for jet pileup ID variables
 from RecoJets.JetProducers.PileupJetIDParams_cfi import *
@@ -264,10 +264,11 @@ process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
 	#'/store/mc/Summer12_DR53X/GluGluToHToWWTo2LAndTau2Nu_M-125_8TeV-powheg-pythia6/AODSIM/PU_S10_START53_V7A-v1/0000/DE5F727F-8BFC-E111-8576-002618FDA263.root'
 #	'root://eoscms//eos/cms/store/user/cmkuo/GluGluToHToZG_M-125_8TeV-powheg-pythia6/HZg_nunug_ggH_m125_RECO_v1/3664d28163503ca8171ba37083c39fc9/STEP2_RAW2DIGI_L1Reco_RECO_PU_100_1_fXq.root'
-    '/store/data/Run2012D/SinglePhotonParked/AOD/22Jan2013-v1/30004/144D7268-4086-E211-9DC1-001E673984C1.root'
-#    '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
+#'/store/data/Run2012D/SinglePhotonParked/AOD/22Jan2013-v1/30004/144D7268-4086-E211-9DC1-001E673984C1.root'
+#'/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
     #'/store/data/Run2012D/DoubleMu/AOD/PromptReco-v1/000/208/341/285B355D-553D-E211-A3FC-BCAEC532971E.root'
     #'file:/tmp/naodell/TTJetsToHqToWWq_M-125_TuneZ2_8TeV_pythia6_v2_1_1_p64.root'
+    'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v2/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_50.root'
 )
 )
 
