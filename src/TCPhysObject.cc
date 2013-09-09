@@ -1,4 +1,5 @@
 #include "../interface/TCPhysObject.h"
+#include "../interface/TCPhysObjectLinkDef.h"
 
 TCPhysObject::TCPhysObject() {
     _isPF = _isReco = false;
