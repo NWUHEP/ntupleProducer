@@ -91,10 +91,12 @@
 #include "JetMETCorrections/Objects/interface/JetCorrectionsRecord.h"
 #include "CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h"
 #include "CondFormats/JetMETObjects/interface/JetCorrectorParameters.h"
+#include "CondFormats/JetMETObjects/interface/FactorizedJetCorrector.h"
 
 // Jet associators
 #include "RecoJets/JetAssociationAlgorithms/interface/JetTracksAssociationDRCalo.h"
 #include "RecoJets/JetAssociationAlgorithms/interface/JetTracksAssociationDRVertex.h"
+#include "RecoJets/JetProducers/interface/PileupJetIdAlgo.h"
 
 // EGamma tools
 #include "RecoEgamma/PhotonIdentification/interface/PhotonIsolationCalculator.h"
