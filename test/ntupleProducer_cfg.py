@@ -4,6 +4,39 @@ from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 
 process = cms.Process("NTUPLE")
 
+<<<<<<< HEAD
+=======
+options = VarParsing.VarParsing ('analysis')
+options.maxEvents = 300
+#options.inputFiles= '/store/data/Run2012C/SingleMu/AOD/22Jan2013-v1/30010/C0E05558-9078-E211-9E02-485B39800B65.root'
+#options.inputFiles= '/store/data/Run2012C/DoublePhoton/AOD/22Jan2013-v2/30001/72DE4526-F370-E211-B370-00304867920A.root'
+#options.loadFromFile('inputFiles','temp_mg5_full.txt')
+#options.inputFiles= "/store/user/stoyan/MC/MG5_pp_mumug/SIMRECO_START53_V5_20.07.13/stoynev/MG5_pp_mumug_SIMRECO_START53_V5/MG5_pp_mumug_SIMRECO_START53_V5/abf2cea0333a5a4aadd0172f40b40a40/ppTOllg_20.07.13_744_1_vSV.root"
+#'/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
+#'file:/tmp/naodell/TTJetsToHqToWWq_M-125_TuneZ2_8TeV_pythia6_v2_1_1_p64.root'\
+#options.inputFiles='/store/user/andrey/hzgamma_pythia8_153_8TeV_v2_HLT/hzgamma_pythia8_153_8TeV_v2_HLT/53f675467979b3dab12ab0598ae228db/hzgamma_pythia8_py_GEN_SIM_DIGI_L1_DIGI2RAW_HLT_RAW2DIGI_RECO_PU_100_1_82E.root'
+#options.inputFiles = '/store/user/andrey/HDalitz_mu_stoyan_hack_v2/HDalitz_mu_stoyan_hack_v2/35e270762607bc21c7cf8c2a7f175bc3/hzgamma_stoyan_hack_pythia8_py_GEN_SIM_DIGI_L1_DIGI2RAW_HLT_RAW2DIGI_RECO_PU_85_1_mBL.root'
+#options.inputFiles = 'file:/uscms_data/d2/andreypz/cmssw/zgamma/generate/CMSSW_5_3_10/src/MCFM/reco.root'
+#options.inputFiles ='/store/user/andrey/MCFM_hzgamma_8TeV_LHE_pythia6_GEN_SIM_v2_unweighted/MCFM_lord_hzgamma_8TeV_LHE_pythia6_RECO/39bf61f738ba3bdb8860f0848073cc88/reco_301_1_VW1.root'
+#options.inputFiles = 'file:/uscms/home/andreypz/nobackup/cmssw/zgamma/generate/CMSSW_5_3_10/src/MCFM/reco_5ev_orig.root'
+#options.inputFiles = 'file:/uscms/home/andreypz/nobackup/cmssw/zgamma/generate/CMSSW_5_3_10/src/MCFM/aodsim.root'
+options.inputFiles = '/store/user/andrey/MCFM_lord_hzgamma_8TeV_LHE_pythia6_v2/AODSIM/39bf61f738ba3bdb8860f0848073cc88/aodsim_99_1_KmE.root'
+
+options.register("isRealData",
+                 0,
+                 VarParsing.VarParsing.multiplicity.singleton,
+                 VarParsing.VarParsing.varType.int,
+                 "0 if running on MC and 1 if running on Data")
+
+options.parseArguments()
+
+## In case you are running over a privately produced MC sample, that is generatet in _one step_,
+## you probably need to use "HLT" for both recoTier and hltTier.
+## Unless you changed the name of your process. In that case it should be that name.
+recoTier = "RECO"
+hltTier  = "HLT"
+
+>>>>>>> dev-andrey
 # real data or MC?
 isRealData = False
 
@@ -285,7 +318,6 @@ process.pfPileUp = cms.EDProducer("PFPileUp",
     checkClosestZVertex = cms.bool(True),
     verbose = cms.untracked.bool(False),
     Vertices = cms.InputTag("offlinePrimaryVertices")
-#    Vertices = cms.InputTag("offlinePrimaryVerticesWithBS")
 )
 
 process.pfNoPileUp = cms.EDProducer("TPPFCandidatesOnPFCandidates",

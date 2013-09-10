@@ -14,6 +14,8 @@ class TCMuon : public TCPhysObject {
         bool _isPF;
         bool _isTRK;
         bool _isGLB;
+        bool _isSoft;
+        bool _isTight;
         float _caloComp;
         float _segComp;
 
@@ -26,6 +28,7 @@ class TCMuon : public TCPhysObject {
         int _numberOfValidMuonHits;
         int _trackLayersWithMeasurement;
         float _normalizedChi2;
+        float _normalizedChi2_tracker;
 
     public:
         TCMuon();
@@ -38,6 +41,8 @@ class TCMuon : public TCPhysObject {
         bool IsGLB() const;
         bool IsTRK() const;
         bool IsPF() const;
+        bool IsSoft() const;
+        bool IsTight() const;
         float CaloComp() const;
         float SegComp() const;
 
@@ -47,6 +52,7 @@ class TCMuon : public TCPhysObject {
         int NumberOfLostTrackerHits() const;
         int NumberOfValidMuonHits() const;
         float NormalizedChi2() const;
+        float NormalizedChi2_tracker() const;
         int NumberOfMatches() const;
         int NumberOfMatchedStations() const;
         int TrackLayersWithMeasurement() const;
@@ -55,6 +61,8 @@ class TCMuon : public TCPhysObject {
         void SetIsGLB(bool t);
         void SetIsTRK(bool t);
         void SetIsPF(bool t);
+        void SetIsSoft(bool t);
+        void SetIsTight(bool t);
         void SetCaloComp(float c);
         void SetSegComp(float s);
 
@@ -66,6 +74,7 @@ class TCMuon : public TCPhysObject {
         void SetNumberOfLostPixelHits(int n);
         void SetNumberOfLostTrackerHits(int n);
         void SetNormalizedChi2(float n);
+        void SetNormalizedChi2_tracker(float n);
         void SetTrackLayersWithMeasurement(int n);
 
         ClassDef(TCMuon, 1);
