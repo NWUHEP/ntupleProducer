@@ -3,7 +3,6 @@
 
 ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
 {
-<<<<<<< HEAD
   jetTag_           = iConfig.getUntrackedParameter<edm::InputTag>("JetTag");
   metTag_           = iConfig.getUntrackedParameter<edm::InputTag>("METTag");
   trackmetTag_      = iConfig.getUntrackedParameter<edm::InputTag>("TrackMETTag"); 
@@ -23,6 +22,7 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
   triggerPaths_     = iConfig.getUntrackedParameter<vector<string> >("triggers");
 
   partFlowTag_      = iConfig.getUntrackedParameter<edm::InputTag>("partFlowTag");
+  skimLepton_       = iConfig.getUntrackedParameter<bool>("skimLepton");
 
   saveJets_         = iConfig.getUntrackedParameter<bool>("saveJets");
   saveElectrons_    = iConfig.getUntrackedParameter<bool>("saveElectrons");
@@ -293,7 +293,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
   if (saveTrackMET_) {
 
-<<<<<<< HEAD
     Handle<METCollection> trkMET;
     iEvent.getByLabel(trackmetTag_, trkMET);
     METCollection::const_iterator trkmet = trkMET->begin();
@@ -304,18 +303,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     }
   }
 
-=======
-        Handle<vector<reco::Muon> > muons;
-        iEvent.getByLabel(muonTag_, muons);
-
-        for (vector<reco::Muon>::const_iterator iMuon = muons->begin(); iMuon != muons->end(); ++iMuon) {
-
 
   //////////////////                                                                                                                                                          
   // Get MVAMET   // 
   ////////////////// 
 
-  //   if (saveTrackMET_) {
 
   Handle<vector<reco::PFMET> > mvaMET;
   iEvent.getByLabel("pfMEtMVA", mvaMET);
@@ -329,66 +321,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     mva_MET->SetMagPhi(mvamet->et(), mvamet->phi());
   }
 
-=======
-            muCon->SetPxPyPzE(iMuon->px(), iMuon->py(), iMuon->pz(), iMuon->energy());
-            muCon->SetCharge(iMuon->charge());
-
-            muCon->SetIsPF(iMuon->isPFMuon());
-            muCon->SetIsGLB(iMuon->isGlobalMuon());
-            muCon->SetIsTRK(iMuon->isTrackerMuon());
-
-            if (primaryVtcs->size()>0){
-              muCon->SetIsTight(muon::isTightMuon(*iMuon, *primaryVtcs->begin()));
-              //isSoftMuon is not available in CMSSW_5_3_8, where I'm working, will include it in a later versions
-              //muCon->SetIsSoft( muon::isSoftMuon( *iMuon, *primaryVtcs->begin()));
-              muCon->SetIsSoft(0);                
-            }
-            else{
-              muCon->SetIsTight(0);
-              muCon->SetIsSoft(0);
-            }
-
-            muCon->SetCaloComp(iMuon->caloCompatibility());
-            muCon->SetSegComp(muon::segmentCompatibility(*iMuon));
-            muCon->SetNumberOfMatchedStations(iMuon->numberOfMatchedStations());
-            muCon->SetNumberOfMatches(iMuon->numberOfMatches());
-            
-            if (iMuon->isGlobalMuon()){
-              muCon->SetNormalizedChi2(       iMuon->globalTrack()->normalizedChi2());
-              muCon->SetNumberOfValidMuonHits(iMuon->globalTrack()->hitPattern().numberOfValidMuonHits());
-            }
-            else{
-              muCon->SetNormalizedChi2(-1);
-              muCon->SetNumberOfValidMuonHits(-1);
-            }
-
-            if (iMuon->isTrackerMuon()){
-              muCon->SetVtx(iMuon->track()->vx(),iMuon->track()->vy(),iMuon->track()->vz());
-              muCon->SetPtError(iMuon->track()->ptError());
-              
-              muCon->SetTrackLayersWithMeasurement(iMuon->track()->hitPattern().trackerLayersWithMeasurement());
-              muCon->SetNumberOfValidPixelHits(    iMuon->innerTrack()->hitPattern().numberOfValidPixelHits());
-              muCon->SetNormalizedChi2_tracker(    iMuon->innerTrack()->normalizedChi2());
-              muCon->SetNumberOfValidTrackerHits(iMuon->track()->hitPattern().numberOfValidTrackerHits());
-              muCon->SetNumberOfLostPixelHits(   iMuon->track()->hitPattern().numberOfLostPixelHits());
-              muCon->SetNumberOfLostTrackerHits( iMuon->track()->hitPattern().numberOfLostTrackerHits());
-            }
-            else{
-              muCon->SetVtx(-1,-1,-1);
-              muCon->SetPtError(-1);
-              muCon->SetTrackLayersWithMeasurement(-1);
-              muCon->SetNumberOfValidPixelHits(-1);
-              muCon->SetNormalizedChi2_tracker(-1);
-              muCon->SetNumberOfValidTrackerHits(-1);
-              muCon->SetNumberOfLostPixelHits(-1);
-              muCon->SetNumberOfLostTrackerHits(-1);
-            }
-            // Set isolation map values
-            // Detector-based isolation
->>>>>>> dev-andrey
-
-
-
   ///////////////
   // Get muons //
   ///////////////
@@ -396,6 +328,71 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
   if (saveMuons_) {
 
+    Handle<vector<reco::Muon> > muons;
+    iEvent.getByLabel(muonTag_, muons);
+
+    for (vector<reco::Muon>::const_iterator iMuon = muons->begin(); iMuon != muons->end(); ++iMuon) {
+      //if (!iMuon->isGlobalMuon() || iMuon->pt() < 3.) continue;
+      //if (iMuon->pt() < 3.) continue;
+      //if (!iMuon->isGlobalMuon()) continue;
+
+      TCMuon* muCon = new ((*recoMuons)[muCount]) TCMuon;
+
+      muCon->SetPxPyPzE(iMuon->px(), iMuon->py(), iMuon->pz(), iMuon->energy());
+      muCon->SetCharge(iMuon->charge());
+
+      muCon->SetIsPF(iMuon->isPFMuon());
+      muCon->SetIsGLB(iMuon->isGlobalMuon());
+      muCon->SetIsTRK(iMuon->isTrackerMuon());
+
+      if (primaryVtcs->size()>0){
+        muCon->SetIsTight(muon::isTightMuon(*iMuon, *primaryVtcs->begin()));
+        //isSoftMuon is not available in CMSSW_5_3_8, where I'm working, will include it in a later versions
+        //muCon->SetIsSoft( muon::isSoftMuon( *iMuon, *primaryVtcs->begin()));
+        muCon->SetIsSoft(0);                
+      }
+      else{
+        muCon->SetIsTight(0);
+        muCon->SetIsSoft(0);
+      }
+
+      muCon->SetCaloComp(iMuon->caloCompatibility());
+      muCon->SetSegComp(muon::segmentCompatibility(*iMuon));
+      muCon->SetNumberOfMatchedStations(iMuon->numberOfMatchedStations());
+      muCon->SetNumberOfMatches(iMuon->numberOfMatches());
+
+      if (iMuon->isGlobalMuon()){
+        muCon->SetNormalizedChi2(       iMuon->globalTrack()->normalizedChi2());
+        muCon->SetNumberOfValidMuonHits(iMuon->globalTrack()->hitPattern().numberOfValidMuonHits());
+      }
+      else{
+        muCon->SetNormalizedChi2(-1);
+        muCon->SetNumberOfValidMuonHits(-1);
+      }
+
+      if (iMuon->isTrackerMuon()){
+        muCon->SetVtx(iMuon->track()->vx(),iMuon->track()->vy(),iMuon->track()->vz());
+        muCon->SetPtError(iMuon->track()->ptError());
+
+        muCon->SetTrackLayersWithMeasurement(iMuon->track()->hitPattern().trackerLayersWithMeasurement());
+        muCon->SetNumberOfValidPixelHits(    iMuon->innerTrack()->hitPattern().numberOfValidPixelHits());
+        muCon->SetNormalizedChi2_tracker(    iMuon->innerTrack()->normalizedChi2());
+        muCon->SetNumberOfValidTrackerHits(iMuon->track()->hitPattern().numberOfValidTrackerHits());
+        muCon->SetNumberOfLostPixelHits(   iMuon->track()->hitPattern().numberOfLostPixelHits());
+        muCon->SetNumberOfLostTrackerHits( iMuon->track()->hitPattern().numberOfLostTrackerHits());
+      }
+      else{
+        muCon->SetVtx(-1,-1,-1);
+        muCon->SetPtError(-1);
+        muCon->SetTrackLayersWithMeasurement(-1);
+        muCon->SetNumberOfValidPixelHits(-1);
+        muCon->SetNormalizedChi2_tracker(-1);
+        muCon->SetNumberOfValidTrackerHits(-1);
+        muCon->SetNumberOfLostPixelHits(-1);
+        muCon->SetNumberOfLostTrackerHits(-1);
+      }
+      // Set isolation map values
+      // Detector-based isolation
       muCon->SetIsoMap("NTracks_R03", iMuon->isolationR03().nTracks);
       muCon->SetIsoMap("EmIso_R03", iMuon->isolationR03().emEt);
       muCon->SetIsoMap("HadIso_R03", iMuon->isolationR03().hadEt);
@@ -706,24 +703,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       }
     }
 
-<<<<<<< HEAD
-    //////////////////////
-    // Get genParticles //
-    //////////////////////
-=======
-        //////////////////////
-        // Get genParticles //
-        //////////////////////
-
-        if (saveGenParticles_) {
-            Handle<GenParticleCollection> genParticleColl;
-            iEvent.getByLabel("genParticles", genParticleColl);
-
-            for (GenParticleCollection::const_iterator iGenPart = genParticleColl->begin(); iGenPart != genParticleColl->end(); ++iGenPart) {
-                const reco::GenParticle myParticle = reco::GenParticle(*iGenPart);
-
->>>>>>> dev-andrey
-
     if (saveGenParticles_) {
       Handle<GenParticleCollection> genParticleColl;
       iEvent.getByLabel("genParticles", genParticleColl);
@@ -909,13 +888,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     }
   } 
 
-<<<<<<< HEAD
   for(unsigned int t = 1; t<hlNames.size();t++){  
     analyzeTrigger(hltResults, hltEvent, hlNames[t], &trigCount);       
   }                                               
 
   ++nEvents;
-=======
     if (!skimLepton_)
       eventTree -> Fill();
     else if(skimLepton_ && (eleCount > 0 || muCount > 0)) // possibly specify a cut in configuration
@@ -930,19 +907,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     triggerObjects-> Clear("C");
     genJets       -> Clear("C");
     genParticles  -> Clear("C");
->>>>>>> dev-andrey
-
-  /*if (eleCount == 0 || muCount == 0)*/  eventTree -> Fill(); // possibly specify a cut in configuration
-
-  primaryVtx    -> Clear("C");
-  recoJets      -> Clear("C");
-  recoJPT       -> Clear("C");
-  recoMuons     -> Clear("C");
-  recoElectrons -> Clear("C");
-  recoPhotons   -> Clear("C");
-  triggerObjects-> Clear("C");
-  genJets       -> Clear("C");
-  genParticles  -> Clear("C");
 }
 
 // ------------ method called once each job just before starting event loop  ------------

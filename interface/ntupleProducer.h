@@ -245,6 +245,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   edm::ParameterSet photonIsoCalcTag_;
   edm::InputTag triggerEventTag_;
 
+  bool skimLepton_;
   bool saveJets_;
   bool saveElectrons_;
   bool saveMuons_;
