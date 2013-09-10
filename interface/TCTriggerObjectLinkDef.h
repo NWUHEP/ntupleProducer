@@ -1,4 +1,4 @@
-#include "../interface/TCTriggerObject.h"
+#include "TCTriggerObject.h"
 #ifdef __CINT__
 #pragma link C++ class TCTriggerObject;
 #endif

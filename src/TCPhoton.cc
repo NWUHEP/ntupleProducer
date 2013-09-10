@@ -1,4 +1,5 @@
 #include "../interface/TCPhoton.h"
+#include "../interface/TCPhotonLinkDef.h"
 #include <iostream>
 
 
@@ -28,7 +29,7 @@ TCPhoton::TCPhoton() {
 }
 
 
-TCPhoton::~TCPhoton() { }
+TCPhoton::~TCPhoton() { delete[] _crysArray; }
 
 // "get" methods -------------------------------------
 

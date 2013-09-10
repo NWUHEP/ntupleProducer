@@ -1,6 +1,7 @@
 #ifndef _TCPHOTON_H
 #define	_TCPHOTON_H
 
+#include <memory>
 #include "TObject.h"
 #include "TLorentzVector.h"
 #include "TArrayF.h"

@@ -187,11 +187,13 @@ class ntupleProducer : public edm::EDAnalyzer {
   
   virtual bool  triggerDecision(edm::Handle<edm::TriggerResults>& hltR, int iTrigger);
   virtual float sumPtSquared(const Vertex& v);
-  virtual bool  associateJetToVertex(reco::PFJet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet *outJet);   
+  virtual bool  associateJetToVertex(reco::PFJet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet* outJet);   
   virtual void  electronMVA(const reco::GsfElectron* iElectron, TCElectron* eleCon, const edm::Event& iEvent,const edm::EventSetup& iSetup, const reco::PFCandidateCollection& PFCandidates, float Rho);
   virtual bool  isFilteredOutScraping(const edm::Event& iEvent, const edm::EventSetup& iSetup, int numtrack=10, double thresh=0.25);
   virtual float MatchBTagsToJets(const reco::JetTagCollection, const reco::PFJet);
   void analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR, edm::Handle<trigger::TriggerEvent> &hltE, const std::string& triggerName, int* trigCount);                   
+  void initJetEnergyCorrector(const edm::EventSetup &iSetup, bool isData);
+  TCGenParticle* addGenParticle(const reco::GenParticle* myParticle, int& genPartCount, std::map<const reco::GenParticle*,TCGenParticle*>& genMap);
   // ----------member data ---------------------------
   
   struct JetCompare :
@@ -221,6 +223,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   TTree* jobTree;
 
   edm::InputTag jetTag_;
+  string        jecTag_;
   edm::InputTag metTag_;
   edm::InputTag trackmetTag_; 
   edm::InputTag t0metTag_;
@@ -243,6 +246,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   edm::InputTag trkPOGFiltersTag3_;
   edm::InputTag partFlowTag_;
   edm::ParameterSet photonIsoCalcTag_;
+  edm::ParameterSet jetPUIdAlgo_;
   edm::InputTag triggerEventTag_;
 
   bool skimLepton_;
@@ -269,12 +273,12 @@ class ntupleProducer : public edm::EDAnalyzer {
   TClonesArray* triggerObjects;
   TClonesArray* genJets;
   TClonesArray* genParticles;
-  TCMET*        recoMET;
-  TCMET*	track_MET; //Added by Rafael on May 28th
-  TCMET*	T0MET; //Added by Rafael on July 3rd
-  TCMET*	T2MET; //Added by Rafael on July 3rd
-  TCMET*        recoMET_corr;
-  TCMET*        mva_MET;
+  auto_ptr<TCMET>   recoMET;
+  auto_ptr<TCMET>   track_MET;
+  auto_ptr<TCMET>	  T0MET; 
+  auto_ptr<TCMET>	  T2MET;
+  auto_ptr<TCMET>   recoMET_corr;
+  auto_ptr<TCMET>   mva_MET;
 
   //Vertex info
   TClonesArray* primaryVtx;
@@ -302,6 +306,10 @@ class ntupleProducer : public edm::EDAnalyzer {
   TH1F * h1_numOfEvents;
 
   // Electron Regression
-  ElectronEnergyRegressionEvaluate* myEleReg;
+  auto_ptr<ElectronEnergyRegressionEvaluate> myEleReg;
+
+  // PU Jet Id Algo
+  auto_ptr<PileupJetIdAlgo> myPUJetID;
+  auto_ptr<FactorizedJetCorrector> jecCor;
   
 };

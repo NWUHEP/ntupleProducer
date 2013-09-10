@@ -38,6 +38,10 @@ class TCJet : public TCPhysObject {
         // Jet flavor
         int   _jetFlavor;
 
+        // Hgg style Jet Id vars
+        float _betaStarClassic;
+        float _dR2Mean;
+
     public:
         TCJet();
         virtual ~TCJet();
@@ -66,6 +70,10 @@ class TCJet : public TCPhysObject {
         // Jet flavor
         int   JetFlavor() const;
 
+        // Hgg style Jet Id vars
+        float BetaStarClassic() const;
+        float DR2Mean() const;
+
         // "set" methods ---------
         void SetVtxSumPtFrac(float f);
         void SetVtxSumPt(float p);
@@ -88,6 +96,10 @@ class TCJet : public TCPhysObject {
 
         // Jet flavor
         void SetJetFlavor(float f);
+
+        // Hgg style Jet Id vars
+        void SetBetaStarClassic(float b);
+        void SetDR2Mean(float d);
 
         ClassDef(TCJet, 1);
 

@@ -10,31 +10,23 @@
 
 class TCGenParticle : public TCPhysObject {
     private:
-        int mother;
-        int grandmother;
+        TCGenParticle* mother;
         int PDGID;
         unsigned status;
         bool isParton_;
 
-        //    std::vector<int> daughters;
 
     public:
         TCGenParticle();
         virtual ~TCGenParticle();
 
-        int Mother();
-        int Grandmother();
+        TCGenParticle* Mother();
         int GetPDGId();
         unsigned GetStatus();
 
         bool IsParton();
 
-        //    std::vector<int> GetDaughters();
-
-        // "set" methods ---------
-        //    void AddDaughter(int d);
-        void SetMother(int m);
-        void SetGrandmother(int g);
+        void SetMother(TCGenParticle* m);
         void SetPDGId(int pdg_id);
         void SetStatus(unsigned s);
 

@@ -1,4 +1,5 @@
 #include "../interface/TCMuon.h"
+#include "../interface/TCMuonLinkDef.h"
 #include <iostream>
 
 TCMuon::TCMuon() {

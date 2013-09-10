@@ -1,7 +1,9 @@
 #include "../interface/TCGenParticle.h"
+#include "../interface/TCGenParticleLinkDef.h"
 #include <iostream>
 
 TCGenParticle::TCGenParticle() {
+  mother = 0;
 }
 
 TCGenParticle::~TCGenParticle() {
@@ -9,12 +11,8 @@ TCGenParticle::~TCGenParticle() {
 
 // "get" methods -------------------------------------
 
-int TCGenParticle::Mother() {
+TCGenParticle* TCGenParticle::Mother() {
     return mother;
-}
-
-int TCGenParticle::Grandmother() {
-    return grandmother;
 }
 
 int TCGenParticle::GetPDGId() {
@@ -29,22 +27,9 @@ bool TCGenParticle::IsParton() {
     return isParton_;
 }
 
-//std::vector<int> TCGenParticle::GetDaughters() {
-//   return daughters;
-//}
 
-// "set" methods ---------------------------------------------
-
-//void TCGenParticle::AddDaughter(int d) {
-//   daughters.push_back(d);
-//}
-
-void TCGenParticle::SetMother(int m) {
+void TCGenParticle::SetMother(TCGenParticle* m) {
     mother = m;
-}
-
-void TCGenParticle::SetGrandmother(int g) {
-    grandmother = g;
 }
 
 void TCGenParticle::SetPDGId(int pdg_id) {

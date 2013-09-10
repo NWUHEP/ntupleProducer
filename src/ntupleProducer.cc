@@ -1,9 +1,9 @@
 #include "../interface/ntupleProducer.h"
-#include "DataFormats/EcalRecHit/interface/EcalRecHitCollections.h"
 
 ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
 {
   jetTag_           = iConfig.getUntrackedParameter<edm::InputTag>("JetTag");
+  jecTag_           = iConfig.getParameter<std::string>("JecTag");
   metTag_           = iConfig.getUntrackedParameter<edm::InputTag>("METTag");
   trackmetTag_      = iConfig.getUntrackedParameter<edm::InputTag>("TrackMETTag"); 
   t0metTag_         = iConfig.getUntrackedParameter<edm::InputTag>("T0METTag"); 
@@ -49,6 +49,7 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
   trkPOGFiltersTag2_  = iConfig.getUntrackedParameter<edm::InputTag>("trkPOGFiltersTag2");
   trkPOGFiltersTag3_  = iConfig.getUntrackedParameter<edm::InputTag>("trkPOGFiltersTag3");
   photonIsoCalcTag_   = iConfig.getParameter<edm::ParameterSet>("photonIsoCalcTag");
+  jetPUIdAlgo_        = iConfig.getParameter<edm::ParameterSet>("jetPUIdAlgo");
 }
 
 ntupleProducer::~ntupleProducer()
@@ -169,7 +170,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
       if (iJet->pt() < 10.) continue;
 
-      TCJet* jetCon = new ((*recoJets)[jetCount]) TCJet;
+      TCJet* jetCon (new ((*recoJets)[jetCount]) TCJet);
 
       jetCon->SetPxPyPzE(iJet->px(), iJet->py(), iJet->pz(), iJet->energy());
       jetCon->SetVtx(0., 0., 0.);
@@ -191,6 +192,34 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       jetCon->SetBDiscriminatorMap("CSV", MatchBTagsToJets(bTagsCSV, *iJet));
       jetCon->SetBDiscriminatorMap("CSVMVA", MatchBTagsToJets(bTagsCSVMVA, *iJet));
 
+      /////////////////////
+      // Get Hgg Id vars //
+      /////////////////////
+     
+      PileupJetIdentifier puIdentifier;
+      // giving uncorrected input, must double check on this
+      float jec = 1.;
+      // jet corrector
+      if( jecCor.get() == 0 ) {
+        initJetEnergyCorrector( iSetup, iEvent.isRealData() );
+      }
+      jecCor->setJetPt(iJet->pt());
+      jecCor->setJetEta(iJet->eta());
+      jecCor->setJetA(iJet->jetArea());
+      jecCor->setRho(rhoFactor);
+      jec = jecCor->getCorrection();
+      //cout<<"jec:\t"<<jec<<endl;
+      VertexCollection::const_iterator vtx;
+      const VertexCollection & vertexes = *(primaryVtcs.product());
+      vtx = vertexes.begin();
+      while( vtx != vertexes.end() && ( vtx->isFake() || vtx->ndof() < 4 ) ) {
+        ++vtx;
+      }
+      if( vtx == vertexes.end() ) { vtx = vertexes.begin(); }
+      puIdentifier = myPUJetID->computeIdVariables(&(*iJet), jec,  &(*vtx),  vertexes, false);
+      //cout<<"betaStarClassic:\t"<<puIdentifier.betaStarClassic()<<"\t"<<"dR2Mean:\t"<<puIdentifier.dR2Mean()<<endl;
+      jetCon->SetBetaStarClassic(puIdentifier.betaStarClassic());
+      jetCon->SetDR2Mean(puIdentifier.dR2Mean());
 
       /////////////////////////
       // Associate to vertex //
@@ -609,8 +638,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 
       }//end of for (unsigned int y =0; y < crystalinfo_container.size();y++
-      TCPhoton::CrystalInfo * savedCrystals = myPhoton->GetCrystalArray();
       /*
+      TCPhoton::CrystalInfo * savedCrystals = myPhoton->GetCrystalArray();
          for (int y = 0; y< myPhoton->GetNCrystals();y++){
          std::cout << "savedCrystals[y].time : " << savedCrystals[y].time << std::endl; 
          std::cout << "savedCrystals[y].timeErr : " << savedCrystals[y].timeErr << std::endl;
@@ -703,53 +732,37 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       }
     }
 
+    //////////////////////
+    // Get genParticles //
+    //////////////////////
+
     if (saveGenParticles_) {
       Handle<GenParticleCollection> genParticleColl;
       iEvent.getByLabel("genParticles", genParticleColl);
 
-      for (GenParticleCollection::const_iterator iGenPart = genParticleColl->begin(); iGenPart != genParticleColl->end(); ++iGenPart) {
-        const reco::GenParticle myParticle = reco::GenParticle(*iGenPart);
+      map<const reco::GenParticle*, TCGenParticle*> genMap;
+      TCGenParticle* genCon;
+      for (GenParticleCollection::const_iterator myParticle= genParticleColl->begin(); myParticle != genParticleColl->end(); ++myParticle) {
 
         ////  Leptons and photons and b's, (oh my)
-        if (
-            (
-             (abs(myParticle.pdgId()) >= 11 && abs(myParticle.pdgId()) <= 16) 
-             || myParticle.pdgId() == 22 
-             || abs(myParticle.pdgId()) == 5 
-            )
-           ) {
-
-          TCGenParticle* genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
-          genCon->SetPxPyPzE(myParticle.px(), myParticle.py(), myParticle.pz(), myParticle.energy() );
-          genCon->SetVtx(myParticle.vx(), myParticle.vy(), myParticle.vz());
-          genCon->SetCharge(myParticle.charge());
-          genCon->SetPDGId(myParticle.pdgId());
-          genCon->SetMother(myParticle.mother()->pdgId());
-          genCon->SetStatus(myParticle.status());
-          if (myParticle.mother()->numberOfMothers() != 0) genCon->SetGrandmother(myParticle.mother()->mother()->pdgId());
-          ++genPartCount;
-        }
-
         //// Z's, W's, H's, and now big juicy Gravitons
         if (
-            abs(myParticle.pdgId()) == 23 
-            || abs(myParticle.pdgId()) == 24 
-            || abs(myParticle.pdgId()) == 25 
-            || abs(myParticle.pdgId()) == 35 
-            || abs(myParticle.pdgId()) == 36 
-            || abs(myParticle.pdgId()) == 39
-           ){
+            (
+             (abs(myParticle->pdgId()) >= 11 && abs(myParticle->pdgId()) <= 16) 
+             || myParticle->pdgId() == 22 
+             || abs(myParticle->pdgId()) == 5 
+             || abs(myParticle->pdgId()) == 23 
+             || abs(myParticle->pdgId()) == 24 
+             || abs(myParticle->pdgId()) == 25 
+             || abs(myParticle->pdgId()) == 35 
+             || abs(myParticle->pdgId()) == 36 
+             || abs(myParticle->pdgId()) == 39
+            )
+           ) {
+          genCon = addGenParticle(&(*myParticle), genPartCount, genMap);
 
-
-          TCGenParticle* genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
-          genCon->SetPxPyPzE(myParticle.px(), myParticle.py(), myParticle.pz(), myParticle.energy() );
-          genCon->SetVtx(myParticle.vx(), myParticle.vy(), myParticle.vz() );
-          genCon->SetCharge(myParticle.charge());
-          genCon->SetPDGId(myParticle.pdgId());
-          genCon->SetMother(myParticle.mother()->pdgId());
-          genCon->SetStatus(myParticle.status());
-          ++genPartCount;
         }
+
       }
     }
 
@@ -898,6 +911,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     else if(skimLepton_ && (eleCount > 0 || muCount > 0)) // possibly specify a cut in configuration
       eventTree -> Fill();
       
+    beamSpot->Clear();
     primaryVtx    -> Clear("C");
     recoJets      -> Clear("C");
     recoJPT       -> Clear("C");
@@ -925,11 +939,11 @@ void  ntupleProducer::beginJob()
   genJets        = new TClonesArray("TCGenJet");
   genParticles   = new TClonesArray("TCGenParticle");
   beamSpot       = new TVector3();
-  recoMET        = 0;
-  track_MET      = 0; //Added by Rafael on May 28th
-  T0MET          = 0; //Added by Rafael on July 3rd
-  T2MET          = 0; //Added by Rafael on July 3rd
-  mva_MET        = 0;
+  recoMET.reset(new TCMET);
+  track_MET.reset(new TCMET);
+  T0MET.reset(new TCMET);
+  T2MET.reset(new TCMET);
+  mva_MET.reset(new TCMET);
 
   h1_numOfEvents = fs->make<TH1F>("numOfEvents", "total number of events, unskimmed", 1,0,1);
 
@@ -938,11 +952,11 @@ void  ntupleProducer::beginJob()
   eventTree->Branch("recoElectrons",&recoElectrons, 6400, 0);
   eventTree->Branch("recoMuons",&recoMuons, 6400, 0);
   eventTree->Branch("recoPhotons",&recoPhotons, 6400, 0);
-  eventTree->Branch("recoMET", &recoMET, 6400, 0);
-  eventTree->Branch("mva_MET", &mva_MET, 6400, 0);
-  eventTree->Branch("track_MET", &track_MET, 6400, 0); //Added by Rafael on May 28th
-  eventTree->Branch("T0MET", &T0MET, 6400, 0); //Added by Rafael on May 28th
-  eventTree->Branch("T2MET", &T2MET, 6400, 0); //Added by Rafael on May 28th
+  eventTree->Branch("recoMET", recoMET.get(), 6400, 0);
+  eventTree->Branch("mva_MET", mva_MET.get(), 6400, 0);
+  eventTree->Branch("track_MET", track_MET.get(), 6400, 0); 
+  eventTree->Branch("T0MET", T0MET.get(), 6400, 0); 
+  eventTree->Branch("T2MET", T2MET.get(), 6400, 0); 
   eventTree->Branch("triggerObjects", &triggerObjects, 6400, 0);
   eventTree->Branch("genJets",&genJets, 6400, 0);
   eventTree->Branch("genParticles",&genParticles, 6400, 0);
@@ -988,7 +1002,7 @@ void  ntupleProducer::beginJob()
   eleIsolator.setConeSize(0.4);
 
   // Initialize Electron Regression
-  myEleReg = new ElectronEnergyRegressionEvaluate();
+  myEleReg.reset(new ElectronEnergyRegressionEvaluate());
   //myEleReg->initialize(mvaPath+"/src/data/eleEnergyRegWeights_V1.root",
 
   string mvaPath = getenv("CMSSW_BASE");
@@ -999,6 +1013,10 @@ void  ntupleProducer::beginJob()
 
   if (verboseMVAs) cout<<"mvaPath: "<<mvaPath<<endl;
   if (verboseMVAs) cout<<"MVA electron regression shit probably has initialized"<<endl;
+
+  // Initialize Jet PU ID
+  myPUJetID.reset(new PileupJetIdAlgo(jetPUIdAlgo_));
+
 }
 
 void ntupleProducer::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
@@ -1669,6 +1687,62 @@ float ntupleProducer::MatchBTagsToJets(const reco::JetTagCollection bTags,const 
 
   return discrValue;
 }
+
+void ntupleProducer::initJetEnergyCorrector(const edm::EventSetup &iSetup, bool isData)
+{
+  //jet energy correction levels to apply on raw jet
+  std::vector<JetCorrectorParameters> jetCorPars_;
+  std::vector<std::string> jecLevels;
+  jecLevels.push_back("L1FastJet");
+  jecLevels.push_back("L2Relative");
+  jecLevels.push_back("L3Absolute");
+  if(isData) jecLevels.push_back("L2L3Residual");
+
+  //check the corrector parameters needed according to the correction levels
+  edm::ESHandle<JetCorrectorParametersCollection> parameters;
+  iSetup.get<JetCorrectionsRecord>().get(jecTag_,parameters);
+  for(std::vector<std::string>::const_iterator ll = jecLevels.begin(); ll != jecLevels.end(); ++ll)
+  { 
+    const JetCorrectorParameters& ip = (*parameters)[*ll];
+    jetCorPars_.push_back(ip); 
+  } 
+
+  //instantiate the jet corrector
+  jecCor.reset(new FactorizedJetCorrector(jetCorPars_));
+}
+
+
+TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticle, int& genPartCount, map<const reco::GenParticle*,TCGenParticle*>& genMap)
+{
+  TCGenParticle* genCon;
+  map<const reco::GenParticle*,TCGenParticle*>::iterator it;
+  it = genMap.find(myParticle);
+  if (it == genMap.end()){
+    genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
+    ++genPartCount;
+    genMap[myParticle] = genCon;
+    genCon->SetPxPyPzE(myParticle->px(), myParticle->py(), myParticle->pz(), myParticle->energy() );
+    genCon->SetVtx(myParticle->vx(), myParticle->vy(), myParticle->vz());
+    genCon->SetCharge(myParticle->charge());
+    genCon->SetPDGId(myParticle->pdgId());
+    genCon->SetStatus(myParticle->status());
+    map<const reco::GenParticle*,TCGenParticle*>::iterator momIt;
+    if (myParticle->numberOfMothers() == 0){
+      genCon->SetMother(0);
+    }else{
+      momIt = genMap.find((const reco::GenParticle*)myParticle->mother());
+      if (momIt == genMap.end()){
+        genCon->SetMother(addGenParticle((const reco::GenParticle*)myParticle->mother(), genPartCount, genMap));
+      }else{
+        genCon->SetMother(momIt->second);
+      }
+    }
+  }else{
+    genCon = it->second;
+  }
+  return genCon;
+}
+
 
 //define this as a plug-in
 DEFINE_FWK_MODULE(ntupleProducer);

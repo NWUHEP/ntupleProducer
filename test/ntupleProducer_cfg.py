@@ -141,11 +141,11 @@ process.ak5JetTracksAssociatorAtCaloFace.jets = cms.InputTag("ak5PFJetsL1FastL2L
 process.ak5JetExtender.jets = cms.InputTag("ak5PFJetsL1FastL2L3")
 
 # jpt extras
-process.load("RecoJets.Configuration.RecoPFJets_cff")
-process.load("RecoJets.Configuration.RecoJPTJets_cff")
-process.load("RecoJets.JetAssociationProducers.ak5JTA_cff")
-process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
-process.load('JetMETCorrections.Configuration.JetCorrectionServices_cff')
+#process.load("RecoJets.Configuration.RecoPFJets_cff")
+#process.load("RecoJets.Configuration.RecoJPTJets_cff")
+#process.load("RecoJets.JetAssociationProducers.ak5JTA_cff")
+#process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
+#process.load('JetMETCorrections.Configuration.JetCorrectionServices_cff')
 
 
 process.kt6PFJetsIso = process.kt6PFJets.clone()
@@ -153,18 +153,21 @@ process.kt6PFJetsIso.doRhoFastjet = True
 process.kt6PFJetsIso.Rho_EtaMax = cms.double(2.5)
 
 
-process.ak5JPTL1Offset.algorithm = 'AK5JPT'
-process.ak5JetTracksAssociatorAtVertex.useAssigned = cms.bool(True)
-process.ak5JetTracksAssociatorAtVertex.pvSrc = cms.InputTag("offlinePrimaryVertices")
+#process.ak5JPTL1Offset.algorithm = 'AK5JPT'
+#process.ak5JetTracksAssociatorAtVertex.useAssigned = cms.bool(True)
+#process.ak5JetTracksAssociatorAtVertex.pvSrc = cms.InputTag("offlinePrimaryVertices")
 #process.ak5JetTracksAssociatorAtVertex.pvSrc = cms.InputTag("offlinePrimaryVerticesWithBS")
 
-process.jpt = cms.Sequence(
-                        process.ak5JTA
-                        * process.recoJPTJets
-                        * process.ak5JPTJetsL1L2L3
-                        * process.kt6PFJets
-                        * process.ak5PFJetsL1FastL2L3
-                        )
+#process.jpt = cms.Sequence(
+#                        process.ak5JTA
+#                        * process.recoJPTJets
+#                        * process.ak5JPTJetsL1L2L3
+#                        * process.kt6PFJets
+#                        * process.ak5PFJetsL1FastL2L3
+#                        )
+
+# for jet pileup ID variables
+from RecoJets.JetProducers.PileupJetIDParams_cfi import *
 
 # pat sequences
 process.load("PhysicsTools.PatAlgos.patSequences_cff")
@@ -330,8 +333,10 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   verboseMVAs          =    cms.untracked.bool(False),
 
   photonIsoCalcTag  =    cms.PSet(isolationSumsCalculator),
+  jetPUIdAlgo       =    cms.PSet(full_5x),
 
   JetTag            =    cms.untracked.InputTag('ak5PFJetsL1FastL2L3'),
+  JecTag            =    cms.string("AK5PF"),
   GenJetTag         =    cms.untracked.InputTag('ak5GenJets'),
   METTag            =    cms.untracked.InputTag('pfType1CorrectedMet'),
   TrackMETTag       =    cms.untracked.InputTag('trackMet'),

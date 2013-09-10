@@ -6,6 +6,7 @@
  */
 
 #include "../interface/TCGenJet.h"
+#include "../interface/TCGenJetLinkDef.h"
 
 TCGenJet::TCGenJet() {}
 
