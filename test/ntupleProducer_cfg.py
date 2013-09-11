@@ -1,11 +1,29 @@
 import FWCore.ParameterSet.Config as cms
+import FWCore.ParameterSet.VarParsing as VarParsing
 from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 
 process = cms.Process("NTUPLE")
 
-# real data or MC?
-isRealData = False
+### For debugging ###
+#service = ProfilerService {
+#       firstEvent = 2,
+#       lastEvent = 51,
+#       paths = { "p1"}
+#}
 
+# Options 
+options = VarParsing.VarParsing ('analysis')
+options.maxEvents = 100
+options.inputFiles = '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
+                     #'/store/data/Run2012C/SingleMu/AOD/22Jan2013-v1/30010/C0E05558-9078-E211-9E02-485B39800B65.root', \
+                     #'/store/data/Run2012D/DoubleMu/AOD/PromptReco-v1/000/208/341/285B355D-553D-E211-A3FC-BCAEC532971E.root',\
+                     #'/store/user/andrey/hzgamma_pythia8_153_8TeV_v2_HLT/hzgamma_pythia8_153_8TeV_v2_HLT/53f675467979b3dab12ab0598ae228db/hzgamma_pythia8_py_GEN_SIM_DIGI_L1_DIGI2RAW_HLT_RAW2DIGI_RECO_PU_100_1_82E.root'
+
+options.register("isRealData", 0, VarParsing.VarParsing.multiplicity.singleton, VarParsing.VarParsing.varType.int, "0 if running on MC and 1 if running on Data")
+
+options.parseArguments()
+
+isRealData = options.isRealData
 
 # global tag
 process.load("Configuration.Geometry.GeometryIdeal_cff")
@@ -13,7 +31,7 @@ process.load("Configuration.StandardSequences.MagneticField_cff")
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.load('Configuration.StandardSequences.Reconstruction_cff')
 
-if (isRealData):
+if isRealData:
     process.GlobalTag.globaltag = 'FT_53_V21_AN3::All'
     process.load('JetMETCorrections.METPUSubtraction.mvaPFMET_leptons_data_cff')
 else:
@@ -105,7 +123,7 @@ process.pfType1CorrectedMetType0.srcType1Corrections = cms.VInputTag(
 process.load("RecoMET.METProducers.pfChargedMET_cfi")
 process.load("RecoMET.METProducers.TrackMET_cfi")
 
-if (isRealData):
+if isRealData:
     process.pfJetMETcorr.jetCorrLabel = cms.string("ak5PFL1FastL2L3Residual")
 
     # 53X b-jet discriminator calibration
@@ -245,26 +263,6 @@ process.pfNoPUSeq = cms.Sequence(process.pfPileUp + process.pfNoPileUp)
 
 process.load("PhysicsTools.JetMCAlgos.CaloJetsMCFlavour_cfi")
 
-# Flavour by reference 
-process.GenJetbyRef = cms.EDProducer("JetPartonMatcher", 
-                                     jets = cms.InputTag("ak5GenJets"), 
-                                     coneSizeToAssociate = cms.double(0.3), 
-                                     partons = cms.InputTag("myPartons") 
-                                     ) 
-# Flavour by value PhysDef 
-process.GenJetbyValPhys = cms.EDProducer("JetFlavourIdentifier", 
-                                         srcByReference = cms.InputTag("GenJetbyRef"), 
-                                         physicsDefinition = cms.bool(True), 
-                                         leptonInfo = cms.bool(True) 
-                                         ) 
-# Flavour by value AlgoDef 
-process.GenJetbyValAlgo = cms.EDProducer("JetFlavourIdentifier", 
-                                         srcByReference = cms.InputTag("GenJetbyRef"), 
-                                         physicsDefinition = cms.bool(False), 
-                                         leptonInfo = cms.bool(True) 
-                                         ) 
-process.GenJetFlavour = cms.Sequence(process.GenJetbyRef*process.GenJetbyValPhys*process.GenJetbyValAlgo)
-
 
 # Flavour by reference
 process.JetbyRef = cms.EDProducer("JetPartonMatcher",
@@ -287,23 +285,11 @@ process.JetbyValAlgo = cms.EDProducer("JetFlavourIdentifier",
 process.JetFlavour = cms.Sequence(process.JetbyRef*process.JetbyValPhys*process.JetbyValAlgo)
 
 # event source for running interactively
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
-process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring(
-	#'/store/mc/Summer12_DR53X/GluGluToHToWWTo2LAndTau2Nu_M-125_8TeV-powheg-pythia6/AODSIM/PU_S10_START53_V7A-v1/0000/DE5F727F-8BFC-E111-8576-002618FDA263.root'
-    #'root://eoscms//eos/cms/store/user/cmkuo/GluGluToHToZG_M-125_8TeV-powheg-pythia6/HZg_nunug_ggH_m125_RECO_v1/3664d28163503ca8171ba37083c39fc9/STEP2_RAW2DIGI_L1Reco_RECO_PU_100_1_fXq.root'
-    #'/store/data/Run2012D/SinglePhotonParked/AOD/22Jan2013-v1/30004/144D7268-4086-E211-9DC1-001E673984C1.root'
-    #'/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
-    '/store/mc/Summer12_DR53X/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/AODSIM/PU_S10_START53_V7C-v1/00000/FE7C71D8-DB25-E211-A93B-0025901D4C74.root'
-    #'/store/data/Run2012D/DoubleMu/AOD/PromptReco-v1/000/208/341/285B355D-553D-E211-A3FC-BCAEC532971E.root'
-    #'file:/tmp/naodell/TTJetsToHqToWWq_M-125_TuneZ2_8TeV_pythia6_v2_1_1_p64.root'
-)
-)
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(options.maxEvents))
+process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring(options.inputFiles))
 
 ### TFile service for output 
-process.TFileService = cms.Service('TFileService',
-                                  fileName = cms.string('nuTuple.root')
-                                   )
+process.TFileService = cms.Service('TFileService', fileName = cms.string('nuTuple.root'))
 
 
 print '\n\nCommence ntuplization...\n\n'
@@ -341,6 +327,11 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
   hltName           =    cms.untracked.string("HLT"),
   triggers          =    cms.untracked.vstring(
+                                               "HLT_IsoMu24_v", # Single Muon
+                                               "HLT_IsoMu24_eta2p1_v",
+
+                                               "HLT_Mu8_v", # Double Muon
+                                               "HLT_Mu15_v",
                                                "HLT_Mu13_Mu8_v",
                                                "HLT_Mu17_Mu8_v",
                                                "HLT_DoubleMu7_v",
@@ -348,31 +339,31 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_Mu22_TkMu8_v",
                                                "HLT_Mu22_TkMu22_v",
 
-                                               "HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL_v",
+                                               "HLT_Ele27_WP80_v", # Single Electron
+
+                                               "HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL_v", # Double Electron
                                                "HLT_Ele17_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_Ele8_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_v",
                                                "HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
                                                "HLT_Ele15_Ele8_Ele5_CaloIdL_TrkIdVL_v",
                                                "HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_v",
 
-                                               "HLT_Mu17_Ele8_CaloIdL_v",
+                                               "HLT_Mu17_Ele8_CaloIdL_v", #MuEG
                                                "HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v",
                                                "HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
                                                "HLT_Mu8_Ele17_CaloIdL_v",
                                                "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v",
                                                "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
+                                               "HLT_Mu22_Photon22_CaloIdL_v"
 
-                                               "HLT_Photon30_R9Id90_CaloId_HE10_Iso40_EBOnly_Met25_HBHENoiseCleaned",
-                                               "HLT_Photon30_R9Id90_CaloId_HE10_Iso40_EBOnly",
-                                               "HLT_Photon30",
-                                               "HLT_DiJet20_MJJ650_AllJets_DEta3p5_HT120_VBF",
-                                               "HLT_DiJet30_MJJ700_AllJets_DEta3p5_VBF",
-                                               "HLT_DiJet35_MJJ650_AllJets_DEta3p5_VBF",
-                                               "HLT_DiJet35_MJJ700_AllJets_DEta3p5_VBF",
-                                               "HLT_DiJet35_MJJ750_AllJets_DEta3p5_VBF"
+                                               "HLT_Photon36_CaloId10_Iso50_Photon22_CaloId10_Iso50_v", # Double Photon
+                                               "HLT_Photon36_CaloId10_Iso50_Photon22_R9Id85_v",
+                                               "HLT_Photon36_R9Id85_OR_CaloId10_Iso50_Photon22_R9Id85_OR_CaloId10_Iso50_v",
+                                               "HLT_Photon36_R9Id85_Photon22_CaloId10_Iso50_v",
+                                               "HLT_Photon36_R9Id85_Photon22_R9Id85_v",
 )
 )
 
-process.ntuplePath = cms.Path(
+process.preNtuple = cms.Sequence(
       process.goodOfflinePrimaryVertices
     * process.type0PFMEtCorrection 
     * process.pfMEtSysShiftCorrSequence
@@ -388,11 +379,9 @@ process.ntuplePath = cms.Path(
     * AllFilters
     * process.pfMEtMVAsequence
     * process.pfMet1
-
-    * process.myPartons #<-- For flavors, only in MC
-    #* process.GenJetFlavour
-    * process.JetFlavour # end for MC only
-
-    * process.ntupleProducer
+    * process.myPartons
+    * process.JetFlavour
 )
+
+process.ntuplePath = cms.Path(process.preNtuple * process.ntupleProducer)
 

@@ -149,7 +149,7 @@ void ntupleProducer::analyze(const Event& iEvent, const EventSetup& iSetup)
 
         for (vector<PFJet>::const_iterator iJet = jets->begin(); iJet != jets->end(); ++iJet) {
 
-            if (iJet->pt() < 15.) continue;
+            if (iJet->pt() < 20.) continue;
 
             TCJet* jetCon = new ((*recoJets)[jetCount]) TCJet;
 
@@ -190,7 +190,9 @@ void ntupleProducer::analyze(const Event& iEvent, const EventSetup& iSetup)
             // Associate to vertex //
             /////////////////////////
 
-            associateJetToVertex(*iJet, primaryVtcs, jetCon);
+            if (primaryVtcs->size() > 0) {
+                associateJetToVertex(*iJet, primaryVtcs, jetCon);
+            }
 
             ++jetCount;
         }   
@@ -317,8 +319,10 @@ void ntupleProducer::analyze(const Event& iEvent, const EventSetup& iSetup)
         iEvent.getByLabel(muonTag_, muons);
 
         for (vector<Muon>::const_iterator iMuon = muons->begin(); iMuon != muons->end(); ++iMuon) {
-            if (!iMuon->isGlobalMuon() || iMuon->pt() < 3.) continue;
-            //if (!iMuon->isGlobalMuon()) continue;
+            if (muCount == 0 and iMuon->pt() < 10.)
+                continue;
+            else if (iMuon->pt() < 3. || !iMuon->isGlobalMuon())
+                continue;
 
             TCMuon* muCon = new ((*recoMuons)[muCount]) TCMuon;
 
@@ -391,7 +395,10 @@ void ntupleProducer::analyze(const Event& iEvent, const EventSetup& iSetup)
         iEvent.getByLabel(electronTag_, electrons);
 
         for (vector<GsfElectron>::const_iterator iElectron = electrons->begin(); iElectron != electrons->end(); ++iElectron) {
-            if (iElectron->pt() < 10) continue;
+            if (eleCount == 0 && iElectron->pt() < 10) 
+                continue;
+            else if (iElectron->pt() < 5) 
+                continue;
 
             TCElectron* eleCon = new ((*recoElectrons)[eleCount]) TCElectron;
 
@@ -1326,8 +1333,8 @@ void ntupleProducer::electronMVA(const GsfElectron* iElectron, TCElectron* eleCo
         fMVAVar_NeutralHadronIso_DR0p3To0p4 = TMath::Max(TMath::Min((tmpNeutralHadronIso_DR0p3To0p4 - Rho*ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleNeutralHadronIsoDR0p3To0p4, iElectron->superCluster()->eta(), ElectronEffectiveArea::kEleEAData2012))/iElectron->pt(), 2.5), 0.0);
         fMVAVar_NeutralHadronIso_DR0p4To0p5 = TMath::Max(TMath::Min((tmpNeutralHadronIso_DR0p4To0p5 - Rho*ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleNeutralHadronIsoDR0p4To0p5, iElectron->superCluster()->eta(), ElectronEffectiveArea::kEleEAData2012))/iElectron->pt(), 2.5), 0.0);
     } else {
-        fMVAVar_ChargedIso_DR0p0To0p1   = TMath::Min((tmpChargedIso_DR0p0To0p1)/iElectron->pt(), 2.5);
-        fMVAVar_ChargedIso_DR0p1To0p2   = TMath::Min((tmpChargedIso_DR0p1To0p2)/iElectron->pt(), 2.5) / 0.03;
+        fMVAVar_ChargedIso_DR0p0To0p1 = TMath::Min((tmpChargedIso_DR0p0To0p1)/iElectron->pt(), 2.5);
+        fMVAVar_ChargedIso_DR0p1To0p2 = TMath::Min((tmpChargedIso_DR0p1To0p2)/iElectron->pt(), 2.5) / 0.03;
         fMVAVar_ChargedIso_DR0p2To0p3 = TMath::Min((tmpChargedIso_DR0p2To0p3)/iElectron->pt(), 2.5) / 0.05;
         fMVAVar_ChargedIso_DR0p3To0p4 = TMath::Min((tmpChargedIso_DR0p3To0p4)/iElectron->pt(), 2.5) / 0.07;
         fMVAVar_ChargedIso_DR0p4To0p5 = TMath::Min((tmpChargedIso_DR0p4To0p5)/iElectron->pt(), 2.5) / 0.09; 
