@@ -6,7 +6,6 @@
  */
 
 #include "../interface/TCMET.h"
-#include "../interface/TCMETLinkDef.h"
 #include <iostream>
 
 TCMET::TCMET() {}

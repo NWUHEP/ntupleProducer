@@ -1,4 +1,4 @@
-#include "TCPhysObject.h"
+#include "../interface/TCPhysObject.h"
 
 #ifdef __CINT__
 #pragma link C++ class std::map<string, float>+;

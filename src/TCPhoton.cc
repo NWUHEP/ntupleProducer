@@ -1,5 +1,4 @@
 #include "../interface/TCPhoton.h"
-#include "../interface/TCPhotonLinkDef.h"
 #include <iostream>
 
 

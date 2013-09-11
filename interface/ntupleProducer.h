@@ -1,6 +1,7 @@
 // system include files
 #include <memory>
 #include <string>
+#include <map>
 
 // user include files
 #include "FWCore/Framework/interface/Frameworkfwd.h"
@@ -116,6 +117,7 @@
 #include "RecoMET/METProducers/interface/ParticleFlowForChargedMETProducer.h"
 #include "DataFormats/MuonReco/interface/MuonSelectors.h"
 // ntuple storage classes
+#include "TCPhysObject.h"
 #include "TCPrimaryVtx.h"
 #include "TCJet.h"
 #include "TCMET.h"
@@ -126,6 +128,7 @@
 #include "TCTriggerObject.h"
 #include "TCGenJet.h"
 #include "TCGenParticle.h"
+
 
 // Need for HLT trigger info:
 #include "FWCore/Common/interface/TriggerNames.h"

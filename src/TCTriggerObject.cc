@@ -1,5 +1,4 @@
 #include "../interface/TCTriggerObject.h"
-#include "../interface/TCTriggerObjectLinkDef.h"
 
 TCTriggerObject::TCTriggerObject() {
 }
