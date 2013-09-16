@@ -21,38 +21,34 @@ Instructions for Users
  cd ../..
 ```
 
- * NWU Code (along for the ride from v6.X):
+ * Met recipes, according to [2] and [3]:
 ```
-  addpkg CommonTools/ParticleFlow   V00-03-16
-  addpkg RecoParticleFlow/PFProducer V15-01-11 
-  addpkg DataFormats/METReco V03-03-11-01 
-  addpkg JetMETCorrections/Type1MET V04-06-09-02
-  addpkg CommonTools/RecoUtils V00-01-04
-  addpkg DataFormats/ParticleFlowCandidate V15-03-04-01
-  addpkg DataFormats/TrackReco V10-02-02-01
-  addpkg DataFormats/VertexReco V02-00-04-01
-  addpkg PhysicsTools/PatAlgos V08-09-52  
-  cvs up -r V08-09-07-05 PhysicsTools/PatAlgos/python/patTemplate_cfg.py   
-  addpkg PhysicsTools/PatUtils V03-09-28
-  addpkg DataFormats/StdDictionaries V00-02-14
-  addpkg FWCore/GuiBrowsers V00-00-70
-  addpkg RecoMET/METProducers V03-03-12-02
-  addpkg DataFormats/PatCandidates V06-05-06-07
-  cvs co -r V00-00-13 RecoMET/METFilters
+  git cms-addpkg PhysicsTools/PatAlgos
+  git cms-merge-topic -u vadler:53X-tagset133511
+  git cms-addpkg PhysicsTools/PatUtils
+  git cms-merge-topic -u TaiSakuma:53X-met-130910-01
+```
+ 
+* Met filters according to [4]:
+```
+  cvs co -r V00-00-13-01 RecoMET/METFilters
   cvs co -r V00-00-08 RecoMET/METAnalyzers
   cvs co -r V00-03-23 CommonTools/RecoAlgos
   cvs co -r V01-00-11-01 DPGAnalysis/Skims
   cvs co -r V00-11-17 DPGAnalysis/SiStripTools
   cvs co -r V00-00-08 DataFormats/TrackerCommon
   cvs co -r V01-09-05 RecoLocalTracker/SubCollectionProducers
-  cvs co -r V00-00-30-02 -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
-  cvs up -r 1.13 EGamma/EGammaAnalysisTools/interface/PFIsolationEstimator.h
-  cvs up -r 1.20 EGamma/EGammaAnalysisTools/src/PFIsolationEstimator.cc
-  cvs co -r HCP2012_V05 EgammaAnalysis/ElectronTools
+```
+ * Egamma tools from [5]:
+```
+  cvs co -r V00-00-09 EgammaAnalysis/ElectronTools
   cvs co -r V09-00-01 RecoEgamma/EgammaTools
+  cd EgammaAnalysis/ElectronTools/data
+  cat download.url | xargs wget
+  cd ../../../
 ```
 
- * Track MET Code:
+ * Track MET Code [need a ref]:
 ```
   cvs co -r 1.2 RecoMET/METProducers/src/ParticleFlowForChargedMETProducer.cc
   cvs co -r 1.1 RecoMET/METProducers/src/TrackMETProducer.cc
@@ -63,7 +59,7 @@ Instructions for Users
   cvs co -r 1.2 RecoMET/METProducers/python/pfChargedMET_cfi.py
 ```
 
- * MVA MET Code:
+ * MVA MET Code [need a ref]:
 ```
   cvs co -r METPU_5_3_X_v12 JetMETCorrections/METPUSubtraction
   cvs co -r HEAD -d pharrisTmp UserCode/pharris/MVAMet/data
@@ -177,4 +173,7 @@ If the new code significantly changes the format of the ntuples (substantial cha
 
 
 [1]: https://twiki.cern.ch/twiki/bin/view/CMS/UserCodeNWUntupleProducer
-[2]: https://twiki.cern.ch/twiki/bin/view/CMS/MissingETOptionalFilters
+[3]: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideMETRecipe53X
+[2]: https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookMetAnalysis
+[4]: https://twiki.cern.ch/twiki/bin/view/CMS/MissingETOptionalFilters
+[5]: https://twiki.cern.ch/twiki/bin/view/CMS/MultivariateElectronIdentification
