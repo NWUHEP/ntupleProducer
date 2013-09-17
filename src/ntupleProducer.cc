@@ -50,6 +50,12 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
   trkPOGFiltersTag3_  = iConfig.getUntrackedParameter<edm::InputTag>("trkPOGFiltersTag3");
   photonIsoCalcTag_   = iConfig.getParameter<edm::ParameterSet>("photonIsoCalcTag");
   jetPUIdAlgo_        = iConfig.getParameter<edm::ParameterSet>("jetPUIdAlgo");
+
+
+  //These are for ele energy regression:
+  geomInitialized_ = false;
+
+
 }
 
 ntupleProducer::~ntupleProducer()
@@ -93,6 +99,19 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
   Handle<PFCandidateCollection> pfCandsEleIso;
   iEvent.getByLabel("pfNoPileUp",pfCandsEleIso);
   const  PFCandidateCollection thePfCollEleIso = *(pfCandsEleIso.product());
+
+
+
+  if (!geomInitialized_) {
+    edm::ESHandle<CaloTopology> theCaloTopology;
+    iSetup.get<CaloTopologyRecord>().get(theCaloTopology);
+    ecalTopology_ = & (*theCaloTopology);
+    
+    edm::ESHandle<CaloGeometry> theCaloGeometry;
+    iSetup.get<CaloGeometryRecord>().get(theCaloGeometry);
+    caloGeometry_ = & (*theCaloGeometry);
+    geomInitialized_ = true;
+  }
 
 
   //////////////////////////
@@ -532,21 +551,35 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       // Add electron MVA ID and ISO
       electronMVA(&(*iElectron), eleCon, iEvent, iSetup, thePfCollEleIso, rhoFactor);
 
-      // Calculate electron energy regression
-      InputTag  reducedEBRecHitCollection(string("reducedEcalRecHitsEB"));                                 
-      InputTag  reducedEERecHitCollection(string("reducedEcalRecHitsEE"));                                 
-      EcalClusterLazyTools lazyTools(iEvent, iSetup, reducedEBRecHitCollection, reducedEERecHitCollection);
 
-      double eleEngReg = myEleReg->calculateRegressionEnergy(&(*iElectron), lazyTools, iSetup, rhoFactor, primaryVtcs->size(), false);
-      double eleEngRegErr = myEleReg->calculateRegressionEnergyUncertainty(&(*iElectron), lazyTools, iSetup, rhoFactor, primaryVtcs->size(), false);
+      // Calculate electron energy regression
+      //Folowing the example from: EgammaAnalysis/ElectronTools/plugins/ElectronRegressionEnergyProducer.cc
+
+      edm::Handle< EcalRecHitCollection > pEBRecHits;
+      edm::Handle< EcalRecHitCollection > pEERecHits;
+      iEvent.getByLabel("reducedEcalRecHitsEB", pEBRecHits );
+      iEvent.getByLabel("reducedEcalRecHitsEE", pEERecHits );
+
+      const EcalRecHitCollection * recHits=0;
+      if(iElectron->isEB())
+        recHits = pEBRecHits.product();
+      else
+        recHits = pEERecHits.product();
+
+      SuperClusterHelper mySCHelper(&(*iElectron),recHits,ecalTopology_,caloGeometry_);
+      //EcalClusterLazyTools lazyTools(iEvent, iSetup, reducedEBRecHitCollection, reducedEERecHitCollection);
+
+      double eleEngReg    = myEleReg->calculateRegressionEnergy(&(*iElectron), mySCHelper, rhoFactor, primaryVtcs->size(), false);
+      double eleEngRegErr = myEleReg->calculateRegressionEnergyUncertainty(&(*iElectron), mySCHelper, rhoFactor, primaryVtcs->size(), false);
 
 
       eleCon->SetIdMap("EnergyRegression",eleEngReg);
       eleCon->SetIdMap("EnergyRegressionErr",eleEngRegErr);
 
+      //These doesn't work yet (need PAT ElectronEnergyCalibrator). Is it used thou?
       reco::GsfElectron iElectronTmp = *iElectron;
-      ElectronEnergyCalibrator myCalibrator("none",true,!isRealData,true,10,false);
-      myCalibrator.correct(iElectronTmp, iElectronTmp.r9(), iEvent, iSetup, eleEngReg,eleEngRegErr);
+      //ElectronEnergyCalibrator myCalibrator("none",true,!isRealData,true,10,false);
+      //myCalibrator.correct(iElectronTmp, iElectronTmp.r9(), iEvent, iSetup, eleEngReg,eleEngRegErr);
 
       TLorentzVector tmpP4;
       tmpP4.SetPtEtaPhiE(iElectronTmp.pt(), iElectronTmp.eta(), iElectronTmp.phi(), iElectronTmp.energy());
@@ -566,14 +599,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 
     Handle<EcalRecHitCollection> Brechit;
-
     iEvent.getByLabel("reducedEcalRecHitsEB",Brechit);
-
-    const EcalRecHitCollection* barrelRecHits= Brechit.product();
+    //const EcalRecHitCollection* barrelRecHits= Brechit.product();
 
     Handle<vector<reco::Photon> > photons;
     iEvent.getByLabel(photonTag_, photons);
-
 
 
     edm::Handle<reco::GsfElectronCollection> hElectrons;
@@ -592,7 +622,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       TCPhoton::CrystalInfo crystal = {};
       float timing_avg =0.0;
       int ncrys   = 0;
-      int ncrysPhoton = 0;
+      //int ncrysPhoton = 0;
       vector< std::pair<DetId, float> >::const_iterator detitr;
 
       for(detitr = PhotonHit_DetIds.begin(); detitr != PhotonHit_DetIds.end(); ++detitr)
@@ -627,8 +657,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       //Without taking into account uncertainty, this time makes no sense.
       if (ncrys !=0) timing_avg = timing_avg/(float)ncrys;
       else timing_avg = -99.;
-      ncrysPhoton = crystalinfo_container.size(); 
-      int pho_timingavg_xtal      = timing_avg;
+      //ncrysPhoton = crystalinfo_container.size(); 
+      //int pho_timingavg_xtal      = timing_avg;
 
       myPhoton->SetNCrystals(crystalinfo_container.size());
 
@@ -650,8 +680,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
          }
          */
 
-      const reco::BasicCluster& seedClus = *(iPhoton->superCluster()->seed());
-
+      //const reco::BasicCluster& seedClus = *(iPhoton->superCluster()->seed());
 
 
       myPhoton->SetPxPyPzE(iPhoton->px(), iPhoton->py(), iPhoton->pz(), iPhoton->p());
@@ -947,35 +976,35 @@ void  ntupleProducer::beginJob()
 
   h1_numOfEvents = fs->make<TH1F>("numOfEvents", "total number of events, unskimmed", 1,0,1);
 
-  eventTree->Branch("recoJets",&recoJets, 6400, 0);
-  eventTree->Branch("recoJPT",&recoJPT, 6400, 0);
-  eventTree->Branch("recoElectrons",&recoElectrons, 6400, 0);
-  eventTree->Branch("recoMuons",&recoMuons, 6400, 0);
-  eventTree->Branch("recoPhotons",&recoPhotons, 6400, 0);
-  eventTree->Branch("recoMET", recoMET.get(), 6400, 0);
-  eventTree->Branch("mva_MET", mva_MET.get(), 6400, 0);
-  eventTree->Branch("track_MET", track_MET.get(), 6400, 0); 
-  eventTree->Branch("T0MET", T0MET.get(), 6400, 0); 
-  eventTree->Branch("T2MET", T2MET.get(), 6400, 0); 
+  eventTree->Branch("recoJets",     &recoJets,       6400, 0);
+  eventTree->Branch("recoJPT",      &recoJPT,        6400, 0);
+  eventTree->Branch("recoElectrons",&recoElectrons,  6400, 0);
+  eventTree->Branch("recoMuons",    &recoMuons,      6400, 0);
+  eventTree->Branch("recoPhotons",  &recoPhotons,    6400, 0);
+  eventTree->Branch("recoMET",      recoMET.get(),   6400, 0);
+  eventTree->Branch("mva_MET",      mva_MET.get(),   6400, 0);
+  eventTree->Branch("track_MET",    track_MET.get(), 6400, 0); 
+  eventTree->Branch("T0MET",        T0MET.get(),     6400, 0); 
+  eventTree->Branch("T2MET",        T2MET.get(),     6400, 0); 
+  eventTree->Branch("genJets",      &genJets,        6400, 0);
+  eventTree->Branch("genParticles", &genParticles,   6400, 0);
   eventTree->Branch("triggerObjects", &triggerObjects, 6400, 0);
-  eventTree->Branch("genJets",&genJets, 6400, 0);
-  eventTree->Branch("genParticles",&genParticles, 6400, 0);
 
-  eventTree->Branch("primaryVtx",&primaryVtx, 6400, 0);
-  eventTree->Branch("beamSpot", &beamSpot, 6400, 0);
-  eventTree->Branch("nPUVertices", &nPUVertices, "nPUVertices/I");
+  eventTree->Branch("primaryVtx",      &primaryVtx, 6400, 0);
+  eventTree->Branch("beamSpot",        &beamSpot,   6400, 0);
+  eventTree->Branch("nPUVertices",     &nPUVertices, "nPUVertices/I");
   eventTree->Branch("nPUVerticesTrue", &nPUVerticesTrue, "nPUVerticesTrue/F");
 
-  eventTree->Branch("isRealData",&isRealData, "isRealData/O");
-  eventTree->Branch("runNumber",&runNumber, "runNumber/i");
+  eventTree->Branch("isRealData", &isRealData,  "isRealData/O");
+  eventTree->Branch("runNumber",  &runNumber,   "runNumber/i");
   eventTree->Branch("eventNumber",&eventNumber, "eventNumber/l");
   eventTree->Branch("lumiSection",&lumiSection, "lumiSection/i");
-  eventTree->Branch("bunchCross",&bunchCross, "bunchCross/i");
+  eventTree->Branch("bunchCross", &bunchCross,  "bunchCross/i");
 
-  eventTree->Branch("ptHat",&ptHat, "ptHat/F");
-  eventTree->Branch("qScale", &qScale, "qScale/F");
-  eventTree->Branch("evtWeight", &evtWeight, "evtWeight/F");
-  eventTree->Branch("rhoFactor",&rhoFactor, "rhoFactor/F");
+  eventTree->Branch("ptHat",      &ptHat,       "ptHat/F");
+  eventTree->Branch("qScale",     &qScale,      "qScale/F");
+  eventTree->Branch("evtWeight",  &evtWeight,   "evtWeight/F");
+  eventTree->Branch("rhoFactor",  &rhoFactor,   "rhoFactor/F");
   eventTree->Branch("rho25Factor",&rho25Factor, "rho25Factor/F");
   eventTree->Branch("rhoMuFactor",&rhoMuFactor, "rhoMuFactor/F");
   eventTree->Branch("triggerStatus",&triggerStatus, "triggerStatus/l");
@@ -1005,9 +1034,11 @@ void  ntupleProducer::beginJob()
   myEleReg.reset(new ElectronEnergyRegressionEvaluate());
   //myEleReg->initialize(mvaPath+"/src/data/eleEnergyRegWeights_V1.root",
 
+  //This is rediculous -->
   string mvaPath = getenv("CMSSW_BASE");
   mvaPath = mvaPath+"/src/EGamma/EGammaAnalysisTools/data:"+getenv("CMSSW_SEARCH_PATH");
   setenv("CMSSW_SEARCH_PATH",mvaPath.c_str(),1);
+  //<<--- 
 
   myEleReg->initialize("eleEnergyRegWeights_V1.root", ElectronEnergyRegressionEvaluate::kNoTrkVar);
 
@@ -1726,7 +1757,12 @@ TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticl
     genCon->SetCharge(myParticle->charge());
     genCon->SetPDGId(myParticle->pdgId());
     genCon->SetStatus(myParticle->status());
-    map<const reco::GenParticle*,TCGenParticle*>::iterator momIt;
+
+    genCon->SetMother(0);
+
+    //Ignore the mothers for now
+    /*
+      map<const reco::GenParticle*,TCGenParticle*>::iterator momIt;
     if (myParticle->numberOfMothers() == 0){
       genCon->SetMother(0);
     }else{
@@ -1734,12 +1770,14 @@ TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticl
       if (momIt == genMap.end()){
         genCon->SetMother(addGenParticle((const reco::GenParticle*)myParticle->mother(), genPartCount, genMap));
       }else{
-        genCon->SetMother(momIt->second);
+      genCon->SetMother(momIt->second);
       }
     }
-  }else{
-    genCon = it->second;
+    */
   }
+  else  
+    genCon = it->second;
+  
   return genCon;
 }
 

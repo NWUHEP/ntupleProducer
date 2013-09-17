@@ -77,13 +77,14 @@
 #include "SimDataFormats/JetMatching/interface/MatchedPartons.h"
 #include "SimDataFormats/JetMatching/interface/JetMatchedPartons.h"
 
-// PAT
-#include "DataFormats/PatCandidates/interface/Electron.h"
-#include "DataFormats/PatCandidates/interface/Muon.h"
-#include "DataFormats/PatCandidates/interface/Photon.h"
-#include "DataFormats/PatCandidates/interface/MET.h"
-#include "DataFormats/PatCandidates/interface/Jet.h"
-#include "DataFormats/PatCandidates/interface/Tau.h"
+// PAT 
+//Not using pats no more, commentng out
+//#include "DataFormats/PatCandidates/interface/Electron.h"
+//#include "DataFormats/PatCandidates/interface/Muon.h"
+//#include "DataFormats/PatCandidates/interface/Photon.h"
+//#include "DataFormats/PatCandidates/interface/MET.h"
+//#include "DataFormats/PatCandidates/interface/Jet.h"
+//#include "DataFormats/PatCandidates/interface/Tau.h"
 
 //#include "RecoVertex/PrimaryVertexProducer/interface/VertexHigherPtSquared.h"
 
@@ -97,21 +98,26 @@
 // Jet associators
 #include "RecoJets/JetAssociationAlgorithms/interface/JetTracksAssociationDRCalo.h"
 #include "RecoJets/JetAssociationAlgorithms/interface/JetTracksAssociationDRVertex.h"
+
 #include "RecoJets/JetProducers/interface/PileupJetIdAlgo.h"
 
 // EGamma tools
 #include "RecoEgamma/PhotonIdentification/interface/PhotonIsolationCalculator.h"
 #include "RecoEgamma/EgammaTools/interface/ConversionTools.h"
-#include "EGamma/EGammaAnalysisTools/interface/ElectronEffectiveArea.h"
-#include "EGamma/EGammaAnalysisTools/src/PFIsolationEstimator.cc"
-//#include "EGamma/EGammaAnalysisTools/interface/EGammaMvaEleEstimator.h"
+#include "EgammaAnalysis/ElectronTools/interface/ElectronEffectiveArea.h"
+#include "EgammaAnalysis/ElectronTools/interface/PFIsolationEstimator.h"
+#include "EgammaAnalysis/ElectronTools/interface/ElectronEnergyRegressionEvaluate.h"
+
+#include "EgammaAnalysis/ElectronTools/interface/EGammaMvaEleEstimator.h"
+#include "Geometry/CaloEventSetup/interface/CaloTopologyRecord.h"
+#include "TrackingTools/IPTools/interface/IPTools.h"
+
+// Tracking tools, supposedly for track-met:
 #include "TrackingTools/Records/interface/TransientTrackRecord.h"
 #include "TrackingTools/TransientTrack/interface/TransientTrackBuilder.h"
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 #include "DataFormats/METReco/interface/BeamHaloSummary.h"
-#include "EGamma/EGammaAnalysisTools/interface/ElectronEnergyRegressionEvaluate.h"
-#include "EgammaAnalysis/ElectronTools/interface/PatElectronEnergyCalibrator.h"
 
 #include "RecoMET/METProducers/interface/TrackMETProducer.h"
 #include "RecoMET/METProducers/interface/ParticleFlowForChargedMETProducer.h"
@@ -280,8 +286,8 @@ class ntupleProducer : public edm::EDAnalyzer {
   TClonesArray* genParticles;
   auto_ptr<TCMET>   recoMET;
   auto_ptr<TCMET>   track_MET;
-  auto_ptr<TCMET>	  T0MET; 
-  auto_ptr<TCMET>	  T2MET;
+  auto_ptr<TCMET>	T0MET; 
+  auto_ptr<TCMET>	T2MET;
   auto_ptr<TCMET>   recoMET_corr;
   auto_ptr<TCMET>   mva_MET;
 
@@ -316,5 +322,12 @@ class ntupleProducer : public edm::EDAnalyzer {
   // PU Jet Id Algo
   auto_ptr<PileupJetIdAlgo> myPUJetID;
   auto_ptr<FactorizedJetCorrector> jecCor;
+
+
+  //These are for new electron regression
+  bool geomInitialized_;
+
+  const CaloTopology* ecalTopology_;
+  const CaloGeometry* caloGeometry_;
   
 };

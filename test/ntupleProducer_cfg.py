@@ -47,10 +47,10 @@ process.load('Configuration.StandardSequences.Reconstruction_cff')
 
 if (isRealData):
     process.GlobalTag.globaltag = 'FT_53_V21_AN3::All'
-    process.load('JetMETCorrections.METPUSubtraction.mvaPFMET_leptons_data_cff')
+    #process.load('JetMETCorrections.METPUSubtraction.mvaPFMET_leptons_data_cff')
 else:
     process.GlobalTag.globaltag = 'START53_V27::All'
-    process.load('JetMETCorrections.METPUSubtraction.mvaPFMET_leptons_cff')
+    #process.load('JetMETCorrections.METPUSubtraction.mvaPFMET_leptons_cff')
 
 # Create good primary vertices for PF association
 from PhysicsTools.SelectorUtils.pvSelector_cfi import pvSelector
@@ -432,7 +432,7 @@ process.ntuplePath = cms.Path(
     * process.ak5JetTracksAssociatorAtVertex
     * process.btagging
     * AllFilters
-    * process.pfMEtMVAsequence
+    #* process.pfMEtMVAsequence
     * process.pfMet1
     * process.ntupleProducer
 )

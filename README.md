@@ -8,16 +8,17 @@ Instructions for Users
  * Set up the environment
 ```
   setenv SCRAM_ARCH slc5_amd64_gcc462
-  cmsrel CMSSW_5_3_8_patch1
-  cd CMSSW_5_3_8_patch1/src
+  cmsrel CMSSW_5_3_11_patch6
+  cd CMSSW_5_3_11_patch6/src
   cmsenv
 ```
+(note: _patch6 is recommended in met recepie)
 
  * Check out the ntuple producer code and then the specific tag of the code that is known to work
 ```
  git clone https://github.com/NWUHEP/ntupleProducer NWU/ntupleProducer
  cd NWU/ntupleProducer
- git checkout v8.0
+ git checkout dev-andrey-fresh
  cd ../..
 ```
 
@@ -51,6 +52,7 @@ Instructions for Users
 
  * Track MET Code [need a ref]:
 ```
+  cvs co -r V03-03-12-02 RecoMET/METProducers
   cvs co -r 1.2 RecoMET/METProducers/src/ParticleFlowForChargedMETProducer.cc
   cvs co -r 1.1 RecoMET/METProducers/src/TrackMETProducer.cc
   cvs co -r 1.2 RecoMET/METProducers/interface/ParticleFlowForChargedMETProducer.h
@@ -59,6 +61,7 @@ Instructions for Users
   cvs co -r 1.1 RecoMET/METProducers/python/TrackMET_cfi.py
   cvs co -r 1.2 RecoMET/METProducers/python/pfChargedMET_cfi.py
 ```
+
 
  * MVA MET Code [need a ref]:
 ```
@@ -79,22 +82,27 @@ Instructions for Users
   cvs co -r V01-04-13                             RecoTauTag/Configuration
 ```
 
- * Files that needs to be updated:
+ * Files that needs to be updated [why?]:
 ```
   cvs co -r V03-04-07 DataFormats/METReco/interface/CorrMETData.h
-  cvs co -r HEAD JetMETCorrections/Type1MET/plugins/Type0PFMETcorrInputProducer.h
-  cvs co -r HEAD JetMETCorrections/Type1MET/plugins/Type0PFMETcorrInputProducer.cc
+  # These did not work (couldn't check out):
+  #cvs co -r HEAD JetMETCorrections/Type1MET/plugins/Type0PFMETcorrInputProducer.h
+  #cvs co -r HEAD JetMETCorrections/Type1MET/plugins/Type0PFMETcorrInputProducer.cc
 ```
 
- * Patches to checked folders:
+
+ * Patches to checked folders [what's up with that?]:
 ```
+  cp NWU/ntupleProducer/patches/PATMHTProducer.h PhysicsTools/PatAlgos/plugins/PATMHTProducer.h
+  cvs co -r V00-02-14 DataFormats/StdDictionaries
+  cp NWU/ntupleProducer/patches/classes.h DataFormats/StdDictionaries/src/classes.h
+  cp NWU/ntupleProducer/patches/classes_def.xml DataFormats/StdDictionaries/src/classes_def.xml
+
   cp NWU/ntupleProducer/patches/pfMETCorrections_cff.py JetMETCorrections/Type1MET/python/pfMETCorrections_cff.py
   cp NWU/ntupleProducer/patches/mvaPFMET_leptons_data_cff.py JetMETCorrections/METPUSubtraction/python/mvaPFMET_leptons_data_cff.py
   cp NWU/ntupleProducer/patches/mvaPFMET_leptons_cff.py JetMETCorrections/METPUSubtraction/python/mvaPFMET_leptons_cff.py
   cp NWU/ntupleProducer/patches/mvaPFMET_leptons_cfi.py JetMETCorrections/METPUSubtraction/python/mvaPFMET_leptons_cfi.py
-  cp NWU/ntupleProducer/patches/PATMHTProducer.h PhysicsTools/PatAlgos/plugins/PATMHTProducer.h
-  cp NWU/ntupleProducer/patches/classes.h DataFormats/StdDictionaries/src/classes.h
-  cp NWU/ntupleProducer/patches/classes_def.xml DataFormats/StdDictionaries/src/classes_def.xml
+
 ```
 
  * Finally, compile this mess (takes a while... coffee time!)  
