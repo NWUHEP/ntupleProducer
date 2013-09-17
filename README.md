@@ -29,7 +29,7 @@ Instructions for Users
   git cms-merge-topic -u TaiSakuma:53X-met-130910-01
 ```
  
-* Met filters according to [4]:
+ * Met filters according to [4]:
 ```
   cvs co -r V00-00-13-01 RecoMET/METFilters
   cvs co -r V00-00-08 RecoMET/METAnalyzers
