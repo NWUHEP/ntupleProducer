@@ -1036,7 +1036,7 @@ void  ntupleProducer::beginJob()
 
   //This is rediculous -->
   string mvaPath = getenv("CMSSW_BASE");
-  mvaPath = mvaPath+"/src/EGamma/EGammaAnalysisTools/data:"+getenv("CMSSW_SEARCH_PATH");
+  mvaPath = mvaPath+"/src/EgammaAnalysis/ElectronTools/data:"+getenv("CMSSW_SEARCH_PATH");
   setenv("CMSSW_SEARCH_PATH",mvaPath.c_str(),1);
   //<<--- 
 
