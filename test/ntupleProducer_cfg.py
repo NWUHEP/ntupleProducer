@@ -436,9 +436,9 @@ process.ntuplePath = cms.Path(
     * process.pfMEtMVAsequence
     * process.pfMet1
     
-    * process.mvaTrigV0
     * process.eleRegressionEnergy
     * process.calibratedElectrons
+    * process.mvaTrigV0
     * process.ntupleProducer
 )
 

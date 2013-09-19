@@ -387,12 +387,16 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       muCon->SetIsPF(iMuon->isPFMuon());
       muCon->SetIsGLB(iMuon->isGlobalMuon());
       muCon->SetIsTRK(iMuon->isTrackerMuon());
+      
+
+      muCon->SetIsGood(muon::isGoodMuon(*iMuon, muon::TMOneStationTight));
+      muCon->SetIsGoodLoose(muon::isGoodMuon(*iMuon, muon::TMOneStationLoose));
 
       if (primaryVtcs->size()>0){
         muCon->SetIsTight(muon::isTightMuon(*iMuon, *primaryVtcs->begin()));
         //isSoftMuon is not available in CMSSW_5_3_8, where I'm working, will include it in a later versions
-        //muCon->SetIsSoft( muon::isSoftMuon( *iMuon, *primaryVtcs->begin()));
-        muCon->SetIsSoft(0);                
+        muCon->SetIsSoft( muon::isSoftMuon( *iMuon, *primaryVtcs->begin()));
+        //muCon->SetIsSoft(0);                
       }
       else{
         muCon->SetIsTight(0);
@@ -418,6 +422,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         muCon->SetPtError(iMuon->track()->ptError());
 
         muCon->SetTrackLayersWithMeasurement(iMuon->track()->hitPattern().trackerLayersWithMeasurement());
+        muCon->SetPixelLayersWithMeasurement(iMuon->innerTrack()->hitPattern().pixelLayersWithMeasurement());
         muCon->SetNumberOfValidPixelHits(    iMuon->innerTrack()->hitPattern().numberOfValidPixelHits());
         muCon->SetNormalizedChi2_tracker(    iMuon->innerTrack()->normalizedChi2());
         muCon->SetNumberOfValidTrackerHits(iMuon->track()->hitPattern().numberOfValidTrackerHits());
@@ -479,7 +484,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     iEvent.getByLabel(electronTag_, electrons);
 
     Handle<reco::GsfElectronCollection > calibratedElectrons;
-    iEvent.getByLabel("calibratedElectrons", calibratedElectrons);
+    iEvent.getByLabel(edm::InputTag("calibratedElectrons","calibratedGsfElectrons"), calibratedElectrons);
    
     edm::Handle<edm::ValueMap<float>> mvaTrigV0_handle;
     iEvent.getByLabel("mvaTrigV0", mvaTrigV0_handle);
@@ -552,13 +557,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       // Add electron MVA ID and ISO variables
       electronMVA(&(*iElectron), eleCon, iEvent, iSetup, thePfCollEleIso, rhoFactor);
       
-
-      /*
       eleIsolator.fGetIsolation(&(*iElectron), &thePfColl, myVtxRef, primaryVtcs);
       eleCon->SetIsoMap("pfChIso_R04", eleIsolator.getIsolationCharged());
       eleCon->SetIsoMap("pfNeuIso_R04",eleIsolator.getIsolationNeutral());
       eleCon->SetIsoMap("pfPhoIso_R04",eleIsolator.getIsolationPhoton());
-      */
+
       // Effective area for rho PU corrections (not sure if needed)
       float AEff03 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso03, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
       float AEff04 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso04, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
@@ -578,10 +581,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       
       //cout<<eee<<"  mva0 = "<<m<<endl;
 
-      const reco::GsfElectron &iElectronTmp   ( (*calibratedElectrons)[eee]);
+      const reco::GsfElectron &iElectronTmp   ( (*calibratedElectrons)[eee-1]);
 
-      cout<<"ielectron , pt ="<<iElectron->pt()<<" eta="<<iElectron->eta()<<endl;
-      cout<<"  calibra , pt ="<<iElectronTmp.pt()<<" eta="<<iElectronTmp.eta()<<endl;
+      //cout<<"ielectron , pt ="<<iElectron->pt()<<" eta="<<iElectron->eta()<<endl;
+      //cout<<"  calibra , pt ="<<iElectronTmp.pt()<<" eta="<<iElectronTmp.eta()<<endl;
 
       TLorentzVector tmpP4;
       tmpP4.SetPtEtaPhiE(iElectronTmp.pt(), iElectronTmp.eta(), iElectronTmp.phi(), iElectronTmp.energy());
@@ -1023,32 +1026,15 @@ void  ntupleProducer::beginJob()
   // Start counting number of events per job //
   nEvents = 0;
 
-  // Photon Iso maker init
+  // Photon and Electron PF Iso maker init
   phoIsolator.initializePhotonIsolation(kTRUE);
   phoIsolator.setConeSize(0.3);
 
-  // Initialize Electron MVA nonsense
-  //eleIsolator.initializeElectronIsolation(kTRUE);
-  //eleIsolator.setConeSize(0.4);
-
-  // Initialize Electron Regression
-  //myEleReg.reset(new ElectronEnergyRegressionEvaluate());
-  //myEleReg->initialize(mvaPath+"/src/data/eleEnergyRegWeights_V1.root",
-
-  //This is rediculous -->
-  //string mvaPath = getenv("CMSSW_BASE");
-  //mvaPath = mvaPath+"/src/EgammaAnalysis/ElectronTools/data:"+getenv("CMSSW_SEARCH_PATH");
-  //setenv("CMSSW_SEARCH_PATH",mvaPath.c_str(),1);
-  //<<--- 
-
-  //myEleReg->initialize("eleEnergyReg2012Weights_V1.root", ElectronEnergyRegressionEvaluate::kNoTrkVar);
-
-  //if (verboseMVAs) cout<<"mvaPath: "<<mvaPath<<endl;
-  //if (verboseMVAs) cout<<"MVA electron regression shit probably has initialized"<<endl;
+  eleIsolator.initializeElectronIsolation(kTRUE);
+  eleIsolator.setConeSize(0.4);
 
   // Initialize Jet PU ID
   myPUJetID.reset(new PileupJetIdAlgo(jetPUIdAlgo_));
-
 }
 
 void ntupleProducer::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
