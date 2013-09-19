@@ -1020,7 +1020,6 @@ void  ntupleProducer::beginJob()
   jobTree->Branch("triggerNames", "vector<string>", &triggerPaths_);
 
   // Initialize HLT prescales //
-
   for (int i = 0; i < (int)(sizeof(hltPrescale)/sizeof(int)); ++i) hltPrescale[i] = 1;
 
   // Start counting number of events per job //
