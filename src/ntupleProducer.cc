@@ -478,6 +478,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     Handle<reco::GsfElectronCollection > electrons;
     iEvent.getByLabel(electronTag_, electrons);
 
+    Handle<reco::GsfElectronCollection > calibratedElectrons;
+    iEvent.getByLabel("calibratedElectrons", calibratedElectrons);
    
     edm::Handle<edm::ValueMap<float>> mvaTrigV0_handle;
     iEvent.getByLabel("mvaTrigV0", mvaTrigV0_handle);
@@ -576,9 +578,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       
       //cout<<eee<<"  mva0 = "<<m<<endl;
 
-      reco::GsfElectron iElectronTmp = *iElectron;
-      //ElectronEnergyCalibrator myCalibrator("none",true,!isRealData,true,10,false);
-      //myCalibrator.correct(iElectronTmp, iElectronTmp.r9(), iEvent, iSetup, ene, err);
+      const reco::GsfElectron &iElectronTmp   ( (*calibratedElectrons)[eee]);
+
+      cout<<"ielectron , pt ="<<iElectron->pt()<<" eta="<<iElectron->eta()<<endl;
+      cout<<"  calibra , pt ="<<iElectronTmp.pt()<<" eta="<<iElectronTmp.eta()<<endl;
 
       TLorentzVector tmpP4;
       tmpP4.SetPtEtaPhiE(iElectronTmp.pt(), iElectronTmp.eta(), iElectronTmp.phi(), iElectronTmp.energy());

@@ -288,12 +288,8 @@ process.eleRegressionEnergy.inputCollectionType  = cms.uint32(0)
 process.eleRegressionEnergy.useRecHitCollections = cms.bool(True)
 process.eleRegressionEnergy.produceValueMaps     = cms.bool(True)
 
-#process.load('EgammaAnalysis/ElectronTools/calibratedElectrons_cfi')
-#process.calibratedElectrons.nameEnergyReg = cms.InputTag('eleRegressionEnergy','eneRegForGsfEle'),
-#process.calibratedElectrons.nameEnergyErrorReg = cms.InputTag('eleRegressionEnergy','eneErrorRegForGsfEle'),
-#process.calibratedElectrons.verbose = cms.bool(False),
-#process.calibratedElectrons.nameNewEnergyReg = cms.string('NEWeneRegForGsfEle'),
-#process.calibratedElectrons.nameNewEnergyErrorReg  = cms.string('NEWeneErrorRegForGsfEle'),  
+process.RandomNumberGeneratorService = cms.Service("RandomNumberGeneratorService")
+process.load('EgammaAnalysis/ElectronTools/calibratedElectrons_cfi')
 
 # event source
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(options.maxEvents))
@@ -442,39 +438,13 @@ process.ntuplePath = cms.Path(
     
     * process.mvaTrigV0
     * process.eleRegressionEnergy
-    #* process.calibratedElectrons
+    * process.calibratedElectrons
     * process.ntupleProducer
 )
 
-#if (isRealData == False):
-#	process.ntuplePath = cms.Path(
-#        	process.goodOfflinePrimaryVertices
-#		* process.genCandidatesForMET
-#		* process.corMetGlobalMuons
-#		* process.genMetCalo
-#	        * process.pfMEtSysShiftCorrSequence
-#	        * process.producePFMETCorrections
-#	        * process.pfNoPUSeq
-#		* process.particleFlowForChargedMET
-#		* process.pfChargedMET
-#		* process.trackMet
-#	        #* process.patDefaultSequence
-#	        * process.kt6PFJetsIso
-#	        * process.ak5PFJetsL1FastL2L3
-#	        * process.ak5JetTracksAssociatorAtVertex
-#	        * process.btagging
-#	        * AllFilters
-#	        * process.ntupleProducer
-#	        )
-
-
-
-
-
-process.out = cms.OutputModule("PoolOutputModule",
-                               fileName = cms.untracked.string('/tmp/myTuple.root'),
-                               SelectEvents   = cms.untracked.PSet( SelectEvents = cms.vstring('ntuplePath')),
-                               outputCommands = cms.untracked.vstring('keep *')
-                               )
-
-process.outpath = cms.EndPath(process.out)
+#process.out = cms.OutputModule("PoolOutputModule",
+#                               fileName = cms.untracked.string('/tmp/myTuple.root'),
+#                               SelectEvents   = cms.untracked.PSet( SelectEvents = cms.vstring('ntuplePath')),
+#                               outputCommands = cms.untracked.vstring('keep *')
+#                               )
+#process.outpath = cms.EndPath(process.out)
