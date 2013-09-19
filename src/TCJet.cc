@@ -6,6 +6,7 @@
  */
 
 #include "../interface/TCJet.h"
+#include "TCJetLinkDef.h"
 
 
 TCJet::TCJet() {

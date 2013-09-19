@@ -1,38 +1,34 @@
 #include "../interface/TCPhoton.h"
+#include "TCPhotonLinkDef.h"
 #include <iostream>
 
 
 //TCPhoton::TCPhoton() { }
 
 
-TCPhoton::TCPhoton() {
+TCPhoton::TCPhoton() {}
+
+/*
+TCPhoton::TCPhoton(const TCPhoton& other){
   _crysArray = new CrystalInfo[100];
-
-  CrystalInfo crystal;
-
-  crystal.rawId = -99;
-  crystal.ieta= -99;
-  crystal.iphi= -99;
-  crystal.ix= -99;
-  crystal.iy= -99;
-  crystal.energy= -99;
-  crystal.time= -99;
-  crystal.timeErr= -99;
-  crystal.recoFlag= -99;
-
   for(int i=0; i < 100; i++){
-    TCPhoton:: SetCrystal(i, crystal);
+    TCPhoton:: SetCrystal(i, other.GetCrystalArray()[i]);
   }
-  
-
 }
 
+TCPhoton& TCPhoton::operator=(const TCPhoton& other){
+  TCPhoton temp(other);
+  swap(_crysArray,temp._crysArray);
+  return *this;
+}
+*/
 
-TCPhoton::~TCPhoton() { delete[] _crysArray; }
+//TCPhoton::~TCPhoton() { delete[] _crysArray; }
+TCPhoton::~TCPhoton() {}
 
 // "get" methods -------------------------------------
 
-TCPhoton::CrystalInfo* TCPhoton::GetCrystalArray() const { return _crysArray; }
+std::vector<TCPhoton::CrystalInfo> TCPhoton::GetCrystalVect() const { return _crysVect; }
 int   TCPhoton::GetNCrystals() const { return _nCrystals;}
 float TCPhoton::NormChi2() const { return _normChi2; }
 float TCPhoton::HadOverEm() const { return _hadOverEm; } 
@@ -53,17 +49,7 @@ bool  TCPhoton::ConversionVeto() const { return _convVeto; }
 // "set" methods ---------------------------------------------
 
 
-void TCPhoton::SetCrystal(int i , CrystalInfo crys) {
-  _crysArray[i].rawId = crys.rawId;
-  _crysArray[i].ieta =crys.ieta;
-  _crysArray[i].iphi =crys.iphi;
-    _crysArray[i].ix =crys.ix;
-  _crysArray[i].iy =crys.iy;
-  _crysArray[i].energy =crys.energy;
-  _crysArray[i].time =crys.time;
-  _crysArray[i].timeErr =crys.timeErr;
-  _crysArray[i].recoFlag =crys.recoFlag;
-}
+void TCPhoton::AddCrystal(TCPhoton::CrystalInfo crys) {_crysVect.push_back(crys);}
 void TCPhoton::SetNCrystals(int n){ _nCrystals = n;}
 
 

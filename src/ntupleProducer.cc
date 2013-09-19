@@ -634,21 +634,19 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
       for (unsigned int y =0; y < crystalinfo_container.size() && y < 100;y++){ 
 
-        myPhoton->SetCrystal(y,crystalinfo_container[y]);
+        myPhoton->AddCrystal(crystalinfo_container[y]);
 
 
       }//end of for (unsigned int y =0; y < crystalinfo_container.size();y++
-      /*
-      TCPhoton::CrystalInfo * savedCrystals = myPhoton->GetCrystalArray();
-         for (int y = 0; y< myPhoton->GetNCrystals();y++){
-         std::cout << "savedCrystals[y].time : " << savedCrystals[y].time << std::endl; 
-         std::cout << "savedCrystals[y].timeErr : " << savedCrystals[y].timeErr << std::endl;
-         std::cout << "savedCrystals[y].energy : " << savedCrystals[y].energy <<std::endl;
-         std::cout << "savedCrystals[y].ieta: " << savedCrystals[y].ieta << std::endl;
+      vector<TCPhoton::CrystalInfo> savedCrystals = myPhoton->GetCrystalVect();
+      for (int y = 0; y< myPhoton->GetNCrystals();y++){
+        std::cout << "savedCrystals[y].time : " << savedCrystals[y].time << std::endl; 
+        std::cout << "savedCrystals[y].timeErr : " << savedCrystals[y].timeErr << std::endl;
+        std::cout << "savedCrystals[y].energy : " << savedCrystals[y].energy <<std::endl;
+        std::cout << "savedCrystals[y].ieta: " << savedCrystals[y].ieta << std::endl;
 
-         std::cout << "savedCrystals[y].rawId: " << savedCrystals[y].rawId <<std::endl;
-         }
-         */
+        std::cout << "savedCrystals[y].rawId: " << savedCrystals[y].rawId <<std::endl;
+      }
 
       const reco::BasicCluster& seedClus = *(iPhoton->superCluster()->seed());
 
@@ -1728,6 +1726,24 @@ TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticl
     genCon->SetStatus(myParticle->status());
     map<const reco::GenParticle*,TCGenParticle*>::iterator momIt;
     if (myParticle->numberOfMothers() == 0){
+      genCon->SetMother(0);
+    }else if(
+             abs(myParticle->mother()->pdgId()) != 5 
+             && abs(myParticle->mother()->pdgId()) != 11
+             && abs(myParticle->mother()->pdgId()) != 12
+             && abs(myParticle->mother()->pdgId()) != 13
+             && abs(myParticle->mother()->pdgId()) != 14
+             && abs(myParticle->mother()->pdgId()) != 15
+             && abs(myParticle->mother()->pdgId()) != 16
+             && abs(myParticle->mother()->pdgId()) != 22
+             && abs(myParticle->mother()->pdgId()) != 23 
+             && abs(myParticle->mother()->pdgId()) != 24 
+             && abs(myParticle->mother()->pdgId()) != 25 
+             && abs(myParticle->mother()->pdgId()) != 35 
+             && abs(myParticle->mother()->pdgId()) != 36 
+             && abs(myParticle->mother()->pdgId()) != 39
+          )
+    {
       genCon->SetMother(0);
     }else{
       momIt = genMap.find((const reco::GenParticle*)myParticle->mother());

@@ -1,4 +1,5 @@
 #include "../interface/TCPhysObject.h"
+#include "TCPhysObjectLinkDef.h"
 //
 
 TCPhysObject::TCPhysObject() {

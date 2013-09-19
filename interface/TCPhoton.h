@@ -12,9 +12,6 @@ using namespace std;
 
 class TCPhoton : public TCPhysObject {
 public:
-    TCPhoton();
-    virtual ~TCPhoton();
-
     struct CrystalInfo{
       int rawId;
       int ieta;
@@ -27,6 +24,8 @@ public:
       int recoFlag;
     };
 
+    TCPhoton();
+    virtual ~TCPhoton();
 private:
 
     // ID variables
@@ -49,14 +48,14 @@ private:
     bool    _convVeto;
 
     // crystal stuff
-    CrystalInfo* _crysArray;
+    vector<TCPhoton::CrystalInfo> _crysVect;
     int  _nCrystals; 
 
 public:
 
     // "get" methods -----------
 
-    CrystalInfo* GetCrystalArray() const;
+    vector<TCPhoton::CrystalInfo> GetCrystalVect() const;
 
     int   GetNCrystals() const;
 
@@ -78,7 +77,7 @@ public:
 
     // "set" methods ---------
 
-    void SetCrystal(int, CrystalInfo);
+    void AddCrystal(TCPhoton::CrystalInfo);
     void SetNCrystals(int);
 
     void SetNormChi2(float);
