@@ -75,12 +75,11 @@ Instructions for Users
   cvs co -r V01-04-25                             RecoTauTag/RecoTau 
   cvs co -r V03-04-07                             RecoMET/METAlgorithms
   cvs co -r V01-04-13                             RecoTauTag/Configuration
-  scram b -j 9
 ```
 
- * Files that needs to be updated [why?]:
+ * Files that needs to be updated, or not??:
 ```
-  cvs co -r V03-04-07 DataFormats/METReco/interface/CorrMETData.h
+  ## cvs co -r V03-04-07 DataFormats/METReco/interface/CorrMETData.h
   # These did not work (couldn't check out):
   #cvs co -r HEAD JetMETCorrections/Type1MET/plugins/Type0PFMETcorrInputProducer.h
   #cvs co -r HEAD JetMETCorrections/Type1MET/plugins/Type0PFMETcorrInputProducer.cc
@@ -126,7 +125,7 @@ that will set up an appropriate global tag etc.
 *NB* 
 By defualt, the ntuples require that there be at least one muon(electron) with pT > 3(5) GeV in order for an event to be saved. 
 In the case that this is not desired (for instance, in jet or photon based studies), 
-you should modify switch off the ```skimLeptons``` option in ntupleProducer_cfg.py
+you should switch off the ```skimLeptons``` option in ntupleProducer_cfg.py
 
 In addition to this, there are various flags the configuration file, ntupleProducer_cfg.py, that allow to save/not save certain objects (muons, jets, etc). All are saved by default.  
 
@@ -146,20 +145,20 @@ Instructions for Developers
 
  * Then create a new branch and swich to it:
 ```
-  git branch dev1
-  git checkout dev1
+  git branch dev-username
+  git checkout dev-username
 ```
 
  * Now you can make any changes you want. Once you are done, commit it and push your branch.
 ```
   git commit -a
-  git push origin dev1
+  git push origin dev-username
 ```
 
  * When you are satisfied with you new code, merge it with master branch. For that:
 ```
   git checkout master
-  git merge dev1
+  git merge dev-username
   git push
 ```
 
