@@ -20,17 +20,18 @@ Instructions for Users
   git cms-merge-topic -u vadler:53X-tagset133511
   git cms-addpkg PhysicsTools/PatUtils
   git cms-merge-topic -u TaiSakuma:53X-met-130910-01
+  scram b -j 9
 ```
  
  * Met filters according to [4]:
 ```
   cvs co -r V00-00-13-01 RecoMET/METFilters
-  ##  cvs co -r V00-00-08 RecoMET/METAnalyzers
   cvs co -r V00-03-23 CommonTools/RecoAlgos
   cvs co -r V01-00-11-01 DPGAnalysis/Skims
   cvs co -r V00-11-17 DPGAnalysis/SiStripTools
   cvs co -r V00-00-08 DataFormats/TrackerCommon
   cvs co -r V01-09-05 RecoLocalTracker/SubCollectionProducers
+  scram b -j 9
 ```
 
  * Egamma tools from [5]:
@@ -40,6 +41,7 @@ Instructions for Users
   cd EgammaAnalysis/ElectronTools/data
   cat download.url | xargs wget
   cd ../../../
+  scram b -j 9
 ```
 
  * Track MET Code [need a ref]:
