@@ -569,7 +569,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     iEvent.getByLabel("reducedEcalRecHitsEB",Brechit);
 
-    const EcalRecHitCollection* barrelRecHits= Brechit.product();
+    //const EcalRecHitCollection* barrelRecHits= Brechit.product();
 
     Handle<vector<reco::Photon> > photons;
     iEvent.getByLabel(photonTag_, photons);
@@ -592,7 +592,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       TCPhoton::CrystalInfo crystal = {};
       float timing_avg =0.0;
       int ncrys   = 0;
-      int ncrysPhoton = 0;
       vector< std::pair<DetId, float> >::const_iterator detitr;
 
       for(detitr = PhotonHit_DetIds.begin(); detitr != PhotonHit_DetIds.end(); ++detitr)
@@ -627,8 +626,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       //Without taking into account uncertainty, this time makes no sense.
       if (ncrys !=0) timing_avg = timing_avg/(float)ncrys;
       else timing_avg = -99.;
-      ncrysPhoton = crystalinfo_container.size(); 
-      int pho_timingavg_xtal      = timing_avg;
 
       myPhoton->SetNCrystals(crystalinfo_container.size());
 
@@ -638,6 +635,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 
       }//end of for (unsigned int y =0; y < crystalinfo_container.size();y++
+      /*
       vector<TCPhoton::CrystalInfo> savedCrystals = myPhoton->GetCrystalVect();
       for (int y = 0; y< myPhoton->GetNCrystals();y++){
         std::cout << "savedCrystals[y].time : " << savedCrystals[y].time << std::endl; 
@@ -647,8 +645,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
         std::cout << "savedCrystals[y].rawId: " << savedCrystals[y].rawId <<std::endl;
       }
+      */
 
-      const reco::BasicCluster& seedClus = *(iPhoton->superCluster()->seed());
+      //const reco::BasicCluster& seedClus = *(iPhoton->superCluster()->seed());
 
 
 
@@ -739,7 +738,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       iEvent.getByLabel("genParticles", genParticleColl);
 
       map<const reco::GenParticle*, TCGenParticle*> genMap;
-      TCGenParticle* genCon;
       for (GenParticleCollection::const_iterator myParticle= genParticleColl->begin(); myParticle != genParticleColl->end(); ++myParticle) {
 
         ////  Leptons and photons and b's, (oh my)
@@ -757,7 +755,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
              || abs(myParticle->pdgId()) == 39
             )
            ) {
-          genCon = addGenParticle(&(*myParticle), genPartCount, genMap);
+          addGenParticle(&(*myParticle), genPartCount, genMap);
 
         }
 
