@@ -25,7 +25,7 @@ Instructions for Users
  * Met filters according to [4]:
 ```
   cvs co -r V00-00-13-01 RecoMET/METFilters
-  cvs co -r V00-00-08 RecoMET/METAnalyzers
+  ##  cvs co -r V00-00-08 RecoMET/METAnalyzers
   cvs co -r V00-03-23 CommonTools/RecoAlgos
   cvs co -r V01-00-11-01 DPGAnalysis/Skims
   cvs co -r V00-11-17 DPGAnalysis/SiStripTools
@@ -102,7 +102,7 @@ Instructions for Users
   cp NWU/ntupleProducer/patches/mvaPFMET_leptons_cff.py JetMETCorrections/METPUSubtraction/python/mvaPFMET_leptons_cff.py
   cp NWU/ntupleProducer/patches/mvaPFMET_leptons_cfi.py JetMETCorrections/METPUSubtraction/python/mvaPFMET_leptons_cfi.py
 
-  scram b
+  scram b -j 9
 ```
 
 
