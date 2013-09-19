@@ -82,12 +82,6 @@ Instructions for Users
   #cvs co -r HEAD JetMETCorrections/Type1MET/plugins/Type0PFMETcorrInputProducer.cc
 ```
 
-
- * Before we checkout the ntupleProducer, compile this mess.
-```
- scram b -j 9
-```
-
  * Now check out the ntuple producer code and then the specific tag/branch of the code that is known to work
 ```
  git clone https://github.com/NWUHEP/ntupleProducer NWU/ntupleProducer
