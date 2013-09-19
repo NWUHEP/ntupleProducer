@@ -51,11 +51,6 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
   photonIsoCalcTag_   = iConfig.getParameter<edm::ParameterSet>("photonIsoCalcTag");
   jetPUIdAlgo_        = iConfig.getParameter<edm::ParameterSet>("jetPUIdAlgo");
 
-
-  //These are for ele energy regression:
-  geomInitialized_ = false;
-
-
 }
 
 ntupleProducer::~ntupleProducer()
@@ -483,7 +478,22 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     Handle<reco::GsfElectronCollection > electrons;
     iEvent.getByLabel(electronTag_, electrons);
 
+   
+    edm::Handle<edm::ValueMap<float>> mvaTrigV0_handle;
+    iEvent.getByLabel("mvaTrigV0", mvaTrigV0_handle);
+    const edm::ValueMap<float> ele_mvaTrigV0 = (*mvaTrigV0_handle.product());
+
+    edm::Handle<edm::ValueMap<double>> regEne_handle;
+    iEvent.getByLabel(edm::InputTag("eleRegressionEnergy","eneRegForGsfEle"), regEne_handle);
+    const edm::ValueMap<double> ele_regEne = (*regEne_handle.product());
+
+    edm::Handle<edm::ValueMap<double>> regErr_handle;
+    iEvent.getByLabel(edm::InputTag("eleRegressionEnergy","eneErrorRegForGsfEle"), regErr_handle);
+    const edm::ValueMap<double> ele_regErr = (*regErr_handle.product());
+
+    Int_t eee=0;
     for (vector<reco::GsfElectron>::const_iterator iElectron = electrons->begin(); iElectron != electrons->end(); ++iElectron) {
+      eee++;
       if (iElectron->pt() < 5) continue;
 
       TCElectron* eleCon = new ((*recoElectrons)[eleCount]) TCElectron;
@@ -500,86 +510,75 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 
       // Electron ID variables
-      eleCon->SetHadOverEm(iElectron->hadronicOverEm());
-      eleCon->SetDphiSuperCluster(iElectron->deltaPhiSuperClusterTrackAtVtx());
-      eleCon->SetDetaSuperCluster(iElectron->deltaEtaSuperClusterTrackAtVtx());
-      eleCon->SetSigmaIEtaIEta(iElectron->sigmaIetaIeta());
-      eleCon->SetFBrem(iElectron->fbrem());
-      eleCon->SetEOverP(iElectron->eSuperClusterOverP());
-      eleCon->SetSCEta(iElectron->superCluster()->eta());
-      eleCon->SetR9(iElectron->r9());
+      eleCon->SetHadOverEm(        iElectron->hadronicOverEm());
+      eleCon->SetDphiSuperCluster( iElectron->deltaPhiSuperClusterTrackAtVtx());
+      eleCon->SetDetaSuperCluster( iElectron->deltaEtaSuperClusterTrackAtVtx());
+      eleCon->SetSigmaIEtaIEta(    iElectron->sigmaIetaIeta());
+      eleCon->SetFBrem(  iElectron->fbrem());
+      eleCon->SetEOverP( iElectron->eSuperClusterOverP());
+      eleCon->SetSCEta(  iElectron->superCluster()->eta());
+      eleCon->SetR9(     iElectron->r9());
 
       eleCon->SetPtError(iElectron->gsfTrack()->ptError());
       eleCon->SetNormalizedChi2(iElectron->gsfTrack()->normalizedChi2());
 
-      eleCon->SetNumberOfValidPixelHits(iElectron->gsfTrack()->hitPattern().numberOfValidPixelHits());
+      eleCon->SetNumberOfValidPixelHits(  iElectron->gsfTrack()->hitPattern().numberOfValidPixelHits());
       eleCon->SetNumberOfValidTrackerHits(iElectron->gsfTrack()->hitPattern().numberOfValidTrackerHits());
-      eleCon->SetNumberOfLostPixelHits(iElectron->gsfTrack()->hitPattern().numberOfLostPixelHits());
-      eleCon->SetNumberOfLostTrackerHits(iElectron->gsfTrack()->hitPattern().numberOfLostTrackerHits());
+      eleCon->SetNumberOfLostPixelHits(   iElectron->gsfTrack()->hitPattern().numberOfLostPixelHits());
+      eleCon->SetNumberOfLostTrackerHits( iElectron->gsfTrack()->hitPattern().numberOfLostTrackerHits());
 
       eleCon->SetIdMap("fabsEPDiff",fabs((1/iElectron->ecalEnergy()) - (1/iElectron->trackMomentumAtVtx().R()))); 
 
       // Electron Iso variables
-      eleCon->SetIsoMap("EmIso_R03", iElectron->dr03EcalRecHitSumEt());
+      eleCon->SetIsoMap("EmIso_R03",  iElectron->dr03EcalRecHitSumEt());
       eleCon->SetIsoMap("HadIso_R03", iElectron->dr03HcalTowerSumEt());
-      eleCon->SetIsoMap("SumPt_R03", iElectron->dr03TkSumPt());
+      eleCon->SetIsoMap("SumPt_R03",  iElectron->dr03TkSumPt());
 
-      eleCon->SetIsoMap("EmIso_R04", iElectron->dr04EcalRecHitSumEt());
+      eleCon->SetIsoMap("EmIso_R04",  iElectron->dr04EcalRecHitSumEt());
       eleCon->SetIsoMap("HadIso_R04", iElectron->dr04HcalTowerSumEt());
-      eleCon->SetIsoMap("SumPt_R04", iElectron->dr04TkSumPt());
+      eleCon->SetIsoMap("SumPt_R04",  iElectron->dr04TkSumPt());
 
-      eleCon->SetIsoMap("pfPhotonEt_R03", iElectron->pfIsolationVariables().photonIso);
+      eleCon->SetIsoMap("pfPhotonEt_R03",      iElectron->pfIsolationVariables().photonIso);
       eleCon->SetIsoMap("pfChargedHadron_R03", iElectron->pfIsolationVariables().chargedHadronIso);
       eleCon->SetIsoMap("pfNeutralHadron_R03", iElectron->pfIsolationVariables().neutralHadronIso);
-
-      eleIsolator.fGetIsolation(&(*iElectron), &thePfColl, myVtxRef, primaryVtcs);
-      eleCon->SetIsoMap("pfChIso_R04",eleIsolator.getIsolationCharged());
-      eleCon->SetIsoMap("pfNeuIso_R04",eleIsolator.getIsolationNeutral());
-      eleCon->SetIsoMap("pfPhoIso_R04",eleIsolator.getIsolationPhoton());
-
-      // Effective area for rho PU corrections (not sure if needed)
-      float AEff03 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso03, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
-      float AEff04 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso04, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
-      eleCon->SetIsoMap("EffArea_R03", AEff03);
-      eleCon->SetIsoMap("EffArea_R04", AEff04);
 
       // Conversion information
       bool convVeto = !(ConversionTools::hasMatchedConversion(*iElectron,hConversions,vertexBeamSpot.position()));
       eleCon->SetConversionVeto(convVeto);
       eleCon->SetConversionMissHits(iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfHits());
 
-      // Add electron MVA ID and ISO
+      // Add electron MVA ID and ISO variables
       electronMVA(&(*iElectron), eleCon, iEvent, iSetup, thePfCollEleIso, rhoFactor);
+      
+
+      /*
+      eleIsolator.fGetIsolation(&(*iElectron), &thePfColl, myVtxRef, primaryVtcs);
+      eleCon->SetIsoMap("pfChIso_R04", eleIsolator.getIsolationCharged());
+      eleCon->SetIsoMap("pfNeuIso_R04",eleIsolator.getIsolationNeutral());
+      eleCon->SetIsoMap("pfPhoIso_R04",eleIsolator.getIsolationPhoton());
+      */
+      // Effective area for rho PU corrections (not sure if needed)
+      float AEff03 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso03, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
+      float AEff04 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso04, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
+      eleCon->SetIsoMap("EffArea_R03", AEff03);
+      eleCon->SetIsoMap("EffArea_R04", AEff04);
 
 
-      // Calculate electron energy regression
-      //Folowing the example from: EgammaAnalysis/ElectronTools/plugins/ElectronRegressionEnergyProducer.cc
+      //MVA output:
+      float m = ele_mvaTrigV0.get(eee-1);
+      eleCon->SetMvaID(m);
+      
+      //Regression energy
+      double ene = ele_regEne.get(eee-1);
+      double err = ele_regErr.get(eee-1);
+      eleCon->SetEnergyRegression(ene);
+      eleCon->SetEnergyRegressionErr(err);
+      
+      //cout<<eee<<"  mva0 = "<<m<<endl;
 
-      edm::Handle< EcalRecHitCollection > pEBRecHits;
-      edm::Handle< EcalRecHitCollection > pEERecHits;
-      iEvent.getByLabel("reducedEcalRecHitsEB", pEBRecHits );
-      iEvent.getByLabel("reducedEcalRecHitsEE", pEERecHits );
-
-      const EcalRecHitCollection * recHits=0;
-      if(iElectron->isEB())
-        recHits = pEBRecHits.product();
-      else
-        recHits = pEERecHits.product();
-
-      SuperClusterHelper mySCHelper(&(*iElectron),recHits,ecalTopology_,caloGeometry_);
-      //EcalClusterLazyTools lazyTools(iEvent, iSetup, reducedEBRecHitCollection, reducedEERecHitCollection);
-
-      double eleEngReg    = myEleReg->calculateRegressionEnergy(&(*iElectron), mySCHelper, rhoFactor, primaryVtcs->size(), false);
-      double eleEngRegErr = myEleReg->calculateRegressionEnergyUncertainty(&(*iElectron), mySCHelper, rhoFactor, primaryVtcs->size(), false);
-
-
-      eleCon->SetIdMap("EnergyRegression",eleEngReg);
-      eleCon->SetIdMap("EnergyRegressionErr",eleEngRegErr);
-
-      //These doesn't work yet (need PAT ElectronEnergyCalibrator). Is it used thou?
       reco::GsfElectron iElectronTmp = *iElectron;
       //ElectronEnergyCalibrator myCalibrator("none",true,!isRealData,true,10,false);
-      //myCalibrator.correct(iElectronTmp, iElectronTmp.r9(), iEvent, iSetup, eleEngReg,eleEngRegErr);
+      //myCalibrator.correct(iElectronTmp, iElectronTmp.r9(), iEvent, iSetup, ene, err);
 
       TLorentzVector tmpP4;
       tmpP4.SetPtEtaPhiE(iElectronTmp.pt(), iElectronTmp.eta(), iElectronTmp.phi(), iElectronTmp.energy());
@@ -705,6 +704,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       myPhoton->SetIsoMap("HadIso_R04", (iPhoton->hcalTowerSumEtConeDR04()));
       myPhoton->SetIsoMap("TrkIso_R04", (iPhoton->trkSumPtHollowConeDR04()));
 
+      
       // PF Iso for photons
       phoIsolator.fGetIsolation(&(*iPhoton),&thePfColl, myVtxRef, primaryVtcs);
       myPhoton->SetIsoMap("chIso03",phoIsolator.getIsolationCharged());
@@ -776,8 +776,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         ////  Leptons and photons and b's, (oh my)
         //// Z's, W's, H's, and now big juicy Gravitons
         if (
-            (
-             (abs(myParticle->pdgId()) >= 11 && abs(myParticle->pdgId()) <= 16) 
+            (abs(myParticle->pdgId()) >= 11 && abs(myParticle->pdgId()) <= 16) 
              || myParticle->pdgId() == 22 
              || abs(myParticle->pdgId()) == 5 
              || abs(myParticle->pdgId()) == 23 
@@ -786,10 +785,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
              || abs(myParticle->pdgId()) == 35 
              || abs(myParticle->pdgId()) == 36 
              || abs(myParticle->pdgId()) == 39
-            )
-           ) {
+            ) {
           genCon = addGenParticle(&(*myParticle), genPartCount, genMap);
-
+          
         }
 
       }
@@ -1027,23 +1025,23 @@ void  ntupleProducer::beginJob()
   phoIsolator.setConeSize(0.3);
 
   // Initialize Electron MVA nonsense
-  eleIsolator.initializeElectronIsolation(kTRUE);
-  eleIsolator.setConeSize(0.4);
+  //eleIsolator.initializeElectronIsolation(kTRUE);
+  //eleIsolator.setConeSize(0.4);
 
   // Initialize Electron Regression
-  myEleReg.reset(new ElectronEnergyRegressionEvaluate());
+  //myEleReg.reset(new ElectronEnergyRegressionEvaluate());
   //myEleReg->initialize(mvaPath+"/src/data/eleEnergyRegWeights_V1.root",
 
   //This is rediculous -->
-  string mvaPath = getenv("CMSSW_BASE");
-  mvaPath = mvaPath+"/src/EgammaAnalysis/ElectronTools/data:"+getenv("CMSSW_SEARCH_PATH");
-  setenv("CMSSW_SEARCH_PATH",mvaPath.c_str(),1);
+  //string mvaPath = getenv("CMSSW_BASE");
+  //mvaPath = mvaPath+"/src/EgammaAnalysis/ElectronTools/data:"+getenv("CMSSW_SEARCH_PATH");
+  //setenv("CMSSW_SEARCH_PATH",mvaPath.c_str(),1);
   //<<--- 
 
-  myEleReg->initialize("eleEnergyRegWeights_V1.root", ElectronEnergyRegressionEvaluate::kNoTrkVar);
+  //myEleReg->initialize("eleEnergyReg2012Weights_V1.root", ElectronEnergyRegressionEvaluate::kNoTrkVar);
 
-  if (verboseMVAs) cout<<"mvaPath: "<<mvaPath<<endl;
-  if (verboseMVAs) cout<<"MVA electron regression shit probably has initialized"<<endl;
+  //if (verboseMVAs) cout<<"mvaPath: "<<mvaPath<<endl;
+  //if (verboseMVAs) cout<<"MVA electron regression shit probably has initialized"<<endl;
 
   // Initialize Jet PU ID
   myPUJetID.reset(new PileupJetIdAlgo(jetPUIdAlgo_));

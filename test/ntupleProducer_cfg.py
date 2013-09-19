@@ -6,21 +6,13 @@ from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 process = cms.Process("NTUPLE")
 
 options = VarParsing.VarParsing ('analysis')
-options.maxEvents = 300
+options.maxEvents = 30
 #options.inputFiles= '/store/data/Run2012C/SingleMu/AOD/22Jan2013-v1/30010/C0E05558-9078-E211-9E02-485B39800B65.root'
 #options.inputFiles= '/store/data/Run2012C/DoublePhoton/AOD/22Jan2013-v2/30001/72DE4526-F370-E211-B370-00304867920A.root'
 #options.loadFromFile('inputFiles','temp_mg5_full.txt')
-#options.inputFiles= "/store/user/stoyan/MC/MG5_pp_mumug/SIMRECO_START53_V5_20.07.13/stoynev/MG5_pp_mumug_SIMRECO_START53_V5/MG5_pp_mumug_SIMRECO_START53_V5/abf2cea0333a5a4aadd0172f40b40a40/ppTOllg_20.07.13_744_1_vSV.root"
 #'/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
-#'file:/tmp/naodell/TTJetsToHqToWWq_M-125_TuneZ2_8TeV_pythia6_v2_1_1_p64.root'\
-#options.inputFiles='/store/user/andrey/hzgamma_pythia8_153_8TeV_v2_HLT/hzgamma_pythia8_153_8TeV_v2_HLT/53f675467979b3dab12ab0598ae228db/hzgamma_pythia8_py_GEN_SIM_DIGI_L1_DIGI2RAW_HLT_RAW2DIGI_RECO_PU_100_1_82E.root'
-#options.inputFiles = '/store/user/andrey/HDalitz_mu_stoyan_hack_v2/HDalitz_mu_stoyan_hack_v2/35e270762607bc21c7cf8c2a7f175bc3/hzgamma_stoyan_hack_pythia8_py_GEN_SIM_DIGI_L1_DIGI2RAW_HLT_RAW2DIGI_RECO_PU_85_1_mBL.root'
-#options.inputFiles = 'file:/uscms_data/d2/andreypz/cmssw/zgamma/generate/CMSSW_5_3_10/src/MCFM/reco.root'
-#options.inputFiles ='/store/user/andrey/MCFM_hzgamma_8TeV_LHE_pythia6_GEN_SIM_v2_unweighted/MCFM_lord_hzgamma_8TeV_LHE_pythia6_RECO/39bf61f738ba3bdb8860f0848073cc88/reco_301_1_VW1.root'
-#options.inputFiles = 'file:/uscms/home/andreypz/nobackup/cmssw/zgamma/generate/CMSSW_5_3_10/src/MCFM/reco_5ev_orig.root'
-#options.inputFiles = 'file:/uscms/home/andreypz/nobackup/cmssw/zgamma/generate/CMSSW_5_3_10/src/MCFM/aodsim.root'
-#options.inputFiles = '/store/user/andrey/MCFM_lord_hzgamma_8TeV_LHE_pythia6_v2/AODSIM/39bf61f738ba3bdb8860f0848073cc88/aodsim_99_1_KmE.root'
-options.inputFiles = 'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v2/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_50.root'
+#options.inputFiles = 'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v2/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_50.root'
+options.inputFiles = '/store/user/andrey/MCFM_lord_hzgamma_8TeV_LHE_pythia6_v2/AODSIM/39bf61f738ba3bdb8860f0848073cc88/aodsim_100_1_BGG.root'
 
 options.register("isRealData",
                  0,
@@ -33,8 +25,8 @@ options.parseArguments()
 ## In case you are running over a privately produced MC sample, that is generatet in _one step_,
 ## you probably need to use "HLT" for both recoTier and hltTier.
 ## Unless you changed the name of your process. In that case it should be that name.
-recoTier = "RECO"
-hltTier  = "HLT"
+#recoTier = "RECO"
+#hltTier  = "HLT"
 
 # real data or MC?
 isRealData = options.isRealData
@@ -47,10 +39,10 @@ process.load('Configuration.StandardSequences.Reconstruction_cff')
 
 if (isRealData):
     process.GlobalTag.globaltag = 'FT_53_V21_AN3::All'
-    #process.load('JetMETCorrections.METPUSubtraction.mvaPFMET_leptons_data_cff')
+    process.load('JetMETCorrections.METPUSubtraction.mvaPFMET_leptons_data_cff')
 else:
     process.GlobalTag.globaltag = 'START53_V27::All'
-    #process.load('JetMETCorrections.METPUSubtraction.mvaPFMET_leptons_cff')
+    process.load('JetMETCorrections.METPUSubtraction.mvaPFMET_leptons_cff')
 
 # Create good primary vertices for PF association
 from PhysicsTools.SelectorUtils.pvSelector_cfi import pvSelector
@@ -169,16 +161,11 @@ process.kt6PFJetsIso.Rho_EtaMax = cms.double(2.5)
 # for jet pileup ID variables
 from RecoJets.JetProducers.PileupJetIDParams_cfi import *
 
-# pat sequences
-process.load("PhysicsTools.PatAlgos.patSequences_cff")
-from PhysicsTools.PatAlgos.patEventContent_cff import patEventContent
-process.out = cms.OutputModule("PoolOutputModule",
-                               fileName = cms.untracked.string('/tmp/patTuple.root'),
-                               SelectEvents   = cms.untracked.PSet( SelectEvents = cms.vstring('ntuplePath')),
-                               outputCommands = cms.untracked.vstring('keep *')#, *patEventContent )
-                               )
+#commenting out  pat sequences. we don't use them
+#process.load("PhysicsTools.PatAlgos.patSequences_cff")
+#from PhysicsTools.PatAlgos.patEventContent_cff import patEventContent
 
-from NWU.ntupleProducer.PatSequences_cff import addPatSequence
+#from NWU.ntupleProducer.PatSequences_cff import addPatSequence
 #addPatSequence(process, not isRealData, addPhotons = True)
 
 
@@ -290,6 +277,24 @@ AllFilters = cms.Sequence(process.HBHENoiseFilterResultProducer
                           * ~process.logErrorTooManyClusters #trkPOGFilter 3
                           )
 
+
+
+
+# Electron MVA ID producer: 
+process.load('EgammaAnalysis/ElectronTools/electronIdMVAProducer_cfi')
+process.load('EgammaAnalysis/ElectronTools/electronRegressionEnergyProducer_cfi')
+process.eleRegressionEnergy.inputElectronsTag    = cms.InputTag('gsfElectrons')
+process.eleRegressionEnergy.inputCollectionType  = cms.uint32(0)
+process.eleRegressionEnergy.useRecHitCollections = cms.bool(True)
+process.eleRegressionEnergy.produceValueMaps     = cms.bool(True)
+
+#process.load('EgammaAnalysis/ElectronTools/calibratedElectrons_cfi')
+#process.calibratedElectrons.nameEnergyReg = cms.InputTag('eleRegressionEnergy','eneRegForGsfEle'),
+#process.calibratedElectrons.nameEnergyErrorReg = cms.InputTag('eleRegressionEnergy','eneErrorRegForGsfEle'),
+#process.calibratedElectrons.verbose = cms.bool(False),
+#process.calibratedElectrons.nameNewEnergyReg = cms.string('NEWeneRegForGsfEle'),
+#process.calibratedElectrons.nameNewEnergyErrorReg  = cms.string('NEWeneErrorRegForGsfEle'),  
+
 # event source
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(options.maxEvents))
 process.source = cms.Source("PoolSource",
@@ -351,7 +356,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   T0METTag	    =	 cms.untracked.InputTag('pfType1CorrectedMetType0'),
   T2METTag	    =	 cms.untracked.InputTag('pfType1p2CorrectedMet'),
 
-  partFlowTag       =    cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
+  partFlowTag       =  cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
   skimLepton        =  cms.untracked.bool(False),
 
   saveJets          =    cms.untracked.bool(True),
@@ -418,22 +423,26 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 )
 
 process.ntuplePath = cms.Path(
-      process.goodOfflinePrimaryVertices
-		* process.type0PFMEtCorrection
+    process.goodOfflinePrimaryVertices
+    * process.type0PFMEtCorrection
     * process.pfMEtSysShiftCorrSequence
     * process.producePFMETCorrections
     * process.pfNoPUSeq
-		* process.particleFlowForChargedMET
-		* process.pfChargedMET
-		* process.trackMet
-   #* process.patDefaultSequence
+    * process.particleFlowForChargedMET
+    * process.pfChargedMET
+    * process.trackMet
+    #* process.patDefaultSequence
     * process.kt6PFJetsIso
     * process.ak5PFJetsL1FastL2L3
     * process.ak5JetTracksAssociatorAtVertex
     * process.btagging
     * AllFilters
-    #* process.pfMEtMVAsequence
+    * process.pfMEtMVAsequence
     * process.pfMet1
+    
+    * process.mvaTrigV0
+    * process.eleRegressionEnergy
+    #* process.calibratedElectrons
     * process.ntupleProducer
 )
 
@@ -457,4 +466,15 @@ process.ntuplePath = cms.Path(
 #	        * AllFilters
 #	        * process.ntupleProducer
 #	        )
-#process.outpath = cms.EndPath(process.out)
+
+
+
+
+
+process.out = cms.OutputModule("PoolOutputModule",
+                               fileName = cms.untracked.string('/tmp/myTuple.root'),
+                               SelectEvents   = cms.untracked.PSet( SelectEvents = cms.vstring('ntuplePath')),
+                               outputCommands = cms.untracked.vstring('keep *')
+                               )
+
+process.outpath = cms.EndPath(process.out)

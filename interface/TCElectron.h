@@ -16,6 +16,9 @@ class TCElectron : public TCPhysObject {
         float _eOverP;
         float _fBrem;
         float _r9;
+        float _mvaID;
+        float _regEne;
+        float _regErr;
 
         float _scEta;
 
@@ -60,6 +63,9 @@ class TCElectron : public TCPhysObject {
 
         float SCEta() const;
         float R9() const; 
+        float MvaID() const; 
+        float EnergyRegression() const; 
+        float EnergyRegressionErr() const; 
 
         bool  ConversionVeto() const;
         short ConversionMissHits() const;
@@ -73,7 +79,7 @@ class TCElectron : public TCPhysObject {
         int NumberOfLostPixelHits() const;
         int NumberOfLostTrackerHits() const;
 
-        int CutLevel(int lvl) const;
+        int  CutLevel(int lvl) const;
         bool PassID(int lvl) const;
         bool PassConversion(int lvl) const;
         bool PassIsolation(int lvl) const;
@@ -103,6 +109,9 @@ class TCElectron : public TCPhysObject {
         void SetNumberOfLostTrackerHits(int n);
         void SetNormalizedChi2(float n);
         void SetR9(float r);
+        void SetMvaID(float m);
+        void SetEnergyRegression(float e);
+        void SetEnergyRegressionErr(float e);
 
         void SetIsEB(bool b);
         void SetIsEE(bool b);

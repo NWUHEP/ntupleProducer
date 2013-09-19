@@ -108,6 +108,8 @@
 #include "EgammaAnalysis/ElectronTools/interface/PFIsolationEstimator.h"
 #include "EgammaAnalysis/ElectronTools/interface/ElectronEnergyRegressionEvaluate.h"
 
+#include "EgammaAnalysis/ElectronTools/interface/ElectronEnergyCalibrator.h"
+
 #include "EgammaAnalysis/ElectronTools/interface/EGammaMvaEleEstimator.h"
 #include "Geometry/CaloEventSetup/interface/CaloTopologyRecord.h"
 #include "TrackingTools/IPTools/interface/IPTools.h"
