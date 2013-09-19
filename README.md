@@ -54,6 +54,7 @@ Instructions for Users
   cvs up -r 1.17 RecoMET/METProducers/src/SealModule.cc
   cvs co -r 1.1 RecoMET/METProducers/python/TrackMET_cfi.py
   cvs co -r 1.2 RecoMET/METProducers/python/pfChargedMET_cfi.py
+  scram b -j 9
 ```
 
 
@@ -74,6 +75,7 @@ Instructions for Users
   cvs co -r V01-04-25                             RecoTauTag/RecoTau 
   cvs co -r V03-04-07                             RecoMET/METAlgorithms
   cvs co -r V01-04-13                             RecoTauTag/Configuration
+  scram b -j 9
 ```
 
  * Files that needs to be updated [why?]:
