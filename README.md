@@ -70,7 +70,7 @@ Instructions for Users
   cvs up -r HEAD RecoJets/JetProducers/python/PileupJetIDCutParams_cfi.py                     
   cvs up -r HEAD RecoJets/JetProducers/python/PileupJetIDParams_cfi.py                     
   cvs up -r HEAD RecoJets/JetProducers/python/PileupJetID_cfi.py     
-  cvs co -r b5_3_X_cvMEtCorr_2013Feb22            DataFormats/METReco
+  ###cvs co -r b5_3_X_cvMEtCorr_2013Feb22            DataFormats/METReco
   cvs co -r V05-00-16                             DataFormats/JetReco
   cvs co -r V01-04-25                             RecoTauTag/RecoTau 
   cvs co -r V03-04-07                             RecoMET/METAlgorithms
