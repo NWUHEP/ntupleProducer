@@ -14,14 +14,6 @@ Instructions for Users
 ```
 (note: _patch6 is recommended in met recepie)
 
- * Check out the ntuple producer code and then the specific tag of the code that is known to work
-```
- git clone https://github.com/NWUHEP/ntupleProducer NWU/ntupleProducer
- cd NWU/ntupleProducer
- git checkout dev-andrey-fresh
- cd ../..
-```
-
  * Met recipes, according to [2] and [3]:
 ```
   git cms-addpkg PhysicsTools/PatAlgos
@@ -104,10 +96,21 @@ Instructions for Users
   cp NWU/ntupleProducer/patches/mvaPFMET_leptons_cfi.py JetMETCorrections/METPUSubtraction/python/mvaPFMET_leptons_cfi.py
 ```
 
- * Finally, compile this mess (takes a while... coffee time!)  
+ * Before we checkout the ntupleProducer, compile this mess.
 ```
  scram b -j 9
 ```
+
+ * Now check out the ntuple producer code and then the specific tag/branch of the code that is known to work
+```
+ git clone https://github.com/NWUHEP/ntupleProducer NWU/ntupleProducer
+ cd NWU/ntupleProducer
+ git checkout dev-andrey-fresh
+ cd ../..
+ scram b
+```
+
+
 
 Once compiled, we are ready to run it
 ### Runnning the code
