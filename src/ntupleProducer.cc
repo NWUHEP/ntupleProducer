@@ -394,9 +394,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
       if (primaryVtcs->size()>0){
         muCon->SetIsTight(muon::isTightMuon(*iMuon, *primaryVtcs->begin()));
-        //isSoftMuon is not available in CMSSW_5_3_8, where I'm working, will include it in a later versions
         muCon->SetIsSoft( muon::isSoftMuon( *iMuon, *primaryVtcs->begin()));
-        //muCon->SetIsSoft(0);                
       }
       else{
         muCon->SetIsTight(0);
@@ -665,11 +663,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       myPhoton->SetNCrystals(crystalinfo_container.size());
 
       for (unsigned int y =0; y < crystalinfo_container.size() && y < 100;y++){ 
-
         myPhoton->AddCrystal(crystalinfo_container[y]);
+      }
 
-
-      }//end of for (unsigned int y =0; y < crystalinfo_container.size();y++
       /*
       vector<TCPhoton::CrystalInfo> savedCrystals = myPhoton->GetCrystalVect();
       for (int y = 0; y< myPhoton->GetNCrystals();y++){
@@ -1743,7 +1739,6 @@ TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticl
     genCon->SetMother(0);
 
     //Ignore the mothers for now
-    /*
       map<const reco::GenParticle*,TCGenParticle*>::iterator momIt;
     if (myParticle->numberOfMothers() == 0){
       genCon->SetMother(0);
@@ -1773,7 +1768,6 @@ TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticl
       genCon->SetMother(momIt->second);
       }
     }
-    */
   }
   else  
     genCon = it->second;

@@ -112,7 +112,7 @@ Instructions for Users
 Once compiled, we are ready to run it
 ### Runnning the code
 ```
-  cd test
+  cd NWU/ntupleProducer/test
   cmsRun ntupleProducer_cfg.py
 ```
 it assumes you are running over an MC sample. If you want to run on data, do:
