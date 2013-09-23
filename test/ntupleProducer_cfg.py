@@ -6,230 +6,14 @@ from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 process = cms.Process("NTUPLE")
 
 options = VarParsing.VarParsing ('analysis')
-options.maxEvents = 300
+options.maxEvents = 30
 #options.inputFiles= '/store/data/Run2012C/SingleMu/AOD/22Jan2013-v1/30010/C0E05558-9078-E211-9E02-485B39800B65.root'
 #options.inputFiles= '/store/data/Run2012C/DoublePhoton/AOD/22Jan2013-v2/30001/72DE4526-F370-E211-B370-00304867920A.root'
 #options.loadFromFile('inputFiles','temp_mg5_full.txt')
-#options.inputFiles= "/store/user/stoyan/MC/MG5_pp_mumug/SIMRECO_START53_V5_20.07.13/stoynev/MG5_pp_mumug_SIMRECO_START53_V5/MG5_pp_mumug_SIMRECO_START53_V5/abf2cea0333a5a4aadd0172f40b40a40/ppTOllg_20.07.13_744_1_vSV.root"
 #'/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
-#'file:/tmp/naodell/TTJetsToHqToWWq_M-125_TuneZ2_8TeV_pythia6_v2_1_1_p64.root'\
-#options.inputFiles='/store/user/andrey/hzgamma_pythia8_153_8TeV_v2_HLT/hzgamma_pythia8_153_8TeV_v2_HLT/53f675467979b3dab12ab0598ae228db/hzgamma_pythia8_py_GEN_SIM_DIGI_L1_DIGI2RAW_HLT_RAW2DIGI_RECO_PU_100_1_82E.root'
-#options.inputFiles = '/store/user/andrey/HDalitz_mu_stoyan_hack_v2/HDalitz_mu_stoyan_hack_v2/35e270762607bc21c7cf8c2a7f175bc3/hzgamma_stoyan_hack_pythia8_py_GEN_SIM_DIGI_L1_DIGI2RAW_HLT_RAW2DIGI_RECO_PU_85_1_mBL.root'
-#options.inputFiles = 'file:/uscms_data/d2/andreypz/cmssw/zgamma/generate/CMSSW_5_3_10/src/MCFM/reco.root'
-#options.inputFiles ='/store/user/andrey/MCFM_hzgamma_8TeV_LHE_pythia6_GEN_SIM_v2_unweighted/MCFM_lord_hzgamma_8TeV_LHE_pythia6_RECO/39bf61f738ba3bdb8860f0848073cc88/reco_301_1_VW1.root'
-#options.inputFiles = 'file:/uscms/home/andreypz/nobackup/cmssw/zgamma/generate/CMSSW_5_3_10/src/MCFM/reco_5ev_orig.root'
-#options.inputFiles = 'file:/uscms/home/andreypz/nobackup/cmssw/zgamma/generate/CMSSW_5_3_10/src/MCFM/aodsim.root'
-#options.inputFiles = '/store/user/andrey/MCFM_lord_hzgamma_8TeV_LHE_pythia6_v2/AODSIM/39bf61f738ba3bdb8860f0848073cc88/aodsim_99_1_KmE.root'
-#options.inputFiles = \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_0.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_1.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_2.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_3.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_4.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_5.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_6.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_7.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_8.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_9.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_10.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_11.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_12.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_13.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_14.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_15.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_16.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_17.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_18.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_19.root', \
-#options.inputFiles = \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_20.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_21.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_22.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_23.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_24.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_25.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_26.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_27.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_28.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_29.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_30.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_31.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_32.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_33.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_34.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_35.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_36.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_37.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_38.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_39.root', \
-      #options.inputFiles = \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_40.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_41.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_42.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_43.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_44.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_45.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_46.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_47.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_48.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_49.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_50.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_51.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_52.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_53.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_54.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_55.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_56.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_57.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_58.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_59.root', \
-      #options.inputFiles = \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_60.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_61.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_62.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_63.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_64.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_65.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_66.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_67.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_68.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_69.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_70.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_71.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_72.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_73.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_74.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_75.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_76.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_77.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_78.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_79.root', \
-      #options.inputFiles = \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_80.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_81.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_82.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_83.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_84.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_85.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_86.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_87.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_88.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_89.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_90.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_91.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_92.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_93.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_94.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_95.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_96.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_97.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_98.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_99.root', \
-      #options.inputFiles = \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_100.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_101.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_102.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_103.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_104.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_105.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_106.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_107.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_108.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_109.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_110.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_111.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_112.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_113.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_114.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_115.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_116.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_117.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_118.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_119.root', \
-      #options.inputFiles = \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_120.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_121.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_122.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_123.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_124.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_125.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_126.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_127.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_128.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_129.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_130.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_131.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_132.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_133.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_134.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_135.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_136.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_137.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_138.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_139.root', \
-      #options.inputFiles = \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_140.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_141.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_142.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_143.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_144.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_145.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_146.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_147.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_148.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_149.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_150.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_151.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_152.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_153.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_154.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_155.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_156.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_157.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_158.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_159.root', \
-      #options.inputFiles = \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_160.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_161.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_162.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_163.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_164.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_165.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_166.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_167.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_168.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_169.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_170.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_171.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_172.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_173.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_174.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_175.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_176.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_177.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_178.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_179.root', \
-options.inputFiles = \
-      'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_180.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_181.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_182.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_183.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_184.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_185.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_186.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_187.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_188.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_189.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_190.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_191.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_192.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_193.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_194.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_195.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_196.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_197.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_198.root', \
-      #'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_199.root', \
+#options.inputFiles = 'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v2/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_50.root'
+#options.inputFiles = '/store/user/andrey/MCFM_lord_hzgamma_8TeV_LHE_pythia6_v2/AODSIM/39bf61f738ba3bdb8860f0848073cc88/aodsim_100_1_BGG.root'
+options.inputFiles = '/store/data/Run2012D/SinglePhotonParked/AOD/22Jan2013-v1/30004/144D7268-4086-E211-9DC1-001E673984C1.root'
 
 options.register("isRealData",
                  0,
@@ -242,8 +26,8 @@ options.parseArguments()
 ## In case you are running over a privately produced MC sample, that is generatet in _one step_,
 ## you probably need to use "HLT" for both recoTier and hltTier.
 ## Unless you changed the name of your process. In that case it should be that name.
-recoTier = "RECO"
-hltTier  = "HLT"
+#recoTier = "RECO"
+#hltTier  = "HLT"
 
 # real data or MC?
 isRealData = options.isRealData
@@ -378,16 +162,11 @@ process.kt6PFJetsIso.Rho_EtaMax = cms.double(2.5)
 # for jet pileup ID variables
 from RecoJets.JetProducers.PileupJetIDParams_cfi import *
 
-# pat sequences
-process.load("PhysicsTools.PatAlgos.patSequences_cff")
-from PhysicsTools.PatAlgos.patEventContent_cff import patEventContent
-process.out = cms.OutputModule("PoolOutputModule",
-                               fileName = cms.untracked.string('/tmp/patTuple.root'),
-                               SelectEvents   = cms.untracked.PSet( SelectEvents = cms.vstring('ntuplePath')),
-                               outputCommands = cms.untracked.vstring('keep *')#, *patEventContent )
-                               )
+#commenting out  pat sequences. we don't use them
+#process.load("PhysicsTools.PatAlgos.patSequences_cff")
+#from PhysicsTools.PatAlgos.patEventContent_cff import patEventContent
 
-from NWU.ntupleProducer.PatSequences_cff import addPatSequence
+#from NWU.ntupleProducer.PatSequences_cff import addPatSequence
 #addPatSequence(process, not isRealData, addPhotons = True)
 
 
@@ -499,6 +278,20 @@ AllFilters = cms.Sequence(process.HBHENoiseFilterResultProducer
                           * ~process.logErrorTooManyClusters #trkPOGFilter 3
                           )
 
+
+
+
+# Electron MVA ID producer:
+process.load('EgammaAnalysis/ElectronTools/electronIdMVAProducer_cfi')
+process.load('EgammaAnalysis/ElectronTools/electronRegressionEnergyProducer_cfi')
+process.eleRegressionEnergy.inputElectronsTag    = cms.InputTag('gsfElectrons')
+process.eleRegressionEnergy.inputCollectionType  = cms.uint32(0)
+process.eleRegressionEnergy.useRecHitCollections = cms.bool(True)
+process.eleRegressionEnergy.produceValueMaps     = cms.bool(True)
+
+process.RandomNumberGeneratorService = cms.Service("RandomNumberGeneratorService")
+process.load('EgammaAnalysis/ElectronTools/calibratedElectrons_cfi')
+
 # event source
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(options.maxEvents))
 process.source = cms.Source("PoolSource",
@@ -561,7 +354,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   T0METTag	    =	 cms.untracked.InputTag('pfType1CorrectedMetType0'),
   T2METTag	    =	 cms.untracked.InputTag('pfType1p2CorrectedMet'),
 
-  partFlowTag       =    cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
+  partFlowTag       =  cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
   skimLepton        =  cms.untracked.bool(False),
 
   saveJets          =    cms.untracked.bool(True),
@@ -628,15 +421,15 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 )
 
 process.ntuplePath = cms.Path(
-      process.goodOfflinePrimaryVertices
-		* process.type0PFMEtCorrection
+    process.goodOfflinePrimaryVertices
+    * process.type0PFMEtCorrection
     * process.pfMEtSysShiftCorrSequence
     * process.producePFMETCorrections
     * process.pfNoPUSeq
-		* process.particleFlowForChargedMET
-		* process.pfChargedMET
-		* process.trackMet
-   #* process.patDefaultSequence
+    * process.particleFlowForChargedMET
+    * process.pfChargedMET
+    * process.trackMet
+    #* process.patDefaultSequence
     * process.kt6PFJetsIso
     * process.ak5PFJetsL1FastL2L3
     * process.ak5JetTracksAssociatorAtVertex
@@ -644,27 +437,16 @@ process.ntuplePath = cms.Path(
     * AllFilters
     * process.pfMEtMVAsequence
     * process.pfMet1
+
+    * process.eleRegressionEnergy
+    * process.calibratedElectrons
+    * process.mvaTrigV0
     * process.ntupleProducer
 )
 
-#if (isRealData == False):
-#	process.ntuplePath = cms.Path(
-#        	process.goodOfflinePrimaryVertices
-#		* process.genCandidatesForMET
-#		* process.corMetGlobalMuons
-#		* process.genMetCalo
-#	        * process.pfMEtSysShiftCorrSequence
-#	        * process.producePFMETCorrections
-#	        * process.pfNoPUSeq
-#		* process.particleFlowForChargedMET
-#		* process.pfChargedMET
-#		* process.trackMet
-#	        #* process.patDefaultSequence
-#	        * process.kt6PFJetsIso
-#	        * process.ak5PFJetsL1FastL2L3
-#	        * process.ak5JetTracksAssociatorAtVertex
-#	        * process.btagging
-#	        * AllFilters
-#	        * process.ntupleProducer
-#	        )
+#process.out = cms.OutputModule("PoolOutputModule",
+#                               fileName = cms.untracked.string('/tmp/myTuple.root'),
+#                               SelectEvents   = cms.untracked.PSet( SelectEvents = cms.vstring('ntuplePath')),
+#                               outputCommands = cms.untracked.vstring('keep *')
+#                               )
 #process.outpath = cms.EndPath(process.out)

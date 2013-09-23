@@ -12,6 +12,10 @@ TCElectron::~TCElectron() {
 
 // "get" methods -------------------------------------
 
+float TCElectron::MvaID() const { return _mvaID; } 
+float TCElectron::EnergyRegression() const { return _regEne; } 
+float TCElectron::EnergyRegressionErr() const { return _regErr; } 
+
 float TCElectron::R9() const { return _r9; } 
 
 float TCElectron::PtError() const {
@@ -129,6 +133,11 @@ TLorentzVector TCElectron::RegressionMomCombP4() const {
 
 
 void TCElectron::SetR9(float r){ _r9 = r; } 
+
+void TCElectron::SetMvaID(float m){ _mvaID = m; } 
+void TCElectron::SetEnergyRegression(float e){ _regEne = e; } 
+void TCElectron::SetEnergyRegressionErr(float e){ _regErr = e; } 
+
 
 void TCElectron::SetPtError(float e) {
   _ptError = e;

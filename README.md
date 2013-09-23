@@ -8,52 +8,45 @@ Instructions for Users
  * Set up the environment
 ```
   setenv SCRAM_ARCH slc5_amd64_gcc462
-  cmsrel CMSSW_5_3_8_patch1
-  cd CMSSW_5_3_8_patch1/src
+  cmsrel CMSSW_5_3_11_patch6
+  cd CMSSW_5_3_11_patch6/src
   cmsenv
 ```
+(note: _patch6 is recommended in met recepie)
 
- * Check out the ntuple producer code and then the specific tag of the code that is known to work
+ * Met recipes, according to [2] and [3]:
 ```
- git clone https://github.com/NWUHEP/ntupleProducer NWU/ntupleProducer
- cd NWU/ntupleProducer
- git checkout v8.0
- cd ../..
+  git cms-addpkg PhysicsTools/PatAlgos
+  git cms-merge-topic -u vadler:53X-tagset133511
+  git cms-addpkg PhysicsTools/PatUtils
+  git cms-merge-topic -u TaiSakuma:53X-met-130910-01
+  scram b -j 9
 ```
-
- * NWU Code (along for the ride from v6.X):
+ 
+ * Met filters according to [4]:
 ```
-  addpkg CommonTools/ParticleFlow   V00-03-16
-  addpkg RecoParticleFlow/PFProducer V15-01-11 
-  addpkg DataFormats/METReco V03-03-11-01 
-  addpkg JetMETCorrections/Type1MET V04-06-09-02
-  addpkg CommonTools/RecoUtils V00-01-04
-  addpkg DataFormats/ParticleFlowCandidate V15-03-04-01
-  addpkg DataFormats/TrackReco V10-02-02-01
-  addpkg DataFormats/VertexReco V02-00-04-01
-  addpkg PhysicsTools/PatAlgos V08-09-52  
-  cvs up -r V08-09-07-05 PhysicsTools/PatAlgos/python/patTemplate_cfg.py   
-  addpkg PhysicsTools/PatUtils V03-09-28
-  addpkg DataFormats/StdDictionaries V00-02-14
-  addpkg FWCore/GuiBrowsers V00-00-70
-  addpkg RecoMET/METProducers V03-03-12-02
-  addpkg DataFormats/PatCandidates V06-05-06-07
-  cvs co -r V00-00-13 RecoMET/METFilters
-  cvs co -r V00-00-08 RecoMET/METAnalyzers
+  cvs co -r V00-00-13-01 RecoMET/METFilters
   cvs co -r V00-03-23 CommonTools/RecoAlgos
   cvs co -r V01-00-11-01 DPGAnalysis/Skims
   cvs co -r V00-11-17 DPGAnalysis/SiStripTools
   cvs co -r V00-00-08 DataFormats/TrackerCommon
   cvs co -r V01-09-05 RecoLocalTracker/SubCollectionProducers
-  cvs co -r V00-00-30-02 -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
-  cvs up -r 1.13 EGamma/EGammaAnalysisTools/interface/PFIsolationEstimator.h
-  cvs up -r 1.20 EGamma/EGammaAnalysisTools/src/PFIsolationEstimator.cc
-  cvs co -r HCP2012_V05 EgammaAnalysis/ElectronTools
-  cvs co -r V09-00-01 RecoEgamma/EgammaTools
+  scram b -j 9
 ```
 
- * Track MET Code:
+ * Egamma tools from [5]:
 ```
+  cvs co -r V00-00-09 EgammaAnalysis/ElectronTools
+  cvs co -r V09-00-01 RecoEgamma/EgammaTools
+  cd EgammaAnalysis/ElectronTools/data
+  cat download.url | xargs wget
+  cd ../../../
+  scram b -j 9
+```
+
+ * Track MET Code [need a ref]:
+```
+  cvs co -r V03-03-12-02 RecoMET/METProducers
   cvs co -r 1.2 RecoMET/METProducers/src/ParticleFlowForChargedMETProducer.cc
   cvs co -r 1.1 RecoMET/METProducers/src/TrackMETProducer.cc
   cvs co -r 1.2 RecoMET/METProducers/interface/ParticleFlowForChargedMETProducer.h
@@ -61,9 +54,11 @@ Instructions for Users
   cvs up -r 1.17 RecoMET/METProducers/src/SealModule.cc
   cvs co -r 1.1 RecoMET/METProducers/python/TrackMET_cfi.py
   cvs co -r 1.2 RecoMET/METProducers/python/pfChargedMET_cfi.py
+  scram b -j 9
 ```
 
- * MVA MET Code:
+
+ * MVA MET Code [need a ref]:
 ```
   cvs co -r METPU_5_3_X_v12 JetMETCorrections/METPUSubtraction
   cvs co -r HEAD -d pharrisTmp UserCode/pharris/MVAMet/data
@@ -75,35 +70,45 @@ Instructions for Users
   cvs up -r HEAD RecoJets/JetProducers/python/PileupJetIDCutParams_cfi.py                     
   cvs up -r HEAD RecoJets/JetProducers/python/PileupJetIDParams_cfi.py                     
   cvs up -r HEAD RecoJets/JetProducers/python/PileupJetID_cfi.py     
-  cvs co -r b5_3_X_cvMEtCorr_2013Feb22            DataFormats/METReco
+  ###cvs co -r b5_3_X_cvMEtCorr_2013Feb22            DataFormats/METReco
   cvs co -r V05-00-16                             DataFormats/JetReco
   cvs co -r V01-04-25                             RecoTauTag/RecoTau 
   cvs co -r V03-04-07                             RecoMET/METAlgorithms
   cvs co -r V01-04-13                             RecoTauTag/Configuration
 ```
 
- * Files that needs to be updated:
+ * Files that needs to be updated, or not??:
 ```
-  cvs co -r V03-04-07 DataFormats/METReco/interface/CorrMETData.h
-  cvs co -r HEAD JetMETCorrections/Type1MET/plugins/Type0PFMETcorrInputProducer.h
-  cvs co -r HEAD JetMETCorrections/Type1MET/plugins/Type0PFMETcorrInputProducer.cc
+  ## cvs co -r V03-04-07 DataFormats/METReco/interface/CorrMETData.h
+  # These did not work (couldn't check out):
+  #cvs co -r HEAD JetMETCorrections/Type1MET/plugins/Type0PFMETcorrInputProducer.h
+  #cvs co -r HEAD JetMETCorrections/Type1MET/plugins/Type0PFMETcorrInputProducer.cc
 ```
 
- * Patches to checked folders:
+ * Now check out the ntuple producer code and then the specific tag/branch of the code that is known to work
 ```
+ git clone https://github.com/NWUHEP/ntupleProducer NWU/ntupleProducer
+ cd NWU/ntupleProducer
+ git checkout dev-andrey-fresh
+ cd ../..
+```
+
+ * Patches to checked folders [should be in the release eventually?]:
+```
+  cp NWU/ntupleProducer/patches/PATMHTProducer.h PhysicsTools/PatAlgos/plugins/PATMHTProducer.h
+  cvs co -r V00-02-14 DataFormats/StdDictionaries
+  cp NWU/ntupleProducer/patches/classes.h DataFormats/StdDictionaries/src/classes.h
+  cp NWU/ntupleProducer/patches/classes_def.xml DataFormats/StdDictionaries/src/classes_def.xml
+
   cp NWU/ntupleProducer/patches/pfMETCorrections_cff.py JetMETCorrections/Type1MET/python/pfMETCorrections_cff.py
   cp NWU/ntupleProducer/patches/mvaPFMET_leptons_data_cff.py JetMETCorrections/METPUSubtraction/python/mvaPFMET_leptons_data_cff.py
   cp NWU/ntupleProducer/patches/mvaPFMET_leptons_cff.py JetMETCorrections/METPUSubtraction/python/mvaPFMET_leptons_cff.py
   cp NWU/ntupleProducer/patches/mvaPFMET_leptons_cfi.py JetMETCorrections/METPUSubtraction/python/mvaPFMET_leptons_cfi.py
-  cp NWU/ntupleProducer/patches/PATMHTProducer.h PhysicsTools/PatAlgos/plugins/PATMHTProducer.h
-  cp NWU/ntupleProducer/patches/classes.h DataFormats/StdDictionaries/src/classes.h
-  cp NWU/ntupleProducer/patches/classes_def.xml DataFormats/StdDictionaries/src/classes_def.xml
+
+  scram b -j 9
 ```
 
- * Finally, compile this mess (takes a while... coffee time!)  
-```
- scram b -j 9
-```
+
 
 Once compiled, we are ready to run it
 ### Runnning the code
@@ -120,7 +125,7 @@ that will set up an appropriate global tag etc.
 *NB* 
 By defualt, the ntuples require that there be at least one muon(electron) with pT > 3(5) GeV in order for an event to be saved. 
 In the case that this is not desired (for instance, in jet or photon based studies), 
-you should modify switch off the ```skimLeptons``` option in ntupleProducer_cfg.py
+you should switch off the ```skimLeptons``` option in ntupleProducer_cfg.py
 
 In addition to this, there are various flags the configuration file, ntupleProducer_cfg.py, that allow to save/not save certain objects (muons, jets, etc). All are saved by default.  
 
@@ -140,20 +145,20 @@ Instructions for Developers
 
  * Then create a new branch and swich to it:
 ```
-  git branch dev1
-  git checkout dev1
+  git branch dev-username
+  git checkout dev-username
 ```
 
  * Now you can make any changes you want. Once you are done, commit it and push your branch.
 ```
   git commit -a
-  git push origin dev1
+  git push origin dev-username
 ```
 
  * When you are satisfied with you new code, merge it with master branch. For that:
 ```
   git checkout master
-  git merge dev1
+  git merge dev-username
   git push
 ```
 
@@ -177,4 +182,7 @@ If the new code significantly changes the format of the ntuples (substantial cha
 
 
 [1]: https://twiki.cern.ch/twiki/bin/view/CMS/UserCodeNWUntupleProducer
-[2]: https://twiki.cern.ch/twiki/bin/view/CMS/MissingETOptionalFilters
+[3]: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideMETRecipe53X
+[2]: https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookMetAnalysis
+[4]: https://twiki.cern.ch/twiki/bin/view/CMS/MissingETOptionalFilters
+[5]: https://twiki.cern.ch/twiki/bin/view/CMS/MultivariateElectronIdentification

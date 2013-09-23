@@ -33,12 +33,22 @@ bool TCMuon::IsTight() const {
   return _isTight;
 }
 
+bool TCMuon::IsGood() const {
+  return _isGood;
+}
+bool TCMuon::IsGoodLoose() const {
+  return _isGoodLoose;
+}
+
 int TCMuon::NumberOfMatchedStations() const {
   return _numberOfMatchedStations;
 }
 
 int TCMuon::TrackLayersWithMeasurement() const {
   return _trackLayersWithMeasurement;
+}
+int TCMuon::PixelLayersWithMeasurement() const {
+  return _pixelLayersWithMeasurement;
 }
 
 int TCMuon::NumberOfValidPixelHits() const {
@@ -88,6 +98,9 @@ void TCMuon::SetNumberOfMatchedStations(int n){
 void TCMuon::SetTrackLayersWithMeasurement(int n) {
   _trackLayersWithMeasurement = n;
 }
+void TCMuon::SetPixelLayersWithMeasurement(int n) {
+  _pixelLayersWithMeasurement = n;
+}
 
 void TCMuon::SetPtError(float er){
    _ptError = er;
@@ -109,6 +122,12 @@ void TCMuon::SetIsSoft(bool t){
 }
 void TCMuon::SetIsTight(bool t){
   _isTight = t;
+}
+void TCMuon::SetIsGood(bool g){
+  _isGood = g;
+}
+void TCMuon::SetIsGoodLoose(bool g){
+  _isGoodLoose = g;
 }
 
 void TCMuon::SetNumberOfValidMuonHits(int n) {
