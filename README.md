@@ -70,7 +70,7 @@ Instructions for Users
   cvs up -r HEAD RecoJets/JetProducers/python/PileupJetIDCutParams_cfi.py                     
   cvs up -r HEAD RecoJets/JetProducers/python/PileupJetIDParams_cfi.py                     
   cvs up -r HEAD RecoJets/JetProducers/python/PileupJetID_cfi.py     
-  ###cvs co -r b5_3_X_cvMEtCorr_2013Feb22            DataFormats/METReco
+  cvs co -r b5_3_X_cvMEtCorr_2013Feb22            DataFormats/METReco
   cvs co -r V05-00-16                             DataFormats/JetReco
   cvs co -r V01-04-25                             RecoTauTag/RecoTau 
   cvs co -r V03-04-07                             RecoMET/METAlgorithms
@@ -79,7 +79,7 @@ Instructions for Users
 
  * Files that needs to be updated, or not??:
 ```
-  ## cvs co -r V03-04-07 DataFormats/METReco/interface/CorrMETData.h
+  cvs co -r V03-04-07 DataFormats/METReco/interface/CorrMETData.h
   # These did not work (couldn't check out):
   #cvs co -r HEAD JetMETCorrections/Type1MET/plugins/Type0PFMETcorrInputProducer.h
   #cvs co -r HEAD JetMETCorrections/Type1MET/plugins/Type0PFMETcorrInputProducer.cc
@@ -89,7 +89,6 @@ Instructions for Users
 ```
  git clone https://github.com/NWUHEP/ntupleProducer NWU/ntupleProducer
  cd NWU/ntupleProducer
- git checkout dev-andrey-fresh
  cd ../..
 ```
 
