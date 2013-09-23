@@ -12,7 +12,8 @@ options.maxEvents = 30
 #options.loadFromFile('inputFiles','temp_mg5_full.txt')
 #'/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
 #options.inputFiles = 'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v2/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_50.root'
-options.inputFiles = '/store/user/andrey/MCFM_lord_hzgamma_8TeV_LHE_pythia6_v2/AODSIM/39bf61f738ba3bdb8860f0848073cc88/aodsim_100_1_BGG.root'
+#options.inputFiles = '/store/user/andrey/MCFM_lord_hzgamma_8TeV_LHE_pythia6_v2/AODSIM/39bf61f738ba3bdb8860f0848073cc88/aodsim_100_1_BGG.root'
+options.inputFiles = '/store/data/Run2012D/SinglePhotonParked/AOD/22Jan2013-v1/30004/144D7268-4086-E211-9DC1-001E673984C1.root'
 
 options.register("isRealData",
                  0,
@@ -280,7 +281,7 @@ AllFilters = cms.Sequence(process.HBHENoiseFilterResultProducer
 
 
 
-# Electron MVA ID producer: 
+# Electron MVA ID producer:
 process.load('EgammaAnalysis/ElectronTools/electronIdMVAProducer_cfi')
 process.load('EgammaAnalysis/ElectronTools/electronRegressionEnergyProducer_cfi')
 process.eleRegressionEnergy.inputElectronsTag    = cms.InputTag('gsfElectrons')
@@ -435,7 +436,7 @@ process.ntuplePath = cms.Path(
     * AllFilters
     * process.pfMEtMVAsequence
     * process.pfMet1
-    
+
     * process.eleRegressionEnergy
     * process.calibratedElectrons
     * process.mvaTrigV0
