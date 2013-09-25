@@ -6,7 +6,7 @@ from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 process = cms.Process("NTUPLE")
 
 options = VarParsing.VarParsing ('analysis')
-options.maxEvents = 10000
+options.maxEvents = 1000
 #options.inputFiles= '/store/data/Run2012C/SingleMu/AOD/22Jan2013-v1/30010/C0E05558-9078-E211-9E02-485B39800B65.root'
 #options.inputFiles= '/store/data/Run2012C/DoublePhoton/AOD/22Jan2013-v2/30001/72DE4526-F370-E211-B370-00304867920A.root'
 #options.loadFromFile('inputFiles','PYTHIA8_175_POWHEG_H_Zg_8TeV.txt')
@@ -285,14 +285,44 @@ AllFilters = cms.Sequence(process.HBHENoiseFilterResultProducer
 
 # Electron MVA ID producer:
 process.load('EgammaAnalysis/ElectronTools/electronIdMVAProducer_cfi')
+
+# Electron Regression (settings for old style, Pre 2013 ReReco)
 process.load('EgammaAnalysis/ElectronTools/electronRegressionEnergyProducer_cfi')
 process.eleRegressionEnergy.inputElectronsTag    = cms.InputTag('gsfElectrons')
 process.eleRegressionEnergy.inputCollectionType  = cms.uint32(0)
 process.eleRegressionEnergy.useRecHitCollections = cms.bool(True)
 process.eleRegressionEnergy.produceValueMaps     = cms.bool(True)
+process.eleRegressionEnergy.energyRegressionType = cms.uint32(1)
+process.eleRegressionEnergy.regressionInputFile = cms.string("EgammaAnalysis/ElectronTools/data/eleEnergyReg2012Weights_V1.root")
+#process.eleRegressionEnergy.energyRegressionType = cms.uint32(2)
+#process.eleRegressionEnergy.regressionInputFile = cms.string("EgammaAnalysis/ElectronTools/data/eleEnergyRegWeights_WithSubClusters_VApr15.root")
 
-process.RandomNumberGeneratorService = cms.Service("RandomNumberGeneratorService")
+# Electron Combination for calibration (settings for old style, Pre 2013 ReReco, Unsmeared, uncorrected combination for data)
 process.load('EgammaAnalysis/ElectronTools/calibratedElectrons_cfi')
+process.RandomNumberGeneratorService = cms.Service("RandomNumberGeneratorService",
+    calibratedElectrons = cms.PSet(
+      initialSeed = cms.untracked.uint32(1),
+      engineName = cms.untracked.string('TRandom3')
+    ),
+)
+if (isRealData):
+  process.calibratedElectrons.isMC = cms.bool(False)
+  process.calibratedElectrons.inputDataset = cms.string("Moriond2013")
+  process.calibratedElectrons.combinationType = cms.int32(2)
+else:
+  process.calibratedElectrons.isMC = cms.bool(True)
+  process.calibratedElectrons.inputDataset = cms.string("Summer12_DR53X_HCP2012")
+  process.calibratedElectrons.combinationType = cms.int32(1)
+process.calibratedElectrons.updateEnergyError = cms.bool(True)
+process.calibratedElectrons.correctionsType = cms.int32(1)
+process.calibratedElectrons.combinationType = cms.int32(2)
+process.calibratedElectrons.lumiRatio = cms.double(0.607)
+process.calibratedElectrons.verbose = cms.bool(False)
+process.calibratedElectrons.synchronization = cms.bool(False)
+process.calibratedElectrons.applyLinearityCorrection = cms.bool(False)
+process.calibratedElectrons.scaleCorrectionsInputPath = cms.string("EgammaAnalysis/ElectronTools/data/scalesMoriond.csv")
+process.calibratedElectrons.combinationRegressionInputPath = cms.string("EgammaAnalysis/ElectronTools/data/eleEnergyReg2012Weights_V1.root")
+
 
 # event source
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(options.maxEvents))
