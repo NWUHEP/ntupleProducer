@@ -279,8 +279,7 @@ AllFilters = cms.Sequence(process.HBHENoiseFilterResultProducer
                           * ~process.toomanystripclus53X #trkPOGFilter2
                           * ~process.logErrorTooManyClusters #trkPOGFilter 3
                           )
-
-
+##### END OF Noise Filters ############
 
 
 # Electron MVA ID producer:
@@ -329,8 +328,6 @@ process.source = cms.Source("PoolSource",
 )
 
 
-##### END OF Noise Filters ############
-
 print '\n\nCommence ntuplization...\n\n'
 
 ### TFile service!
@@ -357,6 +354,31 @@ process.pfNoPileUp = cms.EDProducer("TPPFCandidatesOnPFCandidates",
 )
 
 process.pfNoPUSeq = cms.Sequence(process.pfPileUp + process.pfNoPileUp)
+
+
+
+from SHarper.HEEPAnalyzer.HEEPSelectionCuts_cfi import *
+process.heepIdNoIso = cms.EDProducer("HEEPIdValueMapProducer",
+                                     eleLabel = cms.InputTag("gsfElectrons"),
+                                     barrelCuts = cms.PSet(heepBarrelCuts),
+                                     endcapCuts = cms.PSet(heepEndcapCuts),
+                                     eleIsolEffectiveAreas = cms.PSet(heepEffectiveAreas),
+                                     eleRhoCorrLabel = cms.InputTag("kt6PFJets", "rho"),
+                                     verticesLabel = cms.InputTag("offlinePrimaryVertices"),
+                                     applyRhoCorrToEleIsol = cms.bool(True),
+                                     writeIdAsInt = cms.bool(True)
+                                     )
+process.heepIdNoIso.barrelCuts.cuts=cms.string("et:detEta:ecalDriven:dEtaIn:dPhiIn:hadem:e2x5Over5x5:nrMissHits:dxy")
+process.heepIdNoIso.endcapCuts.cuts=cms.string("et:detEta:ecalDriven:dEtaIn:dPhiIn:hadem:sigmaIEtaIEta:nrMissHits:dxy")
+
+process.heepIdNoIsoEles = cms.EDProducer("tsw::HEEPGsfProducer", cutValueMap = cms.InputTag("heepIdNoIso"),
+                                         inputGsfEles = cms.InputTag("gsfElectrons")  )
+
+# Boosted Z ModEleIso: 1b) Calculating the modified iso. values using BstdZeeTools EDProducer
+
+from TSWilliams.BstdZeeTools.bstdzeemodisolproducer_cff import *
+process.modElectronIso = cms.EDProducer("BstdZeeModIsolProducer",
+                                              bstdZeeModIsolParams, vetoGsfEles = cms.InputTag("heepIdNoIsoEles") )
 
 
 ### ntuple producer
@@ -471,6 +493,11 @@ process.ntuplePath = cms.Path(
     * process.eleRegressionEnergy
     * process.calibratedElectrons
     * process.mvaTrigV0
+
+    * process.heepIdNoIso
+    * process.heepIdNoIsoEles
+    * process.modElectronIso
+    
     * process.ntupleProducer
 )
 

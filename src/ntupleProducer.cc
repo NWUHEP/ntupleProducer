@@ -440,14 +440,14 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       // Set isolation map values
       // Detector-based isolation
       muCon->SetIsoMap("NTracks_R03", iMuon->isolationR03().nTracks);
-      muCon->SetIsoMap("EmIso_R03", iMuon->isolationR03().emEt);
-      muCon->SetIsoMap("HadIso_R03", iMuon->isolationR03().hadEt);
-      muCon->SetIsoMap("SumPt_R03", iMuon->isolationR03().sumPt);
+      muCon->SetIsoMap("EmIso_R03",   iMuon->isolationR03().emEt);
+      muCon->SetIsoMap("HadIso_R03",  iMuon->isolationR03().hadEt);
+      muCon->SetIsoMap("SumPt_R03",   iMuon->isolationR03().sumPt);
 
       muCon->SetIsoMap("NTracks_R05", iMuon->isolationR05().nTracks);
-      muCon->SetIsoMap("EmIso_R05", iMuon->isolationR05().emEt);
-      muCon->SetIsoMap("HadIso_R05", iMuon->isolationR05().hadEt);
-      muCon->SetIsoMap("SumPt_R05", iMuon->isolationR05().sumPt);
+      muCon->SetIsoMap("EmIso_R05",   iMuon->isolationR05().emEt);
+      muCon->SetIsoMap("HadIso_R05",  iMuon->isolationR05().hadEt);
+      muCon->SetIsoMap("SumPt_R05",   iMuon->isolationR05().sumPt);
 
       // PF-based isolation
       muCon->SetIsoMap("pfChargedPt_R03", iMuon->pfIsolationR03().sumChargedParticlePt);
@@ -495,6 +495,19 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     edm::Handle<edm::ValueMap<double>> regErr_handle;
     iEvent.getByLabel(edm::InputTag("eleRegressionEnergy","eneErrorRegForGsfEle"), regErr_handle);
     const edm::ValueMap<double> ele_regErr = (*regErr_handle.product());
+
+    //This stuff is for modified isolation for close electrons,
+    //following prescription here: https://twiki.cern.ch/twiki/bin/viewauth/CMS/BoostedZToEEModIso
+    edm::Handle<edm::ValueMap<double> > h_modElectronIso_Tk;
+    edm::Handle<edm::ValueMap<double> > h_modElectronIso_Ecal;
+    edm::Handle<edm::ValueMap<double> > h_modElectronIso_HcalD1;
+    iEvent.getByLabel("modElectronIso","track",      h_modElectronIso_Tk);
+    iEvent.getByLabel("modElectronIso","ecal",       h_modElectronIso_Ecal);
+    iEvent.getByLabel("modElectronIso","hcalDepth1", h_modElectronIso_HcalD1);
+    const edm::ValueMap<double> modElectronIso_Tk     = (*h_modElectronIso_Tk.product());
+    const edm::ValueMap<double> modElectronIso_Ecal   = (*h_modElectronIso_Ecal.product());
+    const edm::ValueMap<double> modElectronIso_HcalD1 = (*h_modElectronIso_HcalD1.product());
+
 
     Int_t eee=0;
     for (vector<reco::GsfElectron>::const_iterator iElectron = electrons->begin(); iElectron != electrons->end(); ++iElectron) {
@@ -559,6 +572,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       eleCon->SetIsoMap("pfChIso_R04", eleIsolator.getIsolationCharged());
       eleCon->SetIsoMap("pfNeuIso_R04",eleIsolator.getIsolationNeutral());
       eleCon->SetIsoMap("pfPhoIso_R04",eleIsolator.getIsolationPhoton());
+
+      eleCon->SetIsoMap("modElectronIso_Tk",     modElectronIso_Tk.get(eee-1));
+      eleCon->SetIsoMap("modElectronIso_Ecal",   modElectronIso_Ecal.get(eee-1));
+      eleCon->SetIsoMap("modElectronIso_HcalD1", modElectronIso_HcalD1.get(eee-1));
 
       // Effective area for rho PU corrections (not sure if needed)
       float AEff03 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso03, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
