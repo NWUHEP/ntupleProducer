@@ -89,6 +89,7 @@ Instructions for Users
 ```
  git clone https://github.com/NWUHEP/ntupleProducer NWU/ntupleProducer
  cd NWU/ntupleProducer
+ git checkout v8.1
  cd ../..
 ```
 

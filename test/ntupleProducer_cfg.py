@@ -286,18 +286,18 @@ AllFilters = cms.Sequence(process.HBHENoiseFilterResultProducer
 # Electron MVA ID producer:
 process.load('EgammaAnalysis/ElectronTools/electronIdMVAProducer_cfi')
 
-# Electron Regression (settings for old style, Pre 2013 ReReco)
+# Electron Regression (post moriond recommendation)
 process.load('EgammaAnalysis/ElectronTools/electronRegressionEnergyProducer_cfi')
 process.eleRegressionEnergy.inputElectronsTag    = cms.InputTag('gsfElectrons')
 process.eleRegressionEnergy.inputCollectionType  = cms.uint32(0)
 process.eleRegressionEnergy.useRecHitCollections = cms.bool(True)
 process.eleRegressionEnergy.produceValueMaps     = cms.bool(True)
-process.eleRegressionEnergy.energyRegressionType = cms.uint32(1)
-process.eleRegressionEnergy.regressionInputFile = cms.string("EgammaAnalysis/ElectronTools/data/eleEnergyReg2012Weights_V1.root")
-#process.eleRegressionEnergy.energyRegressionType = cms.uint32(2)
-#process.eleRegressionEnergy.regressionInputFile = cms.string("EgammaAnalysis/ElectronTools/data/eleEnergyRegWeights_WithSubClusters_VApr15.root")
+#process.eleRegressionEnergy.energyRegressionType = cms.uint32(1)
+#process.eleRegressionEnergy.regressionInputFile = cms.string("EgammaAnalysis/ElectronTools/data/eleEnergyReg2012Weights_V1.root")
+process.eleRegressionEnergy.energyRegressionType = cms.uint32(2)
+process.eleRegressionEnergy.regressionInputFile = cms.string("EgammaAnalysis/ElectronTools/data/eleEnergyRegWeights_WithSubClusters_VApr15.root")
 
-# Electron Combination for calibration (settings for old style, Pre 2013 ReReco, Unsmeared, uncorrected combination for data)
+# Electron Combination for calibration (post moriond recommendation)
 process.load('EgammaAnalysis/ElectronTools/calibratedElectrons_cfi')
 process.RandomNumberGeneratorService = cms.Service("RandomNumberGeneratorService",
     calibratedElectrons = cms.PSet(
@@ -307,21 +307,19 @@ process.RandomNumberGeneratorService = cms.Service("RandomNumberGeneratorService
 )
 if (isRealData):
   process.calibratedElectrons.isMC = cms.bool(False)
-  process.calibratedElectrons.inputDataset = cms.string("Moriond2013")
-  process.calibratedElectrons.combinationType = cms.int32(2)
+  process.calibratedElectrons.inputDataset = cms.string("22Jan2013ReReco")
 else:
   process.calibratedElectrons.isMC = cms.bool(True)
-  process.calibratedElectrons.inputDataset = cms.string("Summer12_DR53X_HCP2012")
-  process.calibratedElectrons.combinationType = cms.int32(1)
+  process.calibratedElectrons.inputDataset = cms.string("Summer12_LegacyPaper")
 process.calibratedElectrons.updateEnergyError = cms.bool(True)
-process.calibratedElectrons.correctionsType = cms.int32(1)
-process.calibratedElectrons.combinationType = cms.int32(2)
-process.calibratedElectrons.lumiRatio = cms.double(0.607)
+process.calibratedElectrons.correctionsType = cms.int32(2)
+process.calibratedElectrons.combinationType = cms.int32(3)
+process.calibratedElectrons.lumiRatio = cms.double(1.0)
 process.calibratedElectrons.verbose = cms.bool(False)
 process.calibratedElectrons.synchronization = cms.bool(False)
-process.calibratedElectrons.applyLinearityCorrection = cms.bool(False)
-process.calibratedElectrons.scaleCorrectionsInputPath = cms.string("EgammaAnalysis/ElectronTools/data/scalesMoriond.csv")
-process.calibratedElectrons.combinationRegressionInputPath = cms.string("EgammaAnalysis/ElectronTools/data/eleEnergyReg2012Weights_V1.root")
+process.calibratedElectrons.applyLinearityCorrection = cms.bool(True)
+#process.calibratedElectrons.scaleCorrectionsInputPath = cms.string("EgammaAnalysis/ElectronTools/data/scalesMoriond.csv")
+#process.calibratedElectrons.combinationRegressionInputPath = cms.string("EgammaAnalysis/ElectronTools/data/eleEnergyReg2012Weights_V1.root")
 
 
 # event source
@@ -337,7 +335,7 @@ print '\n\nCommence ntuplization...\n\n'
 
 ### TFile service!
 process.TFileService = cms.Service('TFileService',
-                                  fileName = cms.string('nuTuple_DATA.root')
+                                  fileName = cms.string('nuTuple.root')
                                   #fileName = cms.string('~/EOS/V08_00_8TeV/ggHZG_M125_Pythia8_175_v3/nuTuple_9.root')
                                    )
 
