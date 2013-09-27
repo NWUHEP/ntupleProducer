@@ -96,23 +96,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
   const  PFCandidateCollection thePfCollEleIso = *(pfCandsEleIso.product());
 
 
-
-  if (!geomInitialized_) {
-    edm::ESHandle<CaloTopology> theCaloTopology;
-    iSetup.get<CaloTopologyRecord>().get(theCaloTopology);
-    ecalTopology_ = & (*theCaloTopology);
-    
-    edm::ESHandle<CaloGeometry> theCaloGeometry;
-    iSetup.get<CaloGeometryRecord>().get(theCaloGeometry);
-    caloGeometry_ = & (*theCaloGeometry);
-    geomInitialized_ = true;
-  }
-
-
   //////////////////////////
   //Get vertex information//
   //////////////////////////
-
 
   Handle<reco::VertexCollection> primaryVtcs;
   iEvent.getByLabel(primaryVtxTag_, primaryVtcs);
@@ -450,17 +436,17 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       muCon->SetIsoMap("SumPt_R05",   iMuon->isolationR05().sumPt);
 
       // PF-based isolation
+      muCon->SetIsoMap("pfPUPt_R03",      iMuon->pfIsolationR03().sumPUPt);
+      muCon->SetIsoMap("pfPhotonEt_R03",  iMuon->pfIsolationR03().sumPhotonEt);
       muCon->SetIsoMap("pfChargedPt_R03", iMuon->pfIsolationR03().sumChargedParticlePt);
       muCon->SetIsoMap("pfChargedHadronPt_R03", iMuon->pfIsolationR03().sumChargedHadronPt);
-      muCon->SetIsoMap("pfPhotonEt_R03", iMuon->pfIsolationR03().sumPhotonEt);
       muCon->SetIsoMap("pfNeutralHadronEt_R03", iMuon->pfIsolationR03().sumNeutralHadronEt);
-      muCon->SetIsoMap("pfPUPt_R03", iMuon->pfIsolationR03().sumPUPt);
 
+      muCon->SetIsoMap("pfPUPt_R04",      iMuon->pfIsolationR04().sumPUPt);
+      muCon->SetIsoMap("pfPhotonEt_R04",  iMuon->pfIsolationR04().sumPhotonEt);
       muCon->SetIsoMap("pfChargedPt_R04", iMuon->pfIsolationR04().sumChargedParticlePt);
       muCon->SetIsoMap("pfChargedHadronPt_R04", iMuon->pfIsolationR04().sumChargedHadronPt);
-      muCon->SetIsoMap("pfPhotonEt_R04", iMuon->pfIsolationR04().sumPhotonEt);
       muCon->SetIsoMap("pfNeutralHadronEt_R04", iMuon->pfIsolationR04().sumNeutralHadronEt);
-      muCon->SetIsoMap("pfPUPt_R04", iMuon->pfIsolationR04().sumPUPt);
 
 
       muCount++;
@@ -573,9 +559,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       eleCon->SetIsoMap("pfNeuIso_R04",eleIsolator.getIsolationNeutral());
       eleCon->SetIsoMap("pfPhoIso_R04",eleIsolator.getIsolationPhoton());
 
-      eleCon->SetIsoMap("modElectronIso_Tk",     modElectronIso_Tk.get(eee-1));
-      eleCon->SetIsoMap("modElectronIso_Ecal",   modElectronIso_Ecal.get(eee-1));
-      eleCon->SetIsoMap("modElectronIso_HcalD1", modElectronIso_HcalD1.get(eee-1));
+      eleCon->SetIsoMap("modIso_Tk",     modElectronIso_Tk.get(eee-1));
+      eleCon->SetIsoMap("modIso_Ecal",   modElectronIso_Ecal.get(eee-1));
+      eleCon->SetIsoMap("modIso_HcalD1", modElectronIso_HcalD1.get(eee-1));
 
       // Effective area for rho PU corrections (not sure if needed)
       float AEff03 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso03, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);

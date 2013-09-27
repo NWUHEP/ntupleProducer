@@ -35,3 +35,6 @@
 130903_072911: /uscmst1/prod/grid/CRAB_2_9_0/python/crab.py -status -c StressTest/
 130903_092737: /uscmst1/prod/grid/CRAB_2_9_0/python/crab.py -status -c StressTest/
 130903_092806: /uscmst1/prod/grid/CRAB_2_9_0/python/crab.py -get -c StressTest/
+130927_135950: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_MC.cfg
+130927_140135: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_MC.cfg
+130927_140214: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_MC.cfg

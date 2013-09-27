@@ -106,12 +106,11 @@
 #include "RecoEgamma/EgammaTools/interface/ConversionTools.h"
 #include "EgammaAnalysis/ElectronTools/interface/ElectronEffectiveArea.h"
 #include "EgammaAnalysis/ElectronTools/interface/PFIsolationEstimator.h"
-#include "EgammaAnalysis/ElectronTools/interface/ElectronEnergyRegressionEvaluate.h"
+//#include "EgammaAnalysis/ElectronTools/interface/ElectronEnergyRegressionEvaluate.h"
 
-#include "EgammaAnalysis/ElectronTools/interface/ElectronEnergyCalibrator.h"
-
-#include "EgammaAnalysis/ElectronTools/interface/EGammaMvaEleEstimator.h"
-#include "Geometry/CaloEventSetup/interface/CaloTopologyRecord.h"
+//#include "EgammaAnalysis/ElectronTools/interface/ElectronEnergyCalibrator.h"
+//#include "EgammaAnalysis/ElectronTools/interface/EGammaMvaEleEstimator.h"
+//#include "Geometry/CaloEventSetup/interface/CaloTopologyRecord.h"
 #include "TrackingTools/IPTools/interface/IPTools.h"
 
 // Tracking tools, supposedly for track-met:
@@ -319,17 +318,9 @@ class ntupleProducer : public edm::EDAnalyzer {
   TH1F * h1_numOfEvents;
 
   // Electron Regression
-  auto_ptr<ElectronEnergyRegressionEvaluate> myEleReg;
+  //auto_ptr<ElectronEnergyRegressionEvaluate> myEleReg;
 
   // PU Jet Id Algo
   auto_ptr<PileupJetIdAlgo> myPUJetID;
-  auto_ptr<FactorizedJetCorrector> jecCor;
-
-
-  //These are for new electron regression
-  bool geomInitialized_;
-
-  const CaloTopology* ecalTopology_;
-  const CaloGeometry* caloGeometry_;
-  
+  auto_ptr<FactorizedJetCorrector> jecCor;  
 };
