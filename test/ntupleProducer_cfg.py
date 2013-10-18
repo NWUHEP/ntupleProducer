@@ -6,16 +6,17 @@ from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 process = cms.Process("NTUPLE")
 
 options = VarParsing.VarParsing ('analysis')
-options.maxEvents = 1000
+options.maxEvents = -1
 #options.inputFiles= '/store/data/Run2012C/SingleMu/AOD/22Jan2013-v1/30010/C0E05558-9078-E211-9E02-485B39800B65.root'
 #options.inputFiles= '/store/data/Run2012C/DoublePhoton/AOD/22Jan2013-v2/30001/72DE4526-F370-E211-B370-00304867920A.root'
-#options.loadFromFile('inputFiles','PYTHIA8_175_POWHEG_H_Zg_8TeV.txt')
-options.inputFiles = '/store/data/Run2012A/DoubleElectron/AOD/13Jul2012-v1/00000/00347915-EED9-E111-945A-848F69FD2817.root'
+options.loadFromFile('inputFiles','PYTHIA8_175_H_Zg_8TeV.txt')
+#options.inputFiles = '/store/data/Run2012A/DoubleElectron/AOD/13Jul2012-v1/00000/00347915-EED9-E111-945A-848F69FD2817.root'
 #'/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
 #options.inputFiles = 'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v2/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_50.root'
+#options.inputFiles = '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0000/02CDCF05-BED2-E111-85F4-0030486740BA.root'
 #options.inputFiles = '/store/user/andrey/MCFM_lord_hzgamma_8TeV_LHE_pythia6_v2/AODSIM/39bf61f738ba3bdb8860f0848073cc88/aodsim_100_1_BGG.root'
 #options.inputFiles = '/store/data/Run2012D/SinglePhotonParked/AOD/22Jan2013-v1/30004/144D7268-4086-E211-9DC1-001E673984C1.root'
-#options.inputFiles = 'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v3/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_8.root'
+#options.inputFiles = 'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v2/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_8.root'
 
 options.register("isRealData",
                  0,
@@ -292,8 +293,6 @@ process.eleRegressionEnergy.inputElectronsTag    = cms.InputTag('gsfElectrons')
 process.eleRegressionEnergy.inputCollectionType  = cms.uint32(0)
 process.eleRegressionEnergy.useRecHitCollections = cms.bool(True)
 process.eleRegressionEnergy.produceValueMaps     = cms.bool(True)
-#process.eleRegressionEnergy.energyRegressionType = cms.uint32(1)
-#process.eleRegressionEnergy.regressionInputFile = cms.string("EgammaAnalysis/ElectronTools/data/eleEnergyReg2012Weights_V1.root")
 process.eleRegressionEnergy.energyRegressionType = cms.uint32(2)
 process.eleRegressionEnergy.regressionInputFile = cms.string("EgammaAnalysis/ElectronTools/data/eleEnergyRegWeights_WithSubClusters_VApr15.root")
 
@@ -335,8 +334,8 @@ print '\n\nCommence ntuplization...\n\n'
 
 ### TFile service!
 process.TFileService = cms.Service('TFileService',
-                                  fileName = cms.string('nuTuple.root')
-                                  #fileName = cms.string('~/EOS/V08_00_8TeV/ggHZG_M125_Pythia8_175_v3/nuTuple_9.root')
+    fileName = cms.string('nuTuple.root')
+    #fileName = cms.string('~/EOS/V08_01_8TeV/ggHZG_M125_Pythia8_175_LO/nuTuple_9.root')
                                    )
 
 ### pfNoPU Sequence for electron MVA
@@ -394,9 +393,6 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   saveMET           =    cms.untracked.bool(True),
   saveGenJets       =    cms.untracked.bool(True),
   saveGenParticles  =    cms.untracked.bool(True),
-  saveTrackMET      =    cms.untracked.bool(True),
-  saveT0MET	    =    cms.untracked.bool(True),
-  saveT2MET	    =    cms.untracked.bool(True),
 
   ecalTPFilterTag    =    cms.untracked.InputTag("EcalDeadCellTriggerPrimitiveFilter",""),
   ecalBEFilterTag    =    cms.untracked.InputTag("EcalDeadCellBoundaryEnergyFilter",""),

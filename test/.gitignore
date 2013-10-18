@@ -1,3 +1,6 @@
 StressTest
 *.root
 pollack
+*.out
+*.list
+**/*

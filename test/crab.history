@@ -35,3 +35,670 @@
 130903_072911: /uscmst1/prod/grid/CRAB_2_9_0/python/crab.py -status -c StressTest/
 130903_092737: /uscmst1/prod/grid/CRAB_2_9_0/python/crab.py -status -c StressTest/
 130903_092806: /uscmst1/prod/grid/CRAB_2_9_0/python/crab.py -get -c StressTest/
+130926_062611: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+130926_062832: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+130926_063036: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+130926_063326: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130926_064210: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+130926_064550: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130926_064604: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_065055: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_065107: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130926_073400: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_073423: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c ZGToLLG/
+130926_073432: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_075050: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_075137: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50//
+130926_080810: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50//
+130926_080827: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_080844: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c ZGToLLG/
+130926_080909: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_080940: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 327,148,14,16,58 -c ZGToLLG/
+130926_081027: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_081044: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c ZGToLLG/
+130926_081052: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_081110: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130926_085140: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130926_085229: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DYJetsToLL_M-50/
+130926_085235: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130926_085251: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 140 -c DYJetsToLL_M-50/
+130926_085310: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_085331: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c ZGToLLG/
+130926_092211: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c ZGToLLG/
+130926_092216: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_092243: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c ZGToLLG/
+130926_092303: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_093118: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_093145: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c ZGToLLG/
+130926_093205: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_093240: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 13,74,84,108,226,25,113,154,181,186,190,205,222,248,282,291,333,363,386,393,416 -c ZGToLLG/
+130926_100412: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_100434: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c ZGToLLG/
+130926_100500: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_100623: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 119,136,231,262,298,302,321,431,437,455,180 -c ZGToLLG/
+130926_100707: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_100920: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130926_101007: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DYJetsToLL_M-50/
+130926_101014: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130926_101307: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_101330: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c ZGToLLG/
+130926_101410: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 131,277,423 -c ZGToLLG/
+130926_102139: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_102213: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c ZGToLLG/
+130926_102221: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_102239: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c ZGToLLG/
+130926_102245: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_102305: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 117,236 -c ZGToLLG/
+130926_103020: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_103041: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c ZGToLLG/
+130926_103050: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_103106: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c ZGToLLG/
+130926_103112: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_103132: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 286,347 -c ZGToLLG/
+130926_103603: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130926_103615: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130926_104008: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130926_104259: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_104323: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c ZGToLLG/
+130926_104425: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_104518: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 382,409,421 -c ZGToLLG/
+130926_105331: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_105350: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130926_105401: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130926_105430: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130926_105456: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DYJetsToLL_M-50/
+130926_105526: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130926_105715: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 453 -c DYJetsToLL_M-50/
+130926_105727: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -kill 453 -c DYJetsToLL_M-50/
+130926_105732: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 453 -c DYJetsToLL_M-50/
+130926_110128: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 453 -c DYJetsToLL_M-50/
+130926_110144: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -submit 453 -c DYJetsToLL_M-50/
+130926_110200: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130926_122258: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_122413: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c ZGToLLG/
+130926_122437: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_122513: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 186,205 -c ZGToLLG/
+130926_122543: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130926_122601: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130926_122631: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DYJetsToLL_M-50/
+130926_122724: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130926_122756: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 1,32,42,72-73,85,87,91,100,105,126,128,130,132,141-142,178,185 -c DYJetsToLL_M-50/
+130927_025339: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130927_025417: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DYJetsToLL_M-50/
+130927_030137: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130927_030228: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -kill 290 -c DYJetsToLL_M-50/
+130927_030242: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 290 -c DYJetsToLL_M-50/
+130927_030313: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 2,10,26,62,68,75,82,95,103,118,120,124-125,130,137,177,193,195,206,208,213,220,222,228,238,240,243,253,261-262,274,279,293,296-297,312,316,320,338-342,347,360,365,368,373,381,384,389,391,394,397,402-403,408,411,421,425,434,438,451,39,160,273,285,453 -c DYJetsToLL_M-50/
+130927_030342: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130927_030613: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130927_030653: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 347,409 -c ZGToLLG/
+130927_030702: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c ZGToLLG/
+130927_030717: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130927_030726: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 347,409 -c ZGToLLG/
+130927_031348: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130927_033332: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130927_033357: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130927_033813: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130927_034219: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130927_034237: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130927_034903: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130927_035038: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130927_043644: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+130927_043857: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG_test/
+130927_044013: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG_test/
+130927_044036: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -submit -c ZGToLLG_test/
+130927_044155: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+130927_044311: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG_test/
+130927_044420: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG_test/
+130927_044705: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG_test/
+130927_044901: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG_test/
+130927_045031: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG_test/
+130927_045200: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG_test/
+130927_045355: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG_test/
+130927_045811: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG_test/
+130927_055453: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c ZGToLLG_test/
+130927_055502: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG_test/
+130927_055841: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG
+130927_060733: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+130927_060953: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130927_061008: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130927_061039: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -kill all -c DYJetsToLL_M-50/
+130927_061256: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130927_062506: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130927_063215: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130927_063731: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130927_070755: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130927_070809: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c ZGToLLG/
+130927_070931: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130927_071132: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -kill all -c ZGToLLG/
+130927_081036: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+130927_081218: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130927_081727: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130927_081943: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+130927_082411: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130927_082419: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130927_090104: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130927_090114: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130927_091542: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130927_091552: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c ZGToLLG/
+130927_091613: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130927_091815: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130927_092246: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130927_092607: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130927_093632: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130927_093925: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130927_093935: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DYJetsToLL_M-50/
+130927_095050: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50/
+130927_100857: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+130927_102154: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+130927_102826: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50
+130927_102841: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130928_051332: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130928_051420: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c ZGToLLG/
+130928_051517: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130928_051609: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 67,70-71,97,123,149,153,161,175,182,197,217,266,297,300,302,307,321,330,347,362,389,412,453,472 -c ZGToLLG/
+130928_051652: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50
+130928_053645: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DYJetsToLL_M-50
+130928_064141: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50
+130928_064222: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 1,81,154,217,242,251,273,289-290,297,300-303,305,307,366,413-414,417,419-420,483,352,48,65,433,467 -c DYJetsToLL_M-50
+130928_064254: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50
+130928_064326: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130928_064349: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c ZGToLLG/
+130928_064357: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130928_064428: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 70-71,97,149,161,175,217,300 -c ZGToLLG/
+130928_064502: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130928_070703: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg -submit
+130928_071009: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg -submit
+130928_072136: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg -submit
+130928_072406: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg -submit
+130928_073010: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg -submit
+130928_073512: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg -submit
+130928_074346: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg -submit
+130928_074739: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg -submit
+130928_075420: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg -submit
+130928_075724: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50
+130928_081839: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130928_081916: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c ZGToLLG/
+130928_081925: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130928_081943: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 71,362,412,472 -c ZGToLLG/
+130928_094948: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130928_095053: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c ZGToLLG/
+130928_095119: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+130928_095211: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50
+130928_100809: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DYJetsToLL_M-50
+130928_100817: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50
+130928_100844: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DYJetsToLL_M-50
+130928_100854: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50
+130928_100918: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012A/
+130928_101026: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012A/
+130928_101102: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012A/
+130928_101120: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 56,89 -c DoubleMu/Run2012A/
+130928_101413: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B
+130928_101431: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012B
+130928_101445: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B
+130928_101500: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C
+130928_101525: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D
+130928_101614: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012D
+130928_101623: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D
+130928_101716: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 155 -c DoubleMu/Run2012D
+130928_101752: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012A/
+130928_101811: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012A/
+130928_101848: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012A/
+130928_102030: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012A/
+130928_102043: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012A/
+130928_102058: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012A/
+130928_102104: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012A/
+130928_102138: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 15,18-19,32,39,45,47,57,63,65,87,90-93,95-96,99,102-103,105-107,109-110,112,117,121,128,144,160,189,211,215,222,227,238,248-249,282,286 -c DoubleEl/Run2012A/
+130928_102201: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012B
+130928_102223: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012B
+130928_102236: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012B
+130928_102254: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012B
+130928_102300: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012B
+130928_102333: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 152,244,259,40-42,59,72,143,157,161,179,182,191,246,283,295-296,301,307 -c DoubleEl/Run2012B
+130928_102458: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012B
+130928_102526: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C
+130928_102545: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012C
+130928_102555: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C
+130928_102630: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 376,5-6,22-23,27-28,30,101,107-108,110,126,189,201,207,211,295,323,345-346,348-353,379,385-386,391,401,403,407,411,413-415,417-419,422-424,426,440 -c DoubleEl/Run2012C
+130928_102654: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D
+130928_102713: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012D
+130928_102720: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D
+130928_102811: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 201,73,294,31,64,110,152,154,157,163,217,303,328,348,379,283 -c DoubleEl/Run2012D
+130928_102841: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50
+130928_102903: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DYJetsToLL_M-50
+130928_102911: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50
+130928_180117: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50
+130928_180216: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 290 -c DYJetsToLL_M-50
+130928_180227: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get 290 -c DYJetsToLL_M-50
+130928_180313: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 290 -c DYJetsToLL_M-50
+130928_181334: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50
+130929_042627: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012A/
+130929_044551: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012A/
+130929_044608: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012A/
+130929_044620: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B
+130929_044647: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012B
+130929_044818: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B
+130929_044849: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 126,132-133,138,252-253,257,268-270,362,375,392-395,410,424,192,264,177 -c DoubleMu/Run2012B
+130929_044912: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B
+130929_063518: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C
+130929_063531: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C
+130929_063604: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012C
+130929_063934: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C
+130929_064626: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get 45,63,177,286,59,64,71,90-93,110-119,129-130,133-135,137,154-155,172-173,192-194,223-224,239,243-244,258,268,272,327-328,334,341,346,359,368-371,373,378,385,387,389,392,399,402,405,418-420,426-427,431,209,356 -c DoubleMu/Run2012C
+130929_064648: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 45,63,177,286,59,64,71,90-93,110-119,129-130,133-135,137,154-155,172-173,192-194,223-224,239,243-244,258,268,272,327-328,334,341,346,359,368-371,373,378,385,387,389,392,399,402,405,418-420,426-427,431,209,356 -c DoubleMu/Run2012C
+130929_064731: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D
+130929_064814: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012D
+130929_065023: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D
+130929_065059: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 2,13-15,27,72-75,77-80,89-96,98-99,101,117-120,122-123,133-136,145-146,158-159,165-166,169,171-172,178-179,196,198,205,212-217,233-237,241-242,244,254,259,261,264-266,271,283-284,286-288,290,306,308,312,318,320-321,338-341,346,363-364,373-374,378,380-381,383,386,388,399-401,412,426,437,442,445-448,191,255,289,355,390,408,413,417,367 -c DoubleMu/Run2012D
+130929_065313: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012A/
+130929_065337: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012A/
+130929_065411: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012A/
+130929_065441: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 196,4 -c DoubleEl/Run2012A/
+130929_065533: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012B
+130929_065629: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012B
+130929_070500: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012B
+130929_070724: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 4-5,111,113,115,119,121,125,131,139-140,153,160-162,179-180,191-192,198,203-206,218-219,227,233,236,240,246,290,292,309,320,323,341,348,360,374,390,65,289,321,72,157,178,182,232,237,283,305,324,337,349,361,363,365-366,370,375,379,383,388,397-398,410,412,414,71,200,223,258,294,333,347,389 -c DoubleEl/Run2012B
+130929_071025: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012B
+130929_071218: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C
+130929_071401: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012C
+130929_071817: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C
+130929_071908: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 1-3,8-12,14,16-20,22-26,35-36,38-39,43,45,49,51-54,56-58,60-66,69-77,79-94,96-97,103-104,106-107,109,111-116,118-123,125,127,132-136,138-140,142,144-150,152,155,159-166,170,172-175,178-182,185-197,199,202-206,208-212,215-219,221-224,226-227,229-236,238,240-242,244,247,249-251,254-258,260,263,265-266,268-278,281-285,287-289,291,293-316,319-325,327,330-338,340-346,348-349,351-353,355,357-365,367-369,371-372,378-381,383-387,389,392,394-398,400-404,406-420,422-423,426,430,433,435-438,48,200,428-429,105,292,347,366,382,388,390-391,421,153,207,439,350 -c DoubleEl/Run2012C
+130929_071946: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C
+130929_072012: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D
+130929_072055: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012D
+130929_072245: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D
+130929_072336: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 1-3,6-9,11-14,18-46,48-52,54,58-67,69-81,83-86,89,91,96-98,100,106-111,113,115,117-127,129-134,136-149,157-162,166-171,173-178,181-183,189-195,197-223,225-226,228-229,231,239-253,258,261-268,271-276,279-292,296-297,300,303,307-320,322-323,326-332,334-335,337,339,341-342,345,354,358-363,365,367-372,374,380-384,390-392,394,399,401-402,404-406,413-415,417-418,423,426-427,431,433,440,442-443,180,254,277,409,419-421,429-430,435,441,4-5,101,116,227,298,196,269,324,385 -c DoubleEl/Run2012D
+130929_072659: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D
+130929_080525: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012A/
+130929_080535: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B
+130929_080558: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012B
+130929_080608: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C
+130929_083004: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B/
+130929_093913: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B
+130929_093955: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012B
+130929_094010: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 132 -c DoubleMu/Run2012B
+130929_094032: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012C
+130929_094048: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C
+130929_094121: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012C
+130929_094141: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C
+130929_094202: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D
+130929_095358: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012A/
+130929_095416: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012A/
+130929_095425: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012B
+130929_095505: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012B
+130929_095518: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012B
+130929_095545: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 115 -c DoubleEl/Run2012B
+130929_095553: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012B
+130929_095601: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012B
+130929_095626: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 115 -c DoubleEl/Run2012B
+130929_095659: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C
+130929_095728: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012C
+130929_095735: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C
+130929_095833: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 64,136,142,288 -c DoubleEl/Run2012C
+130929_095856: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D
+130929_100558: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B
+130929_100624: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012B
+130929_100651: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B
+130929_100717: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 133,138,393 -c DoubleMu/Run2012B
+130929_100740: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B
+130929_100757: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C
+130929_100821: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D
+130929_123756: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B
+130929_123827: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012B
+130929_123834: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C
+130929_123904: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012C
+130929_123934: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C
+130929_124105: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 59,64,90-93,112-113,116,129,194,223,418-420,426-427,431 -c DoubleMu/Run2012C
+130929_124126: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D
+130929_124200: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012D
+130929_124248: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D
+130929_135451: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C
+130929_150008: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D
+130929_150110: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012D
+130929_150124: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D
+130929_150433: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 2,13-15,27,72-75,77-80,89-96,98-99,101,117-120,122-123,133-136,166,179,214,233,236,259,283,288,318,363,374,381,383,386,388,390,399-401,412-413,417,426,437,442,446-448 -c DoubleMu/Run2012D
+130930_025322: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg -submit
+130930_025353: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg -submit
+130930_032627: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D/
+130930_032857: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012D/
+130930_032943: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D/
+130930_041031: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg -submit
+130930_044757: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest
+130930_044808: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest2
+130930_060657: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg -submit
+130930_061512: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+130930_062005: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest2
+130930_062019: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ggH_M125_p6/
+130930_063120: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest
+130930_063133: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c StressTest
+130930_063144: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest
+130930_063150: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest2
+130930_070552: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ggH_M125_p6/
+130930_070606: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c ggH_M125_p6/
+130930_070613: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ggH_M125_p6/
+130930_070629: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest2/
+130930_072013: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest2/
+130930_072153: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest2/
+130930_073409: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest2/
+130930_074538: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest2/
+130930_080810: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest2/
+130930_085326: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest2/
+130930_094749: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest2/
+130930_095628: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest2/
+130930_103516: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest2/
+130930_104705: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest2/
+130930_104941: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c StressTest2/
+130930_104946: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest2/
+131001_024730: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg -submit
+131001_025921: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg -submit
+131001_030655: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg -submit
+131001_033558: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest3/
+131001_035238: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest3/
+131001_043235: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest3/
+131001_044137: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest3/
+131001_054328: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest3/
+131001_055716: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest3/
+131001_062121: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest3/
+131001_063240: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest3/
+131001_070357: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest3/
+131001_071126: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest3/
+131001_071135: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c StressTest3/
+131001_071140: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c StressTest3/
+131001_092012: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg -submit
+131001_092235: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg -submit
+131001_092442: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg -submit
+131001_092627: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg -submit
+131001_093036: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B/
+131001_093106: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012B/
+131001_093136: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B/
+131001_093152: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 132-133,138,252,268-270,375,392-394,410,424 -c DoubleMu/Run2012B/
+131001_093329: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C
+131001_093359: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012C
+131001_093422: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C
+131001_093437: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 59,64,90-93,110-119,129-130,133-135,137,154-155,172-173,192-194,223,243-244,258,268,272,327,334,341,346,359,370-371,373,378,385,387,389,392,399,402,405,418-420,426-427,431 -c DoubleMu/Run2012C
+131001_093513: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D
+131001_093625: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012D
+131001_093945: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D
+131001_094849: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 2,13-15,27,72-75,77-80,89-96,98-99,101,117-120,122-123,133-136,145-146,159,165-166,169,171-172,178-179,196,198,205,212-217,233-237,241-242,244,254,261,264-266,271,283-284,286-290,306,308,312,318,320-321,338-341,346,363-364,373-374,380-381,383,386,388,390,399-401,412-413,417,426,437,442,446-448 -c DoubleMu/Run2012D
+131001_100728: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B
+131001_111330: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg
+131001_112416: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg
+131001_112655: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -submit 500 -c DoubleEl/Run2012D_v2/
+131001_112908: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -submit 500 -c DoubleEl/Run2012D_v2/
+131001_113027: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B
+131001_170129: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B
+131001_170421: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D_v2/
+131001_170517: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012D_v2/
+131002_024030: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D_v2/
+131002_024112: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012D_v2/
+131002_024138: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D_v2/
+131002_024253: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 231,281,396,506,536,680,13,75-76,81,229,573-574,617 -c DoubleEl/Run2012D_v2/
+131002_025927: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D_v2/
+131002_030004: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 59,64,110-112,162-163,175,177,188,190,268,326,334,371,378,402,430 -c DoubleEl/Run2012D_v2/
+131002_030535: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg
+131002_031438: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -submit 500 -c DoubleMu/Run2012B_v2/
+131002_031606: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -submit 500 -c DoubleMu/Run2012B_v2/
+131002_031840: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg
+131002_032204: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -submit 500 -c DoubleMu/Run2012C_v2/
+131002_032603: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -submit 500 -c DoubleMu/Run2012C_v2/
+131002_032723: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg
+131002_033309: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -submit 500 -c DoubleMu/Run2012D_v2/
+131002_033421: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -submit 500 -c DoubleMu/Run2012D_v2/
+131002_033557: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg
+131002_033752: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -submit 500 -c DoubleEl/Run2012B_v2/
+131002_033847: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -submit 500 -c DoubleEl/Run2012B_v2/
+131002_033952: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg
+131002_034257: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -submit 500 -c DoubleEl/Run2012C_v2/
+131002_034532: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -submit 500 -c DoubleEl/Run2012C_v2/
+131002_035315: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg
+131002_035533: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -submit 500 -c DoubleEl/Run2012D_v3/
+131002_040350: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -submit 500 -c DoubleEl/Run2012D_v3/
+131002_061830: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D_v2/
+131002_062046: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012D_v2/
+131002_062059: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D_v2/
+131002_064230: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D_v2/
+131002_064345: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012D_v2/
+131002_064422: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D_v2/
+131002_064454: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B_v2/
+131002_064534: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012B_v2/
+131002_064654: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B_v2/
+131002_064753: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 21 -c DoubleMu/Run2012B_v2/
+131002_070139: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C_v2/
+131002_070204: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012C_v2/
+131002_070233: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C_v2/
+131002_070326: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 107,242,364 -c DoubleMu/Run2012C_v2/
+131002_070401: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D_v2/
+131002_070441: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012D_v2/
+131002_070809: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D_v2/
+131002_070846: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 88,222 -c DoubleMu/Run2012D_v2/
+131002_070916: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012B_v2/
+131002_070938: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012B_v2/
+131002_071016: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012B_v2/
+131002_071043: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 26,49,54,159,269,275 -c DoubleEl/Run2012B_v2/
+131002_071108: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v2/
+131002_071203: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D_v3/
+131002_071252: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012D_v3/
+131002_071305: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D_v3/
+131002_071553: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 7,48,14 -c DoubleEl/Run2012D_v3/
+131002_073726: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D_v2/
+131002_073810: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B_v2/
+131002_073908: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012B_v2/
+131002_075318: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B_v2/
+131002_075354: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012B_v2/
+131002_075411: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B_v2/
+131002_075503: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C_v2/
+131002_075533: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012C_v2/
+131002_075620: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C_v2/
+131002_075650: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 147 -c DoubleMu/Run2012C_v2/
+131002_075745: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D_v2/
+131002_075903: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012D_v2/
+131002_075947: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D_v2/
+131002_080029: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 174,220,239,3,651,3 -c DoubleMu/Run2012D_v2/
+131002_080857: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 174,220,239,3,651 -c DoubleMu/Run2012D_v2/
+131002_080920: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012B_v2/
+131002_080954: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012B_v2/
+131002_081030: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012B_v2/
+131002_081102: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 288,167 -c DoubleEl/Run2012B_v2/
+131002_081136: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v2/
+131002_081337: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012C_v2/
+131002_082511: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v2/
+131002_082557: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D_v3/
+131002_091002: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012D_v3/
+131002_091111: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D_v3/
+131002_091209: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 117 -c DoubleEl/Run2012D_v3/
+131002_091534: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B_v2/
+131002_091627: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012B_v2/
+131002_091722: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B_v2/
+131002_091755: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C_v2/
+131002_091836: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012C_v2/
+131002_091956: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C_v2/
+131002_092027: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 289 -c DoubleMu/Run2012C_v2/
+131002_092802: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D_v2/
+131002_094239: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012D_v2/
+131002_094342: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D_v2/
+131002_094443: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 400,481,229 -c DoubleMu/Run2012D_v2/
+131002_094507: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012B_v2/
+131002_094548: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012B_v2/
+131002_094643: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012B_v2/
+131002_094710: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 373 -c DoubleEl/Run2012B_v2/
+131002_094731: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v2/
+131002_094757: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012C_v2/
+131002_094902: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v2/
+131002_094927: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 19 -c DoubleEl/Run2012C_v2/
+131002_095340: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D_v3/
+131002_095435: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012D_v3/
+131002_095640: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D_v3/
+131002_095938: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 454,156 -c DoubleEl/Run2012D_v3/
+131002_150911: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B_v2/
+131002_151022: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012B_v2/
+131002_151045: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B_v2/
+131002_151057: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C_v2/
+131002_151144: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012C_v2/
+131003_025631: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C_v2/
+131003_025734: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012C_v2/
+131003_025827: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C_v2/
+131003_025921: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py crab -resubmit 397,457,669,201 -c DoubleMu/Run2012C_v2/
+131003_030410: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D_v2/
+131003_030449: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012D_v2/
+131003_030556: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D_v2/
+131003_030616: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 579,679,623 -c DoubleMu/Run2012D_v2/
+131003_030701: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012B_v2/
+131003_030730: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012B_v2/
+131003_030750: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v2/
+131003_030925: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012C_v2/
+131003_031219: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v2/
+131003_031451: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 17,19-20,129,494,462 -c DoubleEl/Run2012C_v2/
+131003_031528: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D_v3/
+131003_031656: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012D_v3/
+131003_031952: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D_v3/
+131003_032010: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 293,452,539 -c DoubleEl/Run2012D_v3/
+131003_033138: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D_v3/
+131003_033438: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C_v2/
+131003_062549: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C_v2/
+131003_062756: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012C_v2/
+131003_062806: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D_v2/
+131003_062835: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012D_v2/
+131003_062840: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D_v2/
+131003_062908: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v2/
+131003_062940: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012C_v2/
+131003_063035: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D_v3/
+131003_063134: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012D_v3/
+131003_074039: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C_v2/
+131003_074115: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012C_v2/
+131003_074126: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C_v2/
+131003_074151: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D_v2/
+131003_074225: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012D_v2/
+131003_074255: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D_v2/
+131003_074334: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v2/
+131003_074456: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012C_v2/
+131003_074507: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012D_v3/
+131003_074515: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D_v3/
+131003_084544: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C_v2/
+131003_084619: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012C_v2/
+131003_084627: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C_v2/
+131003_084638: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D_v2/
+131003_084713: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v2/
+131003_085555: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012C_v2/
+131003_085612: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v2/
+131003_085816: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 17,19-20,129 -c DoubleEl/Run2012C_v2/
+131003_090043: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D_v3/
+131003_090136: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012D_v3/
+131003_090147: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D_v3/
+131003_090231: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C_v2/
+131003_090241: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012C_v2/
+131003_090252: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D_v2/
+131003_094052: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D_v2/
+131003_094507: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012D_v2/
+131003_094517: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D_v2/
+131003_094609: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v2/
+131003_094639: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D_v3/
+131003_094704: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012D_v3/
+131004_032049: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C_v2/
+131004_032415: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012C_v2/
+131004_032422: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D_v2/
+131004_032437: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012D_v2/
+131004_032450: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D_v3/
+131004_032504: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012D_v3/
+131004_032511: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v2/
+131004_032647: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg
+131004_033710: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg
+131004_040147: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -submit 500 -c DoubleEl/Run2012C_v3/
+131004_040316: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -submit 500 -c DoubleEl/Run2012C_v3/
+131004_072805: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v3/
+131004_072954: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012C_v3/
+131004_073121: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v3/
+131004_073452: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 304 -c DoubleEl/Run2012C_v3/
+131004_074146: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v3/
+131004_074718: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v3/
+131004_075826: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v3/
+131004_080311: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012C_v3/
+131004_085443: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v3/
+131004_085625: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012C_v3/
+131004_085726: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v3/
+131004_090250: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v3/
+131004_091223: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012C_v3/
+131004_091418: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v3/
+131004_092019: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012C_v3/
+131004_092929: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v3/
+131005_065731: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v3/
+131005_065850: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012C_v3/
+131005_065912: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v3/
+131005_065931: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 19,22 -c DoubleEl/Run2012C_v3/
+131005_070811: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg
+131005_072827: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -submit 500 -c DoubleEl/Run2012C_v4/
+131005_075531: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -submit 500 -c DoubleEl/Run2012C_v4/
+131005_075835: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -submit 500 -c DoubleEl/Run2012C_v4/
+131005_090329: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v4/
+131005_102729: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v4/
+131005_102837: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012C_v4/
+131005_103051: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v4/
+131005_103135: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 431,693,932 -c DoubleEl/Run2012C_v4/
+131005_103752: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v4/
+131005_104212: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v4/
+131005_104246: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012C_v4/
+131005_105423: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v4/
+131005_105606: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 852 -c DoubleEl/Run2012C_v4/
+131005_105739: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v4/
+131005_110306: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012C_v4/
+131005_114814: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v4/
+131005_114910: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012C_v4/
+131005_114950: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v3/
+131005_120936: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v4/
+131005_121005: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012C_v4/
+131005_121016: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v4/
+131005_121044: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 613 -c DoubleEl/Run2012C_v4/
+131005_123451: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v4/
+131006_040616: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v4/
+131006_041421: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012C_v4/
+131006_041437: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v4/
+131006_041614: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v4/
+131006_041641: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 1038,25 -c DoubleEl/Run2012C_v4/
+131006_045100: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v4/
+131006_073845: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v4/
+131006_074039: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012C_v4/
+131006_081423: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v4/
+131006_084022: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v4/
+131006_091046: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v4/
+131006_093727: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v4/
+131006_093822: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -create -cfg crabNtuples_Data.cfg
+131006_095216: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -submit 500 -c DoubleEl/Run2012C_v5
+131006_102825: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -submit 500 -c DoubleEl/Run2012C_v5
+131006_102926: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -submit 500 -c DoubleEl/Run2012C_v5
+131006_103359: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -submit 500 -c DoubleEl/Run2012C_v5
+131006_151051: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v5
+131006_151205: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012C_v5
+131006_152402: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v5
+131006_152716: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -resubmit 516,787,971,1433,1463,1473,1597,189,1133,1438,1511,832,768,1590-1591 -c DoubleEl/Run2012C_v5
+131007_021152: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v4
+131007_022517: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v5
+131007_023058: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012C_v4
+131007_023108: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v5
+131007_023115: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v4
+131007_032441: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c ZGToLLG/
+131007_032452: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c ZGToLLG/
+131007_034543: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DYJetsToLL_M-50
+131007_034749: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012A/
+131007_034815: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012A/
+131007_035147: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012B_v2/
+131007_035158: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012B_v2/
+131007_035219: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012C_v2/
+131007_035235: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012C_v2/
+131007_035255: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleMu/Run2012D_v2/
+131007_035309: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleMu/Run2012D_v2/
+131007_042011: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -report -c DoubleMu/Run2012A/
+131007_042034: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -report -c DoubleMu/Run2012A/
+131007_043553: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -report -c DoubleMu/Run2012B_v2/
+131007_045007: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -report -c DoubleMu/Run2012C_v2/
+131007_060554: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -report -c DoubleMu/Run2012D_v2/
+131007_063320: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012A/
+131007_063350: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012A/
+131007_063358: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -report -c DoubleEl/Run2012A/
+131007_065402: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012B_v2/
+131007_065415: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012B_v2/
+131007_065431: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -report -c DoubleEl/Run2012B_v2/
+131007_065807: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012C_v4/
+131007_065834: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012C_v4/
+131007_065942: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -report -c DoubleEl/Run2012C_v4/
+131007_071505: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -status -c DoubleEl/Run2012D_v3/
+131007_071706: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -get -c DoubleEl/Run2012D_v3/
+131007_071717: /uscmst1/prod/grid/CRAB_2_9_1/python/crab.py -report -c DoubleEl/Run2012D_v3/

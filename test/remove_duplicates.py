@@ -10,6 +10,6 @@ duplFile = "duplicates.txt"
 
 f = open(duplFile)
 for l in f:
-    x = "~/pnfs"+l[66:]
+    x = "~/dCache"+l[68:]
     print x
     os.system("rm "+x)
