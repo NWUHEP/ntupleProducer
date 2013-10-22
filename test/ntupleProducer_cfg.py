@@ -409,16 +409,20 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   partFlowTag       =  cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
   skimLepton        =  cms.untracked.bool(False),
 
+  saveMuons         =    cms.untracked.bool(True),
   saveJets          =    cms.untracked.bool(True),
   saveElectrons     =    cms.untracked.bool(True),
-  saveMuons         =    cms.untracked.bool(True),
+  saveEleCrystals   =    cms.untracked.bool(True),
   savePhotons       =    cms.untracked.bool(True),
+  savePhoCrystals   =    cms.untracked.bool(True),
+
   saveMET           =    cms.untracked.bool(True),
   saveGenJets       =    cms.untracked.bool(True),
   saveGenParticles  =    cms.untracked.bool(True),
   saveTrackMET      =    cms.untracked.bool(True),
-  saveT0MET	    =    cms.untracked.bool(True),
-  saveT2MET	    =    cms.untracked.bool(True),
+  saveT0MET	        =    cms.untracked.bool(True),
+  saveT2MET	        =    cms.untracked.bool(True),
+
 
   ecalTPFilterTag    =    cms.untracked.InputTag("EcalDeadCellTriggerPrimitiveFilter",""),
   ecalBEFilterTag    =    cms.untracked.InputTag("EcalDeadCellBoundaryEnergyFilter",""),
@@ -497,7 +501,7 @@ process.ntuplePath = cms.Path(
     * process.heepIdNoIso
     * process.heepIdNoIsoEles
     * process.modElectronIso
-    
+
     * process.ntupleProducer
 )
 

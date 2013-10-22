@@ -3,31 +3,21 @@
 
 #include "TObject.h"
 #include "TLorentzVector.h"
-#include "TCPhysObject.h"
+#include "TCEGamma.h"
 
-class TCElectron : public TCPhysObject {
+class TCElectron : public TCEGamma {
     private:
 
         float _ptError;
-        float _hadOverEm;
-        float _dPhiSuperCluster;
-        float _dEtaSuperCluster;
-        float _sigmaIetaIeta;
-        float _eOverP;
+
         float _fBrem;
-        float _r9;
+
         float _mvaID;
         float _regEne;
         float _regErr;
 
-        float _scEta;
-
         bool  _convVeto;
         short _convMissHits;
-
-        bool _isEB;        // true if particle is in ECAL Barrel
-        bool _isEE;        // true if particle is in ECAL Endcaps
-        bool _isInGap;
 
         float _normalizedChi2;
         int _numberOfValidPixelHits;
@@ -53,16 +43,11 @@ class TCElectron : public TCPhysObject {
 
         float PtError() const;
 
-        float HadOverEm() const;
-        float DphiSuperCluster() const;
-        float DetaSuperCluster() const;
-        float SigmaIEtaIEta() const;
+
         float FBrem() const;
-        float EOverP() const;
+
         float NormalizedChi2() const;
 
-        float SCEta() const;
-        float R9() const; 
         float MvaID() const; 
         float EnergyRegression() const; 
         float EnergyRegressionErr() const; 
@@ -70,9 +55,6 @@ class TCElectron : public TCPhysObject {
         bool  ConversionVeto() const;
         short ConversionMissHits() const;
 
-        bool IsEB() const;
-        bool IsEE() const;
-        bool IsInGap() const;
 
         int NumberOfValidPixelHits() const;
         int NumberOfValidTrackerHits() const;
@@ -91,14 +73,8 @@ class TCElectron : public TCPhysObject {
         //--------------------------
 
         void SetPtError(float e);
-        void SetHadOverEm(float h);
-        void SetDphiSuperCluster(float dp);
-        void SetDetaSuperCluster(float de);
-        void SetSigmaIEtaIEta(float sieie);
-        void SetEOverP(float e);
+        
         void SetFBrem(float fb);
-
-        void SetSCEta(float);
 
         void SetConversionVeto(bool);
         void SetConversionMissHits(short);
@@ -108,14 +84,10 @@ class TCElectron : public TCPhysObject {
         void SetNumberOfLostPixelHits(int n);
         void SetNumberOfLostTrackerHits(int n);
         void SetNormalizedChi2(float n);
-        void SetR9(float r);
+        
         void SetMvaID(float m);
         void SetEnergyRegression(float e);
         void SetEnergyRegressionErr(float e);
-
-        void SetIsEB(bool b);
-        void SetIsEE(bool b);
-        void SetIsInGap(bool b);
 
         void SetCutLevel(int cut, int lvl);
 

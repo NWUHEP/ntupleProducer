@@ -13,10 +13,8 @@ TCElectron::~TCElectron() {
 // "get" methods -------------------------------------
 
 float TCElectron::MvaID() const { return _mvaID; } 
-float TCElectron::EnergyRegression() const { return _regEne; } 
+float TCElectron::EnergyRegression() const { return _regEne; }
 float TCElectron::EnergyRegressionErr() const { return _regErr; } 
-
-float TCElectron::R9() const { return _r9; } 
 
 float TCElectron::PtError() const {
   return _ptError;
@@ -50,38 +48,6 @@ short TCElectron::ConversionMissHits() const {
     return _convMissHits;
 }
 
-float TCElectron::SCEta() const {
-    return _scEta;
-}
-
-bool TCElectron::IsEB() const {
-  return _isEB;
-}
-
-bool TCElectron::IsEE() const {
-  return _isEE;
-}
-
-bool TCElectron::IsInGap() const {
-  return _isInGap;
-}
-
-float TCElectron::HadOverEm() const {
-  return _hadOverEm;
-}
-float TCElectron::DphiSuperCluster() const {
-  return _dPhiSuperCluster;
-}
-float TCElectron::DetaSuperCluster() const {
-  return _dEtaSuperCluster;
-}
-float TCElectron::SigmaIEtaIEta() const {
-  return _sigmaIetaIeta;
-}
-
-float TCElectron::EOverP() const {
-    return _eOverP;
-}
 
 float TCElectron::FBrem() const {
     return _fBrem;
@@ -131,11 +97,8 @@ TLorentzVector TCElectron::RegressionMomCombP4() const {
 // "set" methods ---------------------------------------------
 //------------------------------------------------------------------------
 
-
-void TCElectron::SetR9(float r){ _r9 = r; } 
-
-void TCElectron::SetMvaID(float m){ _mvaID = m; } 
-void TCElectron::SetEnergyRegression(float e){ _regEne = e; } 
+void TCElectron::SetMvaID(float m){ _mvaID = m; }
+void TCElectron::SetEnergyRegression(float e){ _regEne = e; }
 void TCElectron::SetEnergyRegressionErr(float e){ _regErr = e; } 
 
 
@@ -162,34 +125,11 @@ void TCElectron::SetNormalizedChi2(float n) {
   _normalizedChi2 = n;
 }
 
-void TCElectron::SetHadOverEm(float he){
-  _hadOverEm = he;
-}
-void TCElectron::SetDphiSuperCluster(float dp){
-  _dPhiSuperCluster = dp;
-}
-void TCElectron::SetDetaSuperCluster(float de){
-  _dEtaSuperCluster = de;
-}
-
-void TCElectron::SetSigmaIEtaIEta(float sieie){
-  _sigmaIetaIeta = sieie;
-}
-
-void TCElectron::SetEOverP(float e)
-{
-    _eOverP = e;
-}
-
 void TCElectron::SetFBrem(float fb)
 {
     _fBrem = fb;
 }
 
-void TCElectron::SetSCEta(float e)
-{
-    _scEta = e;
-}
 
 void TCElectron::SetConversionVeto(bool v) {
   _convVeto = v;
@@ -199,17 +139,6 @@ void TCElectron::SetConversionMissHits(short m) {
   _convMissHits = m;
 }
 
-void TCElectron::SetIsEB(bool b) {
-  _isEB = b;
-}
-
-void TCElectron::SetIsEE(bool b) {
-  _isEE = b;
-}
-
-void TCElectron::SetIsInGap(bool b) {
-  _isInGap = b;
-}
 
 void TCElectron::SetCutLevel(int cut, int lvl){
   if(lvl==95){

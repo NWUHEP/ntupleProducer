@@ -24,10 +24,12 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
   partFlowTag_      = iConfig.getUntrackedParameter<edm::InputTag>("partFlowTag");
   skimLepton_       = iConfig.getUntrackedParameter<bool>("skimLepton");
 
+  saveMuons_        = iConfig.getUntrackedParameter<bool>("saveMuons");
   saveJets_         = iConfig.getUntrackedParameter<bool>("saveJets");
   saveElectrons_    = iConfig.getUntrackedParameter<bool>("saveElectrons");
-  saveMuons_        = iConfig.getUntrackedParameter<bool>("saveMuons");
+  saveEleCrystals_  = iConfig.getUntrackedParameter<bool>("saveEleCrystals");
   savePhotons_      = iConfig.getUntrackedParameter<bool>("savePhotons");
+  savePhoCrystals_  = iConfig.getUntrackedParameter<bool>("savePhoCrystals");
   saveMET_          = iConfig.getUntrackedParameter<bool>("saveMET");
   saveTrackMET_     = iConfig.getUntrackedParameter<bool>("saveTrackMET"); 
   saveT0MET_        = iConfig.getUntrackedParameter<bool>("saveT0MET"); 
@@ -621,88 +623,90 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
       TCPhoton* myPhoton = new ((*recoPhotons)[photonCount]) TCPhoton();
 
-      //Crystal Info:
-      std::vector< std::pair<DetId, float> >  PhotonHit_DetIds  = iPhoton->superCluster()->hitsAndFractions();
-      std::vector<TCPhoton::CrystalInfo> crystalinfo_container;
-      crystalinfo_container.clear();
-      TCPhoton::CrystalInfo crystal = {};
-      float timing_avg =0.0;
-      int ncrys   = 0;
-      vector< std::pair<DetId, float> >::const_iterator detitr;
-
-      for(detitr = PhotonHit_DetIds.begin(); detitr != PhotonHit_DetIds.end(); ++detitr)
-      {
-
-        if (((*detitr).first).det() == DetId::Ecal && ((*detitr).first).subdetId() == EcalBarrel) {
-          EcalRecHitCollection::const_iterator j= Brechit->find(((*detitr).first));
-          EcalRecHitCollection::const_iterator thishit;
-          if ( j!= Brechit->end())  thishit = j;
-          if ( j== Brechit->end()){
-            continue;
+      if (savePhoCrystals_)
+        {
+          //Crystal Info:
+          std::vector< std::pair<DetId, float> >  PhotonHit_DetIds  = iPhoton->superCluster()->hitsAndFractions();
+          std::vector<TCPhoton::CrystalInfo> crystalinfo_container;
+          crystalinfo_container.clear();
+          TCPhoton::CrystalInfo crystal = {};
+          float timing_avg =0.0;
+          int ncrys   = 0;
+          vector< std::pair<DetId, float> >::const_iterator detitr;
+          
+          for(detitr = PhotonHit_DetIds.begin(); detitr != PhotonHit_DetIds.end(); ++detitr)
+            {
+              
+              if (((*detitr).first).det() == DetId::Ecal && ((*detitr).first).subdetId() == EcalBarrel) {
+                EcalRecHitCollection::const_iterator j= Brechit->find(((*detitr).first));
+                EcalRecHitCollection::const_iterator thishit;
+                if ( j!= Brechit->end())  thishit = j;
+                if ( j== Brechit->end()){
+                  continue;
+                }
+                
+                EBDetId detId  = (EBDetId)((*detitr).first);
+                crystal.rawId  = thishit->id().rawId();
+                crystal.energy = thishit->energy();
+                crystal.time   = thishit->time();
+                crystal.timeErr= thishit->timeError();
+                crystal.recoFlag = thishit->recoFlag();
+                crystal.ieta   = detId.ieta();
+                crystal.iphi   = detId.iphi();
+                if(crystal.energy > 0.1){
+                  timing_avg  = timing_avg + crystal.time;
+                  ncrys++;
+                }  
+              }//end of if ((*detitr).det() == DetId::Ecal && (*detitr).subdetId() == EcalBarrel)
+              crystalinfo_container.push_back(crystal);  
+            }//End loop over detids
+          std::sort(crystalinfo_container.begin(),crystalinfo_container.end(),EnergySortCriterium);
+          
+          
+          //Without taking into account uncertainty, this time makes no sense.
+          if (ncrys !=0) timing_avg = timing_avg/(float)ncrys;
+          else timing_avg = -99.;
+          
+          myPhoton->SetNCrystals(crystalinfo_container.size());
+          
+          for (unsigned int y =0; y < crystalinfo_container.size() && y < 100;y++){ 
+            myPhoton->AddCrystal(crystalinfo_container[y]);
           }
-
-          EBDetId detId  = (EBDetId)((*detitr).first);
-          crystal.rawId  = thishit->id().rawId();
-          crystal.energy = thishit->energy();
-          crystal.time   = thishit->time();
-          crystal.timeErr= thishit->timeError();
-          crystal.recoFlag = thishit->recoFlag();
-          crystal.ieta   = detId.ieta();
-          crystal.iphi   = detId.iphi();
-          if(crystal.energy > 0.1){
-            timing_avg  = timing_avg + crystal.time;
-            ncrys++;
-          }  
-        }//end of if ((*detitr).det() == DetId::Ecal && (*detitr).subdetId() == EcalBarrel)
-        crystalinfo_container.push_back(crystal);  
-      }//End loop over detids
-      std::sort(crystalinfo_container.begin(),crystalinfo_container.end(),EnergySortCriterium);
-
-
-      //Without taking into account uncertainty, this time makes no sense.
-      if (ncrys !=0) timing_avg = timing_avg/(float)ncrys;
-      else timing_avg = -99.;
-
-      myPhoton->SetNCrystals(crystalinfo_container.size());
-
-      for (unsigned int y =0; y < crystalinfo_container.size() && y < 100;y++){ 
-        myPhoton->AddCrystal(crystalinfo_container[y]);
-      }
-
-      /*
-      vector<TCPhoton::CrystalInfo> savedCrystals = myPhoton->GetCrystalVect();
-      for (int y = 0; y< myPhoton->GetNCrystals();y++){
-        std::cout << "savedCrystals[y].time : " << savedCrystals[y].time << std::endl; 
-        std::cout << "savedCrystals[y].timeErr : " << savedCrystals[y].timeErr << std::endl;
-        std::cout << "savedCrystals[y].energy : " << savedCrystals[y].energy <<std::endl;
-        std::cout << "savedCrystals[y].ieta: " << savedCrystals[y].ieta << std::endl;
-
-        std::cout << "savedCrystals[y].rawId: " << savedCrystals[y].rawId <<std::endl;
-      }
-      */
-
-      //const reco::BasicCluster& seedClus = *(iPhoton->superCluster()->seed());
-
-
+          
+          /*
+            vector<TCPhoton::CrystalInfo> savedCrystals = myPhoton->GetCrystalVect();
+            for (int y = 0; y< myPhoton->GetNCrystals();y++){
+            std::cout << "savedCrystals[y].time : " << savedCrystals[y].time << std::endl; 
+            std::cout << "savedCrystals[y].timeErr : " << savedCrystals[y].timeErr << std::endl;
+            std::cout << "savedCrystals[y].energy : " << savedCrystals[y].energy <<std::endl;
+            std::cout << "savedCrystals[y].ieta: " << savedCrystals[y].ieta << std::endl;
+            
+            std::cout << "savedCrystals[y].rawId: " << savedCrystals[y].rawId <<std::endl;
+            }
+          */
+          
+          //const reco::BasicCluster& seedClus = *(iPhoton->superCluster()->seed());
+        }
+      
       myPhoton->SetPxPyPzE(iPhoton->px(), iPhoton->py(), iPhoton->pz(), iPhoton->p());
       myPhoton->SetVtx(iPhoton->vx(), iPhoton->vy(), iPhoton->vz());
 
       // ID variables
-      myPhoton->SetHadOverEm(iPhoton->hadTowOverEm());
-      myPhoton->SetSigmaIEtaIEta(iPhoton->sigmaIetaIeta());
-      myPhoton->SetR9(iPhoton->r9());
+      //myPhoton->SetHadOverEm(iPhoton->hadTowOverEm());
+      //myPhoton->SetSigmaIEtaIEta(iPhoton->sigmaIetaIeta());
+      //myPhoton->SetR9(iPhoton->r9());
       myPhoton->SetTrackVeto(iPhoton->hasPixelSeed());
 
-      myPhoton->SetSCEta(iPhoton->superCluster()->eta());
-      myPhoton->SetSCPhi(iPhoton->superCluster()->phi());
-      myPhoton->SetSCEnergy(iPhoton->superCluster()->energy());
+      //myPhoton->SetSCEta(iPhoton->superCluster()->eta());
+      //myPhoton->SetSCPhi(iPhoton->superCluster()->phi());
+      //myPhoton->SetSCEnergy(iPhoton->superCluster()->energy());
 
       // detector-based isolation
-      myPhoton->SetIsoMap("EmIso_R03", (iPhoton->ecalRecHitSumEtConeDR03()));
+      myPhoton->SetIsoMap("EmIso_R03",  (iPhoton->ecalRecHitSumEtConeDR03()));
       myPhoton->SetIsoMap("HadIso_R03", (iPhoton->hcalTowerSumEtConeDR03()));
       myPhoton->SetIsoMap("TrkIso_R03", (iPhoton->trkSumPtHollowConeDR03()));
 
-      myPhoton->SetIsoMap("EmIso_R04", (iPhoton->ecalRecHitSumEtConeDR04()));
+      myPhoton->SetIsoMap("EmIso_R04",  (iPhoton->ecalRecHitSumEtConeDR04()));
       myPhoton->SetIsoMap("HadIso_R04", (iPhoton->hcalTowerSumEtConeDR04()));
       myPhoton->SetIsoMap("TrkIso_R04", (iPhoton->trkSumPtHollowConeDR04()));
 

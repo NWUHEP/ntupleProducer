@@ -129,6 +129,7 @@
 #include "TCJet.h"
 #include "TCMET.h"
 #include "TCMuon.h"
+#include "TCEGamma.h"
 #include "TCElectron.h"
 #include "TCTau.h"
 #include "TCPhoton.h"
@@ -209,16 +210,16 @@ class ntupleProducer : public edm::EDAnalyzer {
   // ----------member data ---------------------------
   
   struct JetCompare :
-    public std::binary_function<reco::Jet, reco::Jet, bool> {
+  public std::binary_function<reco::Jet, reco::Jet, bool> {
     inline bool operator () (const reco::Jet &j1,
-			     const reco::Jet &j2) const
+                             const reco::Jet &j2) const
     { return (j1.p4().Pt() > j2.p4().Pt()); }
   };
   
-    static bool EnergySortCriterium( const TCPhoton::CrystalInfo p1,const TCPhoton::CrystalInfo p2 ){
-      return p1.energy > p2.energy;
-    };
-    
+  static bool EnergySortCriterium( const TCPhoton::CrystalInfo p1,const TCPhoton::CrystalInfo p2 ){
+    return p1.energy > p2.energy;
+  };
+  
   typedef std::map<reco::Jet, unsigned int, JetCompare> flavourMap;
   typedef reco::JetTagCollection::const_iterator tag_iter;
   
@@ -262,10 +263,12 @@ class ntupleProducer : public edm::EDAnalyzer {
   edm::InputTag triggerEventTag_;
 
   bool skimLepton_;
+  bool saveMuons_;
   bool saveJets_;
   bool saveElectrons_;
-  bool saveMuons_;
+  bool saveEleCrystals_;
   bool savePhotons_;
+  bool savePhoCrystals_;
   bool saveMET_;
   bool saveTrackMET_; 
   bool saveT0MET_; 
