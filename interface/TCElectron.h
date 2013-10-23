@@ -16,13 +16,21 @@ class TCElectron : public TCEGamma {
   float _fBrem;
   float _inverseEnergyMomentumDiff;
 
+  float _EoP;
+  float _EoPout;
+  
+  float _ip3d;
+  float _ip3dSig;
+
+  float _deltaEtaSeedCluster;
+  float _deltaPhiSeedCluster;
+
   float _mvaID;
   float _regEne;
   float _regErr;
   
   bool  _convVeto;
   short _convMissHits;
-  
   
   int _trackerLayersWithMeasurement;
   int _numberOfValidHits;
@@ -53,6 +61,15 @@ class TCElectron : public TCEGamma {
 
   float InverseEnergyMomentumDiff() const;
     
+  float EoP() const;
+  float EoPout() const;
+
+  
+  float IP3d() const;
+  float IP3dSig() const;
+  float DeltaEtaSeedCluster() const;
+  float DeltaPhiSeedCluster() const;
+
   float PtError() const;
   
   float FBrem() const;
@@ -88,6 +105,14 @@ class TCElectron : public TCEGamma {
   void SetNormalizedChi2Kf(float);
   
   void SetInverseEnergyMomentumDiff(float);
+
+  void SetIP3d(float);
+  void SetIP3dSig(float);
+  void SetDeltaEtaSeedCluster(float);
+  void SetDeltaPhiSeedCluster(float);
+
+  void SetEoP(float);
+  void SetEoPout(float);
 
   void SetPtError(float);
   

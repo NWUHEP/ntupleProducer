@@ -3,14 +3,14 @@
 The most important logs should go here. Other are monitored with git commits.
 
 2013-Oct-21,  _Andrey_
- * Introducing EGamma class - common class for Electrons and Photons
+ * Introducing TCEGamma class - common class for Electrons and Photons
 
 2013-Sep-17,  _Andrey_
  * Updated the code to work with CMSSW_5_3_11_patch6
  * Made MVA for electron ID calculated on the fly, updated regressions
  * Added High boosted Z -> ee isolation
   
-2013-Aug-18, _Brianne__
+2013-Aug-18, _Brianne_
  * Added back a few of the minor changes from Aug-01.  It was a waste of my time.  skimLepton was not even fully implemented into the analyzer,
  it was just floating around unused and uninitialized.  VarParser is still removed, looks like its more complicated then useful in
  its v6.4 iteration.  Trigger names still need to be readded for H->llgamma
@@ -29,7 +29,7 @@ without editing the config file. One can also specify other option, or add (regi
 2012-Oct :  2013-Jul
  * Nobody likes to write the logs...
 
-2012-Oct-04, _Nate__
+2012-Oct-04, _Nate_
  * Branch for 533 release
 
 2011-Sep-30

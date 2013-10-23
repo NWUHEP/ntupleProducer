@@ -42,6 +42,29 @@ float TCElectron::EnergyRegressionErr() const {
   return _regErr; 
 } 
 
+float TCElectron::IP3d() const {
+  return _ip3d;
+}
+float TCElectron::IP3dSig() const {
+  return _ip3dSig;
+}
+
+float TCElectron::DeltaEtaSeedCluster() const {
+  return _deltaEtaSeedCluster;
+}
+float TCElectron::DeltaPhiSeedCluster() const {
+  return _deltaPhiSeedCluster;
+}
+
+
+
+float TCElectron::EoP() const {
+  return _EoP;
+}
+float TCElectron::EoPout() const {
+  return _EoPout;
+}
+
 float TCElectron::PtError() const {
   return _ptError;
 }
@@ -151,6 +174,28 @@ void TCElectron::SetEnergyRegression(float e){
 void TCElectron::SetEnergyRegressionErr(float e){ 
   _regErr = e; 
 } 
+
+void TCElectron::SetIP3d(float d){
+  _ip3d = d;
+}
+void TCElectron::SetIP3dSig(float d){
+  _ip3dSig = d;
+}
+
+void TCElectron::SetDeltaEtaSeedCluster(float d){
+  _deltaEtaSeedCluster = d;
+}
+void TCElectron::SetDeltaPhiSeedCluster(float d){
+  _deltaPhiSeedCluster = d;
+}
+
+
+void TCElectron::SetEoP(float e) {
+  _EoP = e;
+}
+void TCElectron::SetEoPout(float e) {
+  _EoPout = e;
+}
 
 void TCElectron::SetPtError(float e) {
   _ptError = e;

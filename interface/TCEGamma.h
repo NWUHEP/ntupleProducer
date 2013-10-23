@@ -27,8 +27,8 @@ class TCEGamma : public TCPhysObject {
   bool  _isInGap;
   
   float _hadOverEm;
-  float _eOverP;
-  float _fBrem;
+  //float _eOverP;
+  //float _fBrem;
   float _r9;
   
   //Superclaster shape variables. These should be coommon between electrons and photons.
@@ -42,6 +42,9 @@ class TCEGamma : public TCPhysObject {
   float _scPhiWidth;
 
   float _scEnergy;
+  float _preShowerOverRaw;
+  float _ome1x5oe5x5;
+  
 
   //float _mvaID;
   //float _regEne;
@@ -69,10 +72,8 @@ class TCEGamma : public TCPhysObject {
   vector<TCEGamma::CrystalInfo> GetCrystalVect() const;
 
   int   GetNCrystals() const;
-  
-  float FBrem() const;
-  float EOverP() const;
   float HadOverEm() const;
+  
   float R9() const; 
 
   float SCEta() const;
@@ -86,8 +87,9 @@ class TCEGamma : public TCPhysObject {
   float SCEtaWidth() const;
   float SCPhiWidth() const;
 
-
   float SCEnergy() const;
+  float PreShowerOverRaw() const;
+  float Ome1x5oe5x5() const;
 
   float PfIsoCharged() const;
   float PfIsoNeutral() const;
@@ -113,8 +115,6 @@ class TCEGamma : public TCPhysObject {
   void SetNCrystals(int);
 
   void SetHadOverEm(float);
-  void SetEOverP(float);
-  void SetFBrem(float);
 
   void SetSCEta(float);
   void SetSCPhi(float);
@@ -129,6 +129,8 @@ class TCEGamma : public TCPhysObject {
   void SetSCPhiWidth(float);
 
   void SetSCEnergy(float);
+  void SetPreShowerOverRaw(float);
+  void SetOme1x5oe5x5(float);
   
   
   //void SetConversionVeto(bool);

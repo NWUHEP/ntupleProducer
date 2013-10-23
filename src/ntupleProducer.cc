@@ -5,8 +5,8 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
   jetTag_           = iConfig.getUntrackedParameter<edm::InputTag>("JetTag");
   jecTag_           = iConfig.getParameter<std::string>("JecTag");
   metTag_           = iConfig.getUntrackedParameter<edm::InputTag>("METTag");
-  trackmetTag_      = iConfig.getUntrackedParameter<edm::InputTag>("TrackMETTag"); 
-  t0metTag_         = iConfig.getUntrackedParameter<edm::InputTag>("T0METTag"); 
+  trackmetTag_      = iConfig.getUntrackedParameter<edm::InputTag>("TrackMETTag");
+  t0metTag_         = iConfig.getUntrackedParameter<edm::InputTag>("T0METTag");
   t2metTag_         = iConfig.getUntrackedParameter<edm::InputTag>("T2METTag");
   muonTag_          = iConfig.getUntrackedParameter<edm::InputTag>("MuonTag");
   electronTag_      = iConfig.getUntrackedParameter<edm::InputTag>("ElectronTag");
@@ -31,8 +31,8 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
   savePhotons_      = iConfig.getUntrackedParameter<bool>("savePhotons");
   savePhoCrystals_  = iConfig.getUntrackedParameter<bool>("savePhoCrystals");
   saveMET_          = iConfig.getUntrackedParameter<bool>("saveMET");
-  saveTrackMET_     = iConfig.getUntrackedParameter<bool>("saveTrackMET"); 
-  saveT0MET_        = iConfig.getUntrackedParameter<bool>("saveT0MET"); 
+  saveTrackMET_     = iConfig.getUntrackedParameter<bool>("saveTrackMET");
+  saveT0MET_        = iConfig.getUntrackedParameter<bool>("saveT0MET");
   saveT2MET_        = iConfig.getUntrackedParameter<bool>("saveT2MET");
 
   saveMoreEgammaVars_= iConfig.getUntrackedParameter<bool>("saveMoreEgammaVars");
@@ -70,7 +70,7 @@ ntupleProducer::~ntupleProducer()
 void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
   // this is for CVS check test
-  eventNumber  = iEvent.id().event(); 
+  eventNumber  = iEvent.id().event();
   runNumber    = iEvent.id().run();
   lumiSection  = (unsigned int)iEvent.getLuminosityBlock().luminosityBlock();
   bunchCross   = (unsigned int)iEvent.bunchCrossing();
@@ -114,7 +114,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     vtxCon->SetXYZ(myVtx.x(), myVtx.y(), myVtx.z());
     vtxCon->SetNDof(myVtx.ndof());
     vtxCon->SetChi2(myVtx.chi2());
-    vtxCon->SetNtracks(myVtx.nTracks()); 
+    vtxCon->SetNtracks(myVtx.nTracks());
     vtxCon->SetSumPt2Trks(sumPtSquared(myVtx));
     vtxCon->SetIsFake(myVtx.isFake());
     ++vtxCount;
@@ -149,7 +149,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     edm::Handle<reco::JetTagCollection> bTagCollectionTCHP;
     iEvent.getByLabel("trackCountingHighPurBJetTags", bTagCollectionTCHP);
-    const reco::JetTagCollection & bTagsTCHP = *(bTagCollectionTCHP.product()); 
+    const reco::JetTagCollection & bTagsTCHP = *(bTagCollectionTCHP.product());
 
     edm::Handle<reco::JetTagCollection> bTagCollectionSSVHE;
     iEvent.getByLabel("simpleSecondaryVertexHighEffBJetTags", bTagCollectionSSVHE);
@@ -199,7 +199,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       /////////////////////
       // Get Hgg Id vars //
       /////////////////////
-     
+
       PileupJetIdentifier puIdentifier;
       // giving uncorrected input, must double check on this
       float jec = 1.;
@@ -232,10 +232,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       associateJetToVertex(*iJet, primaryVtcs, jetCon);
 
       ++jetCount;
-    }   
+    }
   }
 
-  /////////////// 
+  ///////////////
   // Get T0MET //
   ///////////////
 
@@ -264,7 +264,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     }
   }
-  /////////////// 
+  ///////////////
   // Get T2MET //
   ///////////////
 
@@ -321,7 +321,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
   }
 
   //////////////////
-  // Get TrackMET //  
+  // Get TrackMET //
   //////////////////
 
   if (saveTrackMET_) {
@@ -337,9 +337,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
   }
 
 
-  //////////////////                                                                                                                                                          
-  // Get MVAMET   // 
-  ////////////////// 
+  //////////////////
+  // Get MVAMET   //
+  //////////////////
 
 
   Handle<vector<reco::PFMET> > mvaMET;
@@ -377,7 +377,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       muCon->SetIsPF(iMuon->isPFMuon());
       muCon->SetIsGLB(iMuon->isGlobalMuon());
       muCon->SetIsTRK(iMuon->isTrackerMuon());
-      
+
 
       muCon->SetIsGood(muon::isGoodMuon(*iMuon, muon::TMOneStationTight));
       muCon->SetIsGoodLoose(muon::isGoodMuon(*iMuon, muon::TMOneStationLoose));
@@ -455,7 +455,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       muCon->SetPfIsoCharged(iMuon->pfIsolationR04().sumChargedHadronPt);
       muCon->SetPfIsoNeutral(iMuon->pfIsolationR04().sumNeutralHadronEt);
       muCon->SetPfIsoPhoton( iMuon->pfIsolationR04().sumPhotonEt);
-      
+
       muCount++;
     }
   }
@@ -476,7 +476,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     Handle<reco::GsfElectronCollection > calibratedElectrons;
     iEvent.getByLabel(edm::InputTag("calibratedElectrons","calibratedGsfElectrons"), calibratedElectrons);
-   
+
     edm::Handle<edm::ValueMap<float>> mvaTrigV0_handle;
     iEvent.getByLabel("mvaTrigV0", mvaTrigV0_handle);
     const edm::ValueMap<float> ele_mvaTrigV0 = (*mvaTrigV0_handle.product());
@@ -521,16 +521,17 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 
       // Electron ID variables
-      eleCon->SetFBrem(  iElectron->fbrem());
-      eleCon->SetEOverP( iElectron->eSuperClusterOverP());
       eleCon->SetR9(     iElectron->r9());
-      
+      eleCon->SetFBrem(  iElectron->fbrem());
+      eleCon->SetEoP(    iElectron->eSuperClusterOverP());
+      eleCon->SetEoPout( iElectron->eEleClusterOverPout());
+
       //eleCon->SetHadOverEm(iElectron->hadronicOverEm());
       // ***** >> Switching to officially recommended method:  <<<<<<
-      eleCon->SetHadOverEm(iElectron->hadronicOverEm());
+      eleCon->SetHadOverEm(iElectron->hcalOverEcalBc());
       // details are here >>>>>> https://twiki.cern.ch/twiki/bin/view/CMS/HoverE2012 <<<<<<<<<
       // !!!!!!!!!
-      // QUESTION: Does the eleIsolator below returns the recommended isolation for Hcal?? 
+      // QUESTION: Does the eleIsolator below returns the recommended isolation for Hcal??
       //!!!!!!!!!!
 
       //cout<<"H/E compare: hcalOverEcalBc = "<<iElectron->hcalOverEcalBc()<<"   hadronicOverEm = "<<iElectron->hadronicOverEm()<<endl;
@@ -538,38 +539,92 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       eleCon->SetSCEta(  iElectron->superCluster()->eta());
       eleCon->SetSCPhi(  iElectron->superCluster()->phi());
 
-      eleCon->SetSCDeltaEta( iElectron->deltaEtaSuperClusterTrackAtVtx());
-      // Notice that previously it was defined in a Map, as follows:
-      //eleCon->SetIdMap("dEta", (fabs(iElectron->deltaEtaSuperClusterTrackAtVtx()) > 0.06) ? 0.06 : fabs(iElectron->deltaEtaSuperClusterTrackAtVtx()));
-      //one has to perform a selections on analysis level to recover this
+      //*** --> Notice that previously some variables were defined in the IdMap, differently:
+      //one has to perform a selections on analysis level to recover this behaviour:
+      //(cut at over/underflow values)
 
-      eleCon->SetSCDeltaPhi( iElectron->deltaPhiSuperClusterTrackAtVtx());
-      eleCon->SetSigmaIEtaIEta(    iElectron->sigmaIetaIeta());
-      eleCon->SetSigmaIPhiIPhi(    iElectron->sigmaIphiIphi());
+      eleCon->SetSCDeltaEta(   iElectron->deltaEtaSuperClusterTrackAtVtx());
+      eleCon->SetSCDeltaPhi(   iElectron->deltaPhiSuperClusterTrackAtVtx());
+      eleCon->SetSigmaIEtaIEta(iElectron->sigmaIetaIeta());
+      eleCon->SetSigmaIPhiIPhi(iElectron->sigmaIphiIphi());
+      eleCon->SetSCEtaWidth(   iElectron->superCluster()->etaWidth());
+      eleCon->SetSCPhiWidth(   iElectron->superCluster()->phiWidth());
+      eleCon->SetSCEnergy(     iElectron->superCluster()->energy());
+      if (iElectron->superCluster()->rawEnergy()!=0)
+        eleCon->SetPreShowerOverRaw(iElectron->superCluster()->preshowerEnergy() / iElectron->superCluster()->rawEnergy());
 
-      eleCon->SetSCEtaWidth(  iElectron->superCluster()->etaWidth());
-      eleCon->SetSCPhiWidth(  iElectron->superCluster()->phiWidth());
+      //One minus e1x5 over e5x5
+      if (iElectron->e5x5() != 0)
+        eleCon->SetOme1x5oe5x5(1.-(iElectron->e1x5()/iElectron->e5x5()));
 
-      eleCon->SetSCEnergy(iElectron->superCluster()->energy());
+      eleCon->SetDeltaEtaSeedCluster(iElectron->deltaEtaSeedClusterTrackAtCalo());
+      eleCon->SetDeltaPhiSeedCluster(iElectron->deltaPhiSeedClusterTrackAtCalo());
 
+      //std::vector vCov = iElectron->superCluster()->localCovariances(*(iElectron->superCluster()->seed())) ;
+
+
+      eleCon->SetEoP(iElectron->eSuperClusterOverP());
       eleCon->SetPtError(iElectron->gsfTrack()->ptError());
+
       eleCon->SetNormalizedChi2Gsf(iElectron->gsfTrack()->normalizedChi2());
 
       bool validKF= false;
       reco::TrackRef myTrackRef = iElectron->closestCtfTrackRef();
       validKF = (myTrackRef.isAvailable());
-      validKF = (myTrackRef.isNonnull()); 
+      validKF = (myTrackRef.isNonnull());
 
       if (validKF){
         eleCon->SetTrackerLayersWithMeasurement( myTrackRef->hitPattern().trackerLayersWithMeasurement());
         eleCon->SetNormalizedChi2Kf( myTrackRef->normalizedChi2());
         eleCon->SetNumberOfValidHits(myTrackRef->numberOfValidHits());
+
       }
       else{
         eleCon->SetTrackerLayersWithMeasurement(-1);
         eleCon->SetNormalizedChi2Kf(-1);
         eleCon->SetNumberOfValidHits(-1);
       }
+
+
+      InputTag  vertexLabel(string("offlinePrimaryVertices"));
+      Handle<reco::VertexCollection> thePrimaryVertexColl;
+      iEvent.getByLabel(vertexLabel,thePrimaryVertexColl);
+      
+      Vertex dummy;
+      const Vertex *pv = &dummy;
+      if (thePrimaryVertexColl->size() != 0) {
+        pv = &*thePrimaryVertexColl->begin();
+      } else { // create a dummy PV
+        Vertex::Error e;
+        e(0, 0) = 0.0015 * 0.0015;
+        e(1, 1) = 0.0015 * 0.0015;
+        e(2, 2) = 15. * 15.;
+        Vertex::Point p(0, 0, 0);
+        dummy = Vertex(p, e, 0, 0, 0);
+      }
+
+      float ip3d    = -999.0;
+      float ip3derr = 1.0;
+      float ip3dSig = 0.0;
+
+      edm::ESHandle<TransientTrackBuilder> builder;
+      iSetup.get<TransientTrackRecord>().get("TransientTrackBuilder", builder);
+      TransientTrackBuilder thebuilder = *(builder.product());
+
+      if (iElectron->gsfTrack().isNonnull()) {
+        const double gsfsign   = ( (-iElectron->gsfTrack()->dxy(pv->position()))   >=0 ) ? 1. : -1.;
+
+        const reco::TransientTrack &tt = thebuilder.build(iElectron->gsfTrack());
+        const std::pair<bool,Measurement1D> &ip3dpv =  IPTools::absoluteImpactParameter3D(tt,*pv);
+        if (ip3dpv.first) {
+          ip3d = gsfsign*ip3dpv.second.value();
+          ip3derr = ip3dpv.second.error();
+          ip3dSig = ip3d/ip3derr;
+        }
+      }
+
+      eleCon->SetIP3d(ip3d);
+      eleCon->SetIP3dSig(ip3dSig);
 
       eleCon->SetNumberOfValidPixelHits(  iElectron->gsfTrack()->hitPattern().numberOfValidPixelHits());
       eleCon->SetNumberOfValidTrackerHits(iElectron->gsfTrack()->hitPattern().numberOfValidTrackerHits());
@@ -584,17 +639,17 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       eleCon->SetConversionVeto(convVeto);
       eleCon->SetConversionMissHits(iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfHits());
 
-      
+
       //MVA output:
       float m = ele_mvaTrigV0.get(eee-1);
       eleCon->SetMvaID(m);
-      
+
       //Regression energy
       double ene = ele_regEne.get(eee-1);
       double err = ele_regErr.get(eee-1);
       eleCon->SetEnergyRegression(ene);
       eleCon->SetEnergyRegressionErr(err);
-      
+
       //cout<<eee<<"  mva0 = "<<m<<endl;
 
       const reco::GsfElectron &iElectronTmp   ( (*calibratedElectrons)[eee-1]);
@@ -621,12 +676,12 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         eleCon->SetIsoMap("pfChIso_R04", eleIsolator.getIsolationCharged());
         eleCon->SetIsoMap("pfNeuIso_R04",eleIsolator.getIsolationNeutral());
         eleCon->SetIsoMap("pfPhoIso_R04",eleIsolator.getIsolationPhoton());
-        
+
         eleCon->SetIsoMap("modIso_Tk",     modElectronIso_Tk.get(eee-1));
         eleCon->SetIsoMap("modIso_Ecal",   modElectronIso_Ecal.get(eee-1));
         eleCon->SetIsoMap("modIso_HcalD1", modElectronIso_HcalD1.get(eee-1));
 
-        eleCon->SetIdMap("fabsEPDiff",fabs((1/iElectron->ecalEnergy()) - (1/iElectron->trackMomentumAtVtx().R()))); 
+        eleCon->SetIdMap("fabsEPDiff",fabs((1/iElectron->ecalEnergy()) - (1/iElectron->trackMomentumAtVtx().R())));
 
         // Electron Iso variables
         eleCon->SetIsoMap("EmIso_R03",  iElectron->dr03EcalRecHitSumEt());
@@ -658,8 +713,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
   /////////////////
   if (savePhotons_) {
 
-
-
     Handle<EcalRecHitCollection> Brechit;
     iEvent.getByLabel("reducedEcalRecHitsEB",Brechit);
     //const EcalRecHitCollection* barrelRecHits= Brechit.product();
@@ -667,14 +720,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     Handle<vector<reco::Photon> > photons;
     iEvent.getByLabel(photonTag_, photons);
 
-
     edm::Handle<reco::GsfElectronCollection> hElectrons;
     iEvent.getByLabel("gsfElectrons", hElectrons);
 
-
     for (vector<reco::Photon>::const_iterator iPhoton = photons->begin(); iPhoton != photons->end() ; ++iPhoton) {
-
-
       TCPhoton* myPhoton = new ((*recoPhotons)[photonCount]) TCPhoton();
 
       if (savePhoCrystals_)
@@ -687,10 +736,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
           float timing_avg =0.0;
           int ncrys   = 0;
           vector< std::pair<DetId, float> >::const_iterator detitr;
-          
+
           for(detitr = PhotonHit_DetIds.begin(); detitr != PhotonHit_DetIds.end(); ++detitr)
             {
-              
+
               if (((*detitr).first).det() == DetId::Ecal && ((*detitr).first).subdetId() == EcalBarrel) {
                 EcalRecHitCollection::const_iterator j= Brechit->find(((*detitr).first));
                 EcalRecHitCollection::const_iterator thishit;
@@ -698,7 +747,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 if ( j== Brechit->end()){
                   continue;
                 }
-                
+
                 EBDetId detId  = (EBDetId)((*detitr).first);
                 crystal.rawId  = thishit->id().rawId();
                 crystal.energy = thishit->energy();
@@ -710,38 +759,38 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 if(crystal.energy > 0.1){
                   timing_avg  = timing_avg + crystal.time;
                   ncrys++;
-                }  
+                }
               }//end of if ((*detitr).det() == DetId::Ecal && (*detitr).subdetId() == EcalBarrel)
-              crystalinfo_container.push_back(crystal);  
+              crystalinfo_container.push_back(crystal);
             }//End loop over detids
           std::sort(crystalinfo_container.begin(),crystalinfo_container.end(),EnergySortCriterium);
-          
-          
+
+
           //Without taking into account uncertainty, this time makes no sense.
           if (ncrys !=0) timing_avg = timing_avg/(float)ncrys;
           else timing_avg = -99.;
-          
+
           myPhoton->SetNCrystals(crystalinfo_container.size());
-          
-          for (unsigned int y =0; y < crystalinfo_container.size() && y < 100;y++){ 
+
+          for (unsigned int y =0; y < crystalinfo_container.size() && y < 100;y++){
             myPhoton->AddCrystal(crystalinfo_container[y]);
           }
-          
+
           /*
             vector<TCPhoton::CrystalInfo> savedCrystals = myPhoton->GetCrystalVect();
             for (int y = 0; y< myPhoton->GetNCrystals();y++){
-            std::cout << "savedCrystals[y].time : " << savedCrystals[y].time << std::endl; 
+            std::cout << "savedCrystals[y].time : " << savedCrystals[y].time << std::endl;
             std::cout << "savedCrystals[y].timeErr : " << savedCrystals[y].timeErr << std::endl;
             std::cout << "savedCrystals[y].energy : " << savedCrystals[y].energy <<std::endl;
             std::cout << "savedCrystals[y].ieta: " << savedCrystals[y].ieta << std::endl;
-            
+
             std::cout << "savedCrystals[y].rawId: " << savedCrystals[y].rawId <<std::endl;
             }
           */
-          
+
           //const reco::BasicCluster& seedClus = *(iPhoton->superCluster()->seed());
         }
-      
+
       myPhoton->SetPxPyPzE(iPhoton->px(), iPhoton->py(), iPhoton->pz(), iPhoton->p());
       myPhoton->SetVtx(iPhoton->vx(), iPhoton->vy(), iPhoton->vz());
 
@@ -755,7 +804,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       myPhoton->SetSigmaIEtaIEta(iPhoton->sigmaIetaIeta());
       //myPhoton->SetSigmaIPhiIPhi(); there is no sigma iphi iphi in the photon. strange
 
-
       myPhoton->SetSCEtaWidth(  iPhoton->superCluster()->etaWidth());
       myPhoton->SetSCPhiWidth(  iPhoton->superCluster()->phiWidth());
 
@@ -765,8 +813,13 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
       myPhoton->SetSCEnergy(iPhoton->superCluster()->energy());
 
-
+      if (iPhoton->superCluster()->rawEnergy()!=0)
+        myPhoton->SetPreShowerOverRaw(iPhoton->superCluster()->preshowerEnergy() / iPhoton->superCluster()->rawEnergy());
+      if (iPhoton->e5x5() != 0)
+        myPhoton->SetOme1x5oe5x5(1.-(iPhoton->e1x5()/iPhoton->e5x5()));
       
+
+
       // PF Iso for photons
       phoIsolator.fGetIsolation(&(*iPhoton),&thePfColl, myVtxRef, primaryVtcs);
       myPhoton->SetPfIsoCharged(phoIsolator.getIsolationCharged());
@@ -777,22 +830,22 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         myPhoton->SetIsoMap("chIso03",phoIsolator.getIsolationCharged());
         myPhoton->SetIsoMap("nhIso03",phoIsolator.getIsolationNeutral());
         myPhoton->SetIsoMap("phIso03",phoIsolator.getIsolationPhoton());
-        
+
         // detector-based isolation
         myPhoton->SetIsoMap("EmIso_R03",  (iPhoton->ecalRecHitSumEtConeDR03()));
         myPhoton->SetIsoMap("HadIso_R03", (iPhoton->hcalTowerSumEtConeDR03()));
         myPhoton->SetIsoMap("TrkIso_R03", (iPhoton->trkSumPtHollowConeDR03()));
-        
-        
+
+
         myPhoton->SetIsoMap("EmIso_R04",  (iPhoton->ecalRecHitSumEtConeDR04()));
         myPhoton->SetIsoMap("HadIso_R04", (iPhoton->hcalTowerSumEtConeDR04()));
         myPhoton->SetIsoMap("TrkIso_R04", (iPhoton->trkSumPtHollowConeDR04()));
       }
-      
+
       // Hcal isolation for 2012
-      //myPhoton->SetIsoMap("HadIso_R03",iPhoton->hcalTowerSumEtConeDR03() + 
+      //myPhoton->SetIsoMap("HadIso_R03",iPhoton->hcalTowerSumEtConeDR03() +
       //        (iPhoton->hadronicOverEm() - iPhoton->hadTowOverEm())*iPhoton->superCluster()->energy()/cosh(iPhoton->superCluster()->eta()));
-      //myPhoton->SetIsoMap("HadIso_R04",iPhoton->hcalTowerSumEtConeDR04() + 
+      //myPhoton->SetIsoMap("HadIso_R04",iPhoton->hcalTowerSumEtConeDR04() +
       //        (iPhoton->hadronicOverEm() - iPhoton->hadTowOverEm())*iPhoton->superCluster()->energy()/cosh(iPhoton->superCluster()->eta()));
 
 
@@ -853,11 +906,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         ////  Leptons and photons and b's, (oh my)
         //// Z's, W's, H's, and now big juicy Gravitons
         if (
-            (abs(myParticle->pdgId()) >= 11 && abs(myParticle->pdgId()) <= 16) 
-            || myParticle->pdgId() == 22 
-            || abs(myParticle->pdgId()) == 5 
-            || abs(myParticle->pdgId()) == 23 
-            || abs(myParticle->pdgId()) == 24 
+            (abs(myParticle->pdgId()) >= 11 && abs(myParticle->pdgId()) <= 16)
+            || myParticle->pdgId() == 22
+            || abs(myParticle->pdgId()) == 5
+            || abs(myParticle->pdgId()) == 23
+            || abs(myParticle->pdgId()) == 24
             || abs(myParticle->pdgId()) == 25   //higgs
             || abs(myParticle->pdgId()) == 35   // another higgs
             || abs(myParticle->pdgId()) == 36   // more higgses
@@ -866,9 +919,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             || abs(myParticle->pdgId()) == 553  //upsilon
             ) {
           addGenParticle(&(*myParticle), genPartCount, genMap);
-          
+
         }
-        
+
       }
     }
 
@@ -883,8 +936,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       iEvent.getByLabel(genJetTag_, GenJets);
 
       for (GenJetCollection::const_iterator iJet = GenJets->begin(); iJet!= GenJets->end(); ++iJet) {
-        reco::GenJet myJet = reco::GenJet(*iJet);      
-        if (myJet.pt() > 10) { 
+        reco::GenJet myJet = reco::GenJet(*iJet);
+        if (myJet.pt() > 10) {
           TCGenJet* jetCon = new ((*genJets)[genCount]) TCGenJet;
           jetCon->SetPxPyPzE(myJet.px(), myJet.py(), myJet.pz(), myJet.energy());
           jetCon->SetHadEnergy(myJet.hadEnergy());
@@ -894,7 +947,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
           jetCon->SetNumConstit(myJet.getGenConstituents().size());
           jetCon->SetJetFlavor(0);
         }
-        ++genCount;	
+        ++genCount;
       }
     }
   }
@@ -970,7 +1023,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
   //}
 
-  ////////////////////////////  
+  ////////////////////////////
   // get trigger information//
   ////////////////////////////
 
@@ -978,17 +1031,17 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
   triggerResultsTag_ = InputTag(hlTriggerResults_,"",hltProcess_);
   iEvent.getByLabel(triggerResultsTag_,hltResults);
 
-  edm::Handle<trigger::TriggerEvent> hltEvent;                           
+  edm::Handle<trigger::TriggerEvent> hltEvent;
   triggerEventTag_ = InputTag("hltTriggerSummaryAOD","",hltProcess_);
-  iEvent.getByLabel(triggerEventTag_,hltEvent);                          
+  iEvent.getByLabel(triggerEventTag_,hltEvent);
 
   const TriggerNames & triggerNames = iEvent.triggerNames(*hltResults);
-  hlNames = triggerNames.triggerNames();   
+  hlNames = triggerNames.triggerNames();
 
-  triggerStatus   = ULong64_t(0x0);    
+  triggerStatus   = ULong64_t(0x0);
 
-  for (int i=0; i < (int)hlNames.size(); ++i) {      
-    if (!triggerDecision(hltResults, i)) continue;	
+  for (int i=0; i < (int)hlNames.size(); ++i) {
+    if (!triggerDecision(hltResults, i)) continue;
 
     for (int j = 0; j < (int)triggerPaths_.size(); ++j){
       if (triggerPaths_[j] == "") continue;
@@ -1000,23 +1053,23 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
         /* if (isRealData) {
            pair<int, int> preScales;
-           preScales = hltConfig_.prescaleValues(iEvent, iSetup, hlNames[i]); 
+           preScales = hltConfig_.prescaleValues(iEvent, iSetup, hlNames[i]);
            hltPrescale[j] = preScales.first*preScales.second;
            } */
       }
     }
-  } 
+  }
 
-  for(unsigned int t = 1; t<hlNames.size();t++){  
-    analyzeTrigger(hltResults, hltEvent, hlNames[t], &trigCount);       
-  }                                               
+  for(unsigned int t = 1; t<hlNames.size();t++){
+    analyzeTrigger(hltResults, hltEvent, hlNames[t], &trigCount);
+  }
 
   ++nEvents;
     if (!skimLepton_)
       eventTree -> Fill();
     else if(skimLepton_ && (eleCount > 0 || muCount > 0)) // possibly specify a cut in configuration
       eventTree -> Fill();
-      
+
     beamSpot->Clear();
     primaryVtx    -> Clear("C");
     recoJets      -> Clear("C");
@@ -1031,7 +1084,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 // ------------ method called once each job just before starting event loop  ------------
 void  ntupleProducer::beginJob()
-{  
+{
   eventTree      = fs->make<TTree>("eventTree","eventTree");
   jobTree        = fs->make<TTree>("jobTree", "jobTree");
 
@@ -1060,9 +1113,9 @@ void  ntupleProducer::beginJob()
   eventTree->Branch("recoPhotons",  &recoPhotons,    6400, 0);
   eventTree->Branch("recoMET",      recoMET.get(),   6400, 0);
   eventTree->Branch("mva_MET",      mva_MET.get(),   6400, 0);
-  eventTree->Branch("track_MET",    track_MET.get(), 6400, 0); 
-  eventTree->Branch("T0MET",        T0MET.get(),     6400, 0); 
-  eventTree->Branch("T2MET",        T2MET.get(),     6400, 0); 
+  eventTree->Branch("track_MET",    track_MET.get(), 6400, 0);
+  eventTree->Branch("T0MET",        T0MET.get(),     6400, 0);
+  eventTree->Branch("T2MET",        T2MET.get(),     6400, 0);
   eventTree->Branch("genJets",      &genJets,        6400, 0);
   eventTree->Branch("genParticles", &genParticles,   6400, 0);
   eventTree->Branch("triggerObjects", &triggerObjects, 6400, 0);
@@ -1111,7 +1164,7 @@ void  ntupleProducer::beginJob()
 
 void ntupleProducer::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
 {
-  bool changed = true; 
+  bool changed = true;
   hltConfig_.init(iRun, iSetup, hltProcess_, changed);
   deliveredLumi = 0;
   recordedLumi  = 0;
@@ -1135,7 +1188,7 @@ void ntupleProducer::endRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
 }
 
 
-void ntupleProducer::endJob() 
+void ntupleProducer::endJob()
 {
   cout<<nEvents<<endl;
   h1_numOfEvents->SetBinContent(1,nEvents);
@@ -1173,17 +1226,17 @@ bool ntupleProducer::isFilteredOutScraping( const edm::Event& iEvent, const edm:
 {
 
   bool  accepted = false;
-  float fraction = 0;  
+  float fraction = 0;
   // get GeneralTracks collection
 
   edm::Handle<reco::TrackCollection> tkRef;
-  iEvent.getByLabel("generalTracks",tkRef);    
+  iEvent.getByLabel("generalTracks",tkRef);
   const reco::TrackCollection* tkColl = tkRef.product();
 
   int numhighpurity=0;
   reco::TrackBase::TrackQuality _trackQuality = reco::TrackBase::qualityByName("highPurity");
 
-  if(tkColl->size()>(UInt_t)numtrack){ 
+  if(tkColl->size()>(UInt_t)numtrack){
     reco::TrackCollection::const_iterator itk = tkColl->begin();
     reco::TrackCollection::const_iterator itk_e = tkColl->end();
     for(;itk!=itk_e;++itk){
@@ -1192,7 +1245,7 @@ bool ntupleProducer::isFilteredOutScraping( const edm::Event& iEvent, const edm:
     fraction = (float)numhighpurity/(float)tkColl->size();
     if(fraction>thresh) accepted=true;
   } else {
-    //if less than 10 Tracks accept the event anyway    
+    //if less than 10 Tracks accept the event anyway
     accepted= true;
   }
   return !accepted;  //if filtered out it's not accepted.
@@ -1221,15 +1274,15 @@ bool ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::Vertex
 
   sumTrackX = sumTrackY = sumTrackZ  = sumTrackPt = 0;
 
-  //const reco::TrackRefVector &tracks = inJet.associatedTracks(); 
-  const reco::TrackRefVector &tracks = inJet.getTrackRefs(); 
+  //const reco::TrackRefVector &tracks = inJet.associatedTracks();
+  const reco::TrackRefVector &tracks = inJet.getTrackRefs();
 
   for (TrackRefVector::const_iterator iTrack = tracks.begin(); iTrack != tracks.end(); ++iTrack) {
     const reco::Track &jetTrack = **iTrack;
 
     sumTrackPt += jetTrack.pt();
     sumTrackX  += jetTrack.vx();
-    sumTrackY  += jetTrack.vy();            
+    sumTrackY  += jetTrack.vy();
     sumTrackZ  += jetTrack.vz();
     jetTracks.push_back(&jetTrack);
     ++nJetTracks;
@@ -1242,31 +1295,31 @@ bool ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::Vertex
     outJet->SetVtxNTracks(0);
     outJet->SetVtxSumPtIndex(0);
     outJet->SetVtxCountIndex(0);
-    outJet->SetVtx(0., 0., 0.);      	
+    outJet->SetVtx(0., 0., 0.);
   } else {
-    outJet->SetVtx(sumTrackX/nJetTracks, sumTrackY/nJetTracks, sumTrackZ/nJetTracks);       
+    outJet->SetVtx(sumTrackX/nJetTracks, sumTrackY/nJetTracks, sumTrackZ/nJetTracks);
 
-    for (VertexCollection::const_iterator iVtx = vtxCollection->begin(); iVtx!= vtxCollection->end(); ++iVtx) {	      
-      reco::Vertex myVtx = reco::Vertex(*iVtx); 
+    for (VertexCollection::const_iterator iVtx = vtxCollection->begin(); iVtx!= vtxCollection->end(); ++iVtx) {
+      reco::Vertex myVtx = reco::Vertex(*iVtx);
       if(!myVtx.isValid() || myVtx.isFake()) continue;
-      associatedTrackSumPt.push_back(0);            
-      associatedTrackCount.push_back(0);            
+      associatedTrackSumPt.push_back(0);
+      associatedTrackCount.push_back(0);
 
       for(Vertex::trackRef_iterator iTrackRef = myVtx.tracks_begin(); iTrackRef != myVtx.tracks_end(); ++iTrackRef){
-        const edm::RefToBase<reco::Track> &myTrackRef = *iTrackRef; 
+        const edm::RefToBase<reco::Track> &myTrackRef = *iTrackRef;
 
         if(myTrackRef.isAvailable()){
-          const reco::Track &myVertexTrack = *myTrackRef.get();		
+          const reco::Track &myVertexTrack = *myTrackRef.get();
 
           for(vector<const reco::Track*>::const_iterator iTrack = jetTracks.begin(); iTrack != jetTracks.end(); ++iTrack){
             if (*iTrack == &myVertexTrack) {
-              associatedTrackSumPt.at(vCount) += myVertexTrack.pt()/sumTrackPt; 
-              associatedTrackCount.at(vCount) += 1/nJetTracks; 
+              associatedTrackSumPt.at(vCount) += myVertexTrack.pt()/sumTrackPt;
+              associatedTrackCount.at(vCount) += 1/nJetTracks;
             }
           }
         }
       }
-      ++vCount;  
+      ++vCount;
     }
 
     float maxSumPtFraction = 0; float maxCountFraction = 0;
@@ -1275,11 +1328,11 @@ bool ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::Vertex
 
     for (int i = 0; i < vCount; ++i) {
       if (associatedTrackSumPt.at(i) > maxSumPtFraction) {
-        maxSumPtFraction = associatedTrackSumPt.at(i);   
+        maxSumPtFraction = associatedTrackSumPt.at(i);
         vtxSumPtIndex = count + 1;
       }
       if (associatedTrackCount.at(i) > maxCountFraction) {
-        maxCountFraction = associatedTrackCount.at(i);   
+        maxCountFraction = associatedTrackCount.at(i);
         vtxCountIndex = count + 1;
       }
       ++count;
@@ -1296,17 +1349,17 @@ bool ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::Vertex
 }
 
 
-void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron* eleCon, 
+void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron* eleCon,
     const edm::Event& iEvent, const edm::EventSetup& iSetup, const reco::PFCandidateCollection& PFCandidates, float Rho)
 {
   if (verboseMVAs) cout<<"loading up electron MVA values"<<endl;
   //**********************************************************
   //ID variables
   //**********************************************************
-  bool validKF= false; 
+  bool validKF= false;
   reco::TrackRef myTrackRef = iElectron->closestCtfTrackRef();
   validKF = (myTrackRef.isAvailable());
-  validKF = (myTrackRef.isNonnull());  
+  validKF = (myTrackRef.isNonnull());
 
   eleCon->SetIdMap("fbrem", (iElectron->fbrem() < -1) ? -1 : iElectron->fbrem());
   eleCon->SetIdMap("gsfChi2", (iElectron->gsfTrack()->normalizedChi2() > 200) ? 200 : iElectron->gsfTrack()->normalizedChi2());
@@ -1349,38 +1402,45 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
   //d0
   float fMVAVar_d0 = -9999.0;
   if (iElectron->gsfTrack().isNonnull()) {
-    fMVAVar_d0 = (-1.0)*iElectron->gsfTrack()->dxy(pv->position()); 
+    fMVAVar_d0 = (-1.0)*iElectron->gsfTrack()->dxy(pv->position());
   } else if (iElectron->closestCtfTrackRef().isNonnull()) {
-    fMVAVar_d0 = (-1.0)*iElectron->closestCtfTrackRef()->dxy(pv->position()); 
+    fMVAVar_d0 = (-1.0)*iElectron->closestCtfTrackRef()->dxy(pv->position());
   } else {
     fMVAVar_d0 = -9999.0;
   }
 
   eleCon->SetIdMap("d0",fMVAVar_d0);
 
-  //default values for IP3D
-  float fMVAVar_ip3d      = -999.0; 
-  float fMVAVar_ip3dSig   = 0.0;
+  /*
+    This is added into the main part 
 
-  edm::ESHandle<TransientTrackBuilder> builder;
-  iSetup.get<TransientTrackRecord>().get("TransientTrackBuilder", builder);
-  TransientTrackBuilder thebuilder = *(builder.product());
+    //default values for IP3D
+    float fMVAVar_ip3d      = -999.0;
+    float fMVAVar_ip3dSig   = 0.0;
 
-  if (iElectron->gsfTrack().isNonnull()) {
+
+    edm::ESHandle<TransientTrackBuilder> builder;
+    iSetup.get<TransientTrackRecord>().get("TransientTrackBuilder", builder);
+    TransientTrackBuilder thebuilder = *(builder.product());
+
+    if (iElectron->gsfTrack().isNonnull()) {
     const double gsfsign   = ( (-iElectron->gsfTrack()->dxy(pv->position()))   >=0 ) ? 1. : -1.;
 
-    const reco::TransientTrack &tt = thebuilder.build(iElectron->gsfTrack()); 
+    const reco::TransientTrack &tt = thebuilder.build(iElectron->gsfTrack());
     const std::pair<bool,Measurement1D> &ip3dpv =  IPTools::absoluteImpactParameter3D(tt,*pv);
     if (ip3dpv.first) {
-      double ip3d = gsfsign*ip3dpv.second.value();
-      double ip3derr = ip3dpv.second.error();  
-      fMVAVar_ip3d = ip3d; 
-      fMVAVar_ip3dSig = ip3d/ip3derr;
+    double ip3d = gsfsign*ip3dpv.second.value();
+    double ip3derr = ip3dpv.second.error();
+    fMVAVar_ip3d = ip3d;
+    fMVAVar_ip3dSig = ip3d/ip3derr;
     }
-  }
+    }
 
   eleCon->SetIdMap("ip3d",fMVAVar_ip3d);
   eleCon->SetIdMap("ip3dSig",fMVAVar_ip3dSig);
+
+  ---- up to this ---------
+  */
 
   //**********************************************************
   //Isolation variables
@@ -1405,14 +1465,14 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
   //************************************************************
   //Note: Input collection is assumed to be PFNoPU collection
   //************************************************************
-  for (reco::PFCandidateCollection::const_iterator iP = PFCandidates.begin(); 
+  for (reco::PFCandidateCollection::const_iterator iP = PFCandidates.begin();
       iP != PFCandidates.end(); ++iP) {
 
     double dr = sqrt(pow(iP->eta() - iElectron->eta(),2) + pow(acos(cos(iP->phi() - iElectron->phi())),2));
 
     Bool_t passVeto = kTRUE;
     //Charged
-    if(iP->trackRef().isNonnull()) {         
+    if(iP->trackRef().isNonnull()) {
 
       //make sure charged pf candidates pass the PFNoPU condition (assumed)
 
@@ -1423,11 +1483,11 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
       //************************************************************
       // Footprint Veto
       if (fabs(iElectron->superCluster()->eta()) > 1.479 && dr < 0.015) passVeto = kFALSE;
-      if (iP->superClusterRef().isNonnull() && 
+      if (iP->superClusterRef().isNonnull() &&
           iP->superClusterRef() == iElectron->superCluster()) passVeto = kFALSE;
-      if (iP->gsfTrackRef().isNonnull() && iElectron->gsfTrack().isNonnull() && 
+      if (iP->gsfTrackRef().isNonnull() && iElectron->gsfTrack().isNonnull() &&
           iP->gsfTrackRef() == iElectron->gsfTrack()) passVeto = kFALSE;
-      if (iP->trackRef().isNonnull() && iElectron->closestCtfTrackRef().isNonnull() && 
+      if (iP->trackRef().isNonnull() && iElectron->closestCtfTrackRef().isNonnull() &&
           iP->trackRef() == iElectron->closestCtfTrackRef()) passVeto = kFALSE;
       //************************************************************
       if (passVeto) {
@@ -1436,7 +1496,7 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
         if (dr >= 0.2 && dr < 0.3) tmpChargedIso_DR0p2To0p3 += iP->pt();
         if (dr >= 0.3 && dr < 0.4) tmpChargedIso_DR0p3To0p4 += iP->pt();
         if (dr >= 0.4 && dr < 0.5) tmpChargedIso_DR0p4To0p5 += iP->pt();
-      } //pass veto    
+      } //pass veto
     }
     //Gamma
     else if (iP->particleId() == reco::PFCandidate::gamma) {
@@ -1444,7 +1504,7 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
       // Footprint Veto
       if (fabs(iElectron->superCluster()->eta()) > 1.479 && dr < 0.08) passVeto = kFALSE;
       if (iP->superClusterRef() == iElectron->superCluster()) passVeto = kFALSE;
-      //************************************************************  
+      //************************************************************
       if (passVeto) {
         if (dr < 0.1) tmpGammaIso_DR0p0To0p1 += iP->pt();
         if (dr >= 0.1 && dr < 0.2) tmpGammaIso_DR0p1To0p2 += iP->pt();
@@ -1472,8 +1532,8 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
     fMVAVar_ChargedIso_DR0p1To0p2   = TMath::Min((tmpChargedIso_DR0p1To0p2)/iElectron->pt(), 2.5);
     fMVAVar_ChargedIso_DR0p2To0p3   = TMath::Min((tmpChargedIso_DR0p2To0p3)/iElectron->pt(), 2.5);
     fMVAVar_ChargedIso_DR0p3To0p4   = TMath::Min((tmpChargedIso_DR0p3To0p4)/iElectron->pt(), 2.5);
-    fMVAVar_ChargedIso_DR0p4To0p5   = TMath::Min((tmpChargedIso_DR0p4To0p5)/iElectron->pt(), 2.5); 
-    fMVAVar_GammaIso_DR0p0To0p1     = TMath::Max(TMath::Min((tmpGammaIso_DR0p0To0p1 - 
+    fMVAVar_ChargedIso_DR0p4To0p5   = TMath::Min((tmpChargedIso_DR0p4To0p5)/iElectron->pt(), 2.5);
+    fMVAVar_GammaIso_DR0p0To0p1     = TMath::Max(TMath::Min((tmpGammaIso_DR0p0To0p1 -
             Rho*ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaIsoDR0p0To0p1, iElectron->superCluster()->eta(), ElectronEffectiveArea::kEleEAData2012))/iElectron->pt(), 2.5), 0.0);
     fMVAVar_GammaIso_DR0p1To0p2     = TMath::Max(TMath::Min((tmpGammaIso_DR0p1To0p2 -
             Rho*ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaIsoDR0p1To0p2, iElectron->superCluster()->eta(), ElectronEffectiveArea::kEleEAData2012))/iElectron->pt(), 2.5), 0.0);
@@ -1498,7 +1558,7 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
     fMVAVar_ChargedIso_DR0p1To0p2   = TMath::Min((tmpChargedIso_DR0p1To0p2)/iElectron->pt(), 2.5) / 0.03;
     fMVAVar_ChargedIso_DR0p2To0p3 = TMath::Min((tmpChargedIso_DR0p2To0p3)/iElectron->pt(), 2.5) / 0.05;
     fMVAVar_ChargedIso_DR0p3To0p4 = TMath::Min((tmpChargedIso_DR0p3To0p4)/iElectron->pt(), 2.5) / 0.07;
-    fMVAVar_ChargedIso_DR0p4To0p5 = TMath::Min((tmpChargedIso_DR0p4To0p5)/iElectron->pt(), 2.5) / 0.09; 
+    fMVAVar_ChargedIso_DR0p4To0p5 = TMath::Min((tmpChargedIso_DR0p4To0p5)/iElectron->pt(), 2.5) / 0.09;
     fMVAVar_GammaIso_DR0p0To0p1 = TMath::Max(TMath::Min((tmpGammaIso_DR0p0To0p1)/iElectron->pt(), 2.5), 0.0);
     fMVAVar_GammaIso_DR0p1To0p2 = TMath::Max(TMath::Min((tmpGammaIso_DR0p1To0p2)/iElectron->pt(), 2.5), 0.0) / 0.03;
     fMVAVar_GammaIso_DR0p2To0p3 = TMath::Max(TMath::Min((tmpGammaIso_DR0p2To0p3)/iElectron->pt(), 2.5), 0.0) / 0.05;
@@ -1552,7 +1612,7 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
       preSelPassV2= true;
     }
   } else { //endcap
-    if ( (  
+    if ( (
           iElectron->sigmaIetaIeta()< 0.03
           && fabs(iElectron->deltaEtaSuperClusterTrackAtVtx()) < 0.009
           && fabs(iElectron->deltaPhiSuperClusterTrackAtVtx()) < 0.10
@@ -1585,7 +1645,7 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
       preSelPassV1 = true;
     }
   } else { //endcap
-    if ( (  
+    if ( (
           iElectron->sigmaIetaIeta()< 0.035
           && iElectron->hadronicOverEm() < 0.10
           && iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfLostHits() == 0
@@ -1615,7 +1675,7 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
       preSelPassV3 = true;
     }
   } else { //endcap
-    if ( (  
+    if ( (
           iElectron->sigmaIetaIeta()< 0.035
           && iElectron->hadronicOverEm() < 0.10
           && iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfLostHits() == 0
@@ -1696,7 +1756,7 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults
 
   // Results from TriggerEvent product - Attention: must look only for
   // modules actually run in this path for this event!
-  std::vector < GlobalVector > passMomenta; 
+  std::vector < GlobalVector > passMomenta;
   for (unsigned int j=0; j<=moduleIndex; ++j) {
     const string& moduleLabel(moduleLabels[j]);
     const string  moduleType(hltConfig_.moduleType(moduleLabel));
@@ -1792,10 +1852,10 @@ void ntupleProducer::initJetEnergyCorrector(const edm::EventSetup &iSetup, bool 
   edm::ESHandle<JetCorrectorParametersCollection> parameters;
   iSetup.get<JetCorrectionsRecord>().get(jecTag_,parameters);
   for(std::vector<std::string>::const_iterator ll = jecLevels.begin(); ll != jecLevels.end(); ++ll)
-  { 
+  {
     const JetCorrectorParameters& ip = (*parameters)[*ll];
-    jetCorPars_.push_back(ip); 
-  } 
+    jetCorPars_.push_back(ip);
+  }
 
   //instantiate the jet corrector
   jecCor.reset(new FactorizedJetCorrector(jetCorPars_));
@@ -1824,7 +1884,7 @@ TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticl
     if (myParticle->numberOfMothers() == 0){
       genCon->SetMother(0);
     }else if(
-             abs(myParticle->mother()->pdgId()) != 5 
+             abs(myParticle->mother()->pdgId()) != 5
              && abs(myParticle->mother()->pdgId()) != 11
              && abs(myParticle->mother()->pdgId()) != 12
              && abs(myParticle->mother()->pdgId()) != 13
@@ -1832,11 +1892,11 @@ TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticl
              && abs(myParticle->mother()->pdgId()) != 15
              && abs(myParticle->mother()->pdgId()) != 16
              && abs(myParticle->mother()->pdgId()) != 22
-             && abs(myParticle->mother()->pdgId()) != 23 
-             && abs(myParticle->mother()->pdgId()) != 24 
-             && abs(myParticle->mother()->pdgId()) != 25 
-             && abs(myParticle->mother()->pdgId()) != 35 
-             && abs(myParticle->mother()->pdgId()) != 36 
+             && abs(myParticle->mother()->pdgId()) != 23
+             && abs(myParticle->mother()->pdgId()) != 24
+             && abs(myParticle->mother()->pdgId()) != 25
+             && abs(myParticle->mother()->pdgId()) != 35
+             && abs(myParticle->mother()->pdgId()) != 36
              && abs(myParticle->mother()->pdgId()) != 39
              && abs(myParticle->mother()->pdgId()) != 443  //Jpsi
              && abs(myParticle->mother()->pdgId()) != 553  //Upsilon
@@ -1852,9 +1912,9 @@ TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticl
       }
     }
   }
-  else  
+  else
     genCon = it->second;
-  
+
   return genCon;
 }
 

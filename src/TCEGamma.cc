@@ -8,8 +8,6 @@ TCEGamma::TCEGamma() {
   // one can recognize that.
   _nCrystals = 0;
 
-  _eOverP = -99;
-  _fBrem  = -99;
   _r9     = -99;
   _hadOverEm = -99;
 
@@ -23,6 +21,8 @@ TCEGamma::TCEGamma() {
   _scEtaWidth = -99;
   _scPhiWidth = -99;
   _scEnergy   = -99;
+  _ome1x5oe5x5 = -99;
+  _preShowerOverRaw = -99;
 
   _pfIsoCharged = -99;
   _pfIsoNeutral = -99;
@@ -64,14 +64,6 @@ bool TCEGamma::IsInGap() const {
   return _isInGap;
 }
 
-float TCEGamma::EOverP() const {
-  return _eOverP;
-}
-
-float TCEGamma::FBrem() const {
-  return _fBrem;
-}
-
 float TCEGamma::HadOverEm() const {
   return _hadOverEm;
 }
@@ -108,6 +100,14 @@ float TCEGamma::SCPhiWidth() const {
   return _scPhiWidth;
 }
 
+float TCEGamma::PreShowerOverRaw() const {
+  return _preShowerOverRaw;
+}
+
+float TCEGamma::Ome1x5oe5x5() const {
+  return _ome1x5oe5x5;
+}
+
 
 float TCEGamma::SCEnergy() const {
   return _scEnergy;
@@ -127,30 +127,17 @@ float TCEGamma::PfIsoPhoton() const {
 // "set" methods ---------------------------------------------
 //------------------------------------------------------------------------
 
-
-
 void TCEGamma::AddCrystal(TCEGamma::CrystalInfo crys) {_crysVect.push_back(crys);}
 void TCEGamma::SetNCrystals(int n){ _nCrystals = n;}
-
-
 
 void TCEGamma::SetR9(float r){ _r9 = r; } 
 
 //void TCEGamma::SetEnergyRegression(float e){ _regEne = e; } 
 //void TCEGamma::SetEnergyRegressionErr(float e){ _regErr = e; } 
 
-void TCEGamma::SetEOverP(float e){
-  _eOverP = e;
-}
-
-void TCEGamma::SetFBrem(float fb){
-  _fBrem = fb;
-}
-
 void TCEGamma::SetHadOverEm(float he){
   _hadOverEm = he;
 }
-
 
 //Supercluster setters
 void TCEGamma::SetSCEta(float e){
@@ -167,7 +154,6 @@ void TCEGamma::SetSCDeltaPhi(float dp){
   _scDeltaPhi = dp;
 }
 
-
 void TCEGamma::SetSigmaIEtaIEta(float sieie){
   _scSigmaIetaIeta = sieie;
 }
@@ -175,7 +161,6 @@ void TCEGamma::SetSigmaIEtaIEta(float sieie){
 void TCEGamma::SetSigmaIPhiIPhi(float sipip){
   _scSigmaIphiIphi = sipip;
 }
-
 
 void TCEGamma::SetSCEtaWidth(float w){
   _scEtaWidth = w;
@@ -186,6 +171,13 @@ void TCEGamma::SetSCPhiWidth(float w){
 
 void TCEGamma::SetSCEnergy(float e){
   _scEnergy = e;
+}
+
+void TCEGamma::SetPreShowerOverRaw(float p){
+  _preShowerOverRaw = p;
+}
+void TCEGamma::SetOme1x5oe5x5(float o){
+  _ome1x5oe5x5 = o;
 }
 
 //void TCEGamma::SetConversionVeto(bool v) {
