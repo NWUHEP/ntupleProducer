@@ -278,7 +278,8 @@ class ntupleProducer : public edm::EDAnalyzer {
   bool isRealData;
   bool verboseTrigs;
   bool verboseMVAs;
-  
+  bool saveMoreEgammaVars_;
+
   //Physics object containers
   TClonesArray* recoJets;
   TClonesArray* recoJPT;

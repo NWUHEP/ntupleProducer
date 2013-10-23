@@ -51,9 +51,6 @@ float TCEGamma::R9() const { return _r9; }
 //    return _convVeto;
 //}
 
-//short TCEGamma::ConversionMissHits() const {
-//    return _convMissHits;
-//}
 
 bool TCEGamma::IsEB() const {
   return _isEB;
@@ -126,26 +123,6 @@ float TCEGamma::PfIsoPhoton() const {
   return _pfIsoPhoton;
 }
 
-/*
-bool TCEGamma::PassID(int lvl) const { 
-  unsigned c = CutLevel(lvl);
-  if (c & 0x01) return true;
-  else return false;
-}   
-
-bool TCEGamma::PassIsolation(int lvl) const {
-  unsigned c = CutLevel(lvl);
-  if (c & 0x02) return true;
-  else return false;
-}
-
-bool TCEGamma::PassConversion(int lvl) const {
-  unsigned c = CutLevel(lvl);
-  if (c & 0x04) return true;
-  else return false;
-}
-*/
-
 //------------------------------------------------
 // "set" methods ---------------------------------------------
 //------------------------------------------------------------------------
@@ -213,10 +190,6 @@ void TCEGamma::SetSCEnergy(float e){
 
 //void TCEGamma::SetConversionVeto(bool v) {
 //  _convVeto = v;
-//}
-
-//void TCEGamma::SetConversionMissHits(short m) {
-//  _convMissHits = m;
 //}
 
 void TCEGamma::SetIsEB(bool b) {

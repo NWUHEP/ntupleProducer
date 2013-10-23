@@ -35,6 +35,8 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
   saveT0MET_        = iConfig.getUntrackedParameter<bool>("saveT0MET"); 
   saveT2MET_        = iConfig.getUntrackedParameter<bool>("saveT2MET");
 
+  saveMoreEgammaVars_= iConfig.getUntrackedParameter<bool>("saveMoreEgammaVars");
+
   saveGenJets_      = iConfig.getUntrackedParameter<bool>("saveGenJets");
   saveGenParticles_ = iConfig.getUntrackedParameter<bool>("saveGenParticles");
 
@@ -522,10 +524,16 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       eleCon->SetFBrem(  iElectron->fbrem());
       eleCon->SetEOverP( iElectron->eSuperClusterOverP());
       eleCon->SetR9(     iElectron->r9());
-
-      eleCon->SetHadOverEm(        iElectron->hadronicOverEm());
-
       
+      //eleCon->SetHadOverEm(iElectron->hadronicOverEm());
+      // ***** >> Switching to officially recommended method:  <<<<<<
+      eleCon->SetHadOverEm(iElectron->hadronicOverEm());
+      // details are here >>>>>> https://twiki.cern.ch/twiki/bin/view/CMS/HoverE2012 <<<<<<<<<
+      // !!!!!!!!!
+      // QUESTION: Does the eleIsolator below returns the recommended isolation for Hcal?? 
+      //!!!!!!!!!!
+
+      //cout<<"H/E compare: hcalOverEcalBc = "<<iElectron->hcalOverEcalBc()<<"   hadronicOverEm = "<<iElectron->hadronicOverEm()<<endl;
 
       eleCon->SetSCEta(  iElectron->superCluster()->eta());
       eleCon->SetSCPhi(  iElectron->superCluster()->phi());
@@ -545,56 +553,38 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       eleCon->SetSCEnergy(iElectron->superCluster()->energy());
 
       eleCon->SetPtError(iElectron->gsfTrack()->ptError());
-      eleCon->SetNormalizedChi2(iElectron->gsfTrack()->normalizedChi2());
+      eleCon->SetNormalizedChi2Gsf(iElectron->gsfTrack()->normalizedChi2());
+
+      bool validKF= false;
+      reco::TrackRef myTrackRef = iElectron->closestCtfTrackRef();
+      validKF = (myTrackRef.isAvailable());
+      validKF = (myTrackRef.isNonnull()); 
+
+      if (validKF){
+        eleCon->SetTrackerLayersWithMeasurement( myTrackRef->hitPattern().trackerLayersWithMeasurement());
+        eleCon->SetNormalizedChi2Kf( myTrackRef->normalizedChi2());
+        eleCon->SetNumberOfValidHits(myTrackRef->numberOfValidHits());
+      }
+      else{
+        eleCon->SetTrackerLayersWithMeasurement(-1);
+        eleCon->SetNormalizedChi2Kf(-1);
+        eleCon->SetNumberOfValidHits(-1);
+      }
 
       eleCon->SetNumberOfValidPixelHits(  iElectron->gsfTrack()->hitPattern().numberOfValidPixelHits());
       eleCon->SetNumberOfValidTrackerHits(iElectron->gsfTrack()->hitPattern().numberOfValidTrackerHits());
       eleCon->SetNumberOfLostPixelHits(   iElectron->gsfTrack()->hitPattern().numberOfLostPixelHits());
       eleCon->SetNumberOfLostTrackerHits( iElectron->gsfTrack()->hitPattern().numberOfLostTrackerHits());
 
-      eleCon->SetIdMap("fabsEPDiff",fabs((1/iElectron->ecalEnergy()) - (1/iElectron->trackMomentumAtVtx().R()))); 
+      eleCon->SetInverseEnergyMomentumDiff(fabs((1/iElectron->ecalEnergy()) - (1/iElectron->trackMomentumAtVtx().R())));
 
-      // Electron Iso variables
-      eleCon->SetIsoMap("EmIso_R03",  iElectron->dr03EcalRecHitSumEt());
-      eleCon->SetIsoMap("HadIso_R03", iElectron->dr03HcalTowerSumEt());
-      eleCon->SetIsoMap("SumPt_R03",  iElectron->dr03TkSumPt());
-
-      eleCon->SetIsoMap("EmIso_R04",  iElectron->dr04EcalRecHitSumEt());
-      eleCon->SetIsoMap("HadIso_R04", iElectron->dr04HcalTowerSumEt());
-      eleCon->SetIsoMap("SumPt_R04",  iElectron->dr04TkSumPt());
-
-      eleCon->SetIsoMap("pfPhotonEt_R03",      iElectron->pfIsolationVariables().photonIso);
-      eleCon->SetIsoMap("pfChargedHadron_R03", iElectron->pfIsolationVariables().chargedHadronIso);
-      eleCon->SetIsoMap("pfNeutralHadron_R03", iElectron->pfIsolationVariables().neutralHadronIso);
 
       // Conversion information
       bool convVeto = !(ConversionTools::hasMatchedConversion(*iElectron,hConversions,vertexBeamSpot.position()));
       eleCon->SetConversionVeto(convVeto);
       eleCon->SetConversionMissHits(iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfHits());
 
-      // Add electron MVA ID and ISO variables
-      electronMVA(&(*iElectron), eleCon, iEvent, iSetup, thePfCollEleIso, rhoFactor);
       
-      eleIsolator.fGetIsolation(&(*iElectron), &thePfColl, myVtxRef, primaryVtcs);
-      eleCon->SetIsoMap("pfChIso_R04", eleIsolator.getIsolationCharged());
-      eleCon->SetIsoMap("pfNeuIso_R04",eleIsolator.getIsolationNeutral());
-      eleCon->SetIsoMap("pfPhoIso_R04",eleIsolator.getIsolationPhoton());
-
-      eleCon->SetPfIsoCharged(eleIsolator.getIsolationCharged());
-      eleCon->SetPfIsoNeutral(eleIsolator.getIsolationNeutral());
-      eleCon->SetPfIsoPhoton( eleIsolator.getIsolationPhoton());
-
-      eleCon->SetIsoMap("modIso_Tk",     modElectronIso_Tk.get(eee-1));
-      eleCon->SetIsoMap("modIso_Ecal",   modElectronIso_Ecal.get(eee-1));
-      eleCon->SetIsoMap("modIso_HcalD1", modElectronIso_HcalD1.get(eee-1));
-
-      // Effective area for rho PU corrections (not sure if needed)
-      float AEff03 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso03, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
-      float AEff04 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso04, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
-      eleCon->SetIsoMap("EffArea_R03", AEff03);
-      eleCon->SetIsoMap("EffArea_R04", AEff04);
-
-
       //MVA output:
       float m = ele_mvaTrigV0.get(eee-1);
       eleCon->SetMvaID(m);
@@ -616,6 +606,47 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       tmpP4.SetPtEtaPhiE(iElectronTmp.pt(), iElectronTmp.eta(), iElectronTmp.phi(), iElectronTmp.energy());
       eleCon->SetRegressionMomCombP4(tmpP4);
 
+      // Effective area for rho PU corrections (not sure if needed)
+      float AEff03 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso03, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
+      float AEff04 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso04, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
+
+      eleCon->SetEffArea(AEff04);
+
+      eleIsolator.fGetIsolation(&(*iElectron), &thePfColl, myVtxRef, primaryVtcs);
+      eleCon->SetPfIsoCharged(eleIsolator.getIsolationCharged());
+      eleCon->SetPfIsoNeutral(eleIsolator.getIsolationNeutral());
+      eleCon->SetPfIsoPhoton( eleIsolator.getIsolationPhoton());
+
+      if (saveMoreEgammaVars_){
+        eleCon->SetIsoMap("pfChIso_R04", eleIsolator.getIsolationCharged());
+        eleCon->SetIsoMap("pfNeuIso_R04",eleIsolator.getIsolationNeutral());
+        eleCon->SetIsoMap("pfPhoIso_R04",eleIsolator.getIsolationPhoton());
+        
+        eleCon->SetIsoMap("modIso_Tk",     modElectronIso_Tk.get(eee-1));
+        eleCon->SetIsoMap("modIso_Ecal",   modElectronIso_Ecal.get(eee-1));
+        eleCon->SetIsoMap("modIso_HcalD1", modElectronIso_HcalD1.get(eee-1));
+
+        eleCon->SetIdMap("fabsEPDiff",fabs((1/iElectron->ecalEnergy()) - (1/iElectron->trackMomentumAtVtx().R()))); 
+
+        // Electron Iso variables
+        eleCon->SetIsoMap("EmIso_R03",  iElectron->dr03EcalRecHitSumEt());
+        eleCon->SetIsoMap("HadIso_R03", iElectron->dr03HcalTowerSumEt());
+        eleCon->SetIsoMap("SumPt_R03",  iElectron->dr03TkSumPt());
+
+        eleCon->SetIsoMap("EmIso_R04",  iElectron->dr04EcalRecHitSumEt());
+        eleCon->SetIsoMap("HadIso_R04", iElectron->dr04HcalTowerSumEt());
+        eleCon->SetIsoMap("SumPt_R04",  iElectron->dr04TkSumPt());
+
+        eleCon->SetIsoMap("pfPhotonEt_R03",      iElectron->pfIsolationVariables().photonIso);
+        eleCon->SetIsoMap("pfChargedHadron_R03", iElectron->pfIsolationVariables().chargedHadronIso);
+        eleCon->SetIsoMap("pfNeutralHadron_R03", iElectron->pfIsolationVariables().neutralHadronIso);
+
+        eleCon->SetIsoMap("EffArea_R03", AEff03);
+        eleCon->SetIsoMap("EffArea_R04", AEff04);
+        // Add electron MVA ID and ISO variables
+        electronMVA(&(*iElectron), eleCon, iEvent, iSetup, thePfCollEleIso, rhoFactor);
+
+      }
 
       eleCount++;
     }
@@ -735,28 +766,29 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       myPhoton->SetSCEnergy(iPhoton->superCluster()->energy());
 
 
-
-      // detector-based isolation
-      myPhoton->SetIsoMap("EmIso_R03",  (iPhoton->ecalRecHitSumEtConeDR03()));
-      myPhoton->SetIsoMap("HadIso_R03", (iPhoton->hcalTowerSumEtConeDR03()));
-      myPhoton->SetIsoMap("TrkIso_R03", (iPhoton->trkSumPtHollowConeDR03()));
-
-
-      //myPhoton->SetIsoMap("EmIso_R04",  (iPhoton->ecalRecHitSumEtConeDR04()));
-      //myPhoton->SetIsoMap("HadIso_R04", (iPhoton->hcalTowerSumEtConeDR04()));
-      //myPhoton->SetIsoMap("TrkIso_R04", (iPhoton->trkSumPtHollowConeDR04()));
-
       
       // PF Iso for photons
       phoIsolator.fGetIsolation(&(*iPhoton),&thePfColl, myVtxRef, primaryVtcs);
-      myPhoton->SetIsoMap("chIso03",phoIsolator.getIsolationCharged());
-      myPhoton->SetIsoMap("nhIso03",phoIsolator.getIsolationNeutral());
-      myPhoton->SetIsoMap("phIso03",phoIsolator.getIsolationPhoton());
-      
       myPhoton->SetPfIsoCharged(phoIsolator.getIsolationCharged());
       myPhoton->SetPfIsoNeutral(phoIsolator.getIsolationNeutral());
       myPhoton->SetPfIsoPhoton( phoIsolator.getIsolationPhoton());
 
+      if (saveMoreEgammaVars_){
+        myPhoton->SetIsoMap("chIso03",phoIsolator.getIsolationCharged());
+        myPhoton->SetIsoMap("nhIso03",phoIsolator.getIsolationNeutral());
+        myPhoton->SetIsoMap("phIso03",phoIsolator.getIsolationPhoton());
+        
+        // detector-based isolation
+        myPhoton->SetIsoMap("EmIso_R03",  (iPhoton->ecalRecHitSumEtConeDR03()));
+        myPhoton->SetIsoMap("HadIso_R03", (iPhoton->hcalTowerSumEtConeDR03()));
+        myPhoton->SetIsoMap("TrkIso_R03", (iPhoton->trkSumPtHollowConeDR03()));
+        
+        
+        myPhoton->SetIsoMap("EmIso_R04",  (iPhoton->ecalRecHitSumEtConeDR04()));
+        myPhoton->SetIsoMap("HadIso_R04", (iPhoton->hcalTowerSumEtConeDR04()));
+        myPhoton->SetIsoMap("TrkIso_R04", (iPhoton->trkSumPtHollowConeDR04()));
+      }
+      
       // Hcal isolation for 2012
       //myPhoton->SetIsoMap("HadIso_R03",iPhoton->hcalTowerSumEtConeDR03() + 
       //        (iPhoton->hadronicOverEm() - iPhoton->hadTowOverEm())*iPhoton->superCluster()->energy()/cosh(iPhoton->superCluster()->eta()));

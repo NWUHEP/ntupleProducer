@@ -6,8 +6,6 @@
 #include "TCPhysObject.h"
 
 class TCEGamma : public TCPhysObject {
-
-
  public:
   struct CrystalInfo{
     int rawId;
@@ -57,7 +55,6 @@ class TCEGamma : public TCPhysObject {
   float _pfIsoPhoton;
 
   //bool  _convVeto;
-  //short _convMissHits;
   
   // crystal stuff
   vector<TCEGamma::CrystalInfo> _crysVect;
@@ -101,59 +98,53 @@ class TCEGamma : public TCPhysObject {
   //float EnergyRegressionErr() const; 
   
   //bool  ConversionVeto() const;
-  //short ConversionMissHits() const;
   
   bool IsEB() const;
   bool IsEE() const;
   bool IsInGap() const;
   
   //bool PassConversion(int lvl) const;
-  //bool PassIsolation(int lvl) const;
   
   //--------------------------
   // "set" methods ---------
   //--------------------------
   
-
   void AddCrystal(TCEGamma::CrystalInfo);
   void SetNCrystals(int);
 
-
-  void SetHadOverEm(float h);
-  void SetEOverP(float e);
-  void SetFBrem(float fb);
-
+  void SetHadOverEm(float);
+  void SetEOverP(float);
+  void SetFBrem(float);
 
   void SetSCEta(float);
   void SetSCPhi(float);
   
-  void SetSCDeltaEta(float de);
-  void SetSCDeltaPhi(float dp);
+  void SetSCDeltaEta(float);
+  void SetSCDeltaPhi(float);
 
-  void SetSigmaIEtaIEta(float sieie);
-  void SetSigmaIPhiIPhi(float sipip);
+  void SetSigmaIEtaIEta(float);
+  void SetSigmaIPhiIPhi(float);
 
-  void SetSCEtaWidth(float w);
-  void SetSCPhiWidth(float w);
+  void SetSCEtaWidth(float);
+  void SetSCPhiWidth(float);
 
-  void SetSCEnergy(float e);
+  void SetSCEnergy(float);
   
   
   //void SetConversionVeto(bool);
-  //void SetConversionMissHits(short);
   
-  void SetR9(float r);
+  void SetR9(float);
   //void SetMvaID(float m);
   //void SetEnergyRegression(float e);
   //void SetEnergyRegressionErr(float e);
   
-  void SetIsEB(bool b);
-  void SetIsEE(bool b);
-  void SetIsInGap(bool b);
+  void SetIsEB(bool);
+  void SetIsEE(bool);
+  void SetIsInGap(bool);
   
-  void SetPfIsoCharged(float f);
-  void SetPfIsoNeutral(float f);
-  void SetPfIsoPhoton(float f);
+  void SetPfIsoCharged(float);
+  void SetPfIsoNeutral(float);
+  void SetPfIsoPhoton(float);
   
   ClassDef(TCEGamma, 1);
 };

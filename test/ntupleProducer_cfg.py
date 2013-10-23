@@ -415,6 +415,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   saveEleCrystals   =    cms.untracked.bool(True),
   savePhotons       =    cms.untracked.bool(True),
   savePhoCrystals   =    cms.untracked.bool(True),
+  saveMoreEgammaVars=    cms.untracked.bool(True),
 
   saveMET           =    cms.untracked.bool(True),
   saveGenJets       =    cms.untracked.bool(True),
