@@ -29,19 +29,26 @@ class TCEGamma : public TCPhysObject {
   bool  _isInGap;
   
   float _hadOverEm;
-  float _dPhiSuperCluster;
-  float _dEtaSuperCluster;
-  float _sigmaIetaIeta;
   float _eOverP;
   float _fBrem;
   float _r9;
+  
+  //Superclaster shape variables. These should be coommon between electrons and photons.
+  float _scEta;
+  float _scPhi;
+  float _scDeltaPhi;
+  float _scDeltaEta;
+  float _scSigmaIetaIeta;
+  float _scSigmaIphiIphi;
+  float _scEtaWidth;
+  float _scPhiWidth;
+
+  float _scEnergy;
+
   //float _mvaID;
   //float _regEne;
   //float _regErr;
 
-
-  float _scEta;
-  float _scPhi;
 
   // Notice that in case of electrons, the isolation variables are saved for the cone 0.4
   // while for the photons the cone is 0.3
@@ -65,17 +72,30 @@ class TCEGamma : public TCPhysObject {
   vector<TCEGamma::CrystalInfo> GetCrystalVect() const;
 
   int   GetNCrystals() const;
-
   
-  float HadOverEm() const;
-  float DphiSuperCluster() const;
-  float DetaSuperCluster() const;
-  float SigmaIEtaIEta() const;
   float FBrem() const;
   float EOverP() const;
-  
-  float SCEta() const;
+  float HadOverEm() const;
   float R9() const; 
+
+  float SCEta() const;
+  float SCPhi() const;
+  float SCDeltaEta() const;
+  float SCDeltaPhi() const;
+
+  float SigmaIEtaIEta() const;
+  float SigmaIPhiIPhi() const;
+
+  float SCEtaWidth() const;
+  float SCPhiWidth() const;
+
+
+  float SCEnergy() const;
+
+  float PfIsoCharged() const;
+  float PfIsoNeutral() const;
+  float PfIsoPhoton() const;
+
   //float MvaID() const; 
   //float EnergyRegression() const; 
   //float EnergyRegressionErr() const; 
@@ -100,15 +120,24 @@ class TCEGamma : public TCPhysObject {
 
 
   void SetHadOverEm(float h);
-  void SetDphiSuperCluster(float dp);
-  void SetDetaSuperCluster(float de);
-  void SetSigmaIEtaIEta(float sieie);
   void SetEOverP(float e);
   void SetFBrem(float fb);
-  
-  
-  
+
+
   void SetSCEta(float);
+  void SetSCPhi(float);
+  
+  void SetSCDeltaEta(float de);
+  void SetSCDeltaPhi(float dp);
+
+  void SetSigmaIEtaIEta(float sieie);
+  void SetSigmaIPhiIPhi(float sipip);
+
+  void SetSCEtaWidth(float w);
+  void SetSCPhiWidth(float w);
+
+  void SetSCEnergy(float e);
+  
   
   //void SetConversionVeto(bool);
   //void SetConversionMissHits(short);
@@ -122,6 +151,9 @@ class TCEGamma : public TCPhysObject {
   void SetIsEE(bool b);
   void SetIsInGap(bool b);
   
+  void SetPfIsoCharged(float f);
+  void SetPfIsoNeutral(float f);
+  void SetPfIsoPhoton(float f);
   
   ClassDef(TCEGamma, 1);
 };

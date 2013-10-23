@@ -450,7 +450,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       muCon->SetIsoMap("pfChargedHadronPt_R04", iMuon->pfIsolationR04().sumChargedHadronPt);
       muCon->SetIsoMap("pfNeutralHadronEt_R04", iMuon->pfIsolationR04().sumNeutralHadronEt);
 
-
+      muCon->SetPfIsoCharged(iMuon->pfIsolationR04().sumChargedHadronPt);
+      muCon->SetPfIsoNeutral(iMuon->pfIsolationR04().sumNeutralHadronEt);
+      muCon->SetPfIsoPhoton( iMuon->pfIsolationR04().sumPhotonEt);
+      
       muCount++;
     }
   }
@@ -516,14 +519,30 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 
       // Electron ID variables
-      eleCon->SetHadOverEm(        iElectron->hadronicOverEm());
-      eleCon->SetDphiSuperCluster( iElectron->deltaPhiSuperClusterTrackAtVtx());
-      eleCon->SetDetaSuperCluster( iElectron->deltaEtaSuperClusterTrackAtVtx());
-      eleCon->SetSigmaIEtaIEta(    iElectron->sigmaIetaIeta());
       eleCon->SetFBrem(  iElectron->fbrem());
       eleCon->SetEOverP( iElectron->eSuperClusterOverP());
-      eleCon->SetSCEta(  iElectron->superCluster()->eta());
       eleCon->SetR9(     iElectron->r9());
+
+      eleCon->SetHadOverEm(        iElectron->hadronicOverEm());
+
+      
+
+      eleCon->SetSCEta(  iElectron->superCluster()->eta());
+      eleCon->SetSCPhi(  iElectron->superCluster()->phi());
+
+      eleCon->SetSCDeltaEta( iElectron->deltaEtaSuperClusterTrackAtVtx());
+      // Notice that previously it was defined in a Map, as follows:
+      //eleCon->SetIdMap("dEta", (fabs(iElectron->deltaEtaSuperClusterTrackAtVtx()) > 0.06) ? 0.06 : fabs(iElectron->deltaEtaSuperClusterTrackAtVtx()));
+      //one has to perform a selections on analysis level to recover this
+
+      eleCon->SetSCDeltaPhi( iElectron->deltaPhiSuperClusterTrackAtVtx());
+      eleCon->SetSigmaIEtaIEta(    iElectron->sigmaIetaIeta());
+      eleCon->SetSigmaIPhiIPhi(    iElectron->sigmaIphiIphi());
+
+      eleCon->SetSCEtaWidth(  iElectron->superCluster()->etaWidth());
+      eleCon->SetSCPhiWidth(  iElectron->superCluster()->phiWidth());
+
+      eleCon->SetSCEnergy(iElectron->superCluster()->energy());
 
       eleCon->SetPtError(iElectron->gsfTrack()->ptError());
       eleCon->SetNormalizedChi2(iElectron->gsfTrack()->normalizedChi2());
@@ -560,6 +579,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       eleCon->SetIsoMap("pfChIso_R04", eleIsolator.getIsolationCharged());
       eleCon->SetIsoMap("pfNeuIso_R04",eleIsolator.getIsolationNeutral());
       eleCon->SetIsoMap("pfPhoIso_R04",eleIsolator.getIsolationPhoton());
+
+      eleCon->SetPfIsoCharged(eleIsolator.getIsolationCharged());
+      eleCon->SetPfIsoNeutral(eleIsolator.getIsolationNeutral());
+      eleCon->SetPfIsoPhoton( eleIsolator.getIsolationPhoton());
 
       eleCon->SetIsoMap("modIso_Tk",     modElectronIso_Tk.get(eee-1));
       eleCon->SetIsoMap("modIso_Ecal",   modElectronIso_Ecal.get(eee-1));
@@ -627,7 +650,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         {
           //Crystal Info:
           std::vector< std::pair<DetId, float> >  PhotonHit_DetIds  = iPhoton->superCluster()->hitsAndFractions();
-          std::vector<TCPhoton::CrystalInfo> crystalinfo_container;
+          std::vector<TCEGamma::CrystalInfo> crystalinfo_container;
           crystalinfo_container.clear();
           TCPhoton::CrystalInfo crystal = {};
           float timing_avg =0.0;
@@ -692,23 +715,36 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       myPhoton->SetVtx(iPhoton->vx(), iPhoton->vy(), iPhoton->vz());
 
       // ID variables
-      //myPhoton->SetHadOverEm(iPhoton->hadTowOverEm());
-      //myPhoton->SetSigmaIEtaIEta(iPhoton->sigmaIetaIeta());
-      //myPhoton->SetR9(iPhoton->r9());
+      myPhoton->SetHadOverEm(iPhoton->hadTowOverEm());
+      myPhoton->SetR9(iPhoton->r9());
       myPhoton->SetTrackVeto(iPhoton->hasPixelSeed());
 
-      //myPhoton->SetSCEta(iPhoton->superCluster()->eta());
-      //myPhoton->SetSCPhi(iPhoton->superCluster()->phi());
-      //myPhoton->SetSCEnergy(iPhoton->superCluster()->energy());
+      myPhoton->SetSCEta(iPhoton->superCluster()->eta());
+      myPhoton->SetSCPhi(iPhoton->superCluster()->phi());
+      myPhoton->SetSigmaIEtaIEta(iPhoton->sigmaIetaIeta());
+      //myPhoton->SetSigmaIPhiIPhi(); there is no sigma iphi iphi in the photon. strange
+
+
+      myPhoton->SetSCEtaWidth(  iPhoton->superCluster()->etaWidth());
+      myPhoton->SetSCPhiWidth(  iPhoton->superCluster()->phiWidth());
+
+      //these don't exist either
+      //eleCon->SetSCDeltaEta( );
+      //eleCon->SetSCDeltaPhi( );
+
+      myPhoton->SetSCEnergy(iPhoton->superCluster()->energy());
+
+
 
       // detector-based isolation
       myPhoton->SetIsoMap("EmIso_R03",  (iPhoton->ecalRecHitSumEtConeDR03()));
       myPhoton->SetIsoMap("HadIso_R03", (iPhoton->hcalTowerSumEtConeDR03()));
       myPhoton->SetIsoMap("TrkIso_R03", (iPhoton->trkSumPtHollowConeDR03()));
 
-      myPhoton->SetIsoMap("EmIso_R04",  (iPhoton->ecalRecHitSumEtConeDR04()));
-      myPhoton->SetIsoMap("HadIso_R04", (iPhoton->hcalTowerSumEtConeDR04()));
-      myPhoton->SetIsoMap("TrkIso_R04", (iPhoton->trkSumPtHollowConeDR04()));
+
+      //myPhoton->SetIsoMap("EmIso_R04",  (iPhoton->ecalRecHitSumEtConeDR04()));
+      //myPhoton->SetIsoMap("HadIso_R04", (iPhoton->hcalTowerSumEtConeDR04()));
+      //myPhoton->SetIsoMap("TrkIso_R04", (iPhoton->trkSumPtHollowConeDR04()));
 
       
       // PF Iso for photons
@@ -716,6 +752,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       myPhoton->SetIsoMap("chIso03",phoIsolator.getIsolationCharged());
       myPhoton->SetIsoMap("nhIso03",phoIsolator.getIsolationNeutral());
       myPhoton->SetIsoMap("phIso03",phoIsolator.getIsolationPhoton());
+      
+      myPhoton->SetPfIsoCharged(phoIsolator.getIsolationCharged());
+      myPhoton->SetPfIsoNeutral(phoIsolator.getIsolationNeutral());
+      myPhoton->SetPfIsoPhoton( phoIsolator.getIsolationPhoton());
 
       // Hcal isolation for 2012
       //myPhoton->SetIsoMap("HadIso_R03",iPhoton->hcalTowerSumEtConeDR03() + 
@@ -782,19 +822,21 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         //// Z's, W's, H's, and now big juicy Gravitons
         if (
             (abs(myParticle->pdgId()) >= 11 && abs(myParticle->pdgId()) <= 16) 
-             || myParticle->pdgId() == 22 
-             || abs(myParticle->pdgId()) == 5 
-             || abs(myParticle->pdgId()) == 23 
-             || abs(myParticle->pdgId()) == 24 
-             || abs(myParticle->pdgId()) == 25 
-             || abs(myParticle->pdgId()) == 35 
-             || abs(myParticle->pdgId()) == 36 
-             || abs(myParticle->pdgId()) == 39
-           ) {
+            || myParticle->pdgId() == 22 
+            || abs(myParticle->pdgId()) == 5 
+            || abs(myParticle->pdgId()) == 23 
+            || abs(myParticle->pdgId()) == 24 
+            || abs(myParticle->pdgId()) == 25   //higgs
+            || abs(myParticle->pdgId()) == 35   // another higgs
+            || abs(myParticle->pdgId()) == 36   // more higgses
+            || abs(myParticle->pdgId()) == 39   //graviton (sometimes higgs too)
+            || abs(myParticle->pdgId()) == 443  //jpsi
+            || abs(myParticle->pdgId()) == 553  //upsilon
+            ) {
           addGenParticle(&(*myParticle), genPartCount, genMap);
-
+          
         }
-
+        
       }
     }
 
@@ -1764,6 +1806,8 @@ TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticl
              && abs(myParticle->mother()->pdgId()) != 35 
              && abs(myParticle->mother()->pdgId()) != 36 
              && abs(myParticle->mother()->pdgId()) != 39
+             && abs(myParticle->mother()->pdgId()) != 443  //Jpsi
+             && abs(myParticle->mother()->pdgId()) != 553  //Upsilon
           )
     {
       genCon->SetMother(0);
