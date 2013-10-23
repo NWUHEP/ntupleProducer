@@ -80,8 +80,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
   beamSpot->SetXYZ(vertexBeamSpot.x0(), vertexBeamSpot.y0(), vertexBeamSpot.z0());
 
-  int vtxCount, jetCount, jptCount, metCount, muCount, pfMuCount, eleCount, photonCount, pfPhotonCount, genCount, genPartCount, trigCount;
-  vtxCount = jetCount = jptCount = metCount = muCount = pfMuCount = eleCount = photonCount = pfPhotonCount = genCount = genPartCount = trigCount = 0;
+  int vtxCount, jetCount, metCount, muCount, pfMuCount, eleCount, photonCount, pfPhotonCount, genCount, genPartCount, trigCount;
+  vtxCount = jetCount = metCount = muCount = pfMuCount = eleCount = photonCount = pfPhotonCount = genCount = genPartCount = trigCount = 0;
 
 
   /////////////////////////////////////
@@ -988,7 +988,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     beamSpot->Clear();
     primaryVtx    -> Clear("C");
     recoJets      -> Clear("C");
-    recoJPT       -> Clear("C");
+    //recoJPT       -> Clear("C");
     recoMuons     -> Clear("C");
     recoElectrons -> Clear("C");
     recoPhotons   -> Clear("C");
@@ -1005,7 +1005,7 @@ void  ntupleProducer::beginJob()
 
   primaryVtx     = new TClonesArray("TCPrimaryVtx");
   recoJets       = new TClonesArray("TCJet");
-  recoJPT        = new TClonesArray("TCJet");
+  //recoJPT        = new TClonesArray("TCJet");
   recoElectrons  = new TClonesArray("TCElectron");
   recoMuons      = new TClonesArray("TCMuon");
   recoPhotons    = new TClonesArray("TCPhoton");
@@ -1022,7 +1022,7 @@ void  ntupleProducer::beginJob()
   h1_numOfEvents = fs->make<TH1F>("numOfEvents", "total number of events, unskimmed", 1,0,1);
 
   eventTree->Branch("recoJets",     &recoJets,       6400, 0);
-  eventTree->Branch("recoJPT",      &recoJPT,        6400, 0);
+  //eventTree->Branch("recoJPT",      &recoJPT,        6400, 0);
   eventTree->Branch("recoElectrons",&recoElectrons,  6400, 0);
   eventTree->Branch("recoMuons",    &recoMuons,      6400, 0);
   eventTree->Branch("recoPhotons",  &recoPhotons,    6400, 0);
