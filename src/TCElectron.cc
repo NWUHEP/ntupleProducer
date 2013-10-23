@@ -5,9 +5,29 @@
 TCElectron::TCElectron() {
   _normChi2gsf = -99;
   _normChi2kf  = -99;
-  
   _ptError     = -99;
+  _fBrem       = -99;
+  _inverseEnergyMomentumDiff = -99;
+  _EoP     = -99;
+  _EoPout  = -99;
+  _ip3d    = -99;
+  _ip3dSig = -99;
+  _deltaEtaSeedCluster = -99;
+  _deltaPhiSeedCluster = -99;
+  _mvaID  = -99;
+  _regEne = -99;
+  _regErr = -99;
+  _convVeto = false;
+  _convMissHits = 0;
   
+  _trackerLayersWithMeasurement = -99;
+  _numberOfValidHits            = -99;
+  _numberOfValidPixelHits       = -99;
+  _numberOfValidTrackerHits     = -99;
+  _numberOfLostPixelHits        = -99;
+  _numberOfLostTrackerHits      = -99;
+  
+  _effArea = -99;
 
 }
 
@@ -56,8 +76,6 @@ float TCElectron::DeltaPhiSeedCluster() const {
   return _deltaPhiSeedCluster;
 }
 
-
-
 float TCElectron::EoP() const {
   return _EoP;
 }
@@ -94,8 +112,8 @@ int TCElectron::NumberOfLostTrackerHits() const {
 }
 
 
-bool TCElectron::ConversionVeto() const {
-    return _convVeto;
+bool TCElectron::PassConversionVeto() const {
+    return _passConvVeto;
 }
 
 short TCElectron::ConversionMissHits() const {
@@ -230,8 +248,8 @@ void TCElectron::SetFBrem(float fb)
 }
 
 
-void TCElectron::SetConversionVeto(bool v) {
-  _convVeto = v;
+void TCElectron::SetPassConversionVeto(bool v) {
+  _passConvVeto = v;
 }
 
 void TCElectron::SetConversionMissHits(short m) {

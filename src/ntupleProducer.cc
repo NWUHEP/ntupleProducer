@@ -635,8 +635,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 
       // Conversion information
-      bool convVeto = !(ConversionTools::hasMatchedConversion(*iElectron,hConversions,vertexBeamSpot.position()));
-      eleCon->SetConversionVeto(convVeto);
+      // See definition from here: https://twiki.cern.ch/twiki/bin/view/CMS/ConversionTools
+      bool passConvVeto = !(ConversionTools::hasMatchedConversion(*iElectron,hConversions,vertexBeamSpot.position()));
+      eleCon->SetPassConversionVeto(passConvVeto);
       eleCon->SetConversionMissHits(iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfHits());
 
 

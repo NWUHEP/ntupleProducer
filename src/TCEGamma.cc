@@ -7,7 +7,7 @@ TCEGamma::TCEGamma() {
   //Setting up default values. In case it's not going to be set in the analyzer, 
   // one can recognize that.
   _nCrystals = 0;
-
+  
   _r9     = -99;
   _hadOverEm = -99;
 

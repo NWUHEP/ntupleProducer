@@ -29,7 +29,7 @@ class TCElectron : public TCEGamma {
   float _regEne;
   float _regErr;
   
-  bool  _convVeto;
+  bool  _passConvVeto;
   short _convMissHits;
   
   int _trackerLayersWithMeasurement;
@@ -78,7 +78,7 @@ class TCElectron : public TCEGamma {
   float EnergyRegression() const; 
   float EnergyRegressionErr() const; 
   
-  bool  ConversionVeto() const;
+  bool  PassConversionVeto() const;
   short ConversionMissHits() const;
   
   
@@ -118,7 +118,7 @@ class TCElectron : public TCEGamma {
   
   void SetFBrem(float);
   
-  void SetConversionVeto(bool);
+  void SetPassConversionVeto(bool);
   void SetConversionMissHits(short);
   
   void SetTrackerLayersWithMeasurement(int);
