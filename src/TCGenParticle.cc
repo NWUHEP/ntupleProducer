@@ -3,43 +3,54 @@
 #include <iostream>
 
 TCGenParticle::TCGenParticle() {
-  mother = 0;
+  _mother = 0;
+  _PDGID = 0;
+  _status = 0;
+  _isParton = 0;
 }
 
 TCGenParticle::~TCGenParticle() {
 }
 
 // "get" methods -------------------------------------
+/*
+Needs more validation. May not work in the producer code, too many references
+TCGenParticle* TCGenParticle::PrimaryAncestor(){
+  TCGenParticle *a = this;
+  while (a->Mother())
+    a = a->Mother();
+  return a;
+}
+*/
 
 TCGenParticle* TCGenParticle::Mother() {
-    return mother;
+    return _mother;
 }
 
 int TCGenParticle::GetPDGId() {
-    return PDGID;
+    return _PDGID;
 }
 
 unsigned TCGenParticle::GetStatus() {
-    return status;
+    return _status;
 }
 
 bool TCGenParticle::IsParton() {
-    return isParton_;
+  return _isParton;
 }
-
 
 void TCGenParticle::SetMother(TCGenParticle* m) {
-    mother = m;
+    _mother = m;
 }
 
-void TCGenParticle::SetPDGId(int pdg_id) {
-    PDGID = pdg_id;
+void TCGenParticle::SetPDGId(int p) {
+    _PDGID = p;
 }
 
 void TCGenParticle::SetStatus(unsigned s)
 {
-    status = s;
+    _status = s;
 }
 void TCGenParticle::SetIsParton(bool a) {
-    isParton_=a;
+    _isParton = a;
 }

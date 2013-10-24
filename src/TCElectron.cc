@@ -17,7 +17,7 @@ TCElectron::TCElectron() {
   _mvaID  = -99;
   _regEne = -99;
   _regErr = -99;
-  _convVeto = false;
+  _passConvVeto = false;
   _convMissHits = 0;
   
   _trackerLayersWithMeasurement = -99;

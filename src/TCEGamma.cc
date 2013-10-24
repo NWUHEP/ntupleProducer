@@ -21,7 +21,9 @@ TCEGamma::TCEGamma() {
   _scEtaWidth = -99;
   _scPhiWidth = -99;
   _scEnergy   = -99;
-  _ome1x5oe5x5 = -99;
+  _e1x5 = -99;
+  _e2x5 = -99;
+  _e5x5 = -99;
   _preShowerOverRaw = -99;
 
   _pfIsoCharged = -99;
@@ -41,15 +43,6 @@ int   TCEGamma::GetNCrystals() const { return _nCrystals;}
 //float TCEGamma::EnergyRegressionErr() const { return _regErr; } 
 
 float TCEGamma::R9() const { return _r9; } 
-
-
-//float TCEGamma::NormalizedChi2() const {
-//  return _normalizedChi2;
-//}
-
-//bool TCEGamma::ConversionVeto() const {
-//    return _convVeto;
-//}
 
 
 bool TCEGamma::IsEB() const {
@@ -104,8 +97,15 @@ float TCEGamma::PreShowerOverRaw() const {
   return _preShowerOverRaw;
 }
 
-float TCEGamma::Ome1x5oe5x5() const {
-  return _ome1x5oe5x5;
+
+float TCEGamma::E1x5() const {
+  return _e1x5;
+}
+float TCEGamma::E2x5() const {
+  return _e2x5;
+}
+float TCEGamma::E5x5() const {
+  return _e5x5;
 }
 
 
@@ -176,13 +176,17 @@ void TCEGamma::SetSCEnergy(float e){
 void TCEGamma::SetPreShowerOverRaw(float p){
   _preShowerOverRaw = p;
 }
-void TCEGamma::SetOme1x5oe5x5(float o){
-  _ome1x5oe5x5 = o;
+
+void TCEGamma::SetE1x5(float e){
+  _e1x5 = e;
+}
+void TCEGamma::SetE2x5(float e){
+  _e2x5 = e;
+}
+void TCEGamma::SetE5x5(float e){
+  _e5x5 = e;
 }
 
-//void TCEGamma::SetConversionVeto(bool v) {
-//  _convVeto = v;
-//}
 
 void TCEGamma::SetIsEB(bool b) {
   _isEB = b;

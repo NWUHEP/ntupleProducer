@@ -27,8 +27,6 @@ class TCEGamma : public TCPhysObject {
   bool  _isInGap;
   
   float _hadOverEm;
-  //float _eOverP;
-  //float _fBrem;
   float _r9;
   
   //Superclaster shape variables. These should be coommon between electrons and photons.
@@ -43,7 +41,10 @@ class TCEGamma : public TCPhysObject {
 
   float _scEnergy;
   float _preShowerOverRaw;
-  float _ome1x5oe5x5;
+
+  float _e1x5;
+  float _e2x5;
+  float _e5x5;
   
 
   //float _mvaID;
@@ -89,7 +90,9 @@ class TCEGamma : public TCPhysObject {
 
   float SCEnergy() const;
   float PreShowerOverRaw() const;
-  float Ome1x5oe5x5() const;
+  float E1x5() const;
+  float E2x5() const;
+  float E5x5() const;
 
   float PfIsoCharged() const;
   float PfIsoNeutral() const;
@@ -130,7 +133,9 @@ class TCEGamma : public TCPhysObject {
 
   void SetSCEnergy(float);
   void SetPreShowerOverRaw(float);
-  void SetOme1x5oe5x5(float);
+  void SetE1x5(float);
+  void SetE2x5(float);
+  void SetE5x5(float);
   
   
   //void SetConversionVeto(bool);

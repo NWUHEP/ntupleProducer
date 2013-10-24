@@ -25,12 +25,6 @@ options.register("isRealData",
 
 options.parseArguments()
 
-## In case you are running over a privately produced MC sample, that is generatet in _one step_,
-## you probably need to use "HLT" for both recoTier and hltTier.
-## Unless you changed the name of your process. In that case it should be that name.
-#recoTier = "RECO"
-#hltTier  = "HLT"
-
 # real data or MC?
 isRealData = options.isRealData
 
@@ -310,12 +304,13 @@ if (isRealData):
 else:
   process.calibratedElectrons.isMC = cms.bool(True)
   process.calibratedElectrons.inputDataset = cms.string("Summer12_LegacyPaper")
+  
 process.calibratedElectrons.updateEnergyError = cms.bool(True)
-process.calibratedElectrons.correctionsType = cms.int32(2)
-process.calibratedElectrons.combinationType = cms.int32(3)
-process.calibratedElectrons.lumiRatio = cms.double(1.0)
-process.calibratedElectrons.verbose = cms.bool(False)
-process.calibratedElectrons.synchronization = cms.bool(False)
+process.calibratedElectrons.correctionsType   = cms.int32(2)
+process.calibratedElectrons.combinationType   = cms.int32(3)
+process.calibratedElectrons.lumiRatio         = cms.double(1.0)
+process.calibratedElectrons.verbose           = cms.bool(False)
+process.calibratedElectrons.synchronization   = cms.bool(False)
 process.calibratedElectrons.applyLinearityCorrection = cms.bool(True)
 #process.calibratedElectrons.scaleCorrectionsInputPath = cms.string("EgammaAnalysis/ElectronTools/data/scalesMoriond.csv")
 #process.calibratedElectrons.combinationRegressionInputPath = cms.string("EgammaAnalysis/ElectronTools/data/eleEnergyReg2012Weights_V1.root")
@@ -399,7 +394,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   MuonTag           =    cms.untracked.InputTag('muons'),
   PhotonTag         =    cms.untracked.InputTag('photons'),
   PrimaryVtxTag     =    cms.untracked.InputTag('offlinePrimaryVertices'),
-  rhoCorrTag        =    cms.untracked.InputTag('kt6PFJets', 'rho', 'RECO'),
+  rhoCorrTag        =    cms.untracked.InputTag('kt6PFJets',    'rho', 'RECO'),
   rho25CorrTag      =    cms.untracked.InputTag('kt6PFJetsIso', 'rho', 'NTUPLE'),
   rhoMuCorrTag      =    cms.untracked.InputTag('kt6PFJetsCentralNeutral', 'rho','RECO'),  # specifically for muon iso
 
@@ -423,7 +418,6 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   saveTrackMET      =    cms.untracked.bool(True),
   saveT0MET	        =    cms.untracked.bool(True),
   saveT2MET	        =    cms.untracked.bool(True),
-
 
   ecalTPFilterTag    =    cms.untracked.InputTag("EcalDeadCellTriggerPrimitiveFilter",""),
   ecalBEFilterTag    =    cms.untracked.InputTag("EcalDeadCellBoundaryEnergyFilter",""),

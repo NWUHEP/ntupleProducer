@@ -521,6 +521,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 
       // Electron ID variables
+
+      //Methods that are availabel for the electrons can be found here:
+      //http://cmslxr.fnal.gov/lxr/source/DataFormats/EgammaCandidates/interface/GsfElectron.h?v=CMSSW_5_3_11
+
       eleCon->SetR9(     iElectron->r9());
       eleCon->SetFBrem(  iElectron->fbrem());
       eleCon->SetEoP(    iElectron->eSuperClusterOverP());
@@ -553,9 +557,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       if (iElectron->superCluster()->rawEnergy()!=0)
         eleCon->SetPreShowerOverRaw(iElectron->superCluster()->preshowerEnergy() / iElectron->superCluster()->rawEnergy());
 
-      //One minus e1x5 over e5x5
-      if (iElectron->e5x5() != 0)
-        eleCon->SetOme1x5oe5x5(1.-(iElectron->e1x5()/iElectron->e5x5()));
+      
+      eleCon->SetE1x5(iElectron->e1x5());
+      eleCon->SetE2x5(iElectron->e2x5Max());
+      eleCon->SetE5x5(iElectron->e5x5());
 
       eleCon->SetDeltaEtaSeedCluster(iElectron->deltaEtaSeedClusterTrackAtCalo());
       eleCon->SetDeltaPhiSeedCluster(iElectron->deltaPhiSeedClusterTrackAtCalo());
@@ -796,6 +801,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       myPhoton->SetVtx(iPhoton->vx(), iPhoton->vy(), iPhoton->vz());
 
       // ID variables
+      //Methods that are availabel for the electrons can be found here:
+      //http://cmslxr.fnal.gov/lxr/source/DataFormats/EgammaCandidates/interface/Photon.h?v=CMSSW_5_3_11
       myPhoton->SetHadOverEm(iPhoton->hadTowOverEm());
       myPhoton->SetR9(iPhoton->r9());
       myPhoton->SetTrackVeto(iPhoton->hasPixelSeed());
@@ -816,8 +823,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
       if (iPhoton->superCluster()->rawEnergy()!=0)
         myPhoton->SetPreShowerOverRaw(iPhoton->superCluster()->preshowerEnergy() / iPhoton->superCluster()->rawEnergy());
-      if (iPhoton->e5x5() != 0)
-        myPhoton->SetOme1x5oe5x5(1.-(iPhoton->e1x5()/iPhoton->e5x5()));
+
+
+      myPhoton->SetE1x5(iPhoton->e1x5());
+      myPhoton->SetE2x5(iPhoton->e2x5());
+      myPhoton->SetE5x5(iPhoton->e5x5());
       
 
 
@@ -924,6 +934,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         }
 
       }
+
     }
 
 
@@ -1099,11 +1110,11 @@ void  ntupleProducer::beginJob()
   genJets        = new TClonesArray("TCGenJet");
   genParticles   = new TClonesArray("TCGenParticle");
   beamSpot       = new TVector3();
-  recoMET.reset(new TCMET);
+  recoMET.reset(  new TCMET);
   track_MET.reset(new TCMET);
-  T0MET.reset(new TCMET);
-  T2MET.reset(new TCMET);
-  mva_MET.reset(new TCMET);
+  T0MET.reset(    new TCMET);
+  T2MET.reset(    new TCMET);
+  mva_MET.reset(  new TCMET);
 
   h1_numOfEvents = fs->make<TH1F>("numOfEvents", "total number of events, unskimmed", 1,0,1);
 
@@ -1299,7 +1310,7 @@ bool ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::Vertex
     outJet->SetVtx(0., 0., 0.);
   } else {
     outJet->SetVtx(sumTrackX/nJetTracks, sumTrackY/nJetTracks, sumTrackZ/nJetTracks);
-
+    
     for (VertexCollection::const_iterator iVtx = vtxCollection->begin(); iVtx!= vtxCollection->end(); ++iVtx) {
       reco::Vertex myVtx = reco::Vertex(*iVtx);
       if(!myVtx.isValid() || myVtx.isFake()) continue;
@@ -1875,7 +1886,7 @@ TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticl
     genCon->SetPxPyPzE(myParticle->px(), myParticle->py(), myParticle->pz(), myParticle->energy() );
     genCon->SetVtx(myParticle->vx(), myParticle->vy(), myParticle->vz());
     genCon->SetCharge(myParticle->charge());
-    genCon->SetPDGId(myParticle->pdgId());
+    genCon->SetPDGId( myParticle->pdgId());
     genCon->SetStatus(myParticle->status());
 
     genCon->SetMother(0);
@@ -1915,6 +1926,7 @@ TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticl
   }
   else
     genCon = it->second;
+
 
   return genCon;
 }
