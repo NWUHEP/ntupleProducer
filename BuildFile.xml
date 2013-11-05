@@ -38,3 +38,4 @@
 <use   name="RecoJets/JetProducers"/>
 <use name="PFIsolation/SuperClusterFootprintRemoval"/>
 <flags   EDM_PLUGIN="1"/>
+#<Flags CXXFLAGS="-g"/>

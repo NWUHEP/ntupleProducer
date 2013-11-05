@@ -12,7 +12,7 @@ options.maxEvents = 10
 #options.loadFromFile('inputFiles','PYTHIA8_175_H_Zg_8TeV.txt')
 #options.loadFromFile('inputFiles','PYTHIA8_175_POWHEG_PDF7_H_Zg_8TeV.txt')
 #options.inputFiles = '/store/data/Run2012A/DoubleElectron/AOD/13Jul2012-v1/00000/00347915-EED9-E111-945A-848F69FD2817.root'
-options.inputFiles = '/store/user/andrey/Higgs_To_MuMuGamma_Dalitz_MH125_Mll_0to50_MadgraphHEFT_pythia6/AODSIM_v2/39bf61f738ba3bdb8860f0848073cc88/aodsim_100_1_hLi.root'
+#options.inputFiles = '/store/user/andrey/Higgs_To_MuMuGamma_Dalitz_MH125_Mll_0to50_MadgraphHEFT_pythia6/AODSIM_v2/39bf61f738ba3bdb8860f0848073cc88/aodsim_100_1_hLi.root'
 #'/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
 #options.inputFiles = 'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v2/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_50.root'
 options.inputFiles = '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0000/02CDCF05-BED2-E111-85F4-0030486740BA.root'
@@ -305,7 +305,7 @@ if (isRealData):
 else:
   process.calibratedElectrons.isMC = cms.bool(True)
   process.calibratedElectrons.inputDataset = cms.string("Summer12_LegacyPaper")
-  
+
 process.calibratedElectrons.updateEnergyError = cms.bool(True)
 process.calibratedElectrons.correctionsType   = cms.int32(2)
 process.calibratedElectrons.combinationType   = cms.int32(3)

@@ -1,8 +1,7 @@
 #include "../interface/ntupleProducer.h"
 
 ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig):
-  eventTree(0),
-  geomInitialized_(false)
+  eventTree(0)
 {
   jetTag_           = iConfig.getUntrackedParameter<edm::InputTag>("JetTag");
   jecTag_           = iConfig.getParameter<std::string>("JecTag");
@@ -99,18 +98,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
   iEvent.getByLabel("pfNoPileUp",pfCandsEleIso);
   const  PFCandidateCollection thePfCollEleIso = *(pfCandsEleIso.product());
 
-
-
-  if (!geomInitialized_) {
-    edm::ESHandle<CaloTopology> theCaloTopology;
-    iSetup.get<CaloTopologyRecord>().get(theCaloTopology);
-    ecalTopology_ = & (*theCaloTopology);
-
-    edm::ESHandle<CaloGeometry> theCaloGeometry;
-    iSetup.get<CaloGeometryRecord>().get(theCaloGeometry);
-    caloGeometry_ = & (*theCaloGeometry);
-    geomInitialized_ = true;
-  }
 
 
   //////////////////////////
@@ -652,9 +639,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       eleCon->SetPassConversionVeto(passConvVeto);
       eleCon->SetConversionMissHits(iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfHits());
 
-      // Add electron MVA ID and ISO variables
-      electronMVA(&(*iElectron), eleCon, iEvent, iSetup, thePfCollEleIso, rhoFactor);
-
       eleIsolator.fGetIsolation(&(*iElectron), &thePfColl, myVtxRef, primaryVtcs);
       eleCon->SetIsoMap("pfChIso_R04", eleIsolator.getIsolationCharged());
       eleCon->SetIsoMap("pfNeuIso_R04",eleIsolator.getIsolationNeutral());
@@ -665,6 +649,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       float AEff04 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso04, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
       eleCon->SetIsoMap("EffArea_R03", AEff03);
       eleCon->SetIsoMap("EffArea_R04", AEff04);
+      eleCon->SetEffArea(AEff04);
 
 
       //MVA output:
@@ -688,11 +673,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       tmpP4.SetPtEtaPhiE(iElectronTmp.pt(), iElectronTmp.eta(), iElectronTmp.phi(), iElectronTmp.energy());
       eleCon->SetRegressionMomCombP4(tmpP4);
 
-      // Effective area for rho PU corrections (not sure if needed)
-      float AEff03 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso03, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
-      float AEff04 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso04, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
-
-      eleCon->SetEffArea(AEff04);
 
       eleIsolator.fGetIsolation(&(*iElectron), &thePfColl, myVtxRef, primaryVtcs);
       eleCon->SetPfIsoCharged(eleIsolator.getIsolationCharged());
@@ -802,34 +782,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
           for (unsigned int y =0; y < crystalinfo_container.size() && y < 100;y++){
             myPhoton->AddCrystal(crystalinfo_container[y]);
           }
-
-          EBDetId detId  = (EBDetId)((*detitr).first);
-          crystal.rawId  = thishit->id().rawId();
-          crystal.energy = thishit->energy();
-          crystal.time   = thishit->time();
-          crystal.timeErr= thishit->timeError();
-          crystal.recoFlag = thishit->recoFlag();
-          crystal.ieta   = detId.ieta();
-          crystal.iphi   = detId.iphi();
-          if(crystal.energy > 0.1){
-            timing_avg  = timing_avg + crystal.time;
-            ncrys++;
-          }  
-        }//end of if ((*detitr).det() == DetId::Ecal && (*detitr).subdetId() == EcalBarrel)
-        crystalinfo_container.push_back(crystal);  
-      }//End loop over detids
-      std::sort(crystalinfo_container.begin(),crystalinfo_container.end(),EnergySortCriterium);
-
-
-      //Without taking into account uncertainty, this time makes no sense.
-      if (ncrys !=0) timing_avg = timing_avg/(float)ncrys;
-      else timing_avg = -99.;
-
-      myPhoton->SetNCrystals(crystalinfo_container.size());
-
-      for (unsigned int y =0; y < crystalinfo_container.size() && y < 100;y++){ 
-        myPhoton->AddCrystal(crystalinfo_container[y]);
-      }
 
       /*
          vector<TCPhoton::CrystalInfo> savedCrystals = myPhoton->GetCrystalVect();
@@ -1164,7 +1116,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
   beamSpot->Clear();
   primaryVtx    -> Clear("C");
   recoJets      -> Clear("C");
-  recoJPT       -> Clear("C");
+  //recoJPT       -> Clear("C");
   recoMuons     -> Clear("C");
   recoElectrons -> Clear("C");
   recoPhotons   -> Clear("C");

@@ -77,7 +77,13 @@ Instructions for Users
   cvs co -r V01-04-13                             RecoTauTag/Configuration
 ```
 
- * PF footprint removal [8]:
+ * Extra code (for boosted Z->ee isolation), following [6] and [7]:
+```
+  cvs co -r V00-02-03 -d TSWilliams/BstdZeeTools  UserCode/TSWilliams/BstdZee/BstdZeeTools
+  cvs co -r V00-09-03 -d SHarper/HEEPAnalyzer UserCode/SHarper/HEEPAnalyzer 
+```
+
+ * PF footprint removal [8][Supercluster footprint removal twiki]:
 ```
   git clone https://github.com/peruzzim/SCFootprintRemoval.git
   cd SCFootprintRemoval
@@ -116,13 +122,6 @@ Instructions for Users
   cp NWU/ntupleProducer/patches/mvaPFMET_leptons_cfi.py JetMETCorrections/METPUSubtraction/python/mvaPFMET_leptons_cfi.py
   cp NWU/ntupleProducer/patches/PFMETAlgorithmMVA.cc JetMETCorrections/METPUSubtraction/src/. 
 
-  scram b -j 9
-```
-
- * Extra code (for boosted Z->ee isolation), following [6] and [7]:
-```
-  cvs co -r V00-02-03 -d TSWilliams/BstdZeeTools  UserCode/TSWilliams/BstdZee/BstdZeeTools
-  cvs co -r V00-09-03 -d SHarper/HEEPAnalyzer UserCode/SHarper/HEEPAnalyzer 
   scram b -j 9
 ```
 
