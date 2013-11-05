@@ -31,8 +31,8 @@ class TCPhysObject : public TLorentzVector {
 
         // "get" methods -----------
 
-        float IdMap(string key);
-        float IsoMap(string key);
+        float IdMap(string key) const;
+        float IsoMap(string key) const;
         TVector2 P2() const;
         TVector3 Vtx() const;
         int Charge() const;  

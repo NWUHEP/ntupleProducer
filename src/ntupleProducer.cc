@@ -1,6 +1,8 @@
 #include "../interface/ntupleProducer.h"
 
-ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
+ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig):
+  eventTree(0),
+  geomInitialized_(false)
 {
   jetTag_           = iConfig.getUntrackedParameter<edm::InputTag>("JetTag");
   jecTag_           = iConfig.getParameter<std::string>("JecTag");
@@ -29,9 +31,6 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
   saveMuons_        = iConfig.getUntrackedParameter<bool>("saveMuons");
   savePhotons_      = iConfig.getUntrackedParameter<bool>("savePhotons");
   saveMET_          = iConfig.getUntrackedParameter<bool>("saveMET");
-  saveTrackMET_     = iConfig.getUntrackedParameter<bool>("saveTrackMET"); 
-  saveT0MET_        = iConfig.getUntrackedParameter<bool>("saveT0MET"); 
-  saveT2MET_        = iConfig.getUntrackedParameter<bool>("saveT2MET");
 
   saveGenJets_      = iConfig.getUntrackedParameter<bool>("saveGenJets");
   saveGenParticles_ = iConfig.getUntrackedParameter<bool>("saveGenParticles");
@@ -55,7 +54,6 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig)
 
 ntupleProducer::~ntupleProducer()
 {
-
 }
 
 //
@@ -101,7 +99,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     edm::ESHandle<CaloTopology> theCaloTopology;
     iSetup.get<CaloTopologyRecord>().get(theCaloTopology);
     ecalTopology_ = & (*theCaloTopology);
-    
+
     edm::ESHandle<CaloGeometry> theCaloGeometry;
     iSetup.get<CaloGeometryRecord>().get(theCaloGeometry);
     caloGeometry_ = & (*theCaloGeometry);
@@ -209,7 +207,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       /////////////////////
       // Get Hgg Id vars //
       /////////////////////
-     
+
       PileupJetIdentifier puIdentifier;
       // giving uncorrected input, must double check on this
       float jec = 1.;
@@ -245,11 +243,12 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     }   
   }
 
-  /////////////// 
-  // Get T0MET //
-  ///////////////
+  if (saveMET_) {
 
-  if (saveT0MET_) {
+    /////////////// 
+    // Get T0MET //
+    ///////////////
+
 
     Handle<PFMETCollection> t0MET;
     iEvent.getByLabel(t0metTag_, t0MET);
@@ -273,12 +272,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       T0MET->SetSigmaX2( sigmaX2 );
 
     }
-  }
-  /////////////// 
-  // Get T2MET //
-  ///////////////
+    /////////////// 
+    // Get T2MET //
+    ///////////////
 
-  if (saveT2MET_) {
 
     Handle<PFMETCollection> t2MET;
     iEvent.getByLabel(t2metTag_, t2MET);
@@ -296,13 +293,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       T2MET->SetChargedEMFraction(t2met->ChargedEMEtFraction());
 
     }
-  }
 
-  /////////////
-  // Get MET //
-  /////////////
+    /////////////
+    // Get MET //
+    /////////////
 
-  if (saveMET_) {
 
     Handle<PFMETCollection> MET;
     iEvent.getByLabel(metTag_, MET);
@@ -328,13 +323,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     float sigmaX2 = (pfMEThandle->front()).getSignificanceMatrix()(0,0);
     recoMET->SetSignificance( significance );
     recoMET->SetSigmaX2( sigmaX2 );
-  }
 
-  //////////////////
-  // Get TrackMET //  
-  //////////////////
+    //////////////////
+    // Get TrackMET //  
+    //////////////////
 
-  if (saveTrackMET_) {
 
     Handle<METCollection> trkMET;
     iEvent.getByLabel(trackmetTag_, trkMET);
@@ -344,24 +337,24 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       track_MET->SetSumEt(trkmet->sumEt());
       track_MET->SetMagPhi(trkmet->et(), trkmet->phi());
     }
-  }
 
 
-  //////////////////                                                                                                                                                          
-  // Get MVAMET   // 
-  ////////////////// 
+    //////////////////                                                                                                                                                          
+    // Get MVAMET   // 
+    ////////////////// 
 
 
-  Handle<vector<reco::PFMET> > mvaMET;
-  iEvent.getByLabel("pfMEtMVA", mvaMET);
-  vector<reco::PFMET>::const_iterator mvamet = mvaMET->begin();
+    Handle<vector<reco::PFMET> > mvaMET;
+    iEvent.getByLabel("pfMEtMVA", mvaMET);
+    vector<reco::PFMET>::const_iterator mvamet = mvaMET->begin();
 
-  if (mvaMET->begin() != mvaMET->end()) {
-    //std::cout << "sumET: " << mvamet->sumEt()<<std::endl;
-    //std::cout << "et: " << mvamet->et() << std::endl;
-    //std::cout << "phi: " << mvamet->phi() << std::endl;
-    mva_MET->SetSumEt(mvamet->sumEt());
-    mva_MET->SetMagPhi(mvamet->et(), mvamet->phi());
+    if (mvaMET->begin() != mvaMET->end()) {
+      //std::cout << "sumET: " << mvamet->sumEt()<<std::endl;
+      //std::cout << "et: " << mvamet->et() << std::endl;
+      //std::cout << "phi: " << mvamet->phi() << std::endl;
+      mva_MET->SetSumEt(mvamet->sumEt());
+      mva_MET->SetMagPhi(mvamet->et(), mvamet->phi());
+    }
   }
 
   ///////////////
@@ -387,7 +380,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       muCon->SetIsPF(iMuon->isPFMuon());
       muCon->SetIsGLB(iMuon->isGlobalMuon());
       muCon->SetIsTRK(iMuon->isTrackerMuon());
-      
+
 
       muCon->SetIsGood(muon::isGoodMuon(*iMuon, muon::TMOneStationTight));
       muCon->SetIsGoodLoose(muon::isGoodMuon(*iMuon, muon::TMOneStationLoose));
@@ -483,7 +476,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     Handle<reco::GsfElectronCollection > calibratedElectrons;
     iEvent.getByLabel(edm::InputTag("calibratedElectrons","calibratedGsfElectrons"), calibratedElectrons);
-   
+
     edm::Handle<edm::ValueMap<float>> mvaTrigV0_handle;
     iEvent.getByLabel("mvaTrigV0", mvaTrigV0_handle);
     const edm::ValueMap<float> ele_mvaTrigV0 = (*mvaTrigV0_handle.product());
@@ -554,7 +547,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
       // Add electron MVA ID and ISO variables
       electronMVA(&(*iElectron), eleCon, iEvent, iSetup, thePfCollEleIso, rhoFactor);
-      
+
       eleIsolator.fGetIsolation(&(*iElectron), &thePfColl, myVtxRef, primaryVtcs);
       eleCon->SetIsoMap("pfChIso_R04", eleIsolator.getIsolationCharged());
       eleCon->SetIsoMap("pfNeuIso_R04",eleIsolator.getIsolationNeutral());
@@ -570,13 +563,13 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       //MVA output:
       float m = ele_mvaTrigV0.get(eee-1);
       eleCon->SetMvaID(m);
-      
+
       //Regression energy
       double ene = ele_regEne.get(eee-1);
       double err = ele_regErr.get(eee-1);
       eleCon->SetEnergyRegression(ene);
       eleCon->SetEnergyRegressionErr(err);
-      
+
       //cout<<eee<<"  mva0 = "<<m<<endl;
 
       const reco::GsfElectron &iElectronTmp   ( (*calibratedElectrons)[eee-1]);
@@ -667,16 +660,16 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       }
 
       /*
-      vector<TCPhoton::CrystalInfo> savedCrystals = myPhoton->GetCrystalVect();
-      for (int y = 0; y< myPhoton->GetNCrystals();y++){
-        std::cout << "savedCrystals[y].time : " << savedCrystals[y].time << std::endl; 
-        std::cout << "savedCrystals[y].timeErr : " << savedCrystals[y].timeErr << std::endl;
-        std::cout << "savedCrystals[y].energy : " << savedCrystals[y].energy <<std::endl;
-        std::cout << "savedCrystals[y].ieta: " << savedCrystals[y].ieta << std::endl;
+         vector<TCPhoton::CrystalInfo> savedCrystals = myPhoton->GetCrystalVect();
+         for (int y = 0; y< myPhoton->GetNCrystals();y++){
+         std::cout << "savedCrystals[y].time : " << savedCrystals[y].time << std::endl; 
+         std::cout << "savedCrystals[y].timeErr : " << savedCrystals[y].timeErr << std::endl;
+         std::cout << "savedCrystals[y].energy : " << savedCrystals[y].energy <<std::endl;
+         std::cout << "savedCrystals[y].ieta: " << savedCrystals[y].ieta << std::endl;
 
-        std::cout << "savedCrystals[y].rawId: " << savedCrystals[y].rawId <<std::endl;
-      }
-      */
+         std::cout << "savedCrystals[y].rawId: " << savedCrystals[y].rawId <<std::endl;
+         }
+         */
 
       //const reco::BasicCluster& seedClus = *(iPhoton->superCluster()->seed());
 
@@ -703,7 +696,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       myPhoton->SetIsoMap("HadIso_R04", (iPhoton->hcalTowerSumEtConeDR04()));
       myPhoton->SetIsoMap("TrkIso_R04", (iPhoton->trkSumPtHollowConeDR04()));
 
-      
+
       // PF Iso for photons
       phoIsolator.fGetIsolation(&(*iPhoton),&thePfColl, myVtxRef, primaryVtcs);
       myPhoton->SetIsoMap("chIso03",phoIsolator.getIsolationCharged());
@@ -775,14 +768,14 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         //// Z's, W's, H's, and now big juicy Gravitons
         if (
             (abs(myParticle->pdgId()) >= 11 && abs(myParticle->pdgId()) <= 16) 
-             || myParticle->pdgId() == 22 
-             || abs(myParticle->pdgId()) == 5 
-             || abs(myParticle->pdgId()) == 23 
-             || abs(myParticle->pdgId()) == 24 
-             || abs(myParticle->pdgId()) == 25 
-             || abs(myParticle->pdgId()) == 35 
-             || abs(myParticle->pdgId()) == 36 
-             || abs(myParticle->pdgId()) == 39
+            || myParticle->pdgId() == 22 
+            || abs(myParticle->pdgId()) == 5 
+            || abs(myParticle->pdgId()) == 23 
+            || abs(myParticle->pdgId()) == 24 
+            || abs(myParticle->pdgId()) == 25 
+            || abs(myParticle->pdgId()) == 35 
+            || abs(myParticle->pdgId()) == 36 
+            || abs(myParticle->pdgId()) == 39
            ) {
           addGenParticle(&(*myParticle), genPartCount, genMap);
 
@@ -931,21 +924,22 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
   }                                               
 
   ++nEvents;
-    if (!skimLepton_)
-      eventTree -> Fill();
-    else if(skimLepton_ && (eleCount > 0 || muCount > 0)) // possibly specify a cut in configuration
-      eventTree -> Fill();
-      
-    beamSpot->Clear();
-    primaryVtx    -> Clear("C");
-    recoJets      -> Clear("C");
-    recoJPT       -> Clear("C");
-    recoMuons     -> Clear("C");
-    recoElectrons -> Clear("C");
-    recoPhotons   -> Clear("C");
-    triggerObjects-> Clear("C");
-    genJets       -> Clear("C");
-    genParticles  -> Clear("C");
+  if (!skimLepton_){
+    eventTree -> Fill();
+  }
+  else if(skimLepton_ && (eleCount > 0 || muCount > 0)) // possibly specify a cut in configuration
+    eventTree -> Fill();
+
+  beamSpot->Clear();
+  primaryVtx    -> Clear("C");
+  recoJets      -> Clear("C");
+  recoJPT       -> Clear("C");
+  recoMuons     -> Clear("C");
+  recoElectrons -> Clear("C");
+  recoPhotons   -> Clear("C");
+  triggerObjects-> Clear("C");
+  genJets       -> Clear("C");
+  genParticles  -> Clear("C");
 }
 
 // ------------ method called once each job just before starting event loop  ------------
@@ -1735,29 +1729,26 @@ TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticl
     genCon->SetCharge(myParticle->charge());
     genCon->SetPDGId(myParticle->pdgId());
     genCon->SetStatus(myParticle->status());
+    map<const reco::GenParticle*,TCGenParticle*>::iterator momIt;
 
-    genCon->SetMother(0);
-
-    //Ignore the mothers for now
-      map<const reco::GenParticle*,TCGenParticle*>::iterator momIt;
     if (myParticle->numberOfMothers() == 0){
       genCon->SetMother(0);
     }else if(
-             abs(myParticle->mother()->pdgId()) != 5 
-             && abs(myParticle->mother()->pdgId()) != 11
-             && abs(myParticle->mother()->pdgId()) != 12
-             && abs(myParticle->mother()->pdgId()) != 13
-             && abs(myParticle->mother()->pdgId()) != 14
-             && abs(myParticle->mother()->pdgId()) != 15
-             && abs(myParticle->mother()->pdgId()) != 16
-             && abs(myParticle->mother()->pdgId()) != 22
-             && abs(myParticle->mother()->pdgId()) != 23 
-             && abs(myParticle->mother()->pdgId()) != 24 
-             && abs(myParticle->mother()->pdgId()) != 25 
-             && abs(myParticle->mother()->pdgId()) != 35 
-             && abs(myParticle->mother()->pdgId()) != 36 
-             && abs(myParticle->mother()->pdgId()) != 39
-          )
+        abs(myParticle->mother()->pdgId()) != 5 
+        && abs(myParticle->mother()->pdgId()) != 11
+        && abs(myParticle->mother()->pdgId()) != 12
+        && abs(myParticle->mother()->pdgId()) != 13
+        && abs(myParticle->mother()->pdgId()) != 14
+        && abs(myParticle->mother()->pdgId()) != 15
+        && abs(myParticle->mother()->pdgId()) != 16
+        && abs(myParticle->mother()->pdgId()) != 22
+        && abs(myParticle->mother()->pdgId()) != 23 
+        && abs(myParticle->mother()->pdgId()) != 24 
+        && abs(myParticle->mother()->pdgId()) != 25 
+        && abs(myParticle->mother()->pdgId()) != 35 
+        && abs(myParticle->mother()->pdgId()) != 36 
+        && abs(myParticle->mother()->pdgId()) != 39
+        )
     {
       genCon->SetMother(0);
     }else{
@@ -1765,13 +1756,13 @@ TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticl
       if (momIt == genMap.end()){
         genCon->SetMother(addGenParticle((const reco::GenParticle*)myParticle->mother(), genPartCount, genMap));
       }else{
-      genCon->SetMother(momIt->second);
+        genCon->SetMother(momIt->second);
       }
     }
   }
   else  
     genCon = it->second;
-  
+
   return genCon;
 }
 

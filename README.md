@@ -104,6 +104,7 @@ Instructions for Users
   cp NWU/ntupleProducer/patches/mvaPFMET_leptons_data_cff.py JetMETCorrections/METPUSubtraction/python/mvaPFMET_leptons_data_cff.py
   cp NWU/ntupleProducer/patches/mvaPFMET_leptons_cff.py JetMETCorrections/METPUSubtraction/python/mvaPFMET_leptons_cff.py
   cp NWU/ntupleProducer/patches/mvaPFMET_leptons_cfi.py JetMETCorrections/METPUSubtraction/python/mvaPFMET_leptons_cfi.py
+  cp NWU/ntupleProducer/patches/PFMETAlgorithmMVA.cc JetMETCorrections/METPUSubtraction/src/. 
 
   scram b -j 9
 ```

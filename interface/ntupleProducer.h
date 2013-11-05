@@ -110,7 +110,7 @@
 
 #include "EgammaAnalysis/ElectronTools/interface/ElectronEnergyCalibrator.h"
 
-#include "EgammaAnalysis/ElectronTools/interface/EGammaMvaEleEstimator.h"
+//#include "EgammaAnalysis/ElectronTools/interface/EGammaMvaEleEstimator.h"
 #include "Geometry/CaloEventSetup/interface/CaloTopologyRecord.h"
 #include "TrackingTools/IPTools/interface/IPTools.h"
 
@@ -268,9 +268,6 @@ class ntupleProducer : public edm::EDAnalyzer {
   bool saveMuons_;
   bool savePhotons_;
   bool saveMET_;
-  bool saveTrackMET_; 
-  bool saveT0MET_; 
-  bool saveT2MET_;
   bool saveGenJets_;
   bool saveGenParticles_;
   bool isRealData;

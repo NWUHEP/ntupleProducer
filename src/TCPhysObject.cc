@@ -28,7 +28,7 @@ TCPhysObject::~TCPhysObject() {
 
 using namespace std;
 
-float TCPhysObject::IdMap(string key) { 
+float TCPhysObject::IdMap(string key) const { 
     
     //Check that key is present in the id map
     try {
@@ -39,10 +39,10 @@ float TCPhysObject::IdMap(string key) {
         cout << ex << endl;
     }
 
-    return _IdMap[key]; 
+    return _IdMap.find(key)->second; 
 }
 
-float TCPhysObject::IsoMap(string key) { 
+float TCPhysObject::IsoMap(string key) const { 
     
     //Check that key is present in the iso map
     try {
@@ -53,7 +53,7 @@ float TCPhysObject::IsoMap(string key) {
         cout << ex << endl;
     }
 
-    return _IsoMap[key]; 
+    return _IsoMap.find(key)->second; 
 }
 
 TVector2 TCPhysObject::P2() const {
