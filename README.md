@@ -14,7 +14,7 @@ Instructions for Users
 ```
 (note: _patch6 is recommended in met recepie)
 
- * Met recipes, according to [2] and [3]:
+ * Met recipes, according to [workbook][2] and [met-recipe][3]:
 ```
   git cms-addpkg PhysicsTools/PatAlgos
   git cms-merge-topic -u vadler:53X-tagset133511
@@ -23,7 +23,7 @@ Instructions for Users
   scram b -j 9
 ```
  
- * Met filters according to [4]:
+ * Met filters according to [MissingETOptionalFilters][4]:
 ```
   cvs co -r V00-00-13-01 RecoMET/METFilters
   cvs co -r V00-03-23 CommonTools/RecoAlgos
@@ -77,7 +77,7 @@ Instructions for Users
   cvs co -r V01-04-13                             RecoTauTag/Configuration
 ```
 
- * PF footprint removal [6]:
+ * PF footprint removal [8]:
 ```
   git clone https://github.com/peruzzim/SCFootprintRemoval.git
   cd SCFootprintRemoval
@@ -99,7 +99,7 @@ Instructions for Users
 ```
  git clone https://github.com/NWUHEP/ntupleProducer NWU/ntupleProducer
  cd NWU/ntupleProducer
- git checkout devPollack
+ git checkout master 
  cd ../..
 ```
 
@@ -119,7 +119,12 @@ Instructions for Users
   scram b -j 9
 ```
 
-
+ * Extra code (for boosted Z->ee isolation), following [6] and [7]:
+```
+  cvs co -r V00-02-03 -d TSWilliams/BstdZeeTools  UserCode/TSWilliams/BstdZee/BstdZeeTools
+  cvs co -r V00-09-03 -d SHarper/HEEPAnalyzer UserCode/SHarper/HEEPAnalyzer 
+  scram b -j 9
+```
 
 Once compiled, we are ready to run it
 ### Runnning the code
@@ -193,8 +198,10 @@ If the new code significantly changes the format of the ntuples (substantial cha
 
 
 [1]: https://twiki.cern.ch/twiki/bin/view/CMS/UserCodeNWUntupleProducer
-[3]: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideMETRecipe53X
 [2]: https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookMetAnalysis
+[3]: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideMETRecipe53X
 [4]: https://twiki.cern.ch/twiki/bin/view/CMS/MissingETOptionalFilters
 [5]: https://twiki.cern.ch/twiki/bin/view/CMS/MultivariateElectronIdentification
-[6]: https://twiki.cern.ch/twiki/bin/viewauth/CMS/SuperClusterFootprintRemoval
+[6]: https://twiki.cern.ch/twiki/bin/viewauth/CMS/BoostedZToEEModIso
+[7]: https://twiki.cern.ch/twiki/bin/view/CMS/HEEPSelector
+[8]: https://twiki.cern.ch/twiki/bin/viewauth/CMS/SuperClusterFootprintRemoval

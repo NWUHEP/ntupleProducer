@@ -12,6 +12,7 @@ options.maxEvents = 10
 #options.loadFromFile('inputFiles','PYTHIA8_175_H_Zg_8TeV.txt')
 #options.loadFromFile('inputFiles','PYTHIA8_175_POWHEG_PDF7_H_Zg_8TeV.txt')
 #options.inputFiles = '/store/data/Run2012A/DoubleElectron/AOD/13Jul2012-v1/00000/00347915-EED9-E111-945A-848F69FD2817.root'
+options.inputFiles = '/store/user/andrey/Higgs_To_MuMuGamma_Dalitz_MH125_Mll_0to50_MadgraphHEFT_pythia6/AODSIM_v2/39bf61f738ba3bdb8860f0848073cc88/aodsim_100_1_hLi.root'
 #'/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
 #options.inputFiles = 'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v2/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_50.root'
 options.inputFiles = '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0000/02CDCF05-BED2-E111-85F4-0030486740BA.root'
@@ -26,12 +27,6 @@ options.register("isRealData",
                  "0 if running on MC and 1 if running on Data")
 
 options.parseArguments()
-
-## In case you are running over a privately produced MC sample, that is generatet in _one step_,
-## you probably need to use "HLT" for both recoTier and hltTier.
-## Unless you changed the name of your process. In that case it should be that name.
-#recoTier = "RECO"
-#hltTier  = "HLT"
 
 # real data or MC?
 isRealData = options.isRealData
@@ -281,8 +276,7 @@ AllFilters = cms.Sequence(process.HBHENoiseFilterResultProducer
                           * ~process.toomanystripclus53X #trkPOGFilter2
                           * ~process.logErrorTooManyClusters #trkPOGFilter 3
                           )
-
-
+##### END OF Noise Filters ############
 
 
 # Electron MVA ID producer:
@@ -311,12 +305,13 @@ if (isRealData):
 else:
   process.calibratedElectrons.isMC = cms.bool(True)
   process.calibratedElectrons.inputDataset = cms.string("Summer12_LegacyPaper")
+  
 process.calibratedElectrons.updateEnergyError = cms.bool(True)
-process.calibratedElectrons.correctionsType = cms.int32(2)
-process.calibratedElectrons.combinationType = cms.int32(3)
-process.calibratedElectrons.lumiRatio = cms.double(1.0)
-process.calibratedElectrons.verbose = cms.bool(False)
-process.calibratedElectrons.synchronization = cms.bool(False)
+process.calibratedElectrons.correctionsType   = cms.int32(2)
+process.calibratedElectrons.combinationType   = cms.int32(3)
+process.calibratedElectrons.lumiRatio         = cms.double(1.0)
+process.calibratedElectrons.verbose           = cms.bool(False)
+process.calibratedElectrons.synchronization   = cms.bool(False)
 process.calibratedElectrons.applyLinearityCorrection = cms.bool(True)
 #process.calibratedElectrons.scaleCorrectionsInputPath = cms.string("EgammaAnalysis/ElectronTools/data/scalesMoriond.csv")
 #process.calibratedElectrons.combinationRegressionInputPath = cms.string("EgammaAnalysis/ElectronTools/data/eleEnergyReg2012Weights_V1.root")
@@ -328,8 +323,6 @@ process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(options.inputFiles)
 )
 
-
-##### END OF Noise Filters ############
 
 print '\n\nCommence ntuplization...\n\n'
 
@@ -359,6 +352,31 @@ process.pfNoPileUp = cms.EDProducer("TPPFCandidatesOnPFCandidates",
 process.pfNoPUSeq = cms.Sequence(process.pfPileUp + process.pfNoPileUp)
 
 
+
+from SHarper.HEEPAnalyzer.HEEPSelectionCuts_cfi import *
+process.heepIdNoIso = cms.EDProducer("HEEPIdValueMapProducer",
+                                     eleLabel = cms.InputTag("gsfElectrons"),
+                                     barrelCuts = cms.PSet(heepBarrelCuts),
+                                     endcapCuts = cms.PSet(heepEndcapCuts),
+                                     eleIsolEffectiveAreas = cms.PSet(heepEffectiveAreas),
+                                     eleRhoCorrLabel = cms.InputTag("kt6PFJets", "rho"),
+                                     verticesLabel = cms.InputTag("offlinePrimaryVertices"),
+                                     applyRhoCorrToEleIsol = cms.bool(True),
+                                     writeIdAsInt = cms.bool(True)
+                                     )
+process.heepIdNoIso.barrelCuts.cuts=cms.string("et:detEta:ecalDriven:dEtaIn:dPhiIn:hadem:e2x5Over5x5:nrMissHits:dxy")
+process.heepIdNoIso.endcapCuts.cuts=cms.string("et:detEta:ecalDriven:dEtaIn:dPhiIn:hadem:sigmaIEtaIEta:nrMissHits:dxy")
+
+process.heepIdNoIsoEles = cms.EDProducer("tsw::HEEPGsfProducer", cutValueMap = cms.InputTag("heepIdNoIso"),
+                                         inputGsfEles = cms.InputTag("gsfElectrons")  )
+
+# Boosted Z ModEleIso: 1b) Calculating the modified iso. values using BstdZeeTools EDProducer
+
+from TSWilliams.BstdZeeTools.bstdzeemodisolproducer_cff import *
+process.modElectronIso = cms.EDProducer("BstdZeeModIsolProducer",
+                                              bstdZeeModIsolParams, vetoGsfEles = cms.InputTag("heepIdNoIsoEles") )
+
+
 ### ntuple producer
 process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
@@ -377,7 +395,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   MuonTag           =    cms.untracked.InputTag('muons'),
   PhotonTag         =    cms.untracked.InputTag('photons'),
   PrimaryVtxTag     =    cms.untracked.InputTag('offlinePrimaryVertices'),
-  rhoCorrTag        =    cms.untracked.InputTag('kt6PFJets', 'rho', 'RECO'),
+  rhoCorrTag        =    cms.untracked.InputTag('kt6PFJets',    'rho', 'RECO'),
   rho25CorrTag      =    cms.untracked.InputTag('kt6PFJetsIso', 'rho', 'NTUPLE'),
   rhoMuCorrTag      =    cms.untracked.InputTag('kt6PFJetsCentralNeutral', 'rho','RECO'),  # specifically for muon iso
 
@@ -387,10 +405,14 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   partFlowTag       =  cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
   skimLepton        =  cms.untracked.bool(False),
 
+  saveMuons         =    cms.untracked.bool(True),
   saveJets          =    cms.untracked.bool(True),
   saveElectrons     =    cms.untracked.bool(True),
-  saveMuons         =    cms.untracked.bool(True),
+  saveEleCrystals   =    cms.untracked.bool(True),
   savePhotons       =    cms.untracked.bool(True),
+  savePhoCrystals   =    cms.untracked.bool(True),
+  saveMoreEgammaVars=    cms.untracked.bool(True),
+
   saveMET           =    cms.untracked.bool(True),
   saveGenJets       =    cms.untracked.bool(True),
   saveGenParticles  =    cms.untracked.bool(True),
@@ -473,6 +495,11 @@ process.ntuplePath = cms.Path(
     * process.eleRegressionEnergy
     * process.calibratedElectrons
     * process.mvaTrigV0
+
+    * process.heepIdNoIso
+    * process.heepIdNoIsoEles
+    * process.modElectronIso
+
     * process.ntupleProducer
 )
 

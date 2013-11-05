@@ -106,12 +106,12 @@
 #include "RecoEgamma/EgammaTools/interface/ConversionTools.h"
 #include "EgammaAnalysis/ElectronTools/interface/ElectronEffectiveArea.h"
 #include "EgammaAnalysis/ElectronTools/interface/PFIsolationEstimator.h"
-#include "EgammaAnalysis/ElectronTools/interface/ElectronEnergyRegressionEvaluate.h"
+//#include "EgammaAnalysis/ElectronTools/interface/ElectronEnergyRegressionEvaluate.h"
 
-#include "EgammaAnalysis/ElectronTools/interface/ElectronEnergyCalibrator.h"
+//#include "EgammaAnalysis/ElectronTools/interface/ElectronEnergyCalibrator.h"
 
 //#include "EgammaAnalysis/ElectronTools/interface/EGammaMvaEleEstimator.h"
-#include "Geometry/CaloEventSetup/interface/CaloTopologyRecord.h"
+//#include "Geometry/CaloEventSetup/interface/CaloTopologyRecord.h"
 #include "TrackingTools/IPTools/interface/IPTools.h"
 
 // Tracking tools, supposedly for track-met:
@@ -130,6 +130,7 @@
 #include "TCJet.h"
 #include "TCMET.h"
 #include "TCMuon.h"
+#include "TCEGamma.h"
 #include "TCElectron.h"
 #include "TCTau.h"
 #include "TCPhoton.h"
@@ -213,16 +214,16 @@ class ntupleProducer : public edm::EDAnalyzer {
   // ----------member data ---------------------------
   
   struct JetCompare :
-    public std::binary_function<reco::Jet, reco::Jet, bool> {
+  public std::binary_function<reco::Jet, reco::Jet, bool> {
     inline bool operator () (const reco::Jet &j1,
-			     const reco::Jet &j2) const
+                             const reco::Jet &j2) const
     { return (j1.p4().Pt() > j2.p4().Pt()); }
   };
   
-    static bool EnergySortCriterium( const TCPhoton::CrystalInfo p1,const TCPhoton::CrystalInfo p2 ){
-      return p1.energy > p2.energy;
-    };
-    
+  static bool EnergySortCriterium( const TCPhoton::CrystalInfo p1,const TCPhoton::CrystalInfo p2 ){
+    return p1.energy > p2.energy;
+  };
+  
   typedef std::map<reco::Jet, unsigned int, JetCompare> flavourMap;
   typedef reco::JetTagCollection::const_iterator tag_iter;
   
@@ -266,17 +267,19 @@ class ntupleProducer : public edm::EDAnalyzer {
   edm::InputTag triggerEventTag_;
 
   bool skimLepton_;
+  bool saveMuons_;
   bool saveJets_;
   bool saveElectrons_;
-  bool saveMuons_;
+  bool saveEleCrystals_;
   bool savePhotons_;
+  bool savePhoCrystals_;
   bool saveMET_;
   bool saveGenJets_;
   bool saveGenParticles_;
   bool isRealData;
   bool verboseTrigs;
   bool verboseMVAs;
-
+  bool saveMoreEgammaVars_;
   double SCFPRemovalCone_;
   
   //Physics object containers
@@ -321,17 +324,9 @@ class ntupleProducer : public edm::EDAnalyzer {
   TH1F * h1_numOfEvents;
 
   // Electron Regression
-  auto_ptr<ElectronEnergyRegressionEvaluate> myEleReg;
+  //auto_ptr<ElectronEnergyRegressionEvaluate> myEleReg;
 
   // PU Jet Id Algo
   auto_ptr<PileupJetIdAlgo> myPUJetID;
-  auto_ptr<FactorizedJetCorrector> jecCor;
-
-
-  //These are for new electron regression
-  bool geomInitialized_;
-
-  const CaloTopology* ecalTopology_;
-  const CaloGeometry* caloGeometry_;
-  
+  auto_ptr<FactorizedJetCorrector> jecCor;  
 };

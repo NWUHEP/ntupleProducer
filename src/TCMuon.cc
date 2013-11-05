@@ -90,6 +90,17 @@ float TCMuon::SegComp() const {
    return _segComp;
 }
 
+float TCMuon::PfIsoCharged() const {
+  return _pfIsoCharged;
+}
+float TCMuon::PfIsoNeutral() const {
+  return _pfIsoNeutral;
+}
+float TCMuon::PfIsoPhoton() const {
+  return _pfIsoPhoton;
+}
+
+
 // "set" methods ---------------------------------------------
 void TCMuon::SetNumberOfMatchedStations(int n){
   _numberOfMatchedStations = n;
@@ -169,3 +180,12 @@ void TCMuon::SetSegComp(float s){
    _segComp = s;
 }
 
+void TCMuon::SetPfIsoCharged(float f) {
+  _pfIsoCharged = f;
+}
+void TCMuon::SetPfIsoNeutral(float f) {
+  _pfIsoNeutral = f;
+}
+void TCMuon::SetPfIsoPhoton(float f) {
+  _pfIsoPhoton = f;
+}
