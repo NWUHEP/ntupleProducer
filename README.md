@@ -83,7 +83,7 @@ Instructions for Users
   cvs co -r V00-09-03 -d SHarper/HEEPAnalyzer UserCode/SHarper/HEEPAnalyzer 
 ```
 
- * PF footprint removal [8][Supercluster footprint removal twiki]:
+ * PF footprint removal [Supercluster footprint removal twiki][8]:
 ```
   git clone https://github.com/peruzzim/SCFootprintRemoval.git
   cd SCFootprintRemoval
