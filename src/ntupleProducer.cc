@@ -50,6 +50,8 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig):
   photonIsoCalcTag_   = iConfig.getParameter<edm::ParameterSet>("photonIsoCalcTag");
   jetPUIdAlgo_        = iConfig.getParameter<edm::ParameterSet>("jetPUIdAlgo");
 
+  SCFPRemovalCone_     = iConfig.getUntrackedParameter<double>("isolation_cone_size_forSCremoval");
+
 }
 
 ntupleProducer::~ntupleProducer()
@@ -709,6 +711,22 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       //myPhoton->SetIsoMap("HadIso_R04",iPhoton->hcalTowerSumEtConeDR04() + 
       //        (iPhoton->hadronicOverEm() - iPhoton->hadTowOverEm())*iPhoton->superCluster()->energy()/cosh(iPhoton->superCluster()->eta()));
 
+      //Footprint removal
+      edm::ParameterSet myConfig;
+      myConfig.addUntrackedParameter("isolation_cone_size_forSCremoval",SCFPRemovalCone_);
+      SuperClusterFootprintRemoval remover(iEvent,iSetup,myConfig);
+      PFIsolation_struct mySCFPstruct = remover.PFIsolation(iPhoton->superCluster(),edm::Ptr<Vertex>(primaryVtcs,0));
+      cout<<"chargediso: "<<mySCFPstruct.chargediso<<endl;
+      cout<<"chargediso_primvtx: "<<mySCFPstruct.chargediso_primvtx<<endl;
+      cout<<"neutraliso: "<<mySCFPstruct.neutraliso<<endl;
+      cout<<"photoniso: "<<mySCFPstruct.photoniso<<endl;
+      cout<<"chargediso_rcone: "<<mySCFPstruct.chargediso_rcone<<endl;
+      cout<<"chargediso_primvtx_rcone: "<<mySCFPstruct.chargediso_primvtx_rcone<<endl;
+      cout<<"neutraliso_rcone: "<<mySCFPstruct.neutraliso_rcone<<endl;
+      cout<<"photoniso_rcone: "<<mySCFPstruct.photoniso_rcone<<endl;
+      cout<<"eta_rcone: "<<mySCFPstruct.eta_rcone<<endl;
+      cout<<"phi_rcone: "<<mySCFPstruct.phi_rcone<<endl;
+      cout<<"rcone_isOK: "<<mySCFPstruct.rcone_isOK<<endl;
 
       //Conversion info
       bool passElectronVeto = !(ConversionTools::hasMatchedPromptElectron(iPhoton->superCluster(), hElectrons, hConversions, vertexBeamSpot.position()));

@@ -145,6 +145,9 @@
 #include "DataFormats/HLTReco/interface/TriggerObject.h"
 #include "DataFormats/HLTReco/interface/TriggerEvent.h"
 
+//Supercluster footprint removal:
+#include "PFIsolation/SuperClusterFootprintRemoval/interface/SuperClusterFootprintRemoval.h"
+
 //Root  stuff
 #include "TROOT.h"
 #include "TH1.h"
@@ -273,6 +276,8 @@ class ntupleProducer : public edm::EDAnalyzer {
   bool isRealData;
   bool verboseTrigs;
   bool verboseMVAs;
+
+  double SCFPRemovalCone_;
   
   //Physics object containers
   TClonesArray* recoJets;

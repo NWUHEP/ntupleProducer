@@ -6,7 +6,7 @@ from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 process = cms.Process("NTUPLE")
 
 options = VarParsing.VarParsing ('analysis')
-options.maxEvents = 1
+options.maxEvents = 10
 #options.inputFiles= '/store/data/Run2012C/SingleMu/AOD/22Jan2013-v1/30010/C0E05558-9078-E211-9E02-485B39800B65.root'
 #options.inputFiles= '/store/data/Run2012C/DoublePhoton/AOD/22Jan2013-v2/30001/72DE4526-F370-E211-B370-00304867920A.root'
 #options.loadFromFile('inputFiles','PYTHIA8_175_H_Zg_8TeV.txt')
@@ -404,6 +404,11 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   trkPOGFiltersTag1  =    cms.untracked.InputTag("manystripclus53X",""),
   trkPOGFiltersTag2  =    cms.untracked.InputTag("toomanystripclus53X",""),
   trkPOGFiltersTag3  =    cms.untracked.InputTag("logErrorTooManyClusters",""),
+
+  #for SC footprint removal
+
+  isolation_cone_size_forSCremoval = cms.untracked.double(0.3),
+
 
   hltName           =    cms.untracked.string("HLT"),
   triggers          =    cms.untracked.vstring(

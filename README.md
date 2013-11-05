@@ -77,10 +77,20 @@ Instructions for Users
   cvs co -r V01-04-13                             RecoTauTag/Configuration
 ```
 
+ * PF footprint removal:
+```
+  git clone https://github.com/peruzzim/SCFootprintRemoval.git
+  cd SCFootprintRemoval
+  git checkout V01-06
+  cd ..
+  mkdir PFIsolation
+  mv SCFootprintRemoval PFIsolation/SuperClusterFootprintRemoval
+```
+
  * Files that needs to be updated, or not??:
 ```
   cvs co -r V03-04-07 DataFormats/METReco/interface/CorrMETData.h
-  # These did not work (couldn't check out):
+  # These did not work (could not check out):
   #cvs co -r HEAD JetMETCorrections/Type1MET/plugins/Type0PFMETcorrInputProducer.h
   #cvs co -r HEAD JetMETCorrections/Type1MET/plugins/Type0PFMETcorrInputProducer.cc
 ```
