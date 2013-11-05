@@ -77,7 +77,7 @@ Instructions for Users
   cvs co -r V01-04-13                             RecoTauTag/Configuration
 ```
 
- * PF footprint removal:
+ * PF footprint removal [6]:
 ```
   git clone https://github.com/peruzzim/SCFootprintRemoval.git
   cd SCFootprintRemoval
@@ -99,7 +99,7 @@ Instructions for Users
 ```
  git clone https://github.com/NWUHEP/ntupleProducer NWU/ntupleProducer
  cd NWU/ntupleProducer
- git checkout v8.1
+ git checkout devPollack
  cd ../..
 ```
 
@@ -197,3 +197,4 @@ If the new code significantly changes the format of the ntuples (substantial cha
 [2]: https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookMetAnalysis
 [4]: https://twiki.cern.ch/twiki/bin/view/CMS/MissingETOptionalFilters
 [5]: https://twiki.cern.ch/twiki/bin/view/CMS/MultivariateElectronIdentification
+[6]: https://twiki.cern.ch/twiki/bin/viewauth/CMS/SuperClusterFootprintRemoval

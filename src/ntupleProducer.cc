@@ -715,7 +715,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       edm::ParameterSet myConfig;
       myConfig.addUntrackedParameter("isolation_cone_size_forSCremoval",SCFPRemovalCone_);
       SuperClusterFootprintRemoval remover(iEvent,iSetup,myConfig);
-      PFIsolation_struct mySCFPstruct = remover.PFIsolation(iPhoton->superCluster(),edm::Ptr<Vertex>(primaryVtcs,0));
+      PFIsolation_struct mySCFPstruct = remover.PFIsolation(iPhoton->superCluster(),edm::Ptr<Vertex>(primaryVtcs,ivtx));
+      /*
       cout<<"chargediso: "<<mySCFPstruct.chargediso<<endl;
       cout<<"chargediso_primvtx: "<<mySCFPstruct.chargediso_primvtx<<endl;
       cout<<"neutraliso: "<<mySCFPstruct.neutraliso<<endl;
@@ -727,6 +728,18 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       cout<<"eta_rcone: "<<mySCFPstruct.eta_rcone<<endl;
       cout<<"phi_rcone: "<<mySCFPstruct.phi_rcone<<endl;
       cout<<"rcone_isOK: "<<mySCFPstruct.rcone_isOK<<endl;
+      */
+      myPhoton->SetIsoMap("SCFP_chargediso",mySCFPstruct.chargediso);
+      myPhoton->SetIsoMap("SCFP_chargediso_primvtx",mySCFPstruct.chargediso_primvtx);
+      myPhoton->SetIsoMap("SCFP_neutraliso",mySCFPstruct.neutraliso);
+      myPhoton->SetIsoMap("SCFP_photoniso",mySCFPstruct.photoniso);
+      myPhoton->SetIsoMap("SCFP_chargediso_rcone",mySCFPstruct.chargediso_rcone);
+      myPhoton->SetIsoMap("SCFP_chargediso_primvtx_rcone",mySCFPstruct.chargediso_primvtx_rcone);
+      myPhoton->SetIsoMap("SCFP_neutraliso_rcone",mySCFPstruct.neutraliso_rcone);
+      myPhoton->SetIsoMap("SCFP_photoniso_rcone",mySCFPstruct.photoniso_rcone);
+      myPhoton->SetIsoMap("SCFP_eta_rcone",mySCFPstruct.eta_rcone);
+      myPhoton->SetIsoMap("SCFP_phi_rcone",mySCFPstruct.phi_rcone);
+      myPhoton->SetIsoMap("SCFP_rcone_isOK",mySCFPstruct.rcone_isOK);
 
       //Conversion info
       bool passElectronVeto = !(ConversionTools::hasMatchedPromptElectron(iPhoton->superCluster(), hElectrons, hConversions, vertexBeamSpot.position()));
