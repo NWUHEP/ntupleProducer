@@ -105,7 +105,7 @@ Instructions for Users
 ```
  git clone https://github.com/NWUHEP/ntupleProducer NWU/ntupleProducer
  cd NWU/ntupleProducer
- git checkout master 
+ git checkout v9.1
  cd ../..
 ```
 
