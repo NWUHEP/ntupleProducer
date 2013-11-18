@@ -2,6 +2,11 @@
 ---------------
 The most important logs should go here. Other are monitored with git commits.
 
+2013-Nov-18,  _Andrey_
+ * Adding an option to save/not save trigger objects (don't save by default, some work needs to be done there)
+ * More trigger names added: quarkonia and Di-photon with a mass constraint
+ * Clean up some Brian's shit from the git
+
 2013-Oct-21,  _Andrey_
  * Introducing TCEGamma class - common class for Electrons and Photons
 

@@ -6,16 +6,16 @@ from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 process = cms.Process("NTUPLE")
 
 options = VarParsing.VarParsing ('analysis')
-options.maxEvents = 10
+options.maxEvents = 300
 #options.inputFiles= '/store/data/Run2012C/SingleMu/AOD/22Jan2013-v1/30010/C0E05558-9078-E211-9E02-485B39800B65.root'
 #options.inputFiles= '/store/data/Run2012C/DoublePhoton/AOD/22Jan2013-v2/30001/72DE4526-F370-E211-B370-00304867920A.root'
 #options.loadFromFile('inputFiles','PYTHIA8_175_H_Zg_8TeV.txt')
 #options.loadFromFile('inputFiles','PYTHIA8_175_POWHEG_PDF7_H_Zg_8TeV.txt')
-#options.inputFiles = '/store/data/Run2012A/DoubleElectron/AOD/13Jul2012-v1/00000/00347915-EED9-E111-945A-848F69FD2817.root'
+options.inputFiles = '/store/data/Run2012A/DoubleElectron/AOD/13Jul2012-v1/00000/00347915-EED9-E111-945A-848F69FD2817.root'
 #options.inputFiles = '/store/user/andrey/Higgs_To_MuMuGamma_Dalitz_MH125_Mll_0to50_MadgraphHEFT_pythia6/AODSIM_v2/39bf61f738ba3bdb8860f0848073cc88/aodsim_100_1_hLi.root'
 #'/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0002/D843FB2D-44D4-E111-A3C4-002481E75ED0.root'
 #options.inputFiles = 'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v2/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_50.root'
-options.inputFiles = '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0000/02CDCF05-BED2-E111-85F4-0030486740BA.root'
+#options.inputFiles = '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0000/02CDCF05-BED2-E111-85F4-0030486740BA.root'
 #options.inputFiles = '/store/user/andrey/MCFM_lord_hzgamma_8TeV_LHE_pythia6_v2/AODSIM/39bf61f738ba3bdb8860f0848073cc88/aodsim_100_1_BGG.root'
 #options.inputFiles = '/store/data/Run2012D/SinglePhotonParked/AOD/22Jan2013-v1/30004/144D7268-4086-E211-9DC1-001E673984C1.root'
 #options.inputFiles = 'file:/uscms_data/d2/bpollack/genProd/CMSSW_5_3_8/src/test/testOut2_v2/PYTHIA8_175_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_REDIGI_DIGI_L1_DIGI2RAW_HLT_PU_STEP2_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_8.root'
@@ -328,8 +328,7 @@ print '\n\nCommence ntuplization...\n\n'
 
 ### TFile service!
 process.TFileService = cms.Service('TFileService',
-    #fileName = cms.string('nuTuple.root')
-    fileName = cms.string('~/EOS/V08_01_8TeV/ggHZG_M125_Pythia8_175_POWHEG_PDF7/nuTuple_9.root')
+    fileName = cms.string('nuTuple.root')
                                    )
 
 ### pfNoPU Sequence for electron MVA
@@ -417,6 +416,8 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   saveGenJets       =    cms.untracked.bool(True),
   saveGenParticles  =    cms.untracked.bool(True),
 
+  saveTriggerObj    =    cms.untracked.bool(False),
+
   ecalTPFilterTag    =    cms.untracked.InputTag("EcalDeadCellTriggerPrimitiveFilter",""),
   ecalBEFilterTag    =    cms.untracked.InputTag("EcalDeadCellBoundaryEnergyFilter",""),
   hcalHBHEFilterTag  =    cms.untracked.InputTag("HBHENoiseFilterResultProducer","HBHENoiseFilterResult"),
@@ -430,7 +431,6 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   #for SC footprint removal
 
   isolation_cone_size_forSCremoval = cms.untracked.double(0.3),
-
 
   hltName           =    cms.untracked.string("HLT"),
   triggers          =    cms.untracked.vstring(
@@ -462,7 +462,19 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_Photon36_R9Id85_Photon22_CaloId10_Iso50_v",
                                                "HLT_Photon36_R9Id85_Photon22_R9Id85_v",
 
+                                               "HLT_Photon26_CaloId10_Iso50_Photon18_CaloId10_Iso50_Mass60_v",
+                                               "HLT_Photon26_CaloId10_Iso50_Photon18_R9Id85_Mass60_v",
+                                               "HLT_Photon26_R9Id85_Photon18_CaloId10_Iso50_Mass60_v",
+                                               "HLT_Photon26_R9Id85_Photon18_R9Id85_Mass60_v",
+                                               "HLT_Photon26_R9Id85_OR_CaloId10_Iso50_Photon18_R9Id85_OR_CaloId10_Iso50_Mass70_v",
+                                               "HLT_Photon26_R9Id85_OR_CaloId10_Iso50_Photon18_R9Id85_OR_CaloId10_Iso50_Mass60_v",
 
+                                               #some quarkonia triggers for h ->j/psi gamma analysis
+                                               "HLT_Mu5_Track2_Jpsi_v",
+                                               "HLT_Mu7_Track7_Jpsi_v",
+                                               "HLT_Dimuon8_Jpsi_v",
+                                               "HLT_Dimuon10_Jpsi_v",
+                                                                                                                                             
                                                "HLT_Photon30_R9Id90_CaloId_HE10_Iso40_EBOnly_Met25_HBHENoiseCleaned",
                                                "HLT_Photon30_R9Id90_CaloId_HE10_Iso40_EBOnly",
                                                "HLT_Photon30",
@@ -471,8 +483,8 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_DiJet35_MJJ650_AllJets_DEta3p5_VBF",
                                                "HLT_DiJet35_MJJ700_AllJets_DEta3p5_VBF",
                                                "HLT_DiJet35_MJJ750_AllJets_DEta3p5_VBF"
-)
-)
+                                               )
+                                          )
 
 process.ntuplePath = cms.Path(
     process.goodOfflinePrimaryVertices

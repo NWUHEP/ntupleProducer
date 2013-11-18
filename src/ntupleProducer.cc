@@ -37,6 +37,7 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig):
 
   saveGenJets_      = iConfig.getUntrackedParameter<bool>("saveGenJets");
   saveGenParticles_ = iConfig.getUntrackedParameter<bool>("saveGenParticles");
+  saveTriggerObj_   = iConfig.getUntrackedParameter<bool>("saveTriggerObj");
 
   verboseTrigs       = iConfig.getUntrackedParameter<bool>("verboseTrigs");
   verboseMVAs        = iConfig.getUntrackedParameter<bool>("verboseMVAs");
@@ -1770,6 +1771,9 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults
     }
     return;
   }
+
+  if (!saveTriggerObj_)
+    return;
 
   // modules on this trigger path
   // const unsigned int moduleIndex(hltResults->index(triggerIndex));

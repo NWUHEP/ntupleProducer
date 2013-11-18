@@ -280,6 +280,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   bool verboseTrigs;
   bool verboseMVAs;
   bool saveMoreEgammaVars_;
+  bool saveTriggerObj_;
   double SCFPRemovalCone_;
   
   //Physics object containers
