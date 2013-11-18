@@ -85,12 +85,10 @@ Instructions for Users
 
  * PF footprint removal [Supercluster footprint removal twiki][8]:
 ```
-  git clone https://github.com/peruzzim/SCFootprintRemoval.git
-  cd SCFootprintRemoval
+  git clone https://github.com/peruzzim/SCFootprintRemoval.git PFIsolation/SuperClusterFootprintRemoval
+  cd  PFIsolation/SuperClusterFootprintRemoval
   git checkout V01-06
   cd ..
-  mkdir PFIsolation
-  mv SCFootprintRemoval PFIsolation/SuperClusterFootprintRemoval
 ```
 
  * Files that needs to be updated, or not??:
