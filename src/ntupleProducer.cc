@@ -515,6 +515,14 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       eleCon->SetIsEE(iElectron->isEE());
       eleCon->SetIsInGap(iElectron->isGap());
 
+      
+      TCTrack *t = new TCTrack(); 
+      t->SetXYZM(iElectron->gsfTrack()->px(), iElectron->gsfTrack()->py(), iElectron->gsfTrack()->pz(),  0);
+      t->SetVtx(iElectron->gsfTrack()->vx(), iElectron->gsfTrack()->vy(), iElectron->gsfTrack()->vz());
+      t->SetCharge(iElectron->gsfTrack()->chargeMode());
+      eleCon->AddTrack(*t);
+
+
 
       // Electron ID variables
 

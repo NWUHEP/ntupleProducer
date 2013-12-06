@@ -4,10 +4,10 @@
 #include "TObject.h"
 #include "TLorentzVector.h"
 #include "TCEGamma.h"
+#include "TCTrack.h"
 
 class TCElectron : public TCEGamma {
  private:
-  
   float _normChi2gsf;
   float _normChi2kf;
 
@@ -50,11 +50,16 @@ class TCElectron : public TCEGamma {
   TLorentzVector _regressionMomCombP4;
   float _effArea;
 
+  
+  vector<TCTrack> _tracks;
+
  public:
   TCElectron();
   virtual ~TCElectron();
   
   // "get" methods -----------
+  vector<TCTrack> GetTracks() const;
+
   float NormalizedChi2() const;
   float NormalizedChi2Gsf() const;
   float NormalizedChi2Kf() const;
@@ -101,6 +106,8 @@ class TCElectron : public TCEGamma {
   //--------------------------
   // "set" methods ---------
   //--------------------------
+  void AddTrack(TCTrack);
+
   void SetNormalizedChi2Gsf(float);
   void SetNormalizedChi2Kf(float);
   

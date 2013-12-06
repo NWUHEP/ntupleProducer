@@ -1,6 +1,6 @@
 #include "../interface/TCElectron.h"
 #include "TCElectronLinkDef.h"
-#include <iostream>
+//#include <iostream>
 
 TCElectron::TCElectron() {
   _normChi2gsf = -99;
@@ -37,6 +37,9 @@ TCElectron::~TCElectron() {
 
 
 // "get" methods -------------------------------------
+
+std::vector<TCTrack> TCElectron::GetTracks() const { return _tracks; }
+
 float TCElectron::NormalizedChi2() const { 
   return _normChi2gsf; 
 }
@@ -168,14 +171,18 @@ TLorentzVector TCElectron::RegressionMomCombP4() const {
 float TCElectron::EffArea() const {
   return _effArea;
 }
+
 //------------------------------------------------
 // "set" methods ---------------------------------------------
 //------------------------------------------------------------------------
+void TCElectron::AddTrack(TCTrack tr){
+  _tracks.push_back(tr);
+}
 
 void TCElectron::SetNormalizedChi2Gsf(float c){ 
   _normChi2gsf = c; 
 } 
-void TCElectron::SetNormalizedChi2Kf(float c) { 
+void TCElectron::SetNormalizedChi2Kf(float c){ 
   _normChi2kf  = c; 
 } 
 

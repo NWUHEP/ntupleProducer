@@ -2,7 +2,6 @@
 #define _TGENPARTICLE_H
 
 #include "TCPhysObject.h"
-//#include "TLorentzVector.h"
 
 class TCGenParticle : public TCPhysObject {
     private:

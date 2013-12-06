@@ -6,11 +6,11 @@
 class TCTrack : public TCPhysObject {
  private:
   float _normChi2;
-  
+
  public:
   TCTrack();
   virtual ~TCTrack();
-  
+
   float NormalizedChi2 () const;
 
 

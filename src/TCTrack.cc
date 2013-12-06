@@ -13,4 +13,4 @@ float TCTrack::NormalizedChi2() const {
 
 void TCTrack::SetNormalizedChi2(float c){
   _normChi2 = c;
-} 
+}
