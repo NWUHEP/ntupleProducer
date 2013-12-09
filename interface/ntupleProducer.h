@@ -77,17 +77,6 @@
 #include "SimDataFormats/JetMatching/interface/MatchedPartons.h"
 #include "SimDataFormats/JetMatching/interface/JetMatchedPartons.h"
 
-// PAT 
-//Not using pats no more, commentng out
-//#include "DataFormats/PatCandidates/interface/Electron.h"
-//#include "DataFormats/PatCandidates/interface/Muon.h"
-//#include "DataFormats/PatCandidates/interface/Photon.h"
-//#include "DataFormats/PatCandidates/interface/MET.h"
-//#include "DataFormats/PatCandidates/interface/Jet.h"
-//#include "DataFormats/PatCandidates/interface/Tau.h"
-
-//#include "RecoVertex/PrimaryVertexProducer/interface/VertexHigherPtSquared.h"
-
 // JEC
 #include "JetMETCorrections/Objects/interface/JetCorrector.h"
 #include "JetMETCorrections/Objects/interface/JetCorrectionsRecord.h"
@@ -108,10 +97,6 @@
 #include "EgammaAnalysis/ElectronTools/interface/PFIsolationEstimator.h"
 //#include "EgammaAnalysis/ElectronTools/interface/ElectronEnergyRegressionEvaluate.h"
 
-//#include "EgammaAnalysis/ElectronTools/interface/ElectronEnergyCalibrator.h"
-
-//#include "EgammaAnalysis/ElectronTools/interface/EGammaMvaEleEstimator.h"
-//#include "Geometry/CaloEventSetup/interface/CaloTopologyRecord.h"
 #include "TrackingTools/IPTools/interface/IPTools.h"
 
 // Tracking tools, supposedly for track-met:
