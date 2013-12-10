@@ -1,9 +1,7 @@
 #include "../interface/TCElectron.h"
 #include "TCElectronLinkDef.h"
-//#include <iostream>
 
 TCElectron::TCElectron() {
-  _normChi2gsf = -99;
   _normChi2kf  = -99;
   _ptError     = -99;
   _fBrem       = -99;
@@ -38,13 +36,17 @@ TCElectron::~TCElectron() {
 
 // "get" methods -------------------------------------
 
-std::vector<TCTrack> TCElectron::GetTracks() const { return _tracks; }
+std::vector<TCElectron::Track> TCElectron::GetTracks() const { return _tracks; }
 
 float TCElectron::NormalizedChi2() const { 
-  return _normChi2gsf; 
+  if (_tracks.size()>0)
+    return _tracks[0].NormalizedChi2();
+  else
+    return -1;
 }
 float TCElectron::NormalizedChi2Gsf() const { 
-  return _normChi2gsf; 
+  float n=this->NormalizedChi2();
+  return n; 
 }
 float TCElectron::NormalizedChi2Kf()  const { 
   return _normChi2kf; 
@@ -128,6 +130,7 @@ float TCElectron::FBrem() const {
     return _fBrem;
 }
 
+/*
 int TCElectron::CutLevel(int lvl) const{
   if(lvl==95){
     return _cut95;
@@ -145,7 +148,9 @@ int TCElectron::CutLevel(int lvl) const{
     return -99;
   }
 }
+*/
 
+/*
 bool TCElectron::PassID(int lvl) const { 
   unsigned c = CutLevel(lvl);
   if (c & 0x01) return true;
@@ -163,6 +168,8 @@ bool TCElectron::PassConversion(int lvl) const {
   if (c & 0x04) return true;
   else return false;
 }
+*/
+
 
 TLorentzVector TCElectron::RegressionMomCombP4() const {
   return _regressionMomCombP4;
@@ -175,13 +182,11 @@ float TCElectron::EffArea() const {
 //------------------------------------------------
 // "set" methods ---------------------------------------------
 //------------------------------------------------------------------------
-void TCElectron::AddTrack(TCTrack tr){
+void TCElectron::AddTrack(TCElectron::Track tr){
+  //std::cout<<"Adding a track!  pt="<<tr.Pt()<<std::endl;
   _tracks.push_back(tr);
 }
 
-void TCElectron::SetNormalizedChi2Gsf(float c){ 
-  _normChi2gsf = c; 
-} 
 void TCElectron::SetNormalizedChi2Kf(float c){ 
   _normChi2kf  = c; 
 } 
@@ -263,7 +268,7 @@ void TCElectron::SetConversionMissHits(short m) {
   _convMissHits = m;
 }
 
-
+/*
 void TCElectron::SetCutLevel(int cut, int lvl){
   if(lvl==95){
     _cut95 = cut;
@@ -279,6 +284,7 @@ void TCElectron::SetCutLevel(int cut, int lvl){
     _cut60 = cut;
   }
 }
+*/
 
 void TCElectron::SetRegressionMomCombP4(TLorentzVector tmpP4){
   _regressionMomCombP4 = tmpP4;

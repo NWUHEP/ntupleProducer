@@ -7,10 +7,14 @@
 #include "TCTrack.h"
 
 class TCElectron : public TCEGamma {
+ public:
+  class Track : public TCTrack{
+                       ClassDef(Track, 1);
+                     };
+  
  private:
-  float _normChi2gsf;
-  float _normChi2kf;
 
+  float _normChi2kf;
   float _ptError;
   
   float _fBrem;
@@ -38,27 +42,27 @@ class TCElectron : public TCEGamma {
   int _numberOfValidTrackerHits;
   int _numberOfLostPixelHits;
   int _numberOfLostTrackerHits;
-
   
+  /*
   int _cut95;
   int _cut90;
   int _cut85;
   int _cut80;
   int _cut70;
   int _cut60;
-  
+  */
+
   TLorentzVector _regressionMomCombP4;
   float _effArea;
-
   
-  vector<TCTrack> _tracks;
+  vector<TCElectron::Track> _tracks;
 
  public:
   TCElectron();
   virtual ~TCElectron();
   
   // "get" methods -----------
-  vector<TCTrack> GetTracks() const;
+  vector<TCElectron::Track> GetTracks() const;
 
   float NormalizedChi2() const;
   float NormalizedChi2Gsf() const;
@@ -68,7 +72,6 @@ class TCElectron : public TCEGamma {
     
   float EoP() const;
   float EoPout() const;
-
   
   float IP3d() const;
   float IP3dSig() const;
@@ -94,10 +97,10 @@ class TCElectron : public TCEGamma {
   int NumberOfLostPixelHits() const;
   int NumberOfLostTrackerHits() const;
   
-  int  CutLevel(int lvl) const;
-  bool PassID(int lvl) const;
-  bool PassConversion(int lvl) const;
-  bool PassIsolation(int lvl) const;
+  //int  CutLevel(int lvl) const;
+  //bool PassID(int lvl) const;
+  //bool PassConversion(int lvl) const;
+  //bool PassIsolation(int lvl) const;
   
   TLorentzVector RegressionMomCombP4() const;
 
@@ -106,9 +109,8 @@ class TCElectron : public TCEGamma {
   //--------------------------
   // "set" methods ---------
   //--------------------------
-  void AddTrack(TCTrack);
+  void AddTrack(TCElectron::Track);
 
-  void SetNormalizedChi2Gsf(float);
   void SetNormalizedChi2Kf(float);
   
   void SetInverseEnergyMomentumDiff(float);
@@ -140,7 +142,7 @@ class TCElectron : public TCEGamma {
   void SetEnergyRegression(float);
   void SetEnergyRegressionErr(float);
   
-  void SetCutLevel(int cut, int lvl);
+  //void SetCutLevel(int cut, int lvl);
   
   void SetRegressionMomCombP4(TLorentzVector tmpP4);
   

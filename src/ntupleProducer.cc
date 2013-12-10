@@ -121,8 +121,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     ++vtxCount;
   }
 
-  unsigned ivtx = 0;
-  VertexRef myVtxRef(primaryVtcs, ivtx);
+  VertexRef myVtxRef(primaryVtcs, 0); // main vertex #0
 
   ///////////////////////
   //get jet information//
@@ -565,24 +564,26 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
       eleCon->SetEoP(iElectron->eSuperClusterOverP());
 
-
-      // Assosited tracks:
-
-      TCTrack *t = new TCTrack();
+      // ** *************
+      // Assosited GSF tracks:
+      // ** ************
+      TCElectron::Track *t = new TCElectron::Track();
       t->SetXYZM(iElectron->gsfTrack()->px(), iElectron->gsfTrack()->py(), iElectron->gsfTrack()->pz(),  0);
-      t->SetVtx(iElectron->gsfTrack()->vx(), iElectron->gsfTrack()->vy(), iElectron->gsfTrack()->vz());
+      t->SetVtx(iElectron->gsfTrack()->vx(),  iElectron->gsfTrack()->vy(), iElectron->gsfTrack()->vz());
       t->SetCharge(iElectron->gsfTrack()->chargeMode());
       t->SetNormalizedChi2(iElectron->gsfTrack()->normalizedChi2());
       t->SetPtError(iElectron->gsfTrack()->ptError());
-
+      
+      //This is the main track, directly assosiated with an Electron
       eleCon->AddTrack(*t);
 
       eleCon->SetPtError(iElectron->gsfTrack()->ptError());
 
       Int_t ntr=0;
+
+      //Adding more tracks from the ambiguos collectio:n
       for (reco::GsfTrackRefVector::const_iterator gtr = iElectron->ambiguousGsfTracksBegin(); gtr != iElectron->ambiguousGsfTracksEnd(); ++gtr)
         {
-          //Here adding more tracks from ambiguos collection
           ntr++;
           //cout<<ntr<<" ambigious loop pt="<<(*gtr)->pt()<<" eta="<<(*gtr)->eta()<<" "<<" phi="<<(*gtr)->phi()<<endl;
 
@@ -893,7 +894,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       edm::ParameterSet myConfig;
       myConfig.addUntrackedParameter("isolation_cone_size_forSCremoval",SCFPRemovalCone_);
       SuperClusterFootprintRemoval remover(iEvent,iSetup,myConfig);
-      PFIsolation_struct mySCFPstruct = remover.PFIsolation(iPhoton->superCluster(),edm::Ptr<Vertex>(primaryVtcs,ivtx));
+      PFIsolation_struct mySCFPstruct = remover.PFIsolation(iPhoton->superCluster(),edm::Ptr<Vertex>(primaryVtcs, 0));
       /*
       cout<<"chargediso: "<<mySCFPstruct.chargediso<<endl;
       cout<<"chargediso_primvtx: "<<mySCFPstruct.chargediso_primvtx<<endl;

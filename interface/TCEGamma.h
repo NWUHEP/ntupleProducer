@@ -97,6 +97,8 @@ class TCEGamma : public TCPhysObject {
   float PfIsoCharged() const;
   float PfIsoNeutral() const;
   float PfIsoPhoton() const;
+  
+  float E2OverE5() const; 
 
   //float MvaID() const; 
   //float EnergyRegression() const; 

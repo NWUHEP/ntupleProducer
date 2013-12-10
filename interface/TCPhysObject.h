@@ -19,9 +19,9 @@ class TCPhysObject : public TLorentzVector {
         map<string, float> _IdMap;
         map<string, float> _IsoMap;
         int _charge;
-        string _type;
+        //string _type;
         bool _isPF;
-        bool _isReco;
+        //bool _isReco;
 
     public:
         TCPhysObject();
@@ -36,9 +36,9 @@ class TCPhysObject : public TLorentzVector {
         TVector2 P2() const;
         TVector3 Vtx() const;
         int Charge() const;  
-        string Type() const;
+        //string Type() const;
         bool IsPF() const;
-        bool IsReco() const;
+        //bool IsReco() const;
 
         float Dxy(TVector3 *primVtx) const;
         float Dz(TVector3 *primVtx) const;
@@ -49,8 +49,8 @@ class TCPhysObject : public TLorentzVector {
         void SetIsoMap(string s, float v);
         void SetVtx(float vx, float vy, float vz);
         void SetCharge(int c);  
-        void SetType(string s);
-        void SetReco(bool);
+        //void SetType(string s);
+        //void SetReco(bool);
         void SetPF(bool);
 
         ClassDef(TCPhysObject, 1);

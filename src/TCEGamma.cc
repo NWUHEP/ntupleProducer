@@ -108,6 +108,12 @@ float TCEGamma::E5x5() const {
   return _e5x5;
 }
 
+float TCEGamma::E2OverE5() const {
+  if (_e5x5!=0)
+    return _e2x5/_e5x5;
+  else
+    return -1;
+}
 
 float TCEGamma::SCEnergy() const {
   return _scEnergy;
