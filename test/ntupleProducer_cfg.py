@@ -506,6 +506,7 @@ process.ntuplePath = cms.Path(
     * process.eleRegressionEnergy
     * process.calibratedElectrons
     * process.mvaTrigV0
+    * process.mvaNonTrigV0
 
     * process.heepIdNoIso
     * process.heepIdNoIsoEles

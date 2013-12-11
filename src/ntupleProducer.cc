@@ -477,6 +477,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     iEvent.getByLabel("mvaTrigV0", mvaTrigV0_handle);
     const edm::ValueMap<float> ele_mvaTrigV0 = (*mvaTrigV0_handle.product());
 
+    edm::Handle<edm::ValueMap<float>> mvaNonTrigV0_handle;
+    iEvent.getByLabel("mvaNonTrigV0", mvaNonTrigV0_handle);
+    const edm::ValueMap<float> ele_mvaNonTrigV0 = (*mvaNonTrigV0_handle.product());
+
     edm::Handle<edm::ValueMap<double>> regEne_handle;
     iEvent.getByLabel(edm::InputTag("eleRegressionEnergy","eneRegForGsfEle"), regEne_handle);
     const edm::ValueMap<double> ele_regEne = (*regEne_handle.product());
@@ -654,8 +658,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 
       //MVA output:
-      float m = ele_mvaTrigV0.get(eee-1);
-      eleCon->SetMvaID(m);
+      float m_old = ele_mvaTrigV0.get(eee-1);
+      eleCon->SetMvaID_Old(m_old);
+      float m_HZZ = ele_mvaNonTrigV0.get(eee-1);
+      eleCon->SetMvaID_HZZ(m_HZZ);
 
       //Regression energy
       double ene = ele_regEne.get(eee-1);
