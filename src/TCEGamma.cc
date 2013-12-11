@@ -2,36 +2,39 @@
 #include "TCEGammaLinkDef.h"
 #include <iostream>
 
-TCEGamma::TCEGamma() {
+TCEGamma::TCEGamma():
+  _isEB(false),
+  _isEE(false),
+  _isInGap(false),
 
-  //Setting up default values. In case it's not going to be set in the analyzer, 
-  // one can recognize that.
-  _nCrystals = 0;
+  _hadOverEm(-99),
+  _r9(-99),
   
-  _r9     = -99;
-  _hadOverEm = -99;
 
-  _scEta = -99;
-  _scPhi = -99;
-  _scDeltaPhi = -99;
-  _scDeltaEta = -99;
-  _scSigmaIetaIeta  = -99;
-  _scSigmaIphiIphi  = -99;
+  _scEta(-99),
+  _scPhi(-99),
+  _scDeltaPhi(-99),
+  _scDeltaEta(-99),
+  _scSigmaIetaIeta(-99),
+  _scSigmaIphiIphi(-99),
+  _scEtaWidth(-99),
+  _scPhiWidth(-99),
 
-  _scEtaWidth = -99;
-  _scPhiWidth = -99;
-  _scEnergy   = -99;
-  _e1x5 = -99;
-  _e2x5 = -99;
-  _e5x5 = -99;
-  _preShowerOverRaw = -99;
+  _scEnergy(-99),
+  _preShowerOverRaw(-99),
+  _e1x5(-99),
+  _e2x5(-99),
+  _e5x5(-99),
 
-  _pfIsoCharged = -99;
-  _pfIsoNeutral = -99;
-  _pfIsoPhoton  = -99;
-
+  _pfIsoCharged(-99),
+  _pfIsoNeutral(-99),
+  _pfIsoPhoton(-99),
+  _nCrystals(0)
+{
 }
 TCEGamma::~TCEGamma() {}
+
+
 
 // "get" methods -------------------------------------
 

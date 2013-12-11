@@ -17,6 +17,15 @@ class TCEGamma : public TCPhysObject {
     double time;
     double timeErr;
     int recoFlag;
+    CrystalInfo():
+      rawId(-999),
+      ieta(-999),
+      iphi(-999),
+      energy(-999),
+      time(-999),
+      timeErr(-999),
+      recoFlag(-999)
+    {}
   };
 
 
