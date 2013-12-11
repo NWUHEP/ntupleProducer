@@ -2,9 +2,12 @@
 #include "TCPhysObjectLinkDef.h"
 //
 
-TCPhysObject::TCPhysObject() {
-    _isPF = _isReco = false;
-    _charge = 0;
+TCPhysObject::TCPhysObject():
+  _vtx(-9,-9,-9),
+  _charge(0),
+  _type('-1'),
+  _isPF(false)
+{
 }
 
 TCPhysObject::TCPhysObject(TLorentzVector p4, int charge) {

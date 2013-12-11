@@ -21,7 +21,6 @@ class TCPhysObject : public TLorentzVector {
         int _charge;
         string _type;
         bool _isPF;
-        bool _isReco;
 
     public:
         TCPhysObject();
