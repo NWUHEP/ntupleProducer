@@ -4,6 +4,7 @@
 #include "TCPhysObject.h"
 
 class TCTrack : public TCPhysObject {
+public 
  private:
   float _normChi2;
   float _ptError;

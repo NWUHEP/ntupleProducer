@@ -615,9 +615,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       }
 
 
-      InputTag  vertexLabel(string("offlinePrimaryVertices"));
       Handle<reco::VertexCollection> thePrimaryVertexColl;
-      iEvent.getByLabel(vertexLabel,thePrimaryVertexColl);
+      iEvent.getByLabel("offlinePrimaryVertices",thePrimaryVertexColl);
 
       Vertex dummy;
       const Vertex *pv = &dummy;
@@ -662,12 +661,25 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
       eleCon->SetInverseEnergyMomentumDiff(fabs((1/iElectron->ecalEnergy()) - (1/iElectron->trackMomentumAtVtx().R())));
 
-
       // Conversion information
       // See definition from here: https://twiki.cern.ch/twiki/bin/view/CMS/ConversionTools
       bool passConvVeto = !(ConversionTools::hasMatchedConversion(*iElectron,hConversions,vertexBeamSpot.position()));
       eleCon->SetPassConversionVeto(passConvVeto);
       eleCon->SetConversionMissHits(iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfHits());
+
+
+      int iconv=-1;
+      for (reco::ConversionCollection::const_iterator conv = hConversions->begin(); conv!= hConversions->end(); ++conv) {
+        iconv++;
+
+        reco::Vertex vtx = conv->conversionVertex();
+        if (vtx.isValid()) {
+          if (ConversionTools::matchesConversion(*iElectron, *conv)) {
+
+            break;
+          }
+        }
+
 
       eleIsolator.fGetIsolation(&(*iElectron), &thePfColl, myVtxRef, primaryVtcs);
       eleCon->SetIsoMap("pfChIso_R04", eleIsolator.getIsolationCharged());
@@ -1455,9 +1467,8 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
   eleCon->SetIdMap("eopOut",(iElectron->eEleClusterOverPout() > 20) ? 20 : iElectron->eEleClusterOverPout());
   eleCon->SetIdMap("preShowerORaw",iElectron->superCluster()->preshowerEnergy() / iElectron->superCluster()->rawEnergy());
 
-  InputTag  vertexLabel(string("offlinePrimaryVertices"));
   Handle<reco::VertexCollection> thePrimaryVertexColl;
-  iEvent.getByLabel(vertexLabel,thePrimaryVertexColl);
+  iEvent.getByLabel("offlinePrimaryVertices",thePrimaryVertexColl);
 
   Vertex dummy;
   const Vertex *pv = &dummy;
