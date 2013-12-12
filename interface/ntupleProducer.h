@@ -149,6 +149,10 @@
 //Supercluster footprint removal:
 #include "PFIsolation/SuperClusterFootprintRemoval/interface/SuperClusterFootprintRemoval.h"
 
+//Photon Lazytools
+#include "RecoEcal/EgammaCoreTools/interface/EcalClusterLazyTools.h"
+#include "RecoEcal/EgammaCoreTools/interface/EcalClusterTools.h"
+
 //Root  stuff
 #include "TROOT.h"
 #include "TH1.h"
@@ -265,6 +269,8 @@ class ntupleProducer : public edm::EDAnalyzer {
   edm::ParameterSet photonIsoCalcTag_;
   edm::ParameterSet jetPUIdAlgo_;
   edm::InputTag triggerEventTag_;
+  edm::InputTag ebReducedRecHitCollection_;
+  edm::InputTag eeReducedRecHitCollection_;
 
   bool skimLepton_;
   bool saveMuons_;
@@ -330,4 +336,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   // PU Jet Id Algo
   auto_ptr<PileupJetIdAlgo> myPUJetID;
   auto_ptr<FactorizedJetCorrector> jecCor;  
+
+  // Photon LazyTool
+  auto_ptr<EcalClusterLazyTools> lazyTool;
 };

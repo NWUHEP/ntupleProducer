@@ -34,7 +34,12 @@ Instructions for Users
   scram b -j 9
 ```
 
- * Egamma tools from [5]:
+ * Ecal tools so we can get more photon variables for photon MVA:
+```
+  git cms-addpkg RecoEcal/EgammaCoreTools
+```
+
+ * Egamma tools from [MVA Electron ID][5]:
 ```
   cvs co -r V00-00-09 EgammaAnalysis/ElectronTools
   cvs co -r V09-00-01 RecoEgamma/EgammaTools

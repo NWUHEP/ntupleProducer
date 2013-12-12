@@ -16,6 +16,7 @@ TCEGamma::TCEGamma():
   _scDeltaPhi(-99),
   _scDeltaEta(-99),
   _scSigmaIetaIeta(-99),
+  _scSigmaIetaIphi(-99),
   _scSigmaIphiIphi(-99),
   _scEtaWidth(-99),
   _scPhiWidth(-99),
@@ -78,6 +79,7 @@ float TCEGamma::SCPhi() const {
 float TCEGamma::SCDeltaEta() const {
   return _scDeltaEta;
 }
+
 float TCEGamma::SCDeltaPhi() const {
   return _scDeltaPhi;
 }
@@ -85,6 +87,11 @@ float TCEGamma::SCDeltaPhi() const {
 float TCEGamma::SigmaIEtaIEta() const {
   return _scSigmaIetaIeta;
 }
+
+float TCEGamma::SigmaIEtaIPhi() const {
+  return _scSigmaIetaIphi;
+}
+
 float TCEGamma::SigmaIPhiIPhi() const {
   return _scSigmaIphiIphi;
 }
@@ -159,6 +166,10 @@ void TCEGamma::SetSCDeltaPhi(float dp){
 
 void TCEGamma::SetSigmaIEtaIEta(float sieie){
   _scSigmaIetaIeta = sieie;
+}
+
+void TCEGamma::SetSigmaIEtaIPhi(float sieip){
+  _scSigmaIetaIphi = sieip;
 }
 
 void TCEGamma::SetSigmaIPhiIPhi(float sipip){

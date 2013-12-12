@@ -431,6 +431,12 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
   isolation_cone_size_forSCremoval = cms.untracked.double(0.3),
 
+  #for Ecal LazyTools
+  ebReducedRecHitCollection = cms.InputTag("reducedEcalRecHitsEB"),
+  eeReducedRecHitCollection = cms.InputTag("reducedEcalRecHitsEE"),
+
+  #Trigger stuff
+
   hltName           =    cms.untracked.string("HLT"),
   triggers          =    cms.untracked.vstring(
                                                "HLT_Mu13_Mu8_v",

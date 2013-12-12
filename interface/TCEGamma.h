@@ -44,6 +44,7 @@ class TCEGamma : public TCPhysObject {
   float _scDeltaPhi;
   float _scDeltaEta;
   float _scSigmaIetaIeta;
+  float _scSigmaIetaIphi;
   float _scSigmaIphiIphi;
   float _scEtaWidth;
   float _scPhiWidth;
@@ -92,6 +93,7 @@ class TCEGamma : public TCPhysObject {
   float SCDeltaPhi() const;
 
   float SigmaIEtaIEta() const;
+  float SigmaIEtaIPhi() const;
   float SigmaIPhiIPhi() const;
 
   float SCEtaWidth() const;
@@ -135,6 +137,7 @@ class TCEGamma : public TCPhysObject {
   void SetSCDeltaPhi(float);
 
   void SetSigmaIEtaIEta(float);
+  void SetSigmaIEtaIPhi(float);
   void SetSigmaIPhiIPhi(float);
 
   void SetSCEtaWidth(float);
