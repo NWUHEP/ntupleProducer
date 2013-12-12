@@ -2025,6 +2025,7 @@ TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticl
 
 vector<float> ntupleProducer::getESHits(double X, double Y, double Z, map<DetId, EcalRecHit> rechits_map, const CaloSubdetectorGeometry*& geometry_p, auto_ptr<CaloSubdetectorTopology> topology_p, int row) {
 
+  cout<<"debug 1"<<endl;
   //cout<<row<<endl;
 
   vector<float> esHits;
@@ -2038,6 +2039,7 @@ vector<float> ntupleProducer::getESHits(double X, double Y, double Z, map<DetId,
   DetId esId2 = (dynamic_cast<const EcalPreshowerGeometry*>(geometry_p))->getClosestCellInPlane(point, 2);
   ESDetId esDetId1 = (esId1 == DetId(0)) ? ESDetId(0) : ESDetId(esId1);
   ESDetId esDetId2 = (esId2 == DetId(0)) ? ESDetId(0) : ESDetId(esId2);  
+  cout<<"debug 2"<<endl;
 
   map<DetId, EcalRecHit>::iterator it;
   ESDetId next;
@@ -2061,6 +2063,7 @@ vector<float> ntupleProducer::getESHits(double X, double Y, double Z, map<DetId,
     if (strip2 != ESDetId(0)) strip2 = theESNav2.west();
   }
 
+  cout<<"debug 3"<<endl;
   // Plane 1 
   if (strip1 == ESDetId(0)) {
     for (unsigned int i=0; i<31; ++i) esHits.push_back(0);
@@ -2104,15 +2107,19 @@ vector<float> ntupleProducer::getESHits(double X, double Y, double Z, map<DetId,
     }
   }
 
+  cout<<"debug 4"<<endl;
   if (strip2 == ESDetId(0)) {
     for (unsigned int i=0; i<31; ++i) esHits.push_back(0);
+    cout<<"debug 5"<<endl;
   } else {
+    cout<<"debug 6"<<endl;
 
     it = rechits_map.find(strip2);
     if (it->second.energy() > 1.0e-10 && it != rechits_map.end()) esHits.push_back(it->second.energy());  
     else esHits.push_back(0);
     //cout<<"center : "<<strip2<<" "<<it->second.energy()<<endl;      
 
+    cout<<"debug 7"<<endl;
     // north road 
     for (unsigned int i=0; i<15; ++i) {
       next = theESNav2.north();
@@ -2128,6 +2135,7 @@ vector<float> ntupleProducer::getESHits(double X, double Y, double Z, map<DetId,
       }
     }
 
+    cout<<"debug 8"<<endl;
     // south road 
     theESNav2.setHome(strip2);
     theESNav2.home();
@@ -2146,6 +2154,7 @@ vector<float> ntupleProducer::getESHits(double X, double Y, double Z, map<DetId,
     }
   }
 
+  cout<<"debug end"<<endl;
   return esHits;
 }
 
