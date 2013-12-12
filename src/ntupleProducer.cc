@@ -58,6 +58,7 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig):
 
   ebReducedRecHitCollection_ = iConfig.getParameter<edm::InputTag>("ebReducedRecHitCollection");
   eeReducedRecHitCollection_ = iConfig.getParameter<edm::InputTag>("eeReducedRecHitCollection");
+  esReducedRecHitCollection_ = iConfig.getParameter<edm::InputTag>("esReducedRecHitCollection");
 
 }
 
@@ -733,10 +734,33 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
   /////////////////
   if (savePhotons_) {
 
+    // ES geometry
+    ESHandle<CaloGeometry> geoHandle;
+    iSetup.get<CaloGeometryRecord>().get(geoHandle);
+    const CaloSubdetectorGeometry *geometry = geoHandle->getSubdetectorGeometry(DetId::Ecal, EcalPreshower);
+    const CaloSubdetectorGeometry *& geometry_p = geometry;
+
+    if (geometry) topology_p.reset(new EcalPreshowerTopology(geoHandle));
+
+    // make the map of rechits
+    Handle<EcalRecHitCollection> ESRecHits;
+    iEvent.getByLabel(esReducedRecHitCollection_,ESRecHits);
+
+    rechits_map_.clear();
+    if (ESRecHits.isValid()) {
+      EcalRecHitCollection::const_iterator it;
+      for (it = ESRecHits->begin(); it != ESRecHits->end(); ++it) {
+        // remove bad ES rechits
+        if (it->recoFlag()==1 || it->recoFlag()==14 || (it->recoFlag()<=10 && it->recoFlag()>=5)) continue;
+        //Make the map of DetID, EcalRecHit pairs
+        rechits_map_.insert(std::make_pair(it->id(), *it));   
+      }
+    }
+
     Handle<EcalRecHitCollection> Brechit;
     iEvent.getByLabel("reducedEcalRecHitsEB",Brechit);
     //const EcalRecHitCollection* barrelRecHits= Brechit.product();
-
+    
     Handle<vector<reco::Photon> > photons;
     iEvent.getByLabel(photonTag_, photons);
 
@@ -839,6 +863,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       //eleCon->SetSCDeltaPhi( );
 
       myPhoton->SetSCEnergy(iPhoton->superCluster()->energy());
+      myPhoton->SetSCRawEnergy(iPhoton->superCluster()->rawEnergy());
+      myPhoton->SetSCPSEnergy(iPhoton->superCluster()->preshowerEnergy());
 
       if (iPhoton->superCluster()->rawEnergy()!=0)
         myPhoton->SetPreShowerOverRaw(iPhoton->superCluster()->preshowerEnergy() / iPhoton->superCluster()->rawEnergy());
@@ -848,7 +874,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       myPhoton->SetE1x5(iPhoton->e1x5());
       myPhoton->SetE2x2(lazyTool->e2x2(*phoSeed));
       myPhoton->SetE2x5(iPhoton->e2x5());
-      myPhoton->SetE2x5Max(lazyTool->e2x5(*phoSeed));
+      myPhoton->SetE2x5Max(lazyTool->e2x5Max(*phoSeed));
       myPhoton->SetE5x5(iPhoton->e5x5());
 
       // PF Iso for photons
@@ -912,6 +938,22 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       //Conversion info
       bool passElectronVeto = !(ConversionTools::hasMatchedPromptElectron(iPhoton->superCluster(), hElectrons, hConversions, vertexBeamSpot.position()));
       myPhoton->SetConversionVeto(passElectronVeto);
+
+      //Effective energy shit
+      float phoESEffSigmaRR_x = 0.;
+      float phoESEffSigmaRR_y = 0.;
+      float phoESEffSigmaRR_z = 0.;
+      
+      if (ESRecHits.isValid() && (fabs(iPhoton->superCluster()->eta()) > 1.6 && fabs(iPhoton->superCluster()->eta()) < 3)) {
+
+        vector<float> phoESHits0 = getESHits((*iPhoton).superCluster()->x(), (*iPhoton).superCluster()->y(), (*iPhoton).superCluster()->z(), rechits_map_, geometry_p, topology_p, 0);
+
+        vector<float> phoESShape = getESEffSigmaRR(phoESHits0);
+        phoESEffSigmaRR_x = phoESShape[0];
+        phoESEffSigmaRR_y = phoESShape[1];
+        phoESEffSigmaRR_z = phoESShape[2];
+      }
+      myPhoton->SetESEffSigmaRR(phoESEffSigmaRR_x, phoESEffSigmaRR_y, phoESEffSigmaRR_z);
 
       ++photonCount;
     }
@@ -1979,6 +2021,182 @@ TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticl
     genCon = it->second;
 
   return genCon;
+}
+
+vector<float> ntupleProducer::getESHits(double X, double Y, double Z, map<DetId, EcalRecHit> rechits_map, const CaloSubdetectorGeometry*& geometry_p, auto_ptr<CaloSubdetectorTopology> topology_p, int row) {
+
+  //cout<<row<<endl;
+
+  vector<float> esHits;
+
+  //double X = bcPtr->x();
+  //double Y = bcPtr->y();
+  //double Z = bcPtr->z();
+  const GlobalPoint point(X,Y,Z);
+
+  DetId esId1 = (dynamic_cast<const EcalPreshowerGeometry*>(geometry_p))->getClosestCellInPlane(point, 1);
+  DetId esId2 = (dynamic_cast<const EcalPreshowerGeometry*>(geometry_p))->getClosestCellInPlane(point, 2);
+  ESDetId esDetId1 = (esId1 == DetId(0)) ? ESDetId(0) : ESDetId(esId1);
+  ESDetId esDetId2 = (esId2 == DetId(0)) ? ESDetId(0) : ESDetId(esId2);  
+
+  map<DetId, EcalRecHit>::iterator it;
+  ESDetId next;
+  ESDetId strip1;
+  ESDetId strip2;
+
+  strip1 = esDetId1;
+  strip2 = esDetId2;
+
+  EcalPreshowerNavigator theESNav1(strip1, topology_p.get());
+  theESNav1.setHome(strip1);
+
+  EcalPreshowerNavigator theESNav2(strip2, topology_p.get());
+  theESNav2.setHome(strip2);
+
+  if (row == 1) {
+    if (strip1 != ESDetId(0)) strip1 = theESNav1.north();
+    if (strip2 != ESDetId(0)) strip2 = theESNav2.east();
+  } else if (row == -1) {
+    if (strip1 != ESDetId(0)) strip1 = theESNav1.south();
+    if (strip2 != ESDetId(0)) strip2 = theESNav2.west();
+  }
+
+  // Plane 1 
+  if (strip1 == ESDetId(0)) {
+    for (unsigned int i=0; i<31; ++i) esHits.push_back(0);
+  } else {
+
+    it = rechits_map.find(strip1);
+    if (it->second.energy() > 1.0e-10 && it != rechits_map.end()) esHits.push_back(it->second.energy());  
+    else esHits.push_back(0);
+    //cout<<"center : "<<strip1<<" "<<it->second.energy()<<endl;      
+
+    // east road 
+    for (unsigned int i=0; i<15; ++i) {
+      next = theESNav1.east();
+      if (next != ESDetId(0)) {
+        it = rechits_map.find(next);
+        if (it->second.energy() > 1.0e-10 && it != rechits_map.end()) esHits.push_back(it->second.energy());  
+        else esHits.push_back(0);
+        //cout<<"east "<<i<<" : "<<next<<" "<<it->second.energy()<<endl;
+      } else {
+        for (unsigned int j=i; j<15; ++j) esHits.push_back(0);
+        break;
+        //cout<<"east "<<i<<" : "<<next<<" "<<0<<endl;
+      }
+    }
+
+    // west road 
+    theESNav1.setHome(strip1);
+    theESNav1.home();
+    for (unsigned int i=0; i<15; ++i) {
+      next = theESNav1.west();
+      if (next != ESDetId(0)) {
+        it = rechits_map.find(next);
+        if (it->second.energy() > 1.0e-10 && it != rechits_map.end()) esHits.push_back(it->second.energy());  
+        else esHits.push_back(0);
+        //cout<<"west "<<i<<" : "<<next<<" "<<it->second.energy()<<endl;
+      } else {
+        for (unsigned int j=i; j<15; ++j) esHits.push_back(0);
+        break;
+        //cout<<"west "<<i<<" : "<<next<<" "<<0<<endl;
+      }
+    }
+  }
+
+  if (strip2 == ESDetId(0)) {
+    for (unsigned int i=0; i<31; ++i) esHits.push_back(0);
+  } else {
+
+    it = rechits_map.find(strip2);
+    if (it->second.energy() > 1.0e-10 && it != rechits_map.end()) esHits.push_back(it->second.energy());  
+    else esHits.push_back(0);
+    //cout<<"center : "<<strip2<<" "<<it->second.energy()<<endl;      
+
+    // north road 
+    for (unsigned int i=0; i<15; ++i) {
+      next = theESNav2.north();
+      if (next != ESDetId(0)) {
+        it = rechits_map.find(next);
+        if (it->second.energy() > 1.0e-10 && it != rechits_map.end()) esHits.push_back(it->second.energy());
+        else esHits.push_back(0);
+        //cout<<"north "<<i<<" : "<<next<<" "<<it->second.energy()<<endl;  
+      } else {
+        for (unsigned int j=i; j<15; ++j) esHits.push_back(0);
+        break;
+        //cout<<"north "<<i<<" : "<<next<<" "<<0<<endl;
+      }
+    }
+
+    // south road 
+    theESNav2.setHome(strip2);
+    theESNav2.home();
+    for (unsigned int i=0; i<15; ++i) {
+      next = theESNav2.south();
+      if (next != ESDetId(0)) {
+        it = rechits_map.find(next);
+        if (it->second.energy() > 1.0e-10 && it != rechits_map.end()) esHits.push_back(it->second.energy());  
+        else esHits.push_back(0);
+        //cout<<"south "<<i<<" : "<<next<<" "<<it->second.energy()<<endl;
+      } else {
+        for (unsigned int j=i; j<15; ++j) esHits.push_back(0);
+        break;
+        //cout<<"south "<<i<<" : "<<next<<" "<<0<<endl;
+      }
+    }
+  }
+
+  return esHits;
+}
+
+vector<float> ntupleProducer::getESEffSigmaRR(vector<float> ESHits0)
+{
+  const int nBIN = 21;
+  vector<float> esShape;
+
+  TH1F *htmpF = new TH1F("htmpF","",nBIN,0,nBIN);
+  TH1F *htmpR = new TH1F("htmpR","",nBIN,0,nBIN);
+  htmpF->Reset(); htmpR->Reset();
+
+  Float_t effsigmaRR=0.;
+
+  for(int ibin=0; ibin<((nBIN+1)/2); ++ibin) {
+    if (ibin==0) {
+      htmpF->SetBinContent((nBIN+1)/2,ESHits0[ibin]);
+      htmpR->SetBinContent((nBIN+1)/2,ESHits0[ibin+31]);
+    } else { // hits sourd the seed
+      htmpF->SetBinContent((nBIN+1)/2+ibin,ESHits0[ibin]);
+      htmpF->SetBinContent((nBIN+1)/2-ibin,ESHits0[ibin+15]);
+      htmpR->SetBinContent((nBIN+1)/2+ibin,ESHits0[ibin+31]);
+      htmpR->SetBinContent((nBIN+1)/2-ibin,ESHits0[ibin+31+15]);
+    }
+  }
+
+  // ---- Effective Energy Deposit Width ---- //
+  double EffWidthSigmaXX = 0.;
+  double EffWidthSigmaYY = 0.;
+  double totalEnergyXX   = 0.;
+  double totalEnergyYY   = 0.;
+  double EffStatsXX      = 0.;
+  double EffStatsYY      = 0.;
+  for (int id_X=1; id_X<=21; ++id_X) {
+    totalEnergyXX  += htmpF->GetBinContent(id_X);
+    EffStatsXX     += htmpF->GetBinContent(id_X)*(id_X-11)*(id_X-11);
+    totalEnergyYY  += htmpR->GetBinContent(id_X);
+    EffStatsYY     += htmpR->GetBinContent(id_X)*(id_X-11)*(id_X-11);
+  }
+  // If denominator == 0, effsigmaRR = 0;
+  EffWidthSigmaXX  = (totalEnergyXX>0.)  ? sqrt(fabs(EffStatsXX  / totalEnergyXX))   : 0.;
+  EffWidthSigmaYY  = (totalEnergyYY>0.)  ? sqrt(fabs(EffStatsYY  / totalEnergyYY))   : 0.;
+  effsigmaRR =  ((totalEnergyXX  + totalEnergyYY) >0.) ? sqrt(EffWidthSigmaXX  * EffWidthSigmaXX  + EffWidthSigmaYY  * EffWidthSigmaYY)  : 0.;
+  esShape.push_back(effsigmaRR);
+  esShape.push_back(EffWidthSigmaXX);
+  esShape.push_back(EffWidthSigmaYY);
+
+  delete htmpF;
+  delete htmpR;
+
+  return esShape;
 }
 
 

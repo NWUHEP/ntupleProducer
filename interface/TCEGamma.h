@@ -49,7 +49,9 @@ class TCEGamma : public TCPhysObject {
   float _scEtaWidth;
   float _scPhiWidth;
 
+  float _scRawEnergy;
   float _scEnergy;
+  float _scPSEnergy;
   float _preShowerOverRaw;
 
   float _e1x3;
@@ -58,6 +60,8 @@ class TCEGamma : public TCPhysObject {
   float _e2x5;
   float _e2x5Max;
   float _e5x5;
+
+  vector<float> _esEffSigmaRR;
   
 
   //float _mvaID;
@@ -102,13 +106,18 @@ class TCEGamma : public TCPhysObject {
   float SCEtaWidth() const;
   float SCPhiWidth() const;
 
+  float SCRawEnergy() const;
   float SCEnergy() const;
+  float SCPSEnergy() const;
   float PreShowerOverRaw() const;
   float E1x3() const;
   float E1x5() const;
   float E2x2() const;
   float E2x5() const;
+  float E2x5Max() const;
   float E5x5() const;
+
+  vector<float> ESEffSigmaRR() const;
 
   float PfIsoCharged() const;
   float PfIsoNeutral() const;
@@ -148,12 +157,18 @@ class TCEGamma : public TCPhysObject {
   void SetSCEtaWidth(float);
   void SetSCPhiWidth(float);
 
+  void SetSCRawEnergy(float);
   void SetSCEnergy(float);
+  void SetSCPSEnergy(float);
   void SetPreShowerOverRaw(float);
+  void SetE1x3(float);
   void SetE1x5(float);
   void SetE2x2(float);
   void SetE2x5(float);
+  void SetE2x5Max(float);
   void SetE5x5(float);
+
+  void SetESEffSigmaRR(float, float, float);
   
   
   //void SetConversionVeto(bool);

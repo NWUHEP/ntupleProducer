@@ -149,9 +149,13 @@
 //Supercluster footprint removal:
 #include "PFIsolation/SuperClusterFootprintRemoval/interface/SuperClusterFootprintRemoval.h"
 
-//Photon Lazytools
+//Photon Lazytools and ESEff
 #include "RecoEcal/EgammaCoreTools/interface/EcalClusterLazyTools.h"
 #include "RecoEcal/EgammaCoreTools/interface/EcalClusterTools.h"
+#include "Geometry/CaloTopology/interface/EcalPreshowerTopology.h"
+#include "DataFormats/DetId/interface/DetId.h"
+#include "Geometry/EcalAlgo/interface/EcalPreshowerGeometry.h"
+#include "RecoCaloTools/Navigation/interface/EcalPreshowerNavigator.h"
 
 //Root  stuff
 #include "TROOT.h"
@@ -215,6 +219,10 @@ class ntupleProducer : public edm::EDAnalyzer {
   void analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR, edm::Handle<trigger::TriggerEvent> &hltE, const std::string& triggerName, int* trigCount);                   
   void initJetEnergyCorrector(const edm::EventSetup &iSetup, bool isData);
   TCGenParticle* addGenParticle(const reco::GenParticle* myParticle, int& genPartCount, std::map<const reco::GenParticle*,TCGenParticle*>& genMap);
+  vector<float> getESHits(double X, double Y, double Z, map<DetId, EcalRecHit> rechits_map, const CaloSubdetectorGeometry*& geometry_p, auto_ptr<CaloSubdetectorTopology> topology_p, int row=0);
+  vector<float> getESEffSigmaRR(vector<float> ESHits0);
+
+
   // ----------member data ---------------------------
   
   struct JetCompare :
@@ -271,6 +279,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   edm::InputTag triggerEventTag_;
   edm::InputTag ebReducedRecHitCollection_;
   edm::InputTag eeReducedRecHitCollection_;
+  edm::InputTag esReducedRecHitCollection_;
 
   bool skimLepton_;
   bool saveMuons_;
@@ -337,6 +346,8 @@ class ntupleProducer : public edm::EDAnalyzer {
   auto_ptr<PileupJetIdAlgo> myPUJetID;
   auto_ptr<FactorizedJetCorrector> jecCor;  
 
-  // Photon LazyTool
+  // Photon LazyTool and such
   auto_ptr<EcalClusterLazyTools> lazyTool;
+  map<DetId, EcalRecHit> rechits_map_;
+  auto_ptr<CaloSubdetectorTopology> topology_p;
 };

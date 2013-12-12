@@ -431,9 +431,10 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
   isolation_cone_size_forSCremoval = cms.untracked.double(0.3),
 
-  #for Ecal LazyTools
+  #for Ecal LazyTools and photon items
   ebReducedRecHitCollection = cms.InputTag("reducedEcalRecHitsEB"),
   eeReducedRecHitCollection = cms.InputTag("reducedEcalRecHitsEE"),
+  esReducedRecHitCollection = cms.InputTag("reducedEcalRecHitsES"),
 
   #Trigger stuff
 

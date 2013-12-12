@@ -21,7 +21,9 @@ TCEGamma::TCEGamma():
   _scEtaWidth(-99),
   _scPhiWidth(-99),
 
+  _scRawEnergy(-99),
   _scEnergy(-99),
+  _scPSEnergy(-99),
   _preShowerOverRaw(-99),
   _e1x3(-99),
   _e1x5(-99),
@@ -29,6 +31,7 @@ TCEGamma::TCEGamma():
   _e2x5(-99),
   _e2x5Max(-99),
   _e5x5(-99),
+  _esEffSigmaRR(),
 
   _pfIsoCharged(-99),
   _pfIsoNeutral(-99),
@@ -123,11 +126,24 @@ float TCEGamma::E2x2() const {
 float TCEGamma::E2x5() const {
   return _e2x5;
 }
+float TCEGamma::E2x5Max() const {
+  return _e2x5Max;
+}
 float TCEGamma::E5x5() const {
   return _e5x5;
 }
 
+vector<float> TCEGamma::ESEffSigmaRR() const {
+  return _esEffSigmaRR;
+}
 
+
+float TCEGamma::SCRawEnergy() const {
+  return _scRawEnergy;
+}
+float TCEGamma::SCPSEnergy() const {
+  return _scPSEnergy;
+}
 float TCEGamma::SCEnergy() const {
   return _scEnergy;
 }
@@ -192,6 +208,12 @@ void TCEGamma::SetSCPhiWidth(float w){
   _scPhiWidth = w;
 }
 
+void TCEGamma::SetSCRawEnergy(float e){
+  _scRawEnergy = e;
+}
+void TCEGamma::SetSCPSEnergy(float e){
+  _scPSEnergy = e;
+}
 void TCEGamma::SetSCEnergy(float e){
   _scEnergy = e;
 }
@@ -212,10 +234,18 @@ void TCEGamma::SetE2x2(float e){
 void TCEGamma::SetE2x5(float e){
   _e2x5 = e;
 }
+void TCEGamma::SetE2x5Max(float e){
+  _e2x5Max = e;
+}
 void TCEGamma::SetE5x5(float e){
   _e5x5 = e;
 }
 
+void TCEGamma::SetESEffSigmaRR(float x, float y, float z){
+  _esEffSigmaRR.push_back(x);
+  _esEffSigmaRR.push_back(y);
+  _esEffSigmaRR.push_back(z);
+}
 
 void TCEGamma::SetIsEB(bool b) {
   _isEB = b;
