@@ -52,8 +52,11 @@ class TCEGamma : public TCPhysObject {
   float _scEnergy;
   float _preShowerOverRaw;
 
+  float _e1x3;
   float _e1x5;
+  float _e2x2;
   float _e2x5;
+  float _e2x5Max;
   float _e5x5;
   
 
@@ -101,7 +104,9 @@ class TCEGamma : public TCPhysObject {
 
   float SCEnergy() const;
   float PreShowerOverRaw() const;
+  float E1x3() const;
   float E1x5() const;
+  float E2x2() const;
   float E2x5() const;
   float E5x5() const;
 
@@ -146,6 +151,7 @@ class TCEGamma : public TCPhysObject {
   void SetSCEnergy(float);
   void SetPreShowerOverRaw(float);
   void SetE1x5(float);
+  void SetE2x2(float);
   void SetE2x5(float);
   void SetE5x5(float);
   

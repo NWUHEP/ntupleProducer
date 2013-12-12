@@ -844,8 +844,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         myPhoton->SetPreShowerOverRaw(iPhoton->superCluster()->preshowerEnergy() / iPhoton->superCluster()->rawEnergy());
 
 
+      myPhoton->SetE1x3(lazyTool->e3x1(*phoSeed));
       myPhoton->SetE1x5(iPhoton->e1x5());
+      myPhoton->SetE2x2(lazyTool->e2x2(*phoSeed));
       myPhoton->SetE2x5(iPhoton->e2x5());
+      myPhoton->SetE2x5Max(lazyTool->e2x5(*phoSeed));
       myPhoton->SetE5x5(iPhoton->e5x5());
 
       // PF Iso for photons

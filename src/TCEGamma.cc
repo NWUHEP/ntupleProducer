@@ -23,8 +23,11 @@ TCEGamma::TCEGamma():
 
   _scEnergy(-99),
   _preShowerOverRaw(-99),
+  _e1x3(-99),
   _e1x5(-99),
+  _e2x2(-99),
   _e2x5(-99),
+  _e2x5Max(-99),
   _e5x5(-99),
 
   _pfIsoCharged(-99),
@@ -108,8 +111,14 @@ float TCEGamma::PreShowerOverRaw() const {
 }
 
 
+float TCEGamma::E1x3() const {
+  return _e1x3;
+}
 float TCEGamma::E1x5() const {
   return _e1x5;
+}
+float TCEGamma::E2x2() const {
+  return _e2x2;
 }
 float TCEGamma::E2x5() const {
   return _e2x5;
@@ -191,8 +200,14 @@ void TCEGamma::SetPreShowerOverRaw(float p){
   _preShowerOverRaw = p;
 }
 
+void TCEGamma::SetE1x3(float e){
+  _e1x3 = e;
+}
 void TCEGamma::SetE1x5(float e){
   _e1x5 = e;
+}
+void TCEGamma::SetE2x2(float e){
+  _e2x2 = e;
 }
 void TCEGamma::SetE2x5(float e){
   _e2x5 = e;
