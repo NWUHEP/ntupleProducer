@@ -2,25 +2,21 @@
 #include "TCPhysObjectLinkDef.h"
 //
 
-TCPhysObject::TCPhysObject() {
-    _isPF = _isReco = false;
-    _charge = 0;
+TCPhysObject::TCPhysObject():
+  _vtx(-9,-9,-9),
+  _charge(0),
+  _isPF(false)
+{
 }
 
-TCPhysObject::TCPhysObject(TLorentzVector p4, int charge) {
+TCPhysObject::TCPhysObject(TLorentzVector p4, int charge):
+  _vtx(-9,-9,-9),
+  _charge(charge),
+  _isPF(false)
+{
     this->SetP4(p4);
-    this->SetCharge(charge);
-
-    _isPF = _isReco = false;
 }
 
-TCPhysObject::TCPhysObject(TLorentzVector p4, int charge, string type) {
-    this->SetP4(p4);
-    this->SetCharge(charge);
-    this->SetType(type);
-
-    _isPF = _isReco = false;
-}
 
 TCPhysObject::~TCPhysObject() {
 }
@@ -63,10 +59,8 @@ TVector2 TCPhysObject::P2() const {
 }
 
 TVector3 TCPhysObject::Vtx()  const { return _vtx; }
-string   TCPhysObject::Type() const { return _type; }
 int  TCPhysObject::Charge() const   { return _charge; }
 bool TCPhysObject::IsPF()   const   { return _isPF; }
-bool TCPhysObject::IsReco() const   { return _isReco; }
 
 // "set" methods ---------------------------------------------
 
@@ -80,9 +74,7 @@ void TCPhysObject::SetVtx(float vx, float vy, float vz) {
 }
 
 void TCPhysObject::SetCharge(int c) { _charge = c; }
-void TCPhysObject::SetType(string s){ _type = s; }
 void TCPhysObject::SetPF(bool p)    { _isPF = p;}
-void TCPhysObject::SetReco(bool r)  { _isReco = r;}
 
 // generally useful methods -----------------------------------
 

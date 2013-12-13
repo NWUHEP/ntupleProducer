@@ -2,33 +2,44 @@
 #include "TCElectronLinkDef.h"
 #include <iostream>
 
-TCElectron::TCElectron() {
-  _normChi2gsf = -99;
-  _normChi2kf  = -99;
-  _ptError     = -99;
-  _fBrem       = -99;
-  _inverseEnergyMomentumDiff = -99;
-  _EoP     = -99;
-  _EoPout  = -99;
-  _ip3d    = -99;
-  _ip3dSig = -99;
-  _deltaEtaSeedCluster = -99;
-  _deltaPhiSeedCluster = -99;
-  _mvaID  = -99;
-  _regEne = -99;
-  _regErr = -99;
-  _passConvVeto = false;
-  _convMissHits = 0;
-  
-  _trackerLayersWithMeasurement = -99;
-  _numberOfValidHits            = -99;
-  _numberOfValidPixelHits       = -99;
-  _numberOfValidTrackerHits     = -99;
-  _numberOfLostPixelHits        = -99;
-  _numberOfLostTrackerHits      = -99;
-  
-  _effArea = -99;
+TCElectron::TCElectron():
+  _normChi2gsf(-99),
+  _normChi2kf(-99),
+  _ptError(-99),
+  _fBrem(-99),
+  _inverseEnergyMomentumDiff(-99),
+  _EoP(-99),
+  _EoPout(-99),
+  _ip3d(-99),
+  _ip3dSig(-99),
+  _deltaEtaSeedCluster(-99),
+  _deltaPhiSeedCluster(-99),
+  _mvaID_Old(-99),
+  _mvaID_HZZ(-99),
 
+  _regEne(-99),
+  _regErr(-99),
+  _passConvVeto(false),
+  _convMissHits(0),
+  
+  _trackerLayersWithMeasurement(-99),
+  _numberOfValidHits(-99),
+  _numberOfValidPixelHits(-99),
+  _numberOfValidTrackerHits(-99),
+  _numberOfLostPixelHits(-99),
+  _numberOfLostTrackerHits(-99),
+  
+  _cut95(-999),
+  _cut90(-999),
+  _cut85(-999),
+  _cut80(-999),
+  _cut70(-999),
+  _cut60(-999),
+
+  _regressionMomCombP4(0.,0.,0.,0.),
+  _effArea(-99)
+
+{
 }
 
 TCElectron::~TCElectron() {
@@ -52,9 +63,14 @@ float TCElectron::InverseEnergyMomentumDiff() const{
 }
 
 
-float TCElectron::MvaID() const { 
-  return _mvaID; 
+float TCElectron::MvaID_Old() const { 
+  return _mvaID_Old; 
 } 
+
+float TCElectron::MvaID_HZZ() const { 
+  return _mvaID_HZZ; 
+} 
+
 float TCElectron::EnergyRegression() const { 
   return _regEne; 
 }
@@ -183,9 +199,14 @@ void TCElectron::SetInverseEnergyMomentumDiff(float d){
   _inverseEnergyMomentumDiff = d;
 }
 
-void TCElectron::SetMvaID(float m){ 
-  _mvaID = m; 
+void TCElectron::SetMvaID_Old(float m){ 
+  _mvaID_Old = m; 
 }
+
+void TCElectron::SetMvaID_HZZ(float m){ 
+  _mvaID_HZZ = m; 
+}
+
 void TCElectron::SetEnergyRegression(float e){ 
   _regEne = e; 
 }

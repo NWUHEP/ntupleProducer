@@ -25,7 +25,8 @@ class TCElectron : public TCEGamma {
   float _deltaEtaSeedCluster;
   float _deltaPhiSeedCluster;
 
-  float _mvaID;
+  float _mvaID_Old;
+  float _mvaID_HZZ;
   float _regEne;
   float _regErr;
   
@@ -74,7 +75,8 @@ class TCElectron : public TCEGamma {
   
   float FBrem() const;
   
-  float MvaID() const; 
+  float MvaID_Old() const; 
+  float MvaID_HZZ() const; 
   float EnergyRegression() const; 
   float EnergyRegressionErr() const; 
   
@@ -129,7 +131,8 @@ class TCElectron : public TCEGamma {
   void SetNumberOfLostTrackerHits(int);
   
   
-  void SetMvaID(float);
+  void SetMvaID_Old(float);
+  void SetMvaID_HZZ(float);
   void SetEnergyRegression(float);
   void SetEnergyRegressionErr(float);
   

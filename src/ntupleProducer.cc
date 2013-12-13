@@ -56,6 +56,10 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig):
 
   SCFPRemovalCone_     = iConfig.getUntrackedParameter<double>("isolation_cone_size_forSCremoval");
 
+  ebReducedRecHitCollection_ = iConfig.getParameter<edm::InputTag>("ebReducedRecHitCollection");
+  eeReducedRecHitCollection_ = iConfig.getParameter<edm::InputTag>("eeReducedRecHitCollection");
+  esReducedRecHitCollection_ = iConfig.getParameter<edm::InputTag>("esReducedRecHitCollection");
+
 }
 
 ntupleProducer::~ntupleProducer()
@@ -99,6 +103,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
   iEvent.getByLabel("pfNoPileUp",pfCandsEleIso);
   const  PFCandidateCollection thePfCollEleIso = *(pfCandsEleIso.product());
 
+  //get a lazyTool
+
+  lazyTool.reset(new EcalClusterLazyTools(iEvent, iSetup, ebReducedRecHitCollection_, eeReducedRecHitCollection_));
 
 
   //////////////////////////
@@ -332,7 +339,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     }
 
 
-    //////////////////                                                                                                                                                          
+    //////////////////                                                                                                                         
     // Get MVAMET   // 
     ////////////////// 
 
@@ -477,6 +484,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     iEvent.getByLabel("mvaTrigV0", mvaTrigV0_handle);
     const edm::ValueMap<float> ele_mvaTrigV0 = (*mvaTrigV0_handle.product());
 
+    edm::Handle<edm::ValueMap<float>> mvaNonTrigV0_handle;
+    iEvent.getByLabel("mvaNonTrigV0", mvaNonTrigV0_handle);
+    const edm::ValueMap<float> ele_mvaNonTrigV0 = (*mvaNonTrigV0_handle.product());
+
     edm::Handle<edm::ValueMap<double>> regEne_handle;
     iEvent.getByLabel(edm::InputTag("eleRegressionEnergy","eneRegForGsfEle"), regEne_handle);
     const edm::ValueMap<double> ele_regEne = (*regEne_handle.product());
@@ -552,7 +563,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       if (iElectron->superCluster()->rawEnergy()!=0)
         eleCon->SetPreShowerOverRaw(iElectron->superCluster()->preshowerEnergy() / iElectron->superCluster()->rawEnergy());
 
-      
+
       eleCon->SetE1x5(iElectron->e1x5());
       eleCon->SetE2x5(iElectron->e2x5Max());
       eleCon->SetE5x5(iElectron->e5x5());
@@ -589,7 +600,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       InputTag  vertexLabel(string("offlinePrimaryVertices"));
       Handle<reco::VertexCollection> thePrimaryVertexColl;
       iEvent.getByLabel(vertexLabel,thePrimaryVertexColl);
-      
+
       Vertex dummy;
       const Vertex *pv = &dummy;
       if (thePrimaryVertexColl->size() != 0) {
@@ -654,8 +665,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 
       //MVA output:
-      float m = ele_mvaTrigV0.get(eee-1);
-      eleCon->SetMvaID(m);
+      float m_old = ele_mvaTrigV0.get(eee-1);
+      eleCon->SetMvaID_Old(m_old);
+      float m_HZZ = ele_mvaNonTrigV0.get(eee-1);
+      eleCon->SetMvaID_HZZ(m_HZZ);
 
       //Regression energy
       double ene = ele_regEne.get(eee-1);
@@ -721,10 +734,33 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
   /////////////////
   if (savePhotons_) {
 
+    // ES geometry
+    ESHandle<CaloGeometry> geoHandle;
+    iSetup.get<CaloGeometryRecord>().get(geoHandle);
+    const CaloSubdetectorGeometry *geometry = geoHandle->getSubdetectorGeometry(DetId::Ecal, EcalPreshower);
+    const CaloSubdetectorGeometry *& geometry_p = geometry;
+
+    if (geometry) topology_p.reset(new EcalPreshowerTopology(geoHandle));
+
+    // make the map of rechits
+    Handle<EcalRecHitCollection> ESRecHits;
+    iEvent.getByLabel(esReducedRecHitCollection_,ESRecHits);
+
+    rechits_map_.clear();
+    if (ESRecHits.isValid()) {
+      EcalRecHitCollection::const_iterator it;
+      for (it = ESRecHits->begin(); it != ESRecHits->end(); ++it) {
+        // remove bad ES rechits
+        if (it->recoFlag()==1 || it->recoFlag()==14 || (it->recoFlag()<=10 && it->recoFlag()>=5)) continue;
+        //Make the map of DetID, EcalRecHit pairs
+        rechits_map_.insert(std::make_pair(it->id(), *it));   
+      }
+    }
+
     Handle<EcalRecHitCollection> Brechit;
     iEvent.getByLabel("reducedEcalRecHitsEB",Brechit);
     //const EcalRecHitCollection* barrelRecHits= Brechit.product();
-
+    
     Handle<vector<reco::Photon> > photons;
     iEvent.getByLabel(photonTag_, photons);
 
@@ -735,71 +771,68 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       TCPhoton* myPhoton = new ((*recoPhotons)[photonCount]) TCPhoton();
 
       if (savePhoCrystals_)
+      {
+        //Crystal Info:
+        std::vector< std::pair<DetId, float> >  PhotonHit_DetIds  = iPhoton->superCluster()->hitsAndFractions();
+        std::vector<TCEGamma::CrystalInfo> crystalinfo_container;
+        crystalinfo_container.clear();
+        TCPhoton::CrystalInfo crystal = {};
+        float timing_avg =0.0;
+        int ncrys   = 0;
+        vector< std::pair<DetId, float> >::const_iterator detitr;
+
+        for(detitr = PhotonHit_DetIds.begin(); detitr != PhotonHit_DetIds.end(); ++detitr)
         {
-          //Crystal Info:
-          std::vector< std::pair<DetId, float> >  PhotonHit_DetIds  = iPhoton->superCluster()->hitsAndFractions();
-          std::vector<TCEGamma::CrystalInfo> crystalinfo_container;
-          crystalinfo_container.clear();
-          TCPhoton::CrystalInfo crystal = {};
-          float timing_avg =0.0;
-          int ncrys   = 0;
-          vector< std::pair<DetId, float> >::const_iterator detitr;
 
-          for(detitr = PhotonHit_DetIds.begin(); detitr != PhotonHit_DetIds.end(); ++detitr)
-            {
+          if (((*detitr).first).det() == DetId::Ecal && ((*detitr).first).subdetId() == EcalBarrel) {
+            EcalRecHitCollection::const_iterator j= Brechit->find(((*detitr).first));
+            EcalRecHitCollection::const_iterator thishit;
+            if ( j!= Brechit->end())  thishit = j;
+            if ( j== Brechit->end()){
+              continue;
+            }
 
-              if (((*detitr).first).det() == DetId::Ecal && ((*detitr).first).subdetId() == EcalBarrel) {
-                EcalRecHitCollection::const_iterator j= Brechit->find(((*detitr).first));
-                EcalRecHitCollection::const_iterator thishit;
-                if ( j!= Brechit->end())  thishit = j;
-                if ( j== Brechit->end()){
-                  continue;
-                }
-
-                EBDetId detId  = (EBDetId)((*detitr).first);
-                crystal.rawId  = thishit->id().rawId();
-                crystal.energy = thishit->energy();
-                crystal.time   = thishit->time();
-                crystal.timeErr= thishit->timeError();
-                crystal.recoFlag = thishit->recoFlag();
-                crystal.ieta   = detId.ieta();
-                crystal.iphi   = detId.iphi();
-                if(crystal.energy > 0.1){
-                  timing_avg  = timing_avg + crystal.time;
-                  ncrys++;
-                }
-              }//end of if ((*detitr).det() == DetId::Ecal && (*detitr).subdetId() == EcalBarrel)
-              crystalinfo_container.push_back(crystal);
-            }//End loop over detids
-          std::sort(crystalinfo_container.begin(),crystalinfo_container.end(),EnergySortCriterium);
+            EBDetId detId  = (EBDetId)((*detitr).first);
+            crystal.rawId  = thishit->id().rawId();
+            crystal.energy = thishit->energy();
+            crystal.time   = thishit->time();
+            crystal.timeErr= thishit->timeError();
+            crystal.recoFlag = thishit->recoFlag();
+            crystal.ieta   = detId.ieta();
+            crystal.iphi   = detId.iphi();
+            if(crystal.energy > 0.1){
+              timing_avg  = timing_avg + crystal.time;
+              ncrys++;
+            }
+          }//end of if ((*detitr).det() == DetId::Ecal && (*detitr).subdetId() == EcalBarrel)
+          crystalinfo_container.push_back(crystal);
+        }//End loop over detids
+        std::sort(crystalinfo_container.begin(),crystalinfo_container.end(),EnergySortCriterium);
 
 
-          //Without taking into account uncertainty, this time makes no sense.
-          if (ncrys !=0) timing_avg = timing_avg/(float)ncrys;
-          else timing_avg = -99.;
+        //Without taking into account uncertainty, this time makes no sense.
+        if (ncrys !=0) timing_avg = timing_avg/(float)ncrys;
+        else timing_avg = -99.;
 
-          myPhoton->SetNCrystals(crystalinfo_container.size());
+        myPhoton->SetNCrystals(crystalinfo_container.size());
 
-          for (unsigned int y =0; y < crystalinfo_container.size() && y < 100;y++){
-            myPhoton->AddCrystal(crystalinfo_container[y]);
-          }
-
-      /*
-         vector<TCPhoton::CrystalInfo> savedCrystals = myPhoton->GetCrystalVect();
-         for (int y = 0; y< myPhoton->GetNCrystals();y++){
-         std::cout << "savedCrystals[y].time : " << savedCrystals[y].time << std::endl; 
-         std::cout << "savedCrystals[y].timeErr : " << savedCrystals[y].timeErr << std::endl;
-         std::cout << "savedCrystals[y].energy : " << savedCrystals[y].energy <<std::endl;
-         std::cout << "savedCrystals[y].ieta: " << savedCrystals[y].ieta << std::endl;
-
-         std::cout << "savedCrystals[y].rawId: " << savedCrystals[y].rawId <<std::endl;
-         }
-         */
-
-      //const reco::BasicCluster& seedClus = *(iPhoton->superCluster()->seed());
-
-          //const reco::BasicCluster& seedClus = *(iPhoton->superCluster()->seed());
+        for (unsigned int y =0; y < crystalinfo_container.size() && y < 100;y++){
+          myPhoton->AddCrystal(crystalinfo_container[y]);
         }
+
+        /*
+           vector<TCPhoton::CrystalInfo> savedCrystals = myPhoton->GetCrystalVect();
+           for (int y = 0; y< myPhoton->GetNCrystals();y++){
+           std::cout << "savedCrystals[y].time : " << savedCrystals[y].time << std::endl; 
+           std::cout << "savedCrystals[y].timeErr : " << savedCrystals[y].timeErr << std::endl;
+           std::cout << "savedCrystals[y].energy : " << savedCrystals[y].energy <<std::endl;
+           std::cout << "savedCrystals[y].ieta: " << savedCrystals[y].ieta << std::endl;
+
+           std::cout << "savedCrystals[y].rawId: " << savedCrystals[y].rawId <<std::endl;
+           }
+           */
+
+      }
 
       myPhoton->SetPxPyPzE(iPhoton->px(), iPhoton->py(), iPhoton->pz(), iPhoton->p());
       myPhoton->SetVtx(iPhoton->vx(), iPhoton->vy(), iPhoton->vz());
@@ -807,6 +840,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       // ID variables
       //Methods that are availabel for the electrons can be found here:
       //http://cmslxr.fnal.gov/lxr/source/DataFormats/EgammaCandidates/interface/Photon.h?v=CMSSW_5_3_11
+
+      vector<float> phoCov;
+      const reco::CaloClusterPtr phoSeed = iPhoton->superCluster()->seed();
+      phoCov = lazyTool->localCovariances(*phoSeed);
+
       myPhoton->SetHadOverEm(iPhoton->hadTowOverEm());
       myPhoton->SetR9(iPhoton->r9());
       myPhoton->SetTrackVeto(iPhoton->hasPixelSeed());
@@ -814,7 +852,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       myPhoton->SetSCEta(iPhoton->superCluster()->eta());
       myPhoton->SetSCPhi(iPhoton->superCluster()->phi());
       myPhoton->SetSigmaIEtaIEta(iPhoton->sigmaIetaIeta());
-      //myPhoton->SetSigmaIPhiIPhi(); there is no sigma iphi iphi in the photon. strange
+      myPhoton->SetSigmaIEtaIPhi(phoCov[1]); 
+      myPhoton->SetSigmaIPhiIPhi(phoCov[2]); 
 
       myPhoton->SetSCEtaWidth(  iPhoton->superCluster()->etaWidth());
       myPhoton->SetSCPhiWidth(  iPhoton->superCluster()->phiWidth());
@@ -824,13 +863,18 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       //eleCon->SetSCDeltaPhi( );
 
       myPhoton->SetSCEnergy(iPhoton->superCluster()->energy());
+      myPhoton->SetSCRawEnergy(iPhoton->superCluster()->rawEnergy());
+      myPhoton->SetSCPSEnergy(iPhoton->superCluster()->preshowerEnergy());
 
       if (iPhoton->superCluster()->rawEnergy()!=0)
         myPhoton->SetPreShowerOverRaw(iPhoton->superCluster()->preshowerEnergy() / iPhoton->superCluster()->rawEnergy());
 
 
+      myPhoton->SetE1x3(lazyTool->e3x1(*phoSeed));
       myPhoton->SetE1x5(iPhoton->e1x5());
+      myPhoton->SetE2x2(lazyTool->e2x2(*phoSeed));
       myPhoton->SetE2x5(iPhoton->e2x5());
+      myPhoton->SetE2x5Max(lazyTool->e2x5Max(*phoSeed));
       myPhoton->SetE5x5(iPhoton->e5x5());
 
       // PF Iso for photons
@@ -867,18 +911,18 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       SuperClusterFootprintRemoval remover(iEvent,iSetup,myConfig);
       PFIsolation_struct mySCFPstruct = remover.PFIsolation(iPhoton->superCluster(),edm::Ptr<Vertex>(primaryVtcs,ivtx));
       /*
-      cout<<"chargediso: "<<mySCFPstruct.chargediso<<endl;
-      cout<<"chargediso_primvtx: "<<mySCFPstruct.chargediso_primvtx<<endl;
-      cout<<"neutraliso: "<<mySCFPstruct.neutraliso<<endl;
-      cout<<"photoniso: "<<mySCFPstruct.photoniso<<endl;
-      cout<<"chargediso_rcone: "<<mySCFPstruct.chargediso_rcone<<endl;
-      cout<<"chargediso_primvtx_rcone: "<<mySCFPstruct.chargediso_primvtx_rcone<<endl;
-      cout<<"neutraliso_rcone: "<<mySCFPstruct.neutraliso_rcone<<endl;
-      cout<<"photoniso_rcone: "<<mySCFPstruct.photoniso_rcone<<endl;
-      cout<<"eta_rcone: "<<mySCFPstruct.eta_rcone<<endl;
-      cout<<"phi_rcone: "<<mySCFPstruct.phi_rcone<<endl;
-      cout<<"rcone_isOK: "<<mySCFPstruct.rcone_isOK<<endl;
-      */
+         cout<<"chargediso: "<<mySCFPstruct.chargediso<<endl;
+         cout<<"chargediso_primvtx: "<<mySCFPstruct.chargediso_primvtx<<endl;
+         cout<<"neutraliso: "<<mySCFPstruct.neutraliso<<endl;
+         cout<<"photoniso: "<<mySCFPstruct.photoniso<<endl;
+         cout<<"chargediso_rcone: "<<mySCFPstruct.chargediso_rcone<<endl;
+         cout<<"chargediso_primvtx_rcone: "<<mySCFPstruct.chargediso_primvtx_rcone<<endl;
+         cout<<"neutraliso_rcone: "<<mySCFPstruct.neutraliso_rcone<<endl;
+         cout<<"photoniso_rcone: "<<mySCFPstruct.photoniso_rcone<<endl;
+         cout<<"eta_rcone: "<<mySCFPstruct.eta_rcone<<endl;
+         cout<<"phi_rcone: "<<mySCFPstruct.phi_rcone<<endl;
+         cout<<"rcone_isOK: "<<mySCFPstruct.rcone_isOK<<endl;
+         */
       myPhoton->SetIsoMap("SCFP_chargediso",mySCFPstruct.chargediso);
       myPhoton->SetIsoMap("SCFP_chargediso_primvtx",mySCFPstruct.chargediso_primvtx);
       myPhoton->SetIsoMap("SCFP_neutraliso",mySCFPstruct.neutraliso);
@@ -894,6 +938,22 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       //Conversion info
       bool passElectronVeto = !(ConversionTools::hasMatchedPromptElectron(iPhoton->superCluster(), hElectrons, hConversions, vertexBeamSpot.position()));
       myPhoton->SetConversionVeto(passElectronVeto);
+
+      //Effective energy shit
+      float phoESEffSigmaRR_x = 0.;
+      float phoESEffSigmaRR_y = 0.;
+      float phoESEffSigmaRR_z = 0.;
+      
+      if (ESRecHits.isValid() && (fabs(iPhoton->superCluster()->eta()) > 1.6 && fabs(iPhoton->superCluster()->eta()) < 3)) {
+
+        vector<float> phoESHits0 = getESHits((*iPhoton).superCluster()->x(), (*iPhoton).superCluster()->y(), (*iPhoton).superCluster()->z(), rechits_map_, geometry_p, topology_p.get(), 0);
+
+        vector<float> phoESShape = getESEffSigmaRR(phoESHits0);
+        phoESEffSigmaRR_x = phoESShape[0];
+        phoESEffSigmaRR_y = phoESShape[1];
+        phoESEffSigmaRR_z = phoESShape[2];
+      }
+      myPhoton->SetESEffSigmaRR(phoESEffSigmaRR_x, phoESEffSigmaRR_y, phoESEffSigmaRR_z);
 
       ++photonCount;
     }
@@ -1117,7 +1177,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
   beamSpot->Clear();
   primaryVtx    -> Clear("C");
   recoJets      -> Clear("C");
-  //recoJPT       -> Clear("C");
   recoMuons     -> Clear("C");
   recoElectrons -> Clear("C");
   recoPhotons   -> Clear("C");
@@ -1134,7 +1193,6 @@ void  ntupleProducer::beginJob()
 
   primaryVtx     = new TClonesArray("TCPrimaryVtx");
   recoJets       = new TClonesArray("TCJet");
-  //recoJPT        = new TClonesArray("TCJet");
   recoElectrons  = new TClonesArray("TCElectron");
   recoMuons      = new TClonesArray("TCMuon");
   recoPhotons    = new TClonesArray("TCPhoton");
@@ -1151,7 +1209,6 @@ void  ntupleProducer::beginJob()
   h1_numOfEvents = fs->make<TH1F>("numOfEvents", "total number of events, unskimmed", 1,0,1);
 
   eventTree->Branch("recoJets",     &recoJets,       6400, 0);
-  //eventTree->Branch("recoJPT",      &recoJPT,        6400, 0);
   eventTree->Branch("recoElectrons",&recoElectrons,  6400, 0);
   eventTree->Branch("recoMuons",    &recoMuons,      6400, 0);
   eventTree->Branch("recoPhotons",  &recoPhotons,    6400, 0);
@@ -1204,6 +1261,7 @@ void  ntupleProducer::beginJob()
 
   // Initialize Jet PU ID
   myPUJetID.reset(new PileupJetIdAlgo(jetPUIdAlgo_));
+
 }
 
 void ntupleProducer::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
@@ -1342,7 +1400,7 @@ bool ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::Vertex
     outJet->SetVtx(0., 0., 0.);
   } else {
     outJet->SetVtx(sumTrackX/nJetTracks, sumTrackY/nJetTracks, sumTrackZ/nJetTracks);
-    
+
     for (VertexCollection::const_iterator iVtx = vtxCollection->begin(); iVtx!= vtxCollection->end(); ++iVtx) {
       reco::Vertex myVtx = reco::Vertex(*iVtx);
       if(!myVtx.isValid() || myVtx.isFake()) continue;
@@ -1456,29 +1514,29 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
   eleCon->SetIdMap("d0",fMVAVar_d0);
 
   /*
-    This is added into the main part 
+     This is added into the main part 
 
-    //default values for IP3D
-    float fMVAVar_ip3d      = -999.0;
-    float fMVAVar_ip3dSig   = 0.0;
+  //default values for IP3D
+  float fMVAVar_ip3d      = -999.0;
+  float fMVAVar_ip3dSig   = 0.0;
 
 
-    edm::ESHandle<TransientTrackBuilder> builder;
-    iSetup.get<TransientTrackRecord>().get("TransientTrackBuilder", builder);
-    TransientTrackBuilder thebuilder = *(builder.product());
+  edm::ESHandle<TransientTrackBuilder> builder;
+  iSetup.get<TransientTrackRecord>().get("TransientTrackBuilder", builder);
+  TransientTrackBuilder thebuilder = *(builder.product());
 
-    if (iElectron->gsfTrack().isNonnull()) {
-    const double gsfsign   = ( (-iElectron->gsfTrack()->dxy(pv->position()))   >=0 ) ? 1. : -1.;
+  if (iElectron->gsfTrack().isNonnull()) {
+  const double gsfsign   = ( (-iElectron->gsfTrack()->dxy(pv->position()))   >=0 ) ? 1. : -1.;
 
-    const reco::TransientTrack &tt = thebuilder.build(iElectron->gsfTrack());
-    const std::pair<bool,Measurement1D> &ip3dpv =  IPTools::absoluteImpactParameter3D(tt,*pv);
-    if (ip3dpv.first) {
-    double ip3d = gsfsign*ip3dpv.second.value();
-    double ip3derr = ip3dpv.second.error();
-    fMVAVar_ip3d = ip3d;
-    fMVAVar_ip3dSig = ip3d/ip3derr;
-    }
-    }
+  const reco::TransientTrack &tt = thebuilder.build(iElectron->gsfTrack());
+  const std::pair<bool,Measurement1D> &ip3dpv =  IPTools::absoluteImpactParameter3D(tt,*pv);
+  if (ip3dpv.first) {
+  double ip3d = gsfsign*ip3dpv.second.value();
+  double ip3derr = ip3dpv.second.error();
+  fMVAVar_ip3d = ip3d;
+  fMVAVar_ip3dSig = ip3d/ip3derr;
+  }
+  }
 
   eleCon->SetIdMap("ip3d",fMVAVar_ip3d);
   eleCon->SetIdMap("ip3dSig",fMVAVar_ip3dSig);
@@ -1942,8 +2000,8 @@ TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticl
         && abs(myParticle->mother()->pdgId()) != 35 
         && abs(myParticle->mother()->pdgId()) != 36 
         && abs(myParticle->mother()->pdgId()) != 39
-             && abs(myParticle->mother()->pdgId()) != 443  //Jpsi
-             && abs(myParticle->mother()->pdgId()) != 553  //Upsilon
+        && abs(myParticle->mother()->pdgId()) != 443  //Jpsi
+        && abs(myParticle->mother()->pdgId()) != 553  //Upsilon
         )
     {
       genCon->SetMother(0);
@@ -1960,6 +2018,182 @@ TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticl
     genCon = it->second;
 
   return genCon;
+}
+
+vector<float> ntupleProducer::getESHits(double X, double Y, double Z, map<DetId, EcalRecHit> rechits_map, const CaloSubdetectorGeometry*& geometry_p, CaloSubdetectorTopology *topology_p, int row) {
+
+  //cout<<row<<endl;
+
+  vector<float> esHits;
+
+  //double X = bcPtr->x();
+  //double Y = bcPtr->y();
+  //double Z = bcPtr->z();
+  const GlobalPoint point(X,Y,Z);
+
+  DetId esId1 = (dynamic_cast<const EcalPreshowerGeometry*>(geometry_p))->getClosestCellInPlane(point, 1);
+  DetId esId2 = (dynamic_cast<const EcalPreshowerGeometry*>(geometry_p))->getClosestCellInPlane(point, 2);
+  ESDetId esDetId1 = (esId1 == DetId(0)) ? ESDetId(0) : ESDetId(esId1);
+  ESDetId esDetId2 = (esId2 == DetId(0)) ? ESDetId(0) : ESDetId(esId2);  
+
+  map<DetId, EcalRecHit>::iterator it;
+  ESDetId next;
+  ESDetId strip1;
+  ESDetId strip2;
+
+  strip1 = esDetId1;
+  strip2 = esDetId2;
+
+  EcalPreshowerNavigator theESNav1(strip1, topology_p);
+  theESNav1.setHome(strip1);
+
+  EcalPreshowerNavigator theESNav2(strip2, topology_p);
+  theESNav2.setHome(strip2);
+
+  if (row == 1) {
+    if (strip1 != ESDetId(0)) strip1 = theESNav1.north();
+    if (strip2 != ESDetId(0)) strip2 = theESNav2.east();
+  } else if (row == -1) {
+    if (strip1 != ESDetId(0)) strip1 = theESNav1.south();
+    if (strip2 != ESDetId(0)) strip2 = theESNav2.west();
+  }
+
+  // Plane 2 
+  if (strip1 == ESDetId(0)) {
+    for (unsigned int i=0; i<31; ++i) esHits.push_back(0);
+  } else {
+
+    it = rechits_map.find(strip1);
+    if (it->second.energy() > 1.0e-10 && it != rechits_map.end()) esHits.push_back(it->second.energy());  
+    else esHits.push_back(0);
+    //cout<<"center : "<<strip1<<" "<<it->second.energy()<<endl;      
+
+    // east road 
+    for (unsigned int i=0; i<15; ++i) {
+      next = theESNav1.east();
+      if (next != ESDetId(0)) {
+        it = rechits_map.find(next);
+        if (it->second.energy() > 1.0e-10 && it != rechits_map.end()) esHits.push_back(it->second.energy());  
+        else esHits.push_back(0);
+        //cout<<"east "<<i<<" : "<<next<<" "<<it->second.energy()<<endl;
+      } else {
+        for (unsigned int j=i; j<15; ++j) esHits.push_back(0);
+        break;
+        //cout<<"east "<<i<<" : "<<next<<" "<<0<<endl;
+      }
+    }
+
+    // west road 
+    theESNav1.setHome(strip1);
+    theESNav1.home();
+    for (unsigned int i=0; i<15; ++i) {
+      next = theESNav1.west();
+      if (next != ESDetId(0)) {
+        it = rechits_map.find(next);
+        if (it->second.energy() > 1.0e-10 && it != rechits_map.end()) esHits.push_back(it->second.energy());  
+        else esHits.push_back(0);
+        //cout<<"west "<<i<<" : "<<next<<" "<<it->second.energy()<<endl;
+      } else {
+        for (unsigned int j=i; j<15; ++j) esHits.push_back(0);
+        break;
+        //cout<<"west "<<i<<" : "<<next<<" "<<0<<endl;
+      }
+    }
+  }
+
+  if (strip2 == ESDetId(0)) {
+    for (unsigned int i=0; i<31; ++i) esHits.push_back(0);
+  } else {
+
+    it = rechits_map.find(strip2);
+    if (it->second.energy() > 1.0e-10 && it != rechits_map.end()) esHits.push_back(it->second.energy());  
+    else esHits.push_back(0);
+    //cout<<"center : "<<strip2<<" "<<it->second.energy()<<endl;      
+
+    // north road 
+    for (unsigned int i=0; i<15; ++i) {
+      next = theESNav2.north();
+      if (next != ESDetId(0)) {
+        it = rechits_map.find(next);
+        if (it->second.energy() > 1.0e-10 && it != rechits_map.end()) esHits.push_back(it->second.energy());
+        else esHits.push_back(0);
+        //cout<<"north "<<i<<" : "<<next<<" "<<it->second.energy()<<endl;  
+      } else {
+        for (unsigned int j=i; j<15; ++j) esHits.push_back(0);
+        break;
+        //cout<<"north "<<i<<" : "<<next<<" "<<0<<endl;
+      }
+    }
+
+    // south road 
+    theESNav2.setHome(strip2);
+    theESNav2.home();
+    for (unsigned int i=0; i<15; ++i) {
+      next = theESNav2.south();
+      if (next != ESDetId(0)) {
+        it = rechits_map.find(next);
+        if (it->second.energy() > 1.0e-10 && it != rechits_map.end()) esHits.push_back(it->second.energy());  
+        else esHits.push_back(0);
+        //cout<<"south "<<i<<" : "<<next<<" "<<it->second.energy()<<endl;
+      } else {
+        for (unsigned int j=i; j<15; ++j) esHits.push_back(0);
+        break;
+        //cout<<"south "<<i<<" : "<<next<<" "<<0<<endl;
+      }
+    }
+  }
+
+  return esHits;
+}
+
+vector<float> ntupleProducer::getESEffSigmaRR(vector<float> ESHits0)
+{
+  const int nBIN = 21;
+  vector<float> esShape;
+
+  TH1F *htmpF = new TH1F("htmpF","",nBIN,0,nBIN);
+  TH1F *htmpR = new TH1F("htmpR","",nBIN,0,nBIN);
+  htmpF->Reset(); htmpR->Reset();
+
+  Float_t effsigmaRR=0.;
+
+  for(int ibin=0; ibin<((nBIN+1)/2); ++ibin) {
+    if (ibin==0) {
+      htmpF->SetBinContent((nBIN+1)/2,ESHits0[ibin]);
+      htmpR->SetBinContent((nBIN+1)/2,ESHits0[ibin+31]);
+    } else { // hits sourd the seed
+      htmpF->SetBinContent((nBIN+1)/2+ibin,ESHits0[ibin]);
+      htmpF->SetBinContent((nBIN+1)/2-ibin,ESHits0[ibin+15]);
+      htmpR->SetBinContent((nBIN+1)/2+ibin,ESHits0[ibin+31]);
+      htmpR->SetBinContent((nBIN+1)/2-ibin,ESHits0[ibin+31+15]);
+    }
+  }
+
+  // ---- Effective Energy Deposit Width ---- //
+  double EffWidthSigmaXX = 0.;
+  double EffWidthSigmaYY = 0.;
+  double totalEnergyXX   = 0.;
+  double totalEnergyYY   = 0.;
+  double EffStatsXX      = 0.;
+  double EffStatsYY      = 0.;
+  for (int id_X=1; id_X<=21; ++id_X) {
+    totalEnergyXX  += htmpF->GetBinContent(id_X);
+    EffStatsXX     += htmpF->GetBinContent(id_X)*(id_X-11)*(id_X-11);
+    totalEnergyYY  += htmpR->GetBinContent(id_X);
+    EffStatsYY     += htmpR->GetBinContent(id_X)*(id_X-11)*(id_X-11);
+  }
+  // If denominator == 0, effsigmaRR = 0;
+  EffWidthSigmaXX  = (totalEnergyXX>0.)  ? sqrt(fabs(EffStatsXX  / totalEnergyXX))   : 0.;
+  EffWidthSigmaYY  = (totalEnergyYY>0.)  ? sqrt(fabs(EffStatsYY  / totalEnergyYY))   : 0.;
+  effsigmaRR =  ((totalEnergyXX  + totalEnergyYY) >0.) ? sqrt(EffWidthSigmaXX  * EffWidthSigmaXX  + EffWidthSigmaYY  * EffWidthSigmaYY)  : 0.;
+  esShape.push_back(effsigmaRR);
+  esShape.push_back(EffWidthSigmaXX);
+  esShape.push_back(EffWidthSigmaYY);
+
+  delete htmpF;
+  delete htmpR;
+
+  return esShape;
 }
 
 
