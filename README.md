@@ -8,11 +8,10 @@ Instructions for Users
  * Set up the environment
 ```
   setenv SCRAM_ARCH slc5_amd64_gcc462
-  cmsrel CMSSW_5_3_11_patch6
-  cd CMSSW_5_3_11_patch6/src
+  cmsrel CMSSW_5_3_13_patch3
+  cd CMSSW_5_3_13_patch3/src
   cmsenv
 ```
-(note: _patch6 is recommended in met recepie)
 
  * Met recipes, according to [workbook][2] and [met-recipe][3]:
 ```
@@ -96,23 +95,15 @@ Instructions for Users
   cd ../..
 ```
 
- * Files that needs to be updated, or not??:
-```
-  cvs co -r V03-04-07 DataFormats/METReco/interface/CorrMETData.h
-  # These did not work (could not check out):
-  #cvs co -r HEAD JetMETCorrections/Type1MET/plugins/Type0PFMETcorrInputProducer.h
-  #cvs co -r HEAD JetMETCorrections/Type1MET/plugins/Type0PFMETcorrInputProducer.cc
-```
-
  * Now check out the ntuple producer code and then the specific tag/branch of the code that is known to work
 ```
  git clone https://github.com/NWUHEP/ntupleProducer NWU/ntupleProducer
  cd NWU/ntupleProducer
- git checkout v9.1
+ git checkout v9.2
  cd ../..
 ```
 
- * Patches to checked folders [should be in the release eventually?]:
+ * Patches to checked folders [should be in the release eventually? probably not]:
 ```
   cp NWU/ntupleProducer/patches/PATMHTProducer.h PhysicsTools/PatAlgos/plugins/PATMHTProducer.h
   cvs co -r V00-02-14 DataFormats/StdDictionaries
