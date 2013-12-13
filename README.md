@@ -15,10 +15,9 @@ Instructions for Users
 
  * Met recipes, according to [workbook][2] and [met-recipe][3]:
 ```
-  git cms-addpkg PhysicsTools/PatAlgos
-  git cms-merge-topic -u vadler:53X-tagset133511
-  git cms-addpkg PhysicsTools/PatUtils
-  git cms-merge-topic -u TaiSakuma:53X-met-130910-01
+  git cms-addpkg PhysicsTools/PatAlgos 
+  git cms-merge-topic 1472 
+  git cms-merge-topic -u TaiSakuma:53X-met-131120-01
   scram b -j 9
 ```
  
