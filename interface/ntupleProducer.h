@@ -219,7 +219,7 @@ class ntupleProducer : public edm::EDAnalyzer {
   void analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR, edm::Handle<trigger::TriggerEvent> &hltE, const std::string& triggerName, int* trigCount);                   
   void initJetEnergyCorrector(const edm::EventSetup &iSetup, bool isData);
   TCGenParticle* addGenParticle(const reco::GenParticle* myParticle, int& genPartCount, std::map<const reco::GenParticle*,TCGenParticle*>& genMap);
-  vector<float> getESHits(double X, double Y, double Z, map<DetId, EcalRecHit> rechits_map, const CaloSubdetectorGeometry*& geometry_p, auto_ptr<CaloSubdetectorTopology> topology_p, int row=0);
+  vector<float> getESHits(double X, double Y, double Z, map<DetId, EcalRecHit> rechits_map, const CaloSubdetectorGeometry*& geometry_p, CaloSubdetectorTopology *topology_p, int row=0);
   vector<float> getESEffSigmaRR(vector<float> ESHits0);
 
 

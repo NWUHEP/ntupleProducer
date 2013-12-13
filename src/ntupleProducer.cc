@@ -946,7 +946,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       
       if (ESRecHits.isValid() && (fabs(iPhoton->superCluster()->eta()) > 1.6 && fabs(iPhoton->superCluster()->eta()) < 3)) {
 
-        vector<float> phoESHits0 = getESHits((*iPhoton).superCluster()->x(), (*iPhoton).superCluster()->y(), (*iPhoton).superCluster()->z(), rechits_map_, geometry_p, topology_p, 0);
+        vector<float> phoESHits0 = getESHits((*iPhoton).superCluster()->x(), (*iPhoton).superCluster()->y(), (*iPhoton).superCluster()->z(), rechits_map_, geometry_p, topology_p.get(), 0);
 
         vector<float> phoESShape = getESEffSigmaRR(phoESHits0);
         phoESEffSigmaRR_x = phoESShape[0];
@@ -2023,9 +2023,8 @@ TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticl
   return genCon;
 }
 
-vector<float> ntupleProducer::getESHits(double X, double Y, double Z, map<DetId, EcalRecHit> rechits_map, const CaloSubdetectorGeometry*& geometry_p, auto_ptr<CaloSubdetectorTopology> topology_p, int row) {
+vector<float> ntupleProducer::getESHits(double X, double Y, double Z, map<DetId, EcalRecHit> rechits_map, const CaloSubdetectorGeometry*& geometry_p, CaloSubdetectorTopology *topology_p, int row) {
 
-  cout<<"debug 1"<<endl;
   //cout<<row<<endl;
 
   vector<float> esHits;
@@ -2039,7 +2038,6 @@ vector<float> ntupleProducer::getESHits(double X, double Y, double Z, map<DetId,
   DetId esId2 = (dynamic_cast<const EcalPreshowerGeometry*>(geometry_p))->getClosestCellInPlane(point, 2);
   ESDetId esDetId1 = (esId1 == DetId(0)) ? ESDetId(0) : ESDetId(esId1);
   ESDetId esDetId2 = (esId2 == DetId(0)) ? ESDetId(0) : ESDetId(esId2);  
-  cout<<"debug 2"<<endl;
 
   map<DetId, EcalRecHit>::iterator it;
   ESDetId next;
@@ -2049,10 +2047,10 @@ vector<float> ntupleProducer::getESHits(double X, double Y, double Z, map<DetId,
   strip1 = esDetId1;
   strip2 = esDetId2;
 
-  EcalPreshowerNavigator theESNav1(strip1, topology_p.get());
+  EcalPreshowerNavigator theESNav1(strip1, topology_p);
   theESNav1.setHome(strip1);
 
-  EcalPreshowerNavigator theESNav2(strip2, topology_p.get());
+  EcalPreshowerNavigator theESNav2(strip2, topology_p);
   theESNav2.setHome(strip2);
 
   if (row == 1) {
@@ -2063,8 +2061,7 @@ vector<float> ntupleProducer::getESHits(double X, double Y, double Z, map<DetId,
     if (strip2 != ESDetId(0)) strip2 = theESNav2.west();
   }
 
-  cout<<"debug 3"<<endl;
-  // Plane 1 
+  // Plane 2 
   if (strip1 == ESDetId(0)) {
     for (unsigned int i=0; i<31; ++i) esHits.push_back(0);
   } else {
@@ -2107,19 +2104,15 @@ vector<float> ntupleProducer::getESHits(double X, double Y, double Z, map<DetId,
     }
   }
 
-  cout<<"debug 4"<<endl;
   if (strip2 == ESDetId(0)) {
     for (unsigned int i=0; i<31; ++i) esHits.push_back(0);
-    cout<<"debug 5"<<endl;
   } else {
-    cout<<"debug 6"<<endl;
 
     it = rechits_map.find(strip2);
     if (it->second.energy() > 1.0e-10 && it != rechits_map.end()) esHits.push_back(it->second.energy());  
     else esHits.push_back(0);
     //cout<<"center : "<<strip2<<" "<<it->second.energy()<<endl;      
 
-    cout<<"debug 7"<<endl;
     // north road 
     for (unsigned int i=0; i<15; ++i) {
       next = theESNav2.north();
@@ -2135,7 +2128,6 @@ vector<float> ntupleProducer::getESHits(double X, double Y, double Z, map<DetId,
       }
     }
 
-    cout<<"debug 8"<<endl;
     // south road 
     theESNav2.setHome(strip2);
     theESNav2.home();
@@ -2154,7 +2146,6 @@ vector<float> ntupleProducer::getESHits(double X, double Y, double Z, map<DetId,
     }
   }
 
-  cout<<"debug end"<<endl;
   return esHits;
 }
 
