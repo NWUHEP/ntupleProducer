@@ -1,6 +1,6 @@
 #include "../interface/TCPhysObject.h"
 #include "TCPhysObjectLinkDef.h"
-//
+#include <iostream>
 
 TCPhysObject::TCPhysObject():
   _vtx(-9,-9,-9),

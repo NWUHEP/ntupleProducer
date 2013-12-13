@@ -2,6 +2,12 @@
 ---------------
 The most important logs should go here. Other are monitored with git commits.
 
+2013-Dec-12,  _Andrey_
+ * Conversion information is added to the tracks that have matched conversions.
+
+2013-Dec-10,  _Andrey_
+ * Introducing TCTrack class. It is used inside TCElectron to save the GSF tracks inside it. 
+
 2013-Nov-18,  _Andrey_
  * Adding an option to save/not save trigger objects (don't save by default, some work needs to be done there)
  * More trigger names added: quarkonia and Di-photon with a mass constraint

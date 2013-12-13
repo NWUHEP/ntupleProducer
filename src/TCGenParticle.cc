@@ -1,6 +1,5 @@
 #include "../interface/TCGenParticle.h"
 #include "TCGenParticleLinkDef.h"
-#include <iostream>
 
 TCGenParticle::TCGenParticle() {
   _mother = 0;

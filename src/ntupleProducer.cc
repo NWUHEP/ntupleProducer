@@ -128,8 +128,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     ++vtxCount;
   }
 
-  unsigned ivtx = 0;
-  VertexRef myVtxRef(primaryVtcs, ivtx);
+  VertexRef myVtxRef(primaryVtcs, 0); // main vertex #0
 
   ///////////////////////
   //get jet information//
@@ -245,7 +244,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
   if (saveMET_) {
 
-    /////////////// 
+    ///////////////
     // Get T0MET //
     ///////////////
 
@@ -272,7 +271,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       T0MET->SetSigmaX2( sigmaX2 );
 
     }
-    /////////////// 
+    ///////////////
     // Get T2MET //
     ///////////////
 
@@ -325,7 +324,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     recoMET->SetSigmaX2( sigmaX2 );
 
     //////////////////
-    // Get TrackMET //  
+    // Get TrackMET //
     //////////////////
 
 
@@ -575,10 +574,45 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 
       eleCon->SetEoP(iElectron->eSuperClusterOverP());
+
+      // ** *************
+      // Assosited GSF tracks:
+      // ** ************
+      
+      TCElectron::Track *t = new TCElectron::Track();
+      t->SetXYZM(iElectron->gsfTrack()->px(), iElectron->gsfTrack()->py(), iElectron->gsfTrack()->pz(),  0);
+      t->SetVtx(iElectron->gsfTrack()->vx(),  iElectron->gsfTrack()->vy(), iElectron->gsfTrack()->vz());
+      t->SetCharge(iElectron->gsfTrack()->chargeMode());
+      t->SetNormalizedChi2(iElectron->gsfTrack()->normalizedChi2());
+      t->SetPtError(iElectron->gsfTrack()->ptError());
+      TCTrack::ConversionInfo convInfo = ntupleProducer::CheckForConversions(hConversions, iElectron->gsfTrack(), 
+                                                                             vertexBeamSpot.position(), (*myVtxRef).position());
+      t->SetConversionInfo(convInfo);
+      //This is the main track, directly assosiated with an Electron
+      eleCon->AddTrack(*t);
+
       eleCon->SetPtError(iElectron->gsfTrack()->ptError());
 
-      eleCon->SetNormalizedChi2Gsf(iElectron->gsfTrack()->normalizedChi2());
+      //Int_t ntr=0;
+      //Adding more tracks from the ambiguos collection:
+      for (reco::GsfTrackRefVector::const_iterator gtr = iElectron->ambiguousGsfTracksBegin(); gtr != iElectron->ambiguousGsfTracksEnd(); ++gtr)
+        {
+          //ntr++;
+          //cout<<ntr<<" ambigious loop pt="<<(*gtr)->pt()<<" eta="<<(*gtr)->eta()<<" "<<" phi="<<(*gtr)->phi()<<endl;
 
+          t->SetXYZM((*gtr)->px(), (*gtr)->py(), (*gtr)->pz(),  0);
+          t->SetVtx((*gtr)->vx(), (*gtr)->vy(), (*gtr)->vz());
+          t->SetCharge((*gtr)->chargeMode());
+          t->SetNormalizedChi2((*gtr)->normalizedChi2());
+          t->SetPtError((*gtr)->ptError());
+          //re-using the same object
+          convInfo = ntupleProducer::CheckForConversions(hConversions, *gtr, 
+                                                       vertexBeamSpot.position(), (*myVtxRef).position());
+          t->SetConversionInfo(convInfo);
+          eleCon->AddTrack(*t);
+
+        }
+      
       bool validKF= false;
       reco::TrackRef myTrackRef = iElectron->closestCtfTrackRef();
       validKF = (myTrackRef.isAvailable());
@@ -597,9 +631,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       }
 
 
-      InputTag  vertexLabel(string("offlinePrimaryVertices"));
       Handle<reco::VertexCollection> thePrimaryVertexColl;
-      iEvent.getByLabel(vertexLabel,thePrimaryVertexColl);
+      iEvent.getByLabel("offlinePrimaryVertices",thePrimaryVertexColl);
 
       Vertex dummy;
       const Vertex *pv = &dummy;
@@ -643,7 +676,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       eleCon->SetNumberOfLostTrackerHits( iElectron->gsfTrack()->hitPattern().numberOfLostTrackerHits());
 
       eleCon->SetInverseEnergyMomentumDiff(fabs((1/iElectron->ecalEnergy()) - (1/iElectron->trackMomentumAtVtx().R())));
-
 
       // Conversion information
       // See definition from here: https://twiki.cern.ch/twiki/bin/view/CMS/ConversionTools
@@ -909,7 +941,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       edm::ParameterSet myConfig;
       myConfig.addUntrackedParameter("isolation_cone_size_forSCremoval",SCFPRemovalCone_);
       SuperClusterFootprintRemoval remover(iEvent,iSetup,myConfig);
-      PFIsolation_struct mySCFPstruct = remover.PFIsolation(iPhoton->superCluster(),edm::Ptr<Vertex>(primaryVtcs,ivtx));
+      PFIsolation_struct mySCFPstruct = remover.PFIsolation(iPhoton->superCluster(),edm::Ptr<Vertex>(primaryVtcs, 0));
       /*
          cout<<"chargediso: "<<mySCFPstruct.chargediso<<endl;
          cout<<"chargediso_primvtx: "<<mySCFPstruct.chargediso_primvtx<<endl;
@@ -1008,11 +1040,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         ////  Leptons and photons and b's, (oh my)
         //// Z's, W's, H's, and now big juicy Gravitons
         if (
-            (abs(myParticle->pdgId()) >= 11 && abs(myParticle->pdgId()) <= 16) 
-            || myParticle->pdgId() == 22 
-            || abs(myParticle->pdgId()) == 5 
-            || abs(myParticle->pdgId()) == 23 
-            || abs(myParticle->pdgId()) == 24 
+            (abs(myParticle->pdgId()) >= 11 && abs(myParticle->pdgId()) <= 16)
+            || myParticle->pdgId() == 22
+            || abs(myParticle->pdgId()) == 5
+            || abs(myParticle->pdgId()) == 23
+            || abs(myParticle->pdgId()) == 24
             || abs(myParticle->pdgId()) == 25   //higgs
             || abs(myParticle->pdgId()) == 35   // another higgs
             || abs(myParticle->pdgId()) == 36   // more higgses
@@ -1484,9 +1516,8 @@ void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron*
   eleCon->SetIdMap("eopOut",(iElectron->eEleClusterOverPout() > 20) ? 20 : iElectron->eEleClusterOverPout());
   eleCon->SetIdMap("preShowerORaw",iElectron->superCluster()->preshowerEnergy() / iElectron->superCluster()->rawEnergy());
 
-  InputTag  vertexLabel(string("offlinePrimaryVertices"));
   Handle<reco::VertexCollection> thePrimaryVertexColl;
-  iEvent.getByLabel(vertexLabel,thePrimaryVertexColl);
+  iEvent.getByLabel("offlinePrimaryVertices",thePrimaryVertexColl);
 
   Vertex dummy;
   const Vertex *pv = &dummy;
@@ -1986,7 +2017,7 @@ TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticl
     if (myParticle->numberOfMothers() == 0){
       genCon->SetMother(0);
     }else if(
-        abs(myParticle->mother()->pdgId()) != 5 
+        abs(myParticle->mother()->pdgId()) != 5
         && abs(myParticle->mother()->pdgId()) != 11
         && abs(myParticle->mother()->pdgId()) != 12
         && abs(myParticle->mother()->pdgId()) != 13
@@ -1994,11 +2025,11 @@ TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticl
         && abs(myParticle->mother()->pdgId()) != 15
         && abs(myParticle->mother()->pdgId()) != 16
         && abs(myParticle->mother()->pdgId()) != 22
-        && abs(myParticle->mother()->pdgId()) != 23 
-        && abs(myParticle->mother()->pdgId()) != 24 
-        && abs(myParticle->mother()->pdgId()) != 25 
-        && abs(myParticle->mother()->pdgId()) != 35 
-        && abs(myParticle->mother()->pdgId()) != 36 
+        && abs(myParticle->mother()->pdgId()) != 23
+        && abs(myParticle->mother()->pdgId()) != 24
+        && abs(myParticle->mother()->pdgId()) != 25
+        && abs(myParticle->mother()->pdgId()) != 35
+        && abs(myParticle->mother()->pdgId()) != 36
         && abs(myParticle->mother()->pdgId()) != 39
         && abs(myParticle->mother()->pdgId()) != 443  //Jpsi
         && abs(myParticle->mother()->pdgId()) != 553  //Upsilon
@@ -2194,6 +2225,44 @@ vector<float> ntupleProducer::getESEffSigmaRR(vector<float> ESHits0)
   delete htmpR;
 
   return esShape;
+}
+
+
+TCTrack::ConversionInfo ntupleProducer::CheckForConversions(const edm::Handle<reco::ConversionCollection> &convCol,
+                                                            const reco::GsfTrackRef &gsf,
+                                                            const math::XYZPoint &bs, const math::XYZPoint &pv)
+{
+  TCTrack::ConversionInfo * convInfo = new TCTrack::ConversionInfo();
+  //int iconv=-1;
+  for (reco::ConversionCollection::const_iterator conv = convCol->begin(); conv!= convCol->end(); ++conv) {
+    //iconv++;
+    
+    reco::Vertex vtx = conv->conversionVertex();
+    if (vtx.isValid()) {
+      if (ConversionTools::matchesConversion(gsf, *conv)) {
+        
+        (*convInfo).isValid = true;
+        
+        (*convInfo).vtxProb = TMath::Prob( vtx.chi2(), vtx.ndof() );
+        math::XYZVector mom(conv->refittedPairMomentum());
+        double dbsx = vtx.x() - bs.x();
+        double dbsy = vtx.y() - bs.y();
+        (*convInfo).lxyBS = (mom.x()*dbsx + mom.y()*dbsy)/mom.rho();
+        
+        double dpvx = vtx.x() - pv.x();
+        double dpvy = vtx.y() - pv.y();
+        (*convInfo).lxyPV = (mom.x()*dpvx + mom.y()*dpvy)/mom.rho();
+        
+        (*convInfo).nHitsMax=0;
+        for (std::vector<uint8_t>::const_iterator it = conv->nHitsBeforeVtx().begin(); it!=conv->nHitsBeforeVtx().end(); ++it) {
+          if ((*it)>(*convInfo).nHitsMax) (*convInfo).nHitsMax = (*it);
+        }
+        
+        break;
+      }
+    }
+  }
+  return (*convInfo);
 }
 
 

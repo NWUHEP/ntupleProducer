@@ -75,17 +75,6 @@
 #include "SimDataFormats/JetMatching/interface/MatchedPartons.h"
 #include "SimDataFormats/JetMatching/interface/JetMatchedPartons.h"
 
-// PAT 
-//Not using pats no more, commentng out
-//#include "DataFormats/PatCandidates/interface/Electron.h"
-//#include "DataFormats/PatCandidates/interface/Muon.h"
-//#include "DataFormats/PatCandidates/interface/Photon.h"
-//#include "DataFormats/PatCandidates/interface/MET.h"
-//#include "DataFormats/PatCandidates/interface/Jet.h"
-//#include "DataFormats/PatCandidates/interface/Tau.h"
-
-//#include "RecoVertex/PrimaryVertexProducer/interface/VertexHigherPtSquared.h"
-
 // JEC
 #include "JetMETCorrections/Objects/interface/JetCorrector.h"
 #include "JetMETCorrections/Objects/interface/JetCorrectionsRecord.h"
@@ -106,10 +95,6 @@
 #include "EgammaAnalysis/ElectronTools/interface/PFIsolationEstimator.h"
 //#include "EgammaAnalysis/ElectronTools/interface/ElectronEnergyRegressionEvaluate.h"
 
-//#include "EgammaAnalysis/ElectronTools/interface/ElectronEnergyCalibrator.h"
-
-//#include "EgammaAnalysis/ElectronTools/interface/EGammaMvaEleEstimator.h"
-//#include "Geometry/CaloEventSetup/interface/CaloTopologyRecord.h"
 #include "TrackingTools/IPTools/interface/IPTools.h"
 
 // Tracking tools, supposedly for track-met:
@@ -211,12 +196,19 @@ class ntupleProducer : public edm::EDAnalyzer {
   virtual bool  triggerDecision(edm::Handle<edm::TriggerResults>& hltR, int iTrigger);
   virtual float sumPtSquared(const Vertex& v);
   virtual bool  associateJetToVertex(reco::PFJet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet* outJet);   
-  virtual void  electronMVA(const reco::GsfElectron* iElectron, TCElectron* eleCon, const edm::Event& iEvent,const edm::EventSetup& iSetup, const reco::PFCandidateCollection& PFCandidates, float Rho);
-  virtual bool  isFilteredOutScraping(const edm::Event& iEvent, const edm::EventSetup& iSetup, int numtrack=10, double thresh=0.25);
+  virtual void  electronMVA(const reco::GsfElectron* iElectron, TCElectron* eleCon, 
+                            const edm::Event& iEvent, const edm::EventSetup& iSetup, 
+                            const reco::PFCandidateCollection& PFCandidates, float Rho);
+  virtual bool  isFilteredOutScraping(const edm::Event& iEvent, const edm::EventSetup& iSetup, 
+                                      int numtrack=10, double thresh=0.25);
   virtual float MatchBTagsToJets(const reco::JetTagCollection, const reco::PFJet);
-  void analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR, edm::Handle<trigger::TriggerEvent> &hltE, const std::string& triggerName, int* trigCount);                   
+  void analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR, edm::Handle<trigger::TriggerEvent> &hltE, 
+                      const std::string& triggerName, int* trigCount);                   
   void initJetEnergyCorrector(const edm::EventSetup &iSetup, bool isData);
   TCGenParticle* addGenParticle(const reco::GenParticle* myParticle, int& genPartCount, std::map<const reco::GenParticle*,TCGenParticle*>& genMap);
+  TCTrack::ConversionInfo CheckForConversions(const edm::Handle<reco::ConversionCollection> &convCol,
+                                              const reco::GsfTrackRef &trk,
+                                              const math::XYZPoint &bs, const math::XYZPoint &pv);
   vector<float> getESHits(double X, double Y, double Z, map<DetId, EcalRecHit> rechits_map, const CaloSubdetectorGeometry*& geometry_p, CaloSubdetectorTopology *topology_p, int row=0);
   vector<float> getESEffSigmaRR(vector<float> ESHits0);
 
