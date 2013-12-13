@@ -41,4 +41,4 @@
 <use   name="Geometry/EcalAlgo"/>
 <use   name="RecoCaloTools/Navigation"/>
 <flags   EDM_PLUGIN="1"/>
-<Flags CXXFLAGS="-g"/>
+#<Flags CXXFLAGS="-g"/>
