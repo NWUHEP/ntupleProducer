@@ -567,24 +567,26 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       // ** *************
       // Assosited GSF tracks:
       // ** ************
+      
       TCElectron::Track *t = new TCElectron::Track();
       t->SetXYZM(iElectron->gsfTrack()->px(), iElectron->gsfTrack()->py(), iElectron->gsfTrack()->pz(),  0);
       t->SetVtx(iElectron->gsfTrack()->vx(),  iElectron->gsfTrack()->vy(), iElectron->gsfTrack()->vz());
       t->SetCharge(iElectron->gsfTrack()->chargeMode());
       t->SetNormalizedChi2(iElectron->gsfTrack()->normalizedChi2());
       t->SetPtError(iElectron->gsfTrack()->ptError());
-      
+      TCTrack::ConversionInfo convInfo = ntupleProducer::CheckForConversions(hConversions, iElectron->gsfTrack(), 
+                                                                             vertexBeamSpot.position(), (*myVtxRef).position());
+      t->SetConversionInfo(convInfo);
       //This is the main track, directly assosiated with an Electron
       eleCon->AddTrack(*t);
 
       eleCon->SetPtError(iElectron->gsfTrack()->ptError());
 
-      Int_t ntr=0;
-
-      //Adding more tracks from the ambiguos collectio:n
+      //Int_t ntr=0;
+      //Adding more tracks from the ambiguos collection:
       for (reco::GsfTrackRefVector::const_iterator gtr = iElectron->ambiguousGsfTracksBegin(); gtr != iElectron->ambiguousGsfTracksEnd(); ++gtr)
         {
-          ntr++;
+          //ntr++;
           //cout<<ntr<<" ambigious loop pt="<<(*gtr)->pt()<<" eta="<<(*gtr)->eta()<<" "<<" phi="<<(*gtr)->phi()<<endl;
 
           t->SetXYZM((*gtr)->px(), (*gtr)->py(), (*gtr)->pz(),  0);
@@ -592,11 +594,14 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
           t->SetCharge((*gtr)->chargeMode());
           t->SetNormalizedChi2((*gtr)->normalizedChi2());
           t->SetPtError((*gtr)->ptError());
+          //re-using the same object
+          convInfo = ntupleProducer::CheckForConversions(hConversions, *gtr, 
+                                                       vertexBeamSpot.position(), (*myVtxRef).position());
+          t->SetConversionInfo(convInfo);
           eleCon->AddTrack(*t);
 
         }
-
-
+      
       bool validKF= false;
       reco::TrackRef myTrackRef = iElectron->closestCtfTrackRef();
       validKF = (myTrackRef.isAvailable());
@@ -666,20 +671,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       bool passConvVeto = !(ConversionTools::hasMatchedConversion(*iElectron,hConversions,vertexBeamSpot.position()));
       eleCon->SetPassConversionVeto(passConvVeto);
       eleCon->SetConversionMissHits(iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfHits());
-
-
-      int iconv=-1;
-      for (reco::ConversionCollection::const_iterator conv = hConversions->begin(); conv!= hConversions->end(); ++conv) {
-        iconv++;
-
-        reco::Vertex vtx = conv->conversionVertex();
-        if (vtx.isValid()) {
-          if (ConversionTools::matchesConversion(*iElectron, *conv)) {
-
-            break;
-          }
-        }
-
 
       eleIsolator.fGetIsolation(&(*iElectron), &thePfColl, myVtxRef, primaryVtcs);
       eleCon->SetIsoMap("pfChIso_R04", eleIsolator.getIsolationCharged());
@@ -2000,6 +1991,44 @@ TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticl
     genCon = it->second;
 
   return genCon;
+}
+
+
+TCTrack::ConversionInfo ntupleProducer::CheckForConversions(const edm::Handle<reco::ConversionCollection> &convCol,
+                                                            const reco::GsfTrackRef &gsf,
+                                                            const math::XYZPoint &bs, const math::XYZPoint &pv)
+{
+  TCTrack::ConversionInfo * convInfo = new TCTrack::ConversionInfo();
+  //int iconv=-1;
+  for (reco::ConversionCollection::const_iterator conv = convCol->begin(); conv!= convCol->end(); ++conv) {
+    //iconv++;
+    
+    reco::Vertex vtx = conv->conversionVertex();
+    if (vtx.isValid()) {
+      if (ConversionTools::matchesConversion(gsf, *conv)) {
+        
+        (*convInfo).isValid = true;
+        
+        (*convInfo).vtxProb = TMath::Prob( vtx.chi2(), vtx.ndof() );
+        math::XYZVector mom(conv->refittedPairMomentum());
+        double dbsx = vtx.x() - bs.x();
+        double dbsy = vtx.y() - bs.y();
+        (*convInfo).lxyBS = (mom.x()*dbsx + mom.y()*dbsy)/mom.rho();
+        
+        double dpvx = vtx.x() - pv.x();
+        double dpvy = vtx.y() - pv.y();
+        (*convInfo).lxyPV = (mom.x()*dpvx + mom.y()*dpvy)/mom.rho();
+        
+        (*convInfo).nHitsMax=0;
+        for (std::vector<uint8_t>::const_iterator it = conv->nHitsBeforeVtx().begin(); it!=conv->nHitsBeforeVtx().end(); ++it) {
+          if ((*it)>(*convInfo).nHitsMax) (*convInfo).nHitsMax = (*it);
+        }
+        
+        break;
+      }
+    }
+  }
+  return (*convInfo);
 }
 
 

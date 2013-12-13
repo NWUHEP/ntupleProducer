@@ -190,12 +190,21 @@ class ntupleProducer : public edm::EDAnalyzer {
   virtual bool  triggerDecision(edm::Handle<edm::TriggerResults>& hltR, int iTrigger);
   virtual float sumPtSquared(const Vertex& v);
   virtual bool  associateJetToVertex(reco::PFJet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet* outJet);   
-  virtual void  electronMVA(const reco::GsfElectron* iElectron, TCElectron* eleCon, const edm::Event& iEvent,const edm::EventSetup& iSetup, const reco::PFCandidateCollection& PFCandidates, float Rho);
-  virtual bool  isFilteredOutScraping(const edm::Event& iEvent, const edm::EventSetup& iSetup, int numtrack=10, double thresh=0.25);
+  virtual void  electronMVA(const reco::GsfElectron* iElectron, TCElectron* eleCon, 
+                            const edm::Event& iEvent, const edm::EventSetup& iSetup, 
+                            const reco::PFCandidateCollection& PFCandidates, float Rho);
+  virtual bool  isFilteredOutScraping(const edm::Event& iEvent, const edm::EventSetup& iSetup, 
+                                      int numtrack=10, double thresh=0.25);
   virtual float MatchBTagsToJets(const reco::JetTagCollection, const reco::PFJet);
-  void analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR, edm::Handle<trigger::TriggerEvent> &hltE, const std::string& triggerName, int* trigCount);                   
+  void analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR, edm::Handle<trigger::TriggerEvent> &hltE, 
+                      const std::string& triggerName, int* trigCount);                   
   void initJetEnergyCorrector(const edm::EventSetup &iSetup, bool isData);
-  TCGenParticle* addGenParticle(const reco::GenParticle* myParticle, int& genPartCount, std::map<const reco::GenParticle*,TCGenParticle*>& genMap);
+  TCGenParticle* addGenParticle(const reco::GenParticle* myParticle, int& genPartCount, 
+                                std::map<const reco::GenParticle*,TCGenParticle*>& genMap);
+  TCTrack::ConversionInfo CheckForConversions(const edm::Handle<reco::ConversionCollection> &convCol,
+                                              const reco::GsfTrackRef &trk,
+                                              const math::XYZPoint &bs, const math::XYZPoint &pv);
+
   // ----------member data ---------------------------
   
   struct JetCompare :
