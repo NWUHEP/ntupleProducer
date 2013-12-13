@@ -36,8 +36,6 @@
 #include "DataFormats/JetReco/interface/PFJet.h"
 #include "DataFormats/JetReco/interface/PFJetCollection.h"
 #include "DataFormats/JetReco/interface/JetID.h"
-#include "DataFormats/JetReco/interface/JPTJetCollection.h"
-#include "DataFormats/JetReco/interface/JPTJet.h"
 
 #include "DataFormats/METReco/interface/PFMET.h"
 #include "DataFormats/METReco/interface/PFMETCollection.h"
@@ -300,7 +298,6 @@ class ntupleProducer : public edm::EDAnalyzer {
   
   //Physics object containers
   TClonesArray* recoJets;
-  TClonesArray* recoJPT;
   TClonesArray* recoMuons;
   TClonesArray* recoElectrons;
   TClonesArray* recoPhotons;

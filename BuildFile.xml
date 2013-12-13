@@ -40,5 +40,6 @@
 <use   name="Geometry/CaloTopology"/>
 <use   name="Geometry/EcalAlgo"/>
 <use   name="RecoCaloTools/Navigation"/>
+<use   name="DataFormats/DetId"/>
 <flags   EDM_PLUGIN="1"/>
 #<Flags CXXFLAGS="-g"/>

@@ -40,7 +40,7 @@ if (isRealData):
     process.GlobalTag.globaltag = 'FT_53_V21_AN3::All'
     process.load('JetMETCorrections.METPUSubtraction.mvaPFMET_leptons_data_cff')
 else:
-    process.GlobalTag.globaltag = 'START53_V27::All'
+    process.GlobalTag.globaltag = 'START53_V7N::All'
     process.load('JetMETCorrections.METPUSubtraction.mvaPFMET_leptons_cff')
 
 # Create good primary vertices for PF association
@@ -131,42 +131,14 @@ process.ak5JetTracksAssociatorAtVertex.jets = cms.InputTag("ak5PFJetsL1FastL2L3"
 process.ak5JetTracksAssociatorAtCaloFace.jets = cms.InputTag("ak5PFJetsL1FastL2L3")
 process.ak5JetExtender.jets = cms.InputTag("ak5PFJetsL1FastL2L3")
 
-# jpt extras
-#process.load("RecoJets.Configuration.RecoPFJets_cff")
-#process.load("RecoJets.Configuration.RecoJPTJets_cff")
-#process.load("RecoJets.JetAssociationProducers.ak5JTA_cff")
-#process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
-#process.load('JetMETCorrections.Configuration.JetCorrectionServices_cff')
-
 
 process.kt6PFJetsIso = process.kt6PFJets.clone()
 process.kt6PFJetsIso.doRhoFastjet = True
 process.kt6PFJetsIso.Rho_EtaMax = cms.double(2.5)
 
 
-#process.ak5JPTL1Offset.algorithm = 'AK5JPT'
-#process.ak5JetTracksAssociatorAtVertex.useAssigned = cms.bool(True)
-#process.ak5JetTracksAssociatorAtVertex.pvSrc = cms.InputTag("offlinePrimaryVertices")
-#process.ak5JetTracksAssociatorAtVertex.pvSrc = cms.InputTag("offlinePrimaryVerticesWithBS")
-
-#process.jpt = cms.Sequence(
-#                        process.ak5JTA
-#                        * process.recoJPTJets
-#                        * process.ak5JPTJetsL1L2L3
-#                        * process.kt6PFJets
-#                        * process.ak5PFJetsL1FastL2L3
-#                        )
-
 # for jet pileup ID variables
 from RecoJets.JetProducers.PileupJetIDParams_cfi import *
-
-#commenting out  pat sequences. we don't use them
-#process.load("PhysicsTools.PatAlgos.patSequences_cff")
-#from PhysicsTools.PatAlgos.patEventContent_cff import patEventContent
-
-#from NWU.ntupleProducer.PatSequences_cff import addPatSequence
-#addPatSequence(process, not isRealData, addPhotons = True)
-
 
 # global options
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
