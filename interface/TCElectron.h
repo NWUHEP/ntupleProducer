@@ -85,6 +85,7 @@ class TCElectron : public TCEGamma {
   
   float MvaID_Old() const; 
   float MvaID_HZZ() const; 
+  float MvaID() const; 
   float EnergyRegression() const; 
   float EnergyRegressionErr() const; 
   

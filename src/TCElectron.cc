@@ -68,6 +68,9 @@ float TCElectron::MvaID_Old() const {
 float TCElectron::MvaID_HZZ() const { 
   return _mvaID_HZZ; 
 } 
+float TCElectron::MvaID() const { 
+  return _mvaID_HZZ; 
+} 
 
 float TCElectron::EnergyRegression() const { 
   return _regEne; 
