@@ -25,7 +25,7 @@ Info in <TTreePlayer::MakeClass>: Files: myAnalyzer.h and myAnalyzer.C generated
 As you may have guessed, we will use TSelector method to write the analysis. More details on which can be found here: [http://root.cern.ch/root/html/TSelector.html][TSelector]
 One may use other analysis methods, that's fine too, remember we have a rather simple root tree to deal with.
 
-Two files have been created for us: **myAnalyzer.cc** and **myAnalyzer.h**
+Two files have been created for us: **myAnalyzer.C** and **myAnalyzer.h**
 
  * Now we need to edit **.h** file to let it know about TClone classes that we have inside our root file, just include those:
 ```cpp
@@ -44,7 +44,7 @@ Two files have been created for us: **myAnalyzer.cc** and **myAnalyzer.h**
 #include "../interface/TCTriggerObject.h"
 ```
 
- * For **.cc** file add the following into your **Process()** method:
+ * For **.C** file add the following into your **Process()** method:
 ```cpp
 Bool_t myAnalyzer::Process(Long64_t entry)
 {
@@ -81,7 +81,6 @@ void run(){
 
   TChain* fChain = new TChain("ntupleProducer/eventTree");
   fChain->Add("nuTuple.root");
-  //fChain->Add("nuTuple_2.root");
 
   fChain->Process("myAnalyzer.C+", "options");
 }
