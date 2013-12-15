@@ -124,12 +124,12 @@ In case one has to make a lot of histograms, one could use famous HistoManager,
 
 
 
-#### How do I know which objects are available in the tree
+#### How do I know which objects are available in the tree?
 
  * Look into .h files for the class definitions.
  * Browse the root file with TBrowser, to see what's in there.
 
-#### How do I know wjich methods are available fro each object:
+#### How do I know which methods are available for each object?
 
 You have to go and look into a paticulr classs where the object is defeined.
 For example all methods available from Muons can be viewd
@@ -145,17 +145,17 @@ If you need to know where it's set you go to the **ntupleProducer.cc** code and 
 Most of the obcects we save in the ntuples are inherited from **TCPhysObject** class which itself is inherited from ROOT's TObject.
 **TCPhoton** and **TCElectron** are inherited from a common **TCEgamma** class.
 
-#### How to pass options to your analyzer
+#### How to pass options to your analyzer?
 
-#### How to get the total number of events
+#### How to get the total number of events?
 
-#### How to use the trigger names
+#### How to use the trigger names?
 
-#### How to make easy histogramms with HistManager
+#### How to make easy histogramms with HistManager?
 
-#### How to use plugins
+#### How to use plugins?
 
-#### Do I need CMSSW to run it
+#### Do I need CMSSW to run it?
  No, you only need Root.
 
 [TSelector]: http://root.cern.ch/root/html/TSelector.html
