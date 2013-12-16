@@ -158,5 +158,15 @@ Most of the obcects we save in the ntuples are inherited from **TCPhysObject** c
 #### Do I need CMSSW to run it?
  No, you only need Root.
 
+#### Where can I find other analysis based on these nuTuples?
+Check these out:
+ * [Andrey's  higgs to llgamma dalitz][andrey-zgamma]
+ * [Nathaniel's][Flavour changing neutral Higgs][nate-fcnc]
+ * [Brian's HZG][brianne-hzg]
+
 [TSelector]: http://root.cern.ch/root/html/TSelector.html
 [code-L416]: https://github.com/NWUHEP/ntupleProducer/blob/master/src/ntupleProducer.cc#L416
+
+[andrey-zgamma]: https://github.com/andreypz/nwu-my-analysis/tree/master/zgamma
+[nate-fcnc]: https://github.com/naodell/Analysis_CMS/tree/master/fcncAnalysis
+[brianne-hzg]: https://github.com/brovercleveland/HZG_Analyzer/tree/master/HiggsZGAnalyzer
