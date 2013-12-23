@@ -28,16 +28,15 @@ class TCEGamma : public TCPhysObject {
     {}
   };
 
-
  private:
-  
+
   bool  _isEB;                  // true if particle is in ECAL Barrel
   bool  _isEE;                  // true if particle is in ECAL Endcaps
   bool  _isInGap;
-  
+
   float _hadOverEm;
   float _r9;
-  
+
   //Superclaster shape variables. These should be coommon between electrons and photons.
   float _scEta;
   float _scPhi;
@@ -62,7 +61,7 @@ class TCEGamma : public TCPhysObject {
   float _e5x5;
 
   vector<float> _esEffSigmaRR;
-  
+
 
   //float _mvaID;
   //float _regEne;
@@ -75,24 +74,21 @@ class TCEGamma : public TCPhysObject {
   float _pfIsoNeutral;
   float _pfIsoPhoton;
 
-  //bool  _convVeto;
-  
   // crystal stuff
   vector<TCEGamma::CrystalInfo> _crysVect;
-  int  _nCrystals; 
+  int  _nCrystals;
 
-  
  public:
   TCEGamma();
   virtual ~TCEGamma();
-  
+
    // "get" methods -----------
   vector<TCEGamma::CrystalInfo> GetCrystalVect() const;
 
   int   GetNCrystals() const;
   float HadOverEm() const;
-  
-  float R9() const; 
+
+  float R9() const;
 
   float SCEta() const;
   float SCPhi() const;
@@ -122,25 +118,21 @@ class TCEGamma : public TCPhysObject {
   float PfIsoCharged() const;
   float PfIsoNeutral() const;
   float PfIsoPhoton() const;
-  
-  float E2OverE5() const; 
 
-  //float MvaID() const; 
-  //float EnergyRegression() const; 
-  //float EnergyRegressionErr() const; 
-  
-  //bool  ConversionVeto() const;
-  
+  float E2OverE5() const;
+
+  //float MvaID() const;
+  //float EnergyRegression() const;
+  //float EnergyRegressionErr() const;
+
   bool IsEB() const;
   bool IsEE() const;
   bool IsInGap() const;
-  
-  //bool PassConversion(int lvl) const;
-  
+
   //--------------------------
   // "set" methods ---------
   //--------------------------
-  
+
   void AddCrystal(TCEGamma::CrystalInfo);
   void SetNCrystals(int);
 
@@ -148,7 +140,7 @@ class TCEGamma : public TCPhysObject {
 
   void SetSCEta(float);
   void SetSCPhi(float);
-  
+
   void SetSCDeltaEta(float);
   void SetSCDeltaPhi(float);
 
@@ -171,26 +163,21 @@ class TCEGamma : public TCPhysObject {
   void SetE5x5(float);
 
   void SetESEffSigmaRR(float, float, float);
-  
-  
-  //void SetConversionVeto(bool);
-  
+
   void SetR9(float);
   //void SetMvaID(float m);
   //void SetEnergyRegression(float e);
   //void SetEnergyRegressionErr(float e);
-  
+
   void SetIsEB(bool);
   void SetIsEE(bool);
   void SetIsInGap(bool);
-  
+
   void SetPfIsoCharged(float);
   void SetPfIsoNeutral(float);
   void SetPfIsoPhoton(float);
-  
+
   ClassDef(TCEGamma, 1);
 };
 
 #endif	/* _TCEGAMMA_H */
-
-

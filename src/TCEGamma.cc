@@ -9,7 +9,6 @@ TCEGamma::TCEGamma():
 
   _hadOverEm(-99),
   _r9(-99),
-  
 
   _scEta(-99),
   _scPhi(-99),
@@ -48,11 +47,11 @@ TCEGamma::~TCEGamma() {}
 std::vector<TCEGamma::CrystalInfo> TCEGamma::GetCrystalVect() const { return _crysVect; }
 int   TCEGamma::GetNCrystals() const { return _nCrystals;}
 
-//float TCEGamma::MvaID() const { return _mvaID; } 
-//float TCEGamma::EnergyRegression() const { return _regEne; } 
-//float TCEGamma::EnergyRegressionErr() const { return _regErr; } 
+//float TCEGamma::MvaID() const { return _mvaID; }
+//float TCEGamma::EnergyRegression() const { return _regEne; }
+//float TCEGamma::EnergyRegressionErr() const { return _regErr; }
 
-float TCEGamma::R9() const { return _r9; } 
+float TCEGamma::R9() const { return _r9; }
 
 
 bool TCEGamma::IsEB() const {
@@ -73,7 +72,7 @@ float TCEGamma::HadOverEm() const {
 
 
 
-//Super cluster getters 
+//Super cluster getters
 float TCEGamma::SCEta() const {
   return _scEta;
 }
@@ -139,6 +138,7 @@ float TCEGamma::E2OverE5() const {
   else
     return -1;
 }
+
 vector<float> TCEGamma::ESEffSigmaRR() const {
   return _esEffSigmaRR;
 }
@@ -171,10 +171,10 @@ float TCEGamma::PfIsoPhoton() const {
 void TCEGamma::AddCrystal(TCEGamma::CrystalInfo crys) {_crysVect.push_back(crys);}
 void TCEGamma::SetNCrystals(int n){ _nCrystals = n;}
 
-void TCEGamma::SetR9(float r){ _r9 = r; } 
+void TCEGamma::SetR9(float r){ _r9 = r; }
 
-//void TCEGamma::SetEnergyRegression(float e){ _regEne = e; } 
-//void TCEGamma::SetEnergyRegressionErr(float e){ _regErr = e; } 
+//void TCEGamma::SetEnergyRegression(float e){ _regEne = e; }
+//void TCEGamma::SetEnergyRegressionErr(float e){ _regErr = e; }
 
 void TCEGamma::SetHadOverEm(float he){
   _hadOverEm = he;

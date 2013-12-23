@@ -535,6 +535,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       eleCon->SetFBrem(  iElectron->fbrem());
       eleCon->SetEoP(    iElectron->eSuperClusterOverP());
       eleCon->SetEoPout( iElectron->eEleClusterOverPout());
+      eleCon->SetESeedOverP(iElectron->eSeedClusterOverP());
 
       //eleCon->SetHadOverEm(iElectron->hadronicOverEm());
       // ***** >> Switching to officially recommended method:  <<<<<<
@@ -612,6 +613,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
           eleCon->AddTrack(*t);
 
         }
+
+      eleCon->SetConversionDcot(iElectron->convDcot());
+      eleCon->SetConversionDist(iElectron->convDist());
+      eleCon->SetConversionRadius(iElectron->convRadius());
       
       bool validKF= false;
       reco::TrackRef myTrackRef = iElectron->closestCtfTrackRef();
@@ -725,36 +730,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       eleCon->SetPfIsoNeutral(eleIsolator.getIsolationNeutral());
       eleCon->SetPfIsoPhoton( eleIsolator.getIsolationPhoton());
 
-      if (saveMoreEgammaVars_){
-        eleCon->SetIsoMap("pfChIso_R04", eleIsolator.getIsolationCharged());
-        eleCon->SetIsoMap("pfNeuIso_R04",eleIsolator.getIsolationNeutral());
-        eleCon->SetIsoMap("pfPhoIso_R04",eleIsolator.getIsolationPhoton());
-
-        eleCon->SetIsoMap("modIso_Tk",     modElectronIso_Tk.get(eee-1));
-        eleCon->SetIsoMap("modIso_Ecal",   modElectronIso_Ecal.get(eee-1));
-        eleCon->SetIsoMap("modIso_HcalD1", modElectronIso_HcalD1.get(eee-1));
-
-        eleCon->SetIdMap("fabsEPDiff",fabs((1/iElectron->ecalEnergy()) - (1/iElectron->trackMomentumAtVtx().R())));
-
-        // Electron Iso variables
-        eleCon->SetIsoMap("EmIso_R03",  iElectron->dr03EcalRecHitSumEt());
-        eleCon->SetIsoMap("HadIso_R03", iElectron->dr03HcalTowerSumEt());
-        eleCon->SetIsoMap("SumPt_R03",  iElectron->dr03TkSumPt());
-
-        eleCon->SetIsoMap("EmIso_R04",  iElectron->dr04EcalRecHitSumEt());
-        eleCon->SetIsoMap("HadIso_R04", iElectron->dr04HcalTowerSumEt());
-        eleCon->SetIsoMap("SumPt_R04",  iElectron->dr04TkSumPt());
-
-        eleCon->SetIsoMap("pfPhotonEt_R03",      iElectron->pfIsolationVariables().photonIso);
-        eleCon->SetIsoMap("pfChargedHadron_R03", iElectron->pfIsolationVariables().chargedHadronIso);
-        eleCon->SetIsoMap("pfNeutralHadron_R03", iElectron->pfIsolationVariables().neutralHadronIso);
-
-        eleCon->SetIsoMap("EffArea_R03", AEff03);
-        eleCon->SetIsoMap("EffArea_R04", AEff04);
-        // Add electron MVA ID and ISO variables
-        electronMVA(&(*iElectron), eleCon, iEvent, iSetup, thePfCollEleIso, rhoFactor);
-
-      }
 
       eleCount++;
     }
@@ -905,8 +880,12 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       myPhoton->SetE1x3(lazyTool->e3x1(*phoSeed));
       myPhoton->SetE1x5(iPhoton->e1x5());
       myPhoton->SetE2x2(lazyTool->e2x2(*phoSeed));
-      myPhoton->SetE2x5(iPhoton->e2x5());
-      myPhoton->SetE2x5Max(lazyTool->e2x5Max(*phoSeed));
+      myPhoton->SetE2x5(iPhoton->e2x5()); // <<-
+      // How come these two aren't  the same?!
+      myPhoton->SetE2x5Max(lazyTool->e2x5Max(*phoSeed)); //<<-
+      //if (iPhoton->e2x5() != lazyTool->e2x5Max(*phoSeed))
+      //cout<<"No, it's not the same! : "<< iPhoton->e2x5()<<" vs "<< lazyTool->e2x5Max(*phoSeed)<<endl;
+
       myPhoton->SetE5x5(iPhoton->e5x5());
 
       // PF Iso for photons
@@ -955,17 +934,20 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
          cout<<"phi_rcone: "<<mySCFPstruct.phi_rcone<<endl;
          cout<<"rcone_isOK: "<<mySCFPstruct.rcone_isOK<<endl;
          */
-      myPhoton->SetIsoMap("SCFP_chargediso",mySCFPstruct.chargediso);
-      myPhoton->SetIsoMap("SCFP_chargediso_primvtx",mySCFPstruct.chargediso_primvtx);
-      myPhoton->SetIsoMap("SCFP_neutraliso",mySCFPstruct.neutraliso);
-      myPhoton->SetIsoMap("SCFP_photoniso",mySCFPstruct.photoniso);
-      myPhoton->SetIsoMap("SCFP_chargediso_rcone",mySCFPstruct.chargediso_rcone);
-      myPhoton->SetIsoMap("SCFP_chargediso_primvtx_rcone",mySCFPstruct.chargediso_primvtx_rcone);
-      myPhoton->SetIsoMap("SCFP_neutraliso_rcone",mySCFPstruct.neutraliso_rcone);
-      myPhoton->SetIsoMap("SCFP_photoniso_rcone",mySCFPstruct.photoniso_rcone);
-      myPhoton->SetIsoMap("SCFP_eta_rcone",mySCFPstruct.eta_rcone);
-      myPhoton->SetIsoMap("SCFP_phi_rcone",mySCFPstruct.phi_rcone);
-      myPhoton->SetIsoMap("SCFP_rcone_isOK",mySCFPstruct.rcone_isOK);
+      TCPhoton::FootprintRemoval foot;
+      foot.chargediso = mySCFPstruct.chargediso;
+      foot.chargediso_primvtx = mySCFPstruct.chargediso_primvtx;
+      foot.neutraliso = mySCFPstruct.neutraliso;
+      foot.photoniso = mySCFPstruct.photoniso;
+      foot.chargediso_rcone = mySCFPstruct.chargediso_rcone;
+      foot.chargediso_primvtx_rcone = mySCFPstruct.chargediso_primvtx_rcone;
+      foot.neutraliso_rcone = mySCFPstruct.neutraliso_rcone;
+      foot.photoniso_rcone = mySCFPstruct.photoniso_rcone;
+      foot.eta_rcone = mySCFPstruct.eta_rcone;
+      foot.phi_rcone = mySCFPstruct.phi_rcone;
+      foot.rcone_isOK = mySCFPstruct.rcone_isOK;
+
+      myPhoton->SetSCFootprintRemovalStruct(foot);
 
       //Conversion info
       bool passElectronVeto = !(ConversionTools::hasMatchedPromptElectron(iPhoton->superCluster(), hElectrons, hConversions, vertexBeamSpot.position()));
@@ -1482,349 +1464,6 @@ bool ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::Vertex
   return true;
 }
 
-
-void ntupleProducer::electronMVA(const reco::GsfElectron* iElectron, TCElectron* eleCon,
-    const edm::Event& iEvent, const edm::EventSetup& iSetup, const reco::PFCandidateCollection& PFCandidates, float Rho)
-{
-  if (verboseMVAs) cout<<"loading up electron MVA values"<<endl;
-  //**********************************************************
-  //ID variables
-  //**********************************************************
-  bool validKF= false;
-  reco::TrackRef myTrackRef = iElectron->closestCtfTrackRef();
-  validKF = (myTrackRef.isAvailable());
-  validKF = (myTrackRef.isNonnull());
-
-  eleCon->SetIdMap("fbrem", (iElectron->fbrem() < -1) ? -1 : iElectron->fbrem());
-  eleCon->SetIdMap("gsfChi2", (iElectron->gsfTrack()->normalizedChi2() > 200) ? 200 : iElectron->gsfTrack()->normalizedChi2());
-  eleCon->SetIdMap("kfChi2", (validKF) ? myTrackRef->normalizedChi2() : 0);
-  eleCon->SetIdMap("kfNLayers", (validKF) ? myTrackRef->hitPattern().trackerLayersWithMeasurement() : -1.);
-  eleCon->SetIdMap("kfNLayersAll", (validKF) ? myTrackRef->numberOfValidHits() : -1.);
-  eleCon->SetIdMap("dEta", (fabs(iElectron->deltaEtaSuperClusterTrackAtVtx()) > 0.06) ? 0.06 : fabs(iElectron->deltaEtaSuperClusterTrackAtVtx()));
-  eleCon->SetIdMap("dPhi", iElectron->deltaPhiSuperClusterTrackAtVtx());
-  eleCon->SetIdMap("dEtaAtCalo", iElectron->deltaEtaSeedClusterTrackAtCalo());
-  eleCon->SetIdMap("SigmaIPhiIPhi", (isnan(iElectron->sigmaIphiIphi())) ? 0 : iElectron->sigmaIphiIphi() );
-  eleCon->SetIdMap("SCEtaWidth", iElectron->superCluster()->etaWidth());
-  eleCon->SetIdMap("SCPhiWidth", iElectron->superCluster()->phiWidth());
-  eleCon->SetIdMap("EoP", (iElectron->eSuperClusterOverP() > 20) ? 20 : iElectron->eSuperClusterOverP());
-  eleCon->SetIdMap("ome1x5oe5x5",(iElectron->e5x5()) !=0. ? 1.-(iElectron->e1x5()/iElectron->e5x5()) : -1.);
-  if (eleCon->IdMap("ome1x5oe5x5") < -1) eleCon->SetIdMap("ome1x5oe5x5",-1);
-  if (eleCon->IdMap("ome1x5oe5x5") > 2) eleCon->SetIdMap("ome1x5oe5x5",2);
-  eleCon->SetIdMap("R9",(iElectron->r9() > 5) ? 5 : iElectron->r9());
-  eleCon->SetIdMap("ooemoopV1",(1.0/iElectron->ecalEnergy()) - (1.0 / iElectron->p()));
-  eleCon->SetIdMap("ooemoopV2",(1.0/iElectron->superCluster()->energy()) - (1.0 / iElectron->trackMomentumAtVtx().R()));
-  eleCon->SetIdMap("eopOut",(iElectron->eEleClusterOverPout() > 20) ? 20 : iElectron->eEleClusterOverPout());
-  eleCon->SetIdMap("preShowerORaw",iElectron->superCluster()->preshowerEnergy() / iElectron->superCluster()->rawEnergy());
-
-  Handle<reco::VertexCollection> thePrimaryVertexColl;
-  iEvent.getByLabel("offlinePrimaryVertices",thePrimaryVertexColl);
-
-  Vertex dummy;
-  const Vertex *pv = &dummy;
-  if (thePrimaryVertexColl->size() != 0) {
-    pv = &*thePrimaryVertexColl->begin();
-  } else { // create a dummy PV
-    Vertex::Error e;
-    e(0, 0) = 0.0015 * 0.0015;
-    e(1, 1) = 0.0015 * 0.0015;
-    e(2, 2) = 15. * 15.;
-    Vertex::Point p(0, 0, 0);
-    dummy = Vertex(p, e, 0, 0, 0);
-  }
-
-  //d0
-  float fMVAVar_d0 = -9999.0;
-  if (iElectron->gsfTrack().isNonnull()) {
-    fMVAVar_d0 = (-1.0)*iElectron->gsfTrack()->dxy(pv->position());
-  } else if (iElectron->closestCtfTrackRef().isNonnull()) {
-    fMVAVar_d0 = (-1.0)*iElectron->closestCtfTrackRef()->dxy(pv->position());
-  } else {
-    fMVAVar_d0 = -9999.0;
-  }
-
-  eleCon->SetIdMap("d0",fMVAVar_d0);
-
-  /*
-     This is added into the main part 
-
-  //default values for IP3D
-  float fMVAVar_ip3d      = -999.0;
-  float fMVAVar_ip3dSig   = 0.0;
-
-
-  edm::ESHandle<TransientTrackBuilder> builder;
-  iSetup.get<TransientTrackRecord>().get("TransientTrackBuilder", builder);
-  TransientTrackBuilder thebuilder = *(builder.product());
-
-  if (iElectron->gsfTrack().isNonnull()) {
-  const double gsfsign   = ( (-iElectron->gsfTrack()->dxy(pv->position()))   >=0 ) ? 1. : -1.;
-
-  const reco::TransientTrack &tt = thebuilder.build(iElectron->gsfTrack());
-  const std::pair<bool,Measurement1D> &ip3dpv =  IPTools::absoluteImpactParameter3D(tt,*pv);
-  if (ip3dpv.first) {
-  double ip3d = gsfsign*ip3dpv.second.value();
-  double ip3derr = ip3dpv.second.error();
-  fMVAVar_ip3d = ip3d;
-  fMVAVar_ip3dSig = ip3d/ip3derr;
-  }
-  }
-
-  eleCon->SetIdMap("ip3d",fMVAVar_ip3d);
-  eleCon->SetIdMap("ip3dSig",fMVAVar_ip3dSig);
-
-  ---- up to this ---------
-  */
-
-  //**********************************************************
-  //Isolation variables
-  //**********************************************************
-
-  Double_t tmpChargedIso_DR0p0To0p1  = 0;
-  Double_t tmpChargedIso_DR0p1To0p2  = 0;
-  Double_t tmpChargedIso_DR0p2To0p3  = 0;
-  Double_t tmpChargedIso_DR0p3To0p4  = 0;
-  Double_t tmpChargedIso_DR0p4To0p5  = 0;
-  Double_t tmpGammaIso_DR0p0To0p1  = 0;
-  Double_t tmpGammaIso_DR0p1To0p2  = 0;
-  Double_t tmpGammaIso_DR0p2To0p3  = 0;
-  Double_t tmpGammaIso_DR0p3To0p4  = 0;
-  Double_t tmpGammaIso_DR0p4To0p5  = 0;
-  Double_t tmpNeutralHadronIso_DR0p0To0p1  = 0;
-  Double_t tmpNeutralHadronIso_DR0p1To0p2  = 0;
-  Double_t tmpNeutralHadronIso_DR0p2To0p3  = 0;
-  Double_t tmpNeutralHadronIso_DR0p3To0p4  = 0;
-  Double_t tmpNeutralHadronIso_DR0p4To0p5  = 0;
-
-  //************************************************************
-  //Note: Input collection is assumed to be PFNoPU collection
-  //************************************************************
-  for (reco::PFCandidateCollection::const_iterator iP = PFCandidates.begin();
-      iP != PFCandidates.end(); ++iP) {
-
-    double dr = sqrt(pow(iP->eta() - iElectron->eta(),2) + pow(acos(cos(iP->phi() - iElectron->phi())),2));
-
-    Bool_t passVeto = kTRUE;
-    //Charged
-    if(iP->trackRef().isNonnull()) {
-
-      //make sure charged pf candidates pass the PFNoPU condition (assumed)
-
-      //************************************************************
-      // Veto any PFmuon, or PFEle
-      if (iP->particleId() == reco::PFCandidate::e || iP->particleId() == reco::PFCandidate::mu) passVeto = kFALSE;
-      //************************************************************
-      //************************************************************
-      // Footprint Veto
-      if (fabs(iElectron->superCluster()->eta()) > 1.479 && dr < 0.015) passVeto = kFALSE;
-      if (iP->superClusterRef().isNonnull() &&
-          iP->superClusterRef() == iElectron->superCluster()) passVeto = kFALSE;
-      if (iP->gsfTrackRef().isNonnull() && iElectron->gsfTrack().isNonnull() &&
-          iP->gsfTrackRef() == iElectron->gsfTrack()) passVeto = kFALSE;
-      if (iP->trackRef().isNonnull() && iElectron->closestCtfTrackRef().isNonnull() &&
-          iP->trackRef() == iElectron->closestCtfTrackRef()) passVeto = kFALSE;
-      //************************************************************
-      if (passVeto) {
-        if (dr < 0.1) tmpChargedIso_DR0p0To0p1 += iP->pt();
-        if (dr >= 0.1 && dr < 0.2) tmpChargedIso_DR0p1To0p2 += iP->pt();
-        if (dr >= 0.2 && dr < 0.3) tmpChargedIso_DR0p2To0p3 += iP->pt();
-        if (dr >= 0.3 && dr < 0.4) tmpChargedIso_DR0p3To0p4 += iP->pt();
-        if (dr >= 0.4 && dr < 0.5) tmpChargedIso_DR0p4To0p5 += iP->pt();
-      } //pass veto
-    }
-    //Gamma
-    else if (iP->particleId() == reco::PFCandidate::gamma) {
-      //************************************************************
-      // Footprint Veto
-      if (fabs(iElectron->superCluster()->eta()) > 1.479 && dr < 0.08) passVeto = kFALSE;
-      if (iP->superClusterRef() == iElectron->superCluster()) passVeto = kFALSE;
-      //************************************************************
-      if (passVeto) {
-        if (dr < 0.1) tmpGammaIso_DR0p0To0p1 += iP->pt();
-        if (dr >= 0.1 && dr < 0.2) tmpGammaIso_DR0p1To0p2 += iP->pt();
-        if (dr >= 0.2 && dr < 0.3) tmpGammaIso_DR0p2To0p3 += iP->pt();
-        if (dr >= 0.3 && dr < 0.4) tmpGammaIso_DR0p3To0p4 += iP->pt();
-        if (dr >= 0.4 && dr < 0.5) tmpGammaIso_DR0p4To0p5 += iP->pt();
-      }
-    }
-    //NeutralHadron
-    else {
-      if (dr < 0.1) tmpNeutralHadronIso_DR0p0To0p1 += iP->pt();
-      if (dr >= 0.1 && dr < 0.2) tmpNeutralHadronIso_DR0p1To0p2 += iP->pt();
-      if (dr >= 0.2 && dr < 0.3) tmpNeutralHadronIso_DR0p2To0p3 += iP->pt();
-      if (dr >= 0.3 && dr < 0.4) tmpNeutralHadronIso_DR0p3To0p4 += iP->pt();
-      if (dr >= 0.4 && dr < 0.5) tmpNeutralHadronIso_DR0p4To0p5 += iP->pt();
-    }
-  } //loop over PF candidates
-
-  double fMVAVar_ChargedIso_DR0p0To0p1,fMVAVar_ChargedIso_DR0p1To0p2,fMVAVar_ChargedIso_DR0p2To0p3,fMVAVar_ChargedIso_DR0p3To0p4,fMVAVar_ChargedIso_DR0p4To0p5,fMVAVar_GammaIso_DR0p0To0p1,fMVAVar_GammaIso_DR0p1To0p2,fMVAVar_GammaIso_DR0p2To0p3,
-         fMVAVar_GammaIso_DR0p3To0p4,fMVAVar_GammaIso_DR0p4To0p5,fMVAVar_NeutralHadronIso_DR0p0To0p1,fMVAVar_NeutralHadronIso_DR0p1To0p2,fMVAVar_NeutralHadronIso_DR0p2To0p3,fMVAVar_NeutralHadronIso_DR0p3To0p4,fMVAVar_NeutralHadronIso_DR0p4To0p5;
-
-  bool doPUCorrection = false;
-  if (doPUCorrection) {
-    fMVAVar_ChargedIso_DR0p0To0p1   = TMath::Min((tmpChargedIso_DR0p0To0p1)/iElectron->pt(), 2.5);
-    fMVAVar_ChargedIso_DR0p1To0p2   = TMath::Min((tmpChargedIso_DR0p1To0p2)/iElectron->pt(), 2.5);
-    fMVAVar_ChargedIso_DR0p2To0p3   = TMath::Min((tmpChargedIso_DR0p2To0p3)/iElectron->pt(), 2.5);
-    fMVAVar_ChargedIso_DR0p3To0p4   = TMath::Min((tmpChargedIso_DR0p3To0p4)/iElectron->pt(), 2.5);
-    fMVAVar_ChargedIso_DR0p4To0p5   = TMath::Min((tmpChargedIso_DR0p4To0p5)/iElectron->pt(), 2.5);
-    fMVAVar_GammaIso_DR0p0To0p1     = TMath::Max(TMath::Min((tmpGammaIso_DR0p0To0p1 -
-            Rho*ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaIsoDR0p0To0p1, iElectron->superCluster()->eta(), ElectronEffectiveArea::kEleEAData2012))/iElectron->pt(), 2.5), 0.0);
-    fMVAVar_GammaIso_DR0p1To0p2     = TMath::Max(TMath::Min((tmpGammaIso_DR0p1To0p2 -
-            Rho*ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaIsoDR0p1To0p2, iElectron->superCluster()->eta(), ElectronEffectiveArea::kEleEAData2012))/iElectron->pt(), 2.5), 0.0);
-    fMVAVar_GammaIso_DR0p2To0p3 = TMath::Max(TMath::Min((tmpGammaIso_DR0p2To0p3 -
-            Rho*ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaIsoDR0p2To0p3, iElectron->superCluster()->eta(), ElectronEffectiveArea::kEleEAData2012))/iElectron->pt(), 2.5), 0.0);
-    fMVAVar_GammaIso_DR0p3To0p4 = TMath::Max(TMath::Min((tmpGammaIso_DR0p3To0p4 -
-            Rho*ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaIsoDR0p3To0p4, iElectron->superCluster()->eta(), ElectronEffectiveArea::kEleEAData2012))/iElectron->pt(), 2.5), 0.0);
-    fMVAVar_GammaIso_DR0p4To0p5 = TMath::Max(TMath::Min((tmpGammaIso_DR0p4To0p5 -
-            Rho*ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaIsoDR0p4To0p5, iElectron->superCluster()->eta(), ElectronEffectiveArea::kEleEAData2012))/iElectron->pt(), 2.5), 0.0);
-    fMVAVar_NeutralHadronIso_DR0p0To0p1 = TMath::Max(TMath::Min((tmpNeutralHadronIso_DR0p0To0p1 -
-            Rho*ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleNeutralHadronIsoDR0p0To0p1, iElectron->superCluster()->eta(), ElectronEffectiveArea::kEleEAData2012))/iElectron->pt(), 2.5), 0.0);
-    fMVAVar_NeutralHadronIso_DR0p1To0p2 = TMath::Max(TMath::Min((tmpNeutralHadronIso_DR0p1To0p2 -
-            Rho*ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleNeutralHadronIsoDR0p1To0p2, iElectron->superCluster()->eta(), ElectronEffectiveArea::kEleEAData2012))/iElectron->pt(), 2.5), 0.0);
-    fMVAVar_NeutralHadronIso_DR0p2To0p3 = TMath::Max(TMath::Min((tmpNeutralHadronIso_DR0p2To0p3 -
-            Rho*ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleNeutralHadronIsoDR0p2To0p3, iElectron->superCluster()->eta(), ElectronEffectiveArea::kEleEAData2012))/iElectron->pt(), 2.5), 0.0);
-    fMVAVar_NeutralHadronIso_DR0p3To0p4 = TMath::Max(TMath::Min((tmpNeutralHadronIso_DR0p3To0p4 -
-            Rho*ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleNeutralHadronIsoDR0p3To0p4, iElectron->superCluster()->eta(), ElectronEffectiveArea::kEleEAData2012))/iElectron->pt(), 2.5), 0.0);
-    fMVAVar_NeutralHadronIso_DR0p4To0p5 = TMath::Max(TMath::Min((tmpNeutralHadronIso_DR0p4To0p5 -
-            Rho*ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleNeutralHadronIsoDR0p4To0p5, iElectron->superCluster()->eta(), ElectronEffectiveArea::kEleEAData2012))/iElectron->pt(), 2.5), 0.0);
-  } else {
-    fMVAVar_ChargedIso_DR0p0To0p1   = TMath::Min((tmpChargedIso_DR0p0To0p1)/iElectron->pt(), 2.5);
-    fMVAVar_ChargedIso_DR0p1To0p2   = TMath::Min((tmpChargedIso_DR0p1To0p2)/iElectron->pt(), 2.5) / 0.03;
-    fMVAVar_ChargedIso_DR0p2To0p3 = TMath::Min((tmpChargedIso_DR0p2To0p3)/iElectron->pt(), 2.5) / 0.05;
-    fMVAVar_ChargedIso_DR0p3To0p4 = TMath::Min((tmpChargedIso_DR0p3To0p4)/iElectron->pt(), 2.5) / 0.07;
-    fMVAVar_ChargedIso_DR0p4To0p5 = TMath::Min((tmpChargedIso_DR0p4To0p5)/iElectron->pt(), 2.5) / 0.09;
-    fMVAVar_GammaIso_DR0p0To0p1 = TMath::Max(TMath::Min((tmpGammaIso_DR0p0To0p1)/iElectron->pt(), 2.5), 0.0);
-    fMVAVar_GammaIso_DR0p1To0p2 = TMath::Max(TMath::Min((tmpGammaIso_DR0p1To0p2)/iElectron->pt(), 2.5), 0.0) / 0.03;
-    fMVAVar_GammaIso_DR0p2To0p3 = TMath::Max(TMath::Min((tmpGammaIso_DR0p2To0p3)/iElectron->pt(), 2.5), 0.0) / 0.05;
-    fMVAVar_GammaIso_DR0p3To0p4 = TMath::Max(TMath::Min((tmpGammaIso_DR0p3To0p4)/iElectron->pt(), 2.5), 0.0) / 0.07;
-    fMVAVar_GammaIso_DR0p4To0p5 = TMath::Max(TMath::Min((tmpGammaIso_DR0p4To0p5)/iElectron->pt(), 2.5), 0.0) / 0.09;
-    fMVAVar_NeutralHadronIso_DR0p0To0p1 = TMath::Max(TMath::Min((tmpNeutralHadronIso_DR0p0To0p1)/iElectron->pt(), 2.5), 0.0);
-    fMVAVar_NeutralHadronIso_DR0p1To0p2 = TMath::Max(TMath::Min((tmpNeutralHadronIso_DR0p1To0p2)/iElectron->pt(), 2.5), 0.0) / 0.03;
-    fMVAVar_NeutralHadronIso_DR0p2To0p3 = TMath::Max(TMath::Min((tmpNeutralHadronIso_DR0p2To0p3)/iElectron->pt(), 2.5), 0.0) / 0.05;
-    fMVAVar_NeutralHadronIso_DR0p3To0p4 = TMath::Max(TMath::Min((tmpNeutralHadronIso_DR0p3To0p4)/iElectron->pt(), 2.5), 0.0) / 0.07;
-    fMVAVar_NeutralHadronIso_DR0p4To0p5 = TMath::Max(TMath::Min((tmpNeutralHadronIso_DR0p4To0p5)/iElectron->pt(), 2.5), 0.0) / 0.09;
-  }
-
-  eleCon->SetIsoMap("ChargedIso_DR0p0To0p1",fMVAVar_ChargedIso_DR0p0To0p1);
-  eleCon->SetIsoMap("ChargedIso_DR0p1To0p2",fMVAVar_ChargedIso_DR0p1To0p2);
-  eleCon->SetIsoMap("ChargedIso_DR0p2To0p3",fMVAVar_ChargedIso_DR0p2To0p3);
-  eleCon->SetIsoMap("ChargedIso_DR0p3To0p4",fMVAVar_ChargedIso_DR0p3To0p4);
-  eleCon->SetIsoMap("ChargedIso_DR0p4To0p5",fMVAVar_ChargedIso_DR0p4To0p5);
-  eleCon->SetIsoMap("GammaIso_DR0p0To0p1",fMVAVar_GammaIso_DR0p0To0p1);
-  eleCon->SetIsoMap("GammaIso_DR0p1To0p2",fMVAVar_GammaIso_DR0p1To0p2);
-  eleCon->SetIsoMap("GammaIso_DR0p2To0p3",fMVAVar_GammaIso_DR0p2To0p3);
-  eleCon->SetIsoMap("GammaIso_DR0p3To0p4",fMVAVar_GammaIso_DR0p3To0p4);
-  eleCon->SetIsoMap("GammaIso_DR0p4To0p5",fMVAVar_GammaIso_DR0p4To0p5);
-  eleCon->SetIsoMap("NeutralHadronIso_DR0p0To0p1",fMVAVar_NeutralHadronIso_DR0p0To0p1);
-  eleCon->SetIsoMap("NeutralHadronIso_DR0p1To0p2",fMVAVar_NeutralHadronIso_DR0p1To0p2);
-  eleCon->SetIsoMap("NeutralHadronIso_DR0p2To0p3",fMVAVar_NeutralHadronIso_DR0p2To0p3);
-  eleCon->SetIsoMap("NeutralHadronIso_DR0p3To0p4",fMVAVar_NeutralHadronIso_DR0p3To0p4);
-  eleCon->SetIsoMap("NeutralHadronIso_DR0p4To0p5",fMVAVar_NeutralHadronIso_DR0p4To0p5);
-
-  bool preSelPassV2 = false;
-
-  double electronTrackZ = 0;
-  if (iElectron->gsfTrack().isNonnull()) {
-    electronTrackZ = iElectron->gsfTrack()->dz(pv->position());
-  } else if (iElectron->closestCtfTrackRef().isNonnull()) {
-    electronTrackZ = iElectron->closestCtfTrackRef()->dz(pv->position());
-  }
-
-  if (fabs(iElectron->superCluster()->eta()) < 1.479) {
-    if ( (
-          iElectron->sigmaIetaIeta()< 0.01
-          && fabs(iElectron->deltaEtaSuperClusterTrackAtVtx()) < 0.007
-          && fabs(iElectron->deltaPhiSuperClusterTrackAtVtx()) < 0.15
-          && iElectron->hadronicOverEm() < 0.12
-          && iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfLostHits() <= 1
-          && fabs(electronTrackZ) < 0.1
-          && ( iElectron->dr03TkSumPt()) / iElectron->pt() < 0.2
-          && ( fmax(iElectron->dr03EcalRecHitSumEt() - 1.0,0.0) ) /iElectron->pt() < 0.20
-          && (iElectron->dr03HcalTowerSumEt()) / iElectron->pt() < 0.20
-         )
-       ) {
-      preSelPassV2= true;
-    }
-  } else { //endcap
-    if ( (
-          iElectron->sigmaIetaIeta()< 0.03
-          && fabs(iElectron->deltaEtaSuperClusterTrackAtVtx()) < 0.009
-          && fabs(iElectron->deltaPhiSuperClusterTrackAtVtx()) < 0.10
-          && iElectron->hadronicOverEm() < 0.10
-          && iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfLostHits() <= 1
-          && fabs(electronTrackZ) < 0.1
-          && (iElectron->dr03TkSumPt() ) / iElectron->pt() < 0.2
-          && (iElectron->dr03EcalRecHitSumEt() ) / iElectron->pt() < 0.20
-          && (iElectron->dr03HcalTowerSumEt()) / iElectron->pt() < 0.20
-
-         )
-       ) {
-      preSelPassV2 = true;
-    }
-  }
-  eleCon->SetIdMap("preSelPassV2",preSelPassV2);
-
-  bool preSelPassV1 = false;
-
-  if (fabs(iElectron->superCluster()->eta()) < 1.479) {
-    if ( (
-          iElectron->sigmaIetaIeta()< 0.014
-          && iElectron->hadronicOverEm() < 0.15
-          && iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfLostHits() == 0
-          && ( iElectron->dr03TkSumPt()) / iElectron->pt() < 0.2
-          && ( iElectron->dr03EcalRecHitSumEt()) /iElectron->pt() < 0.2
-          && (iElectron->dr03HcalTowerSumEt()) / iElectron->pt() < 0.2
-         )
-       ) {
-      preSelPassV1 = true;
-    }
-  } else { //endcap
-    if ( (
-          iElectron->sigmaIetaIeta()< 0.035
-          && iElectron->hadronicOverEm() < 0.10
-          && iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfLostHits() == 0
-          && (iElectron->dr03TkSumPt() ) / iElectron->pt() < 0.2
-          && (iElectron->dr03EcalRecHitSumEt() ) / iElectron->pt() < 0.20
-          && (iElectron->dr03HcalTowerSumEt()) / iElectron->pt() < 0.20
-
-         )
-       ) {
-      preSelPassV1 = true;
-    }
-  }
-
-  eleCon->SetIdMap("preSelPassV1",preSelPassV1);
-
-  bool preSelPassV3 = false;
-  if (fabs(iElectron->superCluster()->eta()) < 1.479) {
-    if ( (
-          iElectron->sigmaIetaIeta()< 0.014
-          && iElectron->hadronicOverEm() < 0.15
-          && iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfLostHits() == 0
-          && ( iElectron->dr03TkSumPt()) / iElectron->pt() < 0.2
-          && ( iElectron->dr03EcalRecHitSumEt()) /iElectron->pt() < 0.2
-          && (iElectron->dr03HcalTowerSumEt()) / iElectron->pt() < 0.2
-         )
-       ) {
-      preSelPassV3 = true;
-    }
-  } else { //endcap
-    if ( (
-          iElectron->sigmaIetaIeta()< 0.035
-          && iElectron->hadronicOverEm() < 0.10
-          && iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfLostHits() == 0
-          && (iElectron->dr03TkSumPt() ) / iElectron->pt() < 0.2
-          && (iElectron->dr03EcalRecHitSumEt()-1.0 ) / iElectron->pt() < 0.20
-          && (iElectron->dr03HcalTowerSumEt()) / iElectron->pt() < 0.20
-
-         )
-       ) {
-      preSelPassV3 = true;
-    }
-  }
-  eleCon->SetIdMap("preSelPassV3",preSelPassV3);
-
-  return;
-}
 
 void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults, edm::Handle<trigger::TriggerEvent> &hltEvent, const std::string& triggerName, int* trigCount) {
 

@@ -2,6 +2,10 @@
 ---------------
 The most important logs should go here. Other are monitored with git commits.
 
+2013-Dec-22,  _Andrey_
+ * More conversion information added
+ * Moved Brian's footprint into a struct inside Photon class  
+
 2013-Dec-12,  _Andrey_
  * Conversion information is added to the tracks that have matched conversions.
 

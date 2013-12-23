@@ -11,18 +11,19 @@ class TCElectron : public TCEGamma {
   class Track : public TCTrack{
                        ClassDef(Track, 1);
                      };
-  
+
  private:
 
   float _normChi2kf;
   float _ptError;
-  
+
   float _fBrem;
   float _inverseEnergyMomentumDiff;
 
   float _EoP;
   float _EoPout;
-  
+  float _ESeedOverP;
+
   float _ip3d;
   float _ip3dSig;
 
@@ -33,35 +34,31 @@ class TCElectron : public TCEGamma {
   float _mvaID_HZZ;
   float _regEne;
   float _regErr;
-  
+
   bool  _passConvVeto;
   short _convMissHits;
-  
+
+  float _convDcot;
+  float _convDist;
+  float _convRadius;
+
   int _trackerLayersWithMeasurement;
   int _numberOfValidHits;
   int _numberOfValidPixelHits;
   int _numberOfValidTrackerHits;
   int _numberOfLostPixelHits;
   int _numberOfLostTrackerHits;
-  
-  /*
-  int _cut95;
-  int _cut90;
-  int _cut85;
-  int _cut80;
-  int _cut70;
-  int _cut60;
-  */
+
 
   TLorentzVector _regressionMomCombP4;
   float _effArea;
-  
+
   vector<TCElectron::Track> _tracks;
 
  public:
   TCElectron();
   virtual ~TCElectron();
-  
+
   // "get" methods -----------
   vector<TCElectron::Track> GetTracks() const;
 
@@ -70,41 +67,41 @@ class TCElectron : public TCEGamma {
   float NormalizedChi2Kf() const;
 
   float InverseEnergyMomentumDiff() const;
-    
+
   float EoP() const;
   float EoPout() const;
-  
+  float ESeedOverP() const;
+
   float IP3d() const;
   float IP3dSig() const;
   float DeltaEtaSeedCluster() const;
   float DeltaPhiSeedCluster() const;
 
   float PtError() const;
-  
+
   float FBrem() const;
-  
-  float MvaID_Old() const; 
-  float MvaID_HZZ() const; 
-  float MvaID() const; 
-  float EnergyRegression() const; 
-  float EnergyRegressionErr() const; 
-  
+
+  float MvaID_Old() const;
+  float MvaID_HZZ() const;
+  float MvaID() const;
+  float EnergyRegression() const;
+  float EnergyRegressionErr() const;
+
   bool  PassConversionVeto() const;
   short ConversionMissHits() const;
-  
-  
+
+  float ConversionDcot() const;
+  float ConversionDist() const;
+  float ConversionRadius() const;
+
   int TrackerLayersWithMeasurement() const;
   int NumberOfValidHits() const;
   int NumberOfValidPixelHits() const;
   int NumberOfValidTrackerHits() const;
   int NumberOfLostPixelHits() const;
   int NumberOfLostTrackerHits() const;
-  
-  //int  CutLevel(int lvl) const;
-  //bool PassID(int lvl) const;
-  //bool PassConversion(int lvl) const;
-  //bool PassIsolation(int lvl) const;
-  
+
+
   TLorentzVector RegressionMomCombP4() const;
 
   float EffArea() const;
@@ -115,7 +112,7 @@ class TCElectron : public TCEGamma {
   void AddTrack(TCElectron::Track);
 
   void SetNormalizedChi2Kf(float);
-  
+
   void SetInverseEnergyMomentumDiff(float);
 
   void SetIP3d(float);
@@ -125,31 +122,34 @@ class TCElectron : public TCEGamma {
 
   void SetEoP(float);
   void SetEoPout(float);
+  void SetESeedOverP(float);
 
   void SetPtError(float);
-  
+
   void SetFBrem(float);
-  
+
   void SetPassConversionVeto(bool);
   void SetConversionMissHits(short);
-  
+
+  void SetConversionDcot(float);
+  void SetConversionDist(float);
+  void SetConversionRadius(float);
+
   void SetTrackerLayersWithMeasurement(int);
   void SetNumberOfValidHits(int);
   void SetNumberOfValidPixelHits(int);
   void SetNumberOfValidTrackerHits(int);
   void SetNumberOfLostPixelHits(int);
   void SetNumberOfLostTrackerHits(int);
-  
-  
+
+
   void SetMvaID_Old(float);
   void SetMvaID_HZZ(float);
   void SetEnergyRegression(float);
   void SetEnergyRegressionErr(float);
-  
-  //void SetCutLevel(int cut, int lvl);
-  
+
   void SetRegressionMomCombP4(TLorentzVector tmpP4);
-  
+
   void SetEffArea(float);
 
   ClassDef(TCElectron, 1);

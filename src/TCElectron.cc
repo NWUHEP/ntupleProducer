@@ -8,6 +8,7 @@ TCElectron::TCElectron():
   _inverseEnergyMomentumDiff(-99),
   _EoP(-99),
   _EoPout(-99),
+  _ESeedOverP(-99),
   _ip3d(-99),
   _ip3dSig(-99),
   _deltaEtaSeedCluster(-99),
@@ -19,7 +20,10 @@ TCElectron::TCElectron():
   _regErr(-99),
   _passConvVeto(false),
   _convMissHits(0),
-  
+  _convDcot(-99),
+  _convDist(-99),
+  _convRadius(-99),
+
   _trackerLayersWithMeasurement(-99),
   _numberOfValidHits(-99),
   _numberOfValidPixelHits(-99),
@@ -29,13 +33,11 @@ TCElectron::TCElectron():
   
   _regressionMomCombP4(0.,0.,0.,0.),
   _effArea(-99)
-
 {
 }
 
 TCElectron::~TCElectron() {
 }
-
 
 
 // "get" methods -------------------------------------
@@ -96,8 +98,13 @@ float TCElectron::DeltaPhiSeedCluster() const {
 float TCElectron::EoP() const {
   return _EoP;
 }
+
 float TCElectron::EoPout() const {
   return _EoPout;
+}
+
+float TCElectron::ESeedOverP() const {
+  return _ESeedOverP;
 }
 
 float TCElectron::PtError() const {
@@ -134,53 +141,25 @@ bool TCElectron::PassConversionVeto() const {
 }
 
 short TCElectron::ConversionMissHits() const {
-    return _convMissHits;
+  return _convMissHits;
+}
+
+float TCElectron::ConversionDcot() const {
+  return _convDcot;
+}
+
+float TCElectron::ConversionDist() const {
+  return _convDist;
+}
+
+float TCElectron::ConversionRadius() const {
+  return _convRadius;
 }
 
 
 float TCElectron::FBrem() const {
     return _fBrem;
 }
-
-/*
-int TCElectron::CutLevel(int lvl) const{
-  if(lvl==95){
-    return _cut95;
-  }else if(lvl==90) {
-    return _cut90;
-  }else if(lvl==85) {
-    return _cut85;
-  }else if(lvl==80) {
-    return _cut80;
-  }else if(lvl==70) {
-    return _cut70;
-  }else if(lvl==60) {
-    return _cut60;
-  }else{
-    return -99;
-  }
-}
-*/
-
-/*
-bool TCElectron::PassID(int lvl) const { 
-  unsigned c = CutLevel(lvl);
-  if (c & 0x01) return true;
-  else return false;
-}   
-
-bool TCElectron::PassIsolation(int lvl) const {
-  unsigned c = CutLevel(lvl);
-  if (c & 0x02) return true;
-  else return false;
-}
-
-bool TCElectron::PassConversion(int lvl) const {
-  unsigned c = CutLevel(lvl);
-  if (c & 0x04) return true;
-  else return false;
-}
-*/
 
 
 TLorentzVector TCElectron::RegressionMomCombP4() const {
@@ -240,8 +219,13 @@ void TCElectron::SetDeltaPhiSeedCluster(float d){
 void TCElectron::SetEoP(float e) {
   _EoP = e;
 }
+
 void TCElectron::SetEoPout(float e) {
   _EoPout = e;
+}
+
+void TCElectron::SetESeedOverP(float e) {
+  _ESeedOverP = e;
 }
 
 void TCElectron::SetPtError(float e) {
@@ -271,11 +255,9 @@ void TCElectron::SetNumberOfLostTrackerHits(int n) {
   _numberOfLostTrackerHits = n;
 }
 
-void TCElectron::SetFBrem(float fb)
-{
+void TCElectron::SetFBrem(float fb){
     _fBrem = fb;
 }
-
 
 void TCElectron::SetPassConversionVeto(bool v) {
   _passConvVeto = v;
@@ -285,23 +267,17 @@ void TCElectron::SetConversionMissHits(short m) {
   _convMissHits = m;
 }
 
-/*
-void TCElectron::SetCutLevel(int cut, int lvl){
-  if(lvl==95){
-    _cut95 = cut;
-  }else if(lvl==90) {
-    _cut90 = cut;
-  }else if(lvl==85) {
-    _cut85 = cut;
-  }else if(lvl==80) {
-    _cut80 = cut;
-  }else if(lvl==70) {
-    _cut70 = cut;
-  }else if(lvl==60) {
-    _cut60 = cut;
-  }
+void TCElectron::SetConversionDcot(float c) {
+  _convDcot = c;
 }
-*/
+
+void TCElectron::SetConversionDist(float c) {
+  _convDist = c;
+}
+
+void TCElectron::SetConversionRadius(float c) {
+  _convRadius = c;
+}
 
 void TCElectron::SetRegressionMomCombP4(TLorentzVector tmpP4){
   _regressionMomCombP4 = tmpP4;
