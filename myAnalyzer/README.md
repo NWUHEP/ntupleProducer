@@ -6,23 +6,28 @@ Don't worry, we have you covered and this page will explain it all!
 
 Presumably you got an output **nuTuple.root** file on hands.
 
-* First, let's open it in Root:
+ * First, let's open it in Root:
+
 ```
 [~] root -l nuTuple.root
 ```
+
 You will get various _'no-dictionary'_ warnings. That's Okay, ignore them for now.
 
 
  * Next, in the root file **cd()** to a subdirectory where our main tree is saved and call **MakeSelector()** from that tree (you can browse the root file with TBrowser to find out that the tree we are interesed in is located under **ntupleProducer/eventTree**):
+
 ```
 root [1] _file0.cd("ntupleProducer")
 root [2] eventTree.MakeSelector("myAnalyzer")
 ```
-That last command should give you something like:
+
+That last command should give you something like:  
 ```
 Info in <TTreePlayer::MakeClass>: Files: myAnalyzer.h and myAnalyzer.C generated from TTree: eventTree
 ```
-As you may have guessed, we will use TSelector method to write the analysis. More details on which can be found here: [http://root.cern.ch/root/html/TSelector.html][TSelector]
+
+As you may have guessed, we will use TSelector method to write the analysis. More details on which can be found here: [http://root.cern.ch/root/html/TSelector.html][TSelector].
 One may use other analysis methods, that's fine too, remember we have a rather simple root tree to deal with.
 
 Two files have been created for us: **myAnalyzer.C** and **myAnalyzer.h**
@@ -60,7 +65,7 @@ That will get an entry and then loop over the collection of TCPhotons (it is cal
 As it says in the Root's manual for TSelector, you run it with **tree->Process("myAnalyzer.c+")**.
 However, that would work for a simple tree while ours contains various classes that root doesn't know about.
 We need to load those before running and then do the Process().
-Have a look at **run.C** script which contains all that is needed:
+Have a look at **run.C** script which contains minimal code needed:
 ```cpp
 void run(){
   gROOT->SetMacroPath(".:../src/:../interface/");
@@ -86,8 +91,7 @@ void run(){
 }
 ```
 
- * You can run it simply as:  
-```root -l -q run.C```
+ * You can run it simply as: ```root -l -q run.C```  
 There is a python version as well: ```python run.py```
 
 That's it!
@@ -99,11 +103,12 @@ Tips and tricks
 #### How to fill the histograms
 
  * Define it in the begining of the myAnalyzer.cc
-```cpp
+```
 TFile *f;
 TH1F *h;
 ```
- * Initialize inside  myAnalyzer::Begin method:
+
+ * Initialize inside  the myAnalyzer::Begin() method:
 ```cpp
    f = new TFile("output.root","recreate");
    h = new TH1F("photon_pt","photon_pt", 100,0,100);
@@ -161,7 +166,7 @@ Most of the obcects we save in the ntuples are inherited from **TCPhysObject** c
 #### Where can I find other analysis based on these nuTuples?
 Check these out:
  * [Andrey's  higgs to llgamma dalitz][andrey-zgamma]
- * [Nathaniel's][Flavour changing neutral Higgs][nate-fcnc]
+ * [Nathaniel's Flavour changing neutral Higgs][nate-fcnc]
  * [Brian's HZG][brianne-hzg]
 
 [TSelector]: http://root.cern.ch/root/html/TSelector.html
