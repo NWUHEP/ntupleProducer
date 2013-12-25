@@ -37,6 +37,10 @@ process.load("Configuration.StandardSequences.MagneticField_cff")
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.load('Configuration.StandardSequences.Reconstruction_cff')
 
+# Basic MET shit
+process.load("JetMETCorrections.Type1MET.correctionTermsPfMetType1Type2_cff")
+process.load("JetMETCorrections.Type1MET.correctedMet_cff")
+
 if (isRealData):
     process.GlobalTag.globaltag = 'FT_53_V21_AN3::All'
     process.corrPfMetType1.jetCorrLabel = cms.string("ak5PFL1FastL2L3Residual")
@@ -56,8 +60,6 @@ process.goodOfflinePrimaryVertices = cms.EDFilter( "PrimaryVertexObjectFilter",
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 process.load("CondCore.DBCommon.CondDBCommon_cfi")
 
-# Basic MET shit
-process.load("JetMETCorrections.Type1MET.correctedMet_cff")
 
 if (isRealData):
     # 53X b-jet discriminator calibration
@@ -314,8 +316,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   JetTag            =    cms.untracked.InputTag('ak5PFJetsL1FastL2L3'),
   JecTag            =    cms.string("AK5PF"),
   GenJetTag         =    cms.untracked.InputTag('ak5GenJets'),
-  METTag            =    cms.untracked.InputTag('pfType1CorrectedMet'),
-  TrackMETTag       =    cms.untracked.InputTag('trackMet'),
+  METTag            =    cms.untracked.InputTag('pfMet'),
   ElectronTag       =    cms.untracked.InputTag('gsfElectrons'),
   MuonTag           =    cms.untracked.InputTag('muons'),
   PhotonTag         =    cms.untracked.InputTag('photons'),
@@ -323,9 +324,6 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   rhoCorrTag        =    cms.untracked.InputTag('kt6PFJets',    'rho', 'RECO'),
   rho25CorrTag      =    cms.untracked.InputTag('kt6PFJetsIso', 'rho', 'NTUPLE'),
   rhoMuCorrTag      =    cms.untracked.InputTag('kt6PFJetsCentralNeutral', 'rho','RECO'),  # specifically for muon iso
-
-  T0METTag	    =	 cms.untracked.InputTag('pfType1CorrectedMetType0'),
-  T2METTag	    =	 cms.untracked.InputTag('pfType1p2CorrectedMet'),
 
   partFlowTag       =  cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
   skimLepton        =  cms.untracked.bool(False),

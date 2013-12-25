@@ -6,9 +6,6 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig):
   jetTag_           = iConfig.getUntrackedParameter<edm::InputTag>("JetTag");
   jecTag_           = iConfig.getParameter<std::string>("JecTag");
   metTag_           = iConfig.getUntrackedParameter<edm::InputTag>("METTag");
-  trackmetTag_      = iConfig.getUntrackedParameter<edm::InputTag>("TrackMETTag");
-  t0metTag_         = iConfig.getUntrackedParameter<edm::InputTag>("T0METTag");
-  t2metTag_         = iConfig.getUntrackedParameter<edm::InputTag>("T2METTag");
   muonTag_          = iConfig.getUntrackedParameter<edm::InputTag>("MuonTag");
   electronTag_      = iConfig.getUntrackedParameter<edm::InputTag>("ElectronTag");
   photonTag_        = iConfig.getUntrackedParameter<edm::InputTag>("PhotonTag");
@@ -244,55 +241,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
   if (saveMET_) {
 
-    ///////////////
-    // Get T0MET //
-    ///////////////
-
-
-    Handle<PFMETCollection> t0MET;
-    iEvent.getByLabel(t0metTag_, t0MET);
-    PFMETCollection::const_iterator t0met = t0MET->begin();
-
-    if (t0MET->begin() != t0MET->end()) {
-      T0MET->SetSumEt(t0met->sumEt());
-      T0MET->SetMagPhi(t0met->et(), t0met->phi());
-
-      // PF specififc methods
-      T0MET->SetMuonFraction(t0met->MuonEtFraction());
-      T0MET->SetNeutralHadronFraction(t0met->NeutralHadEtFraction());
-      T0MET->SetNeutralEMFraction(t0met->NeutralEMFraction());
-      T0MET->SetChargedHadronFraction(t0met->ChargedHadEtFraction());
-      T0MET->SetChargedEMFraction(t0met->ChargedEMEtFraction());
-
-      //Significance
-      float significance = (t0MET->front()).significance();
-      float sigmaX2 = (t0MET->front()).getSignificanceMatrix()(0,0);
-      T0MET->SetSignificance( significance );
-      T0MET->SetSigmaX2( sigmaX2 );
-
-    }
-    ///////////////
-    // Get T2MET //
-    ///////////////
-
-
-    Handle<PFMETCollection> t2MET;
-    iEvent.getByLabel(t2metTag_, t2MET);
-    PFMETCollection::const_iterator t2met = t2MET->begin();
-
-    if (t2MET->begin() != t2MET->end()) {
-      T2MET->SetSumEt(t2met->sumEt());
-      T2MET->SetMagPhi(t2met->et(), t2met->phi());
-
-      // PF specififc methods
-      T2MET->SetMuonFraction(t2met->MuonEtFraction());
-      T2MET->SetNeutralHadronFraction(t2met->NeutralHadEtFraction());
-      T2MET->SetNeutralEMFraction(t2met->NeutralEMFraction());
-      T2MET->SetChargedHadronFraction(t2met->ChargedHadEtFraction());
-      T2MET->SetChargedEMFraction(t2met->ChargedEMEtFraction());
-
-    }
-
     /////////////
     // Get MET //
     /////////////
@@ -323,37 +271,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     recoMET->SetSignificance( significance );
     recoMET->SetSigmaX2( sigmaX2 );
 
-    //////////////////
-    // Get TrackMET //
-    //////////////////
-
-
-    Handle<METCollection> trkMET;
-    iEvent.getByLabel(trackmetTag_, trkMET);
-    METCollection::const_iterator trkmet = trkMET->begin();
-
-    if (trkMET->begin() != trkMET->end()) {
-      track_MET->SetSumEt(trkmet->sumEt());
-      track_MET->SetMagPhi(trkmet->et(), trkmet->phi());
-    }
-
-
-    //////////////////                                                                                                                         
-    // Get MVAMET   // 
-    ////////////////// 
-
-
-    Handle<vector<reco::PFMET> > mvaMET;
-    iEvent.getByLabel("pfMEtMVA", mvaMET);
-    vector<reco::PFMET>::const_iterator mvamet = mvaMET->begin();
-
-    if (mvaMET->begin() != mvaMET->end()) {
-      //std::cout << "sumET: " << mvamet->sumEt()<<std::endl;
-      //std::cout << "et: " << mvamet->et() << std::endl;
-      //std::cout << "phi: " << mvamet->phi() << std::endl;
-      mva_MET->SetSumEt(mvamet->sumEt());
-      mva_MET->SetMagPhi(mvamet->et(), mvamet->phi());
-    }
   }
 
   ///////////////
@@ -1233,10 +1150,6 @@ void  ntupleProducer::beginJob()
   genParticles   = new TClonesArray("TCGenParticle");
   beamSpot       = new TVector3();
   recoMET.reset(  new TCMET);
-  track_MET.reset(new TCMET);
-  T0MET.reset(    new TCMET);
-  T2MET.reset(    new TCMET);
-  mva_MET.reset(  new TCMET);
 
   h1_numOfEvents = fs->make<TH1F>("numOfEvents", "total number of events, unskimmed", 1,0,1);
 
@@ -1245,10 +1158,6 @@ void  ntupleProducer::beginJob()
   eventTree->Branch("recoMuons",    &recoMuons,      6400, 0);
   eventTree->Branch("recoPhotons",  &recoPhotons,    6400, 0);
   eventTree->Branch("recoMET",      recoMET.get(),   6400, 0);
-  eventTree->Branch("mva_MET",      mva_MET.get(),   6400, 0);
-  eventTree->Branch("track_MET",    track_MET.get(), 6400, 0);
-  eventTree->Branch("T0MET",        T0MET.get(),     6400, 0);
-  eventTree->Branch("T2MET",        T2MET.get(),     6400, 0);
   eventTree->Branch("genJets",      &genJets,        6400, 0);
   eventTree->Branch("genParticles", &genParticles,   6400, 0);
   eventTree->Branch("triggerObjects", &triggerObjects, 6400, 0);
