@@ -431,6 +431,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       }
       // Set isolation map values
       // Detector-based isolation
+
+      /*
       muCon->SetIsoMap("NTracks_R03", iMuon->isolationR03().nTracks);
       muCon->SetIsoMap("EmIso_R03",   iMuon->isolationR03().emEt);
       muCon->SetIsoMap("HadIso_R03",  iMuon->isolationR03().hadEt);
@@ -453,8 +455,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       muCon->SetIsoMap("pfChargedPt_R04", iMuon->pfIsolationR04().sumChargedParticlePt);
       muCon->SetIsoMap("pfChargedHadronPt_R04", iMuon->pfIsolationR04().sumChargedHadronPt);
       muCon->SetIsoMap("pfNeutralHadronEt_R04", iMuon->pfIsolationR04().sumNeutralHadronEt);
+      */
 
-      muCon->SetPfIsoCharged(iMuon->pfIsolationR04().sumChargedHadronPt);
+      muCon->SetPfIsoPU(iMuon->pfIsolationR04().sumPUPt);
+      muCon->SetPfIsoChargedPart(iMuon->pfIsolationR04().sumChargedParticlePt);
+      muCon->SetPfIsoChargedHad( iMuon->pfIsolationR04().sumChargedHadronPt);
       muCon->SetPfIsoNeutral(iMuon->pfIsolationR04().sumNeutralHadronEt);
       muCon->SetPfIsoPhoton( iMuon->pfIsolationR04().sumPhotonEt);
 
@@ -495,6 +500,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     iEvent.getByLabel(edm::InputTag("eleRegressionEnergy","eneErrorRegForGsfEle"), regErr_handle);
     const edm::ValueMap<double> ele_regErr = (*regErr_handle.product());
 
+    /* DO NOT delete it yet, it maybe useful later for Dalitz electron isolation
     //This stuff is for modified isolation for close electrons,
     //following prescription here: https://twiki.cern.ch/twiki/bin/viewauth/CMS/BoostedZToEEModIso
     edm::Handle<edm::ValueMap<double> > h_modElectronIso_Tk;
@@ -506,7 +512,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     const edm::ValueMap<double> modElectronIso_Tk     = (*h_modElectronIso_Tk.product());
     const edm::ValueMap<double> modElectronIso_Ecal   = (*h_modElectronIso_Ecal.product());
     const edm::ValueMap<double> modElectronIso_HcalD1 = (*h_modElectronIso_HcalD1.product());
-
+    */
 
     Int_t eee=0;
     for (vector<reco::GsfElectron>::const_iterator iElectron = electrons->begin(); iElectron != electrons->end(); ++iElectron) {

@@ -89,8 +89,17 @@ float TCMuon::SegComp() const {
    return _segComp;
 }
 
+float TCMuon::PfIsoPU() const {
+  return _pfIsoPU;
+}
 float TCMuon::PfIsoCharged() const {
-  return _pfIsoCharged;
+  return _pfIsoChargedHad;
+}
+float TCMuon::PfIsoChargedHad() const {
+  return _pfIsoChargedHad;
+}
+float TCMuon::PfIsoChargedPart() const {
+  return _pfIsoChargedPart;
 }
 float TCMuon::PfIsoNeutral() const {
   return _pfIsoNeutral;
@@ -179,8 +188,14 @@ void TCMuon::SetSegComp(float s){
    _segComp = s;
 }
 
-void TCMuon::SetPfIsoCharged(float f) {
-  _pfIsoCharged = f;
+void TCMuon::SetPfIsoPU(float f) {
+  _pfIsoPU = f;
+}
+void TCMuon::SetPfIsoChargedHad(float f) {
+  _pfIsoChargedHad = f;
+}
+void TCMuon::SetPfIsoChargedPart(float f) {
+  _pfIsoChargedPart = f;
 }
 void TCMuon::SetPfIsoNeutral(float f) {
   _pfIsoNeutral = f;

@@ -34,7 +34,9 @@ class TCMuon : public TCPhysObject {
         float _normalizedChi2_tracker;
 
 
-        float _pfIsoCharged;
+        float _pfIsoPU;
+        float _pfIsoChargedHad;
+        float _pfIsoChargedPart;
         float _pfIsoNeutral;
         float _pfIsoPhoton;
 
@@ -69,7 +71,10 @@ class TCMuon : public TCPhysObject {
         int TrackLayersWithMeasurement() const;
         int PixelLayersWithMeasurement() const;
 
-        float PfIsoCharged() const;
+        float PfIsoPU() const;
+        float PfIsoChargedPart() const;
+        float PfIsoChargedHad() const;
+        float PfIsoCharged() const; //this will return Had
         float PfIsoNeutral() const;
         float PfIsoPhoton() const;
 
@@ -97,7 +102,9 @@ class TCMuon : public TCPhysObject {
         void SetPixelLayersWithMeasurement(int n);
 
 
-        void SetPfIsoCharged(float f);
+        void SetPfIsoPU(float f);
+        void SetPfIsoChargedHad(float f);
+        void SetPfIsoChargedPart(float f);
         void SetPfIsoNeutral(float f);
         void SetPfIsoPhoton(float f);
 
