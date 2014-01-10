@@ -8,6 +8,7 @@ Instructions for Users
  * Set up the environment
 ```
   setenv SCRAM_ARCH slc5_amd64_gcc462
+  setenv CVSROOT :ext:<cern-user-account>@lxplus.cern.ch:/afs/cern.ch/user/c/cvscmssw/public/CMSSW
   cmsrel CMSSW_5_3_13_patch3
   cd CMSSW_5_3_13_patch3/src
   cmsenv
@@ -47,43 +48,25 @@ Instructions for Users
   scram b -j 9
 ```
 
- * Track MET Code [need a ref]:
+ * MVA MET Code (Just for PU Jet ID) [need a ref]:
 ```
-  cvs co -r V03-03-12-02 RecoMET/METProducers
-  cvs co -r 1.2 RecoMET/METProducers/src/ParticleFlowForChargedMETProducer.cc
-  cvs co -r 1.1 RecoMET/METProducers/src/TrackMETProducer.cc
-  cvs co -r 1.2 RecoMET/METProducers/interface/ParticleFlowForChargedMETProducer.h
-  cvs co -r 1.1 RecoMET/METProducers/interface/TrackMETProducer.h
-  cvs up -r 1.17 RecoMET/METProducers/src/SealModule.cc
-  cvs co -r 1.1 RecoMET/METProducers/python/TrackMET_cfi.py
-  cvs co -r 1.2 RecoMET/METProducers/python/pfChargedMET_cfi.py
-  scram b -j 9
-```
-
-
- * MVA MET Code [need a ref]:
-```
-  cvs co -r METPU_5_3_X_v12 JetMETCorrections/METPUSubtraction
-  cvs co -r HEAD -d pharrisTmp UserCode/pharris/MVAMet/data
-  cp  -d pharrisTmp/*June2013*.root           JetMETCorrections/METPUSubtraction/data/
-  cp  -d pharrisTmp/*Dec2012*.root           JetMETCorrections/METPUSubtraction/data/
-  rm -rf pharrisTmp
   cvs co -r METPU_5_3_X_v4 RecoJets/JetProducers
   cvs up -r HEAD RecoJets/JetProducers/data/
   cvs up -r HEAD RecoJets/JetProducers/python/PileupJetIDCutParams_cfi.py                     
   cvs up -r HEAD RecoJets/JetProducers/python/PileupJetIDParams_cfi.py                     
   cvs up -r HEAD RecoJets/JetProducers/python/PileupJetID_cfi.py     
-  cvs co -r b5_3_X_cvMEtCorr_2013Feb22            DataFormats/METReco
   cvs co -r V05-00-16                             DataFormats/JetReco
-  cvs co -r V01-04-25                             RecoTauTag/RecoTau 
-  cvs co -r V03-04-07                             RecoMET/METAlgorithms
-  cvs co -r V01-04-13                             RecoTauTag/Configuration
 ```
 
- * Extra code (for boosted Z->ee isolation), following [6] and [7]:
+ * Extra code (for boosted Z->ee isolation), (-d option not working since new CVS directory) following [6] and [7]:
 ```
-  cvs co -r V00-02-03 -d TSWilliams/BstdZeeTools  UserCode/TSWilliams/BstdZee/BstdZeeTools
-  cvs co -r V00-09-03 -d SHarper/HEEPAnalyzer UserCode/SHarper/HEEPAnalyzer 
+  mkdir TSWilliams
+  mkdir SHarper 
+  cvs co -r V00-02-03 UserCode/TSWilliams/BstdZee/BstdZeeTools
+  cvs co -r V00-09-03 UserCode/SHarper/HEEPAnalyzer 
+  mv UserCode/TSWilliams/BstdZee/BstdZeeTools TSWilliams/.
+  mv UserCode/SHarper/HEEPAnalyzer SHarper/.
+  rm -r UserCode
 ```
 
  * PF footprint removal [Supercluster footprint removal twiki][8]:
@@ -98,24 +81,9 @@ Instructions for Users
 ```
  git clone https://github.com/NWUHEP/ntupleProducer NWU/ntupleProducer
  cd NWU/ntupleProducer
- git checkout v9.2
+ git checkout v9.3
  cd ../..
-```
-
- * Patches to checked folders [should be in the release eventually? probably not]:
-```
-  cp NWU/ntupleProducer/patches/PATMHTProducer.h PhysicsTools/PatAlgos/plugins/PATMHTProducer.h
-  cvs co -r V00-02-14 DataFormats/StdDictionaries
-  cp NWU/ntupleProducer/patches/classes.h DataFormats/StdDictionaries/src/classes.h
-  cp NWU/ntupleProducer/patches/classes_def.xml DataFormats/StdDictionaries/src/classes_def.xml
-
-  cp NWU/ntupleProducer/patches/pfMETCorrections_cff.py JetMETCorrections/Type1MET/python/pfMETCorrections_cff.py
-  cp NWU/ntupleProducer/patches/mvaPFMET_leptons_data_cff.py JetMETCorrections/METPUSubtraction/python/mvaPFMET_leptons_data_cff.py
-  cp NWU/ntupleProducer/patches/mvaPFMET_leptons_cff.py JetMETCorrections/METPUSubtraction/python/mvaPFMET_leptons_cff.py
-  cp NWU/ntupleProducer/patches/mvaPFMET_leptons_cfi.py JetMETCorrections/METPUSubtraction/python/mvaPFMET_leptons_cfi.py
-  cp NWU/ntupleProducer/patches/PFMETAlgorithmMVA.cc JetMETCorrections/METPUSubtraction/src/. 
-
-  scram b -j 9
+ scram b -j 9
 ```
 
 Once compiled, we are ready to run it

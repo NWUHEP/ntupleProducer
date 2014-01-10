@@ -104,9 +104,6 @@
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 #include "DataFormats/METReco/interface/BeamHaloSummary.h"
 
-#include "RecoMET/METProducers/interface/TrackMETProducer.h"
-#include "RecoMET/METProducers/interface/ParticleFlowForChargedMETProducer.h"
-#include "DataFormats/MuonReco/interface/MuonSelectors.h"
 // ntuple storage classes
 #include "TCPhysObject.h"
 #include "TCPrimaryVtx.h"
@@ -297,11 +294,6 @@ class ntupleProducer : public edm::EDAnalyzer {
   TClonesArray* genJets;
   TClonesArray* genParticles;
   auto_ptr<TCMET>   recoMET;
-  auto_ptr<TCMET>   track_MET;
-  auto_ptr<TCMET>	T0MET; 
-  auto_ptr<TCMET>	T2MET;
-  auto_ptr<TCMET>   recoMET_corr;
-  auto_ptr<TCMET>   mva_MET;
 
   //Vertex info
   TClonesArray* primaryVtx;

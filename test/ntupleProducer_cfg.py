@@ -6,7 +6,7 @@ from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 process = cms.Process("NTUPLE")
 
 options = VarParsing.VarParsing ('analysis')
-options.maxEvents = 500
+options.maxEvents = 100
 #options.inputFiles= '/store/data/Run2012C/SingleMu/AOD/22Jan2013-v1/30010/C0E05558-9078-E211-9E02-485B39800B65.root'
 #options.inputFiles= '/store/data/Run2012C/DoublePhoton/AOD/22Jan2013-v2/30001/72DE4526-F370-E211-B370-00304867920A.root'
 #options.inputFiles = '/store/user/cmkuo/Dalitz_H_eeg_125_MG_v1/Dalitz_H_eeg_m125_RECO_v1/d459946fa1e058e24b305fca3ec661c6/STEP2_RAW2DIGI_L1Reco_RECO_PU_100_1_jL0.root'
@@ -37,12 +37,20 @@ process.load("Configuration.StandardSequences.MagneticField_cff")
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.load('Configuration.StandardSequences.Reconstruction_cff')
 
+# Basic MET shit
+process.load("JetMETCorrections.Type1MET.correctionTermsPfMetType1Type2_cff")
+process.load("JetMETCorrections.Type1MET.correctionTermsPfMetType0PFCandidate_cff")
+process.load("JetMETCorrections.Type1MET.correctionTermsPfMetShiftXY_cff")
+process.load("JetMETCorrections.Type1MET.correctedMet_cff")
+
 if (isRealData):
     process.GlobalTag.globaltag = 'FT_53_V21_AN3::All'
-    process.load('JetMETCorrections.METPUSubtraction.mvaPFMET_leptons_data_cff')
+    process.corrPfMetType1.jetCorrLabel = cms.string("ak5PFL1FastL2L3Residual")
+    process.corrPfMetShiftXY.parameter = process.pfMEtSysShiftCorrParameters_2012runABCDvsNvtx_data
 else:
     process.GlobalTag.globaltag = 'START53_V7N::All'
-    process.load('JetMETCorrections.METPUSubtraction.mvaPFMET_leptons_cff')
+    process.corrPfMetType1.jetCorrLabel = cms.string("ak5PFL1FastL2L3")
+    process.corrPfMetShiftXY.parameter = process.pfMEtSysShiftCorrParameters_2012runABCDvsNvtx_mc
 
 # Create good primary vertices for PF association
 from PhysicsTools.SelectorUtils.pvSelector_cfi import pvSelector
@@ -57,55 +65,7 @@ process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 process.load("CondCore.DBCommon.CondDBCommon_cfi")
 
 
-# Add MET collection for PAT
-#from PhysicsTools.PatAlgos.tools.metTools import *
-#addPfMET(process,'PF')
-#addTcMET(process,"TC")
-
-##Testing MET significance
-process.load("RecoMET.METProducers.PFMET_cfi")
-process.pfMet1 = process.pfMet.clone(alias="PFMET1")
-
-
-# MET corrections Type 1 and x,y corrections
-process.load('JetMETCorrections.Type1MET.pfMETCorrections_cff')
-process.load("JetMETCorrections.Type1MET.pfMETsysShiftCorrections_cfi")
-process.load("JetMETCorrections.Type1MET.pfMETCorrectionType0_cfi")
-
-
-# use for 2012 Data
 if (isRealData):
-    process.pfMEtSysShiftCorr.parameter = process.pfMEtSysShiftCorrParameters_2012runAvsNvtx_data
-# use for Spring'12 MC
-else:
-    process.pfMEtSysShiftCorr.parameter = process.pfMEtSysShiftCorrParameters_2012runAvsNvtx_mc
-
-process.pfType1CorrectedMet.srcType1Corrections = cms.VInputTag(
-    cms.InputTag('pfJetMETcorr', 'type1') ,
-    cms.InputTag('pfMEtSysShiftCorr')
-)
-process.pfType1p2CorrectedMet.srcType1Corrections = cms.VInputTag(
-    cms.InputTag('pfJetMETcorr', 'type1') ,
-    cms.InputTag('pfMEtSysShiftCorr')
-)
-
-process.pfType1CorrectedMetType0.srcType1Corrections = cms.VInputTag(
-    cms.InputTag('pfMETcorrType0'),
-    cms.InputTag('pfJetMETcorr', 'type1') ,
-    cms.InputTag('pfMEtSysShiftCorr')
-)
-
-process.load("RecoMET.METProducers.pfChargedMET_cfi")
-process.load("RecoMET.METProducers.TrackMET_cfi")
-
-#if (isRealData == False):
-#process.load("RecoMET.Configuration.GenMETParticles_cff")
-#process.load("RecoMET.METProducers.genMetCalo_cfi")
-#process.load("RecoMET.METProducers.MetMuonCorrections_cff")
-
-if (isRealData):
-    process.pfJetMETcorr.jetCorrLabel = cms.string("ak5PFL1FastL2L3Residual")
-
     # 53X b-jet discriminator calibration
     process.GlobalTag.toGet = cms.VPSet(
         cms.PSet(record = cms.string("BTagTrackProbability2DRcd"),
@@ -360,8 +320,8 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   JetTag            =    cms.untracked.InputTag('ak5PFJetsL1FastL2L3'),
   JecTag            =    cms.string("AK5PF"),
   GenJetTag         =    cms.untracked.InputTag('ak5GenJets'),
-  METTag            =    cms.untracked.InputTag('pfType1CorrectedMet'),
-  TrackMETTag       =    cms.untracked.InputTag('trackMet'),
+  #METTag            =    cms.untracked.InputTag('pfMet'),
+  METTag            =    cms.untracked.InputTag('pfMetT0pcT1Txy','','NTUPLE'),
   ElectronTag       =    cms.untracked.InputTag('gsfElectrons'),
   MuonTag           =    cms.untracked.InputTag('muons'),
   PhotonTag         =    cms.untracked.InputTag('photons'),
@@ -369,9 +329,6 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   rhoCorrTag        =    cms.untracked.InputTag('kt6PFJets',    'rho', 'RECO'),
   rho25CorrTag      =    cms.untracked.InputTag('kt6PFJetsIso', 'rho', 'NTUPLE'),
   rhoMuCorrTag      =    cms.untracked.InputTag('kt6PFJetsCentralNeutral', 'rho','RECO'),  # specifically for muon iso
-
-  T0METTag	    =	 cms.untracked.InputTag('pfType1CorrectedMetType0'),
-  T2METTag	    =	 cms.untracked.InputTag('pfType1p2CorrectedMet'),
 
   partFlowTag       =  cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
   skimLepton        =  cms.untracked.bool(False),
@@ -467,21 +424,16 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
 process.ntuplePath = cms.Path(
     process.goodOfflinePrimaryVertices
-    * process.type0PFMEtCorrection
-    * process.pfMEtSysShiftCorrSequence
-    * process.producePFMETCorrections
+    * process.correctionTermsPfMetType1Type2
+    * process.correctionTermsPfMetType0PFCandidate
+    * process.correctionTermsPfMetShiftXY
+    * process.pfMetT0pcT1Txy
     * process.pfNoPUSeq
-    * process.particleFlowForChargedMET
-    * process.pfChargedMET
-    * process.trackMet
-    #* process.patDefaultSequence
     * process.kt6PFJetsIso
     * process.ak5PFJetsL1FastL2L3
     * process.ak5JetTracksAssociatorAtVertex
     * process.btagging
     * AllFilters
-    * process.pfMEtMVAsequence
-    * process.pfMet1
 
     * process.eleRegressionEnergy
     * process.calibratedElectrons
