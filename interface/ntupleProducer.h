@@ -104,9 +104,6 @@
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 #include "DataFormats/METReco/interface/BeamHaloSummary.h"
 
-#include "RecoMET/METProducers/interface/TrackMETProducer.h"
-#include "RecoMET/METProducers/interface/ParticleFlowForChargedMETProducer.h"
-#include "DataFormats/MuonReco/interface/MuonSelectors.h"
 // ntuple storage classes
 #include "TCPhysObject.h"
 #include "TCPrimaryVtx.h"

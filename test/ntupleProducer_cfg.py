@@ -6,7 +6,7 @@ from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 process = cms.Process("NTUPLE")
 
 options = VarParsing.VarParsing ('analysis')
-options.maxEvents = 500
+options.maxEvents = 100
 #options.inputFiles= '/store/data/Run2012C/SingleMu/AOD/22Jan2013-v1/30010/C0E05558-9078-E211-9E02-485B39800B65.root'
 #options.inputFiles= '/store/data/Run2012C/DoublePhoton/AOD/22Jan2013-v2/30001/72DE4526-F370-E211-B370-00304867920A.root'
 #options.loadFromFile('inputFiles','PYTHIA8_175_H_Zg_8TeV.txt')
@@ -39,14 +39,18 @@ process.load('Configuration.StandardSequences.Reconstruction_cff')
 
 # Basic MET shit
 process.load("JetMETCorrections.Type1MET.correctionTermsPfMetType1Type2_cff")
+process.load("JetMETCorrections.Type1MET.correctionTermsPfMetType0PFCandidate_cff")
+process.load("JetMETCorrections.Type1MET.correctionTermsPfMetShiftXY_cff")
 process.load("JetMETCorrections.Type1MET.correctedMet_cff")
 
 if (isRealData):
     process.GlobalTag.globaltag = 'FT_53_V21_AN3::All'
     process.corrPfMetType1.jetCorrLabel = cms.string("ak5PFL1FastL2L3Residual")
+    process.corrPfMetShiftXY.parameter = process.pfMEtSysShiftCorrParameters_2012runABCDvsNvtx_data
 else:
     process.GlobalTag.globaltag = 'START53_V7N::All'
     process.corrPfMetType1.jetCorrLabel = cms.string("ak5PFL1FastL2L3")
+    process.corrPfMetShiftXY.parameter = process.pfMEtSysShiftCorrParameters_2012runABCDvsNvtx_mc
 
 # Create good primary vertices for PF association
 from PhysicsTools.SelectorUtils.pvSelector_cfi import pvSelector
@@ -316,7 +320,8 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   JetTag            =    cms.untracked.InputTag('ak5PFJetsL1FastL2L3'),
   JecTag            =    cms.string("AK5PF"),
   GenJetTag         =    cms.untracked.InputTag('ak5GenJets'),
-  METTag            =    cms.untracked.InputTag('pfMet'),
+  #METTag            =    cms.untracked.InputTag('pfMet'),
+  METTag            =    cms.untracked.InputTag('pfMetT0pcT1Txy','','NTUPLE'),
   ElectronTag       =    cms.untracked.InputTag('gsfElectrons'),
   MuonTag           =    cms.untracked.InputTag('muons'),
   PhotonTag         =    cms.untracked.InputTag('photons'),
@@ -419,7 +424,10 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
 process.ntuplePath = cms.Path(
     process.goodOfflinePrimaryVertices
-    * process.pfMetT0pcT1
+    * process.correctionTermsPfMetType1Type2
+    * process.correctionTermsPfMetType0PFCandidate
+    * process.correctionTermsPfMetShiftXY
+    * process.pfMetT0pcT1Txy
     * process.pfNoPUSeq
     * process.kt6PFJetsIso
     * process.ak5PFJetsL1FastL2L3
