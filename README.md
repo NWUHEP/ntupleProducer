@@ -13,15 +13,18 @@ Instructions for Users
   cd CMSSW_5_3_13_patch3/src
   cmsenv
 ```
+Replace the <cern-user-account> with your CERN account.
+Since the new recipe for CVS connection is done through ssh to lxplus you will have to type your CERN password
+every time when checkout from CVS. It is inconveniet, but we have to live with it for now. 
 
  * Met recipes, according to [workbook][2] and [met-recipe][3]:
 ```
-  git cms-addpkg PhysicsTools/PatAlgos 
-  git cms-merge-topic 1472 
+  git cms-addpkg PhysicsTools/PatAlgos
+  git cms-merge-topic 1472
   git cms-merge-topic -u TaiSakuma:53X-met-131120-01
   scram b -j 9
 ```
- 
+
  * Met filters according to [MissingETOptionalFilters][4]:
 ```
   cvs co -r V00-00-13-01 RecoMET/METFilters
@@ -52,18 +55,19 @@ Instructions for Users
 ```
   cvs co -r METPU_5_3_X_v4 RecoJets/JetProducers
   cvs up -r HEAD RecoJets/JetProducers/data/
-  cvs up -r HEAD RecoJets/JetProducers/python/PileupJetIDCutParams_cfi.py                     
-  cvs up -r HEAD RecoJets/JetProducers/python/PileupJetIDParams_cfi.py                     
-  cvs up -r HEAD RecoJets/JetProducers/python/PileupJetID_cfi.py     
-  cvs co -r V05-00-16                             DataFormats/JetReco
+  cvs up -r HEAD RecoJets/JetProducers/python/PileupJetIDCutParams_cfi.py
+  cvs up -r HEAD RecoJets/JetProducers/python/PileupJetIDParams_cfi.py
+  cvs up -r HEAD RecoJets/JetProducers/python/PileupJetID_cfi.py
+  cvs co -r V05-00-16 DataFormats/JetReco
+  scram b -j 9
 ```
 
- * Extra code (for boosted Z->ee isolation), (-d option not working since new CVS directory) following [6] and [7]:
+ * Extra code (for boosted Z->ee isolation), (-d option not working since new CVS directory) following [boostedZ][6] and [heep][7] twikies:
 ```
   mkdir TSWilliams
-  mkdir SHarper 
+  mkdir SHarper
   cvs co -r V00-02-03 UserCode/TSWilliams/BstdZee/BstdZeeTools
-  cvs co -r V00-09-03 UserCode/SHarper/HEEPAnalyzer 
+  cvs co -r V00-09-03 UserCode/SHarper/HEEPAnalyzer
   mv UserCode/TSWilliams/BstdZee/BstdZeeTools TSWilliams/.
   mv UserCode/SHarper/HEEPAnalyzer SHarper/.
   rm -r UserCode
@@ -75,13 +79,14 @@ Instructions for Users
   cd  PFIsolation/SuperClusterFootprintRemoval
   git checkout V01-06
   cd ../..
+  scram b -j 9
 ```
 
  * Now check out the ntuple producer code and then the specific tag/branch of the code that is known to work
 ```
  git clone https://github.com/NWUHEP/ntupleProducer NWU/ntupleProducer
  cd NWU/ntupleProducer
- git checkout v9.3
+ git checkout v9.4
  cd ../..
  scram b -j 9
 ```
@@ -95,15 +100,15 @@ Once compiled, we are ready to run it
 it assumes you are running over an MC sample. If you want to run on data, do:
 ```
   cmsRun ntupleProducer_cfg.py isRealData=1
-``` 
+```
 that will set up an appropriate global tag etc.
 
-*NB* 
-By defualt, the ntuples require that there be at least one muon(electron) with pT > 3(5) GeV in order for an event to be saved. 
-In the case that this is not desired (for instance, in jet or photon based studies), 
+*NB*
+By defualt, the ntuples require that there be at least one muon(electron) with pT > 3(5) GeV in order for an event to be saved.
+In the case that this is not desired (for instance, in jet or photon based studies),
 you should switch off the ```skimLeptons``` option in ntupleProducer_cfg.py
 
-In addition to this, there are various flags the configuration file, ntupleProducer_cfg.py, that allow to save/not save certain objects (muons, jets, etc). All are saved by default.  
+In addition to this, there are various flags the configuration file, ntupleProducer_cfg.py, that allow to save/not save certain objects (muons, jets, etc). All are saved by default.
 
 #### Running with CRAB
 Look into ```crabNtuples_MC.cfg``` and ```crabNtuples_Data.cfg``` scripts.
@@ -138,10 +143,10 @@ Instructions for Developers
   git push
 ```
 
-If the changes do not conflict, you are done. 
-If there are conflicts, markers will be left in the problematic files showing the conflict; `git diff` will show this. 
+If the changes do not conflict, you are done.
+If there are conflicts, markers will be left in the problematic files showing the conflict; `git diff` will show this.
 Once you have edited the files to resolve the conflicts, `git commit -a`.
- 
+
 ### Tagging policy
 At any time you can tag your code, and push your tags to remote:
 ```
@@ -151,9 +156,9 @@ At any time you can tag your code, and push your tags to remote:
 You can use any tags you want, later those can be deleted.
 
 For the global production though, we should stick with a tagging convention.
-Tags should be **vX.Y** and I am starting them with **v6.1**. Such that the tag corresponds to the **nutuple_v6** name 
-of ntuple production. 
-If the new code significantly changes the format of the ntuples (substantial changes to class definitions etc.) then the first number of a tag should be incremented 
+Tags should be **vX.Y** and I am starting them with **v6.1**. Such that the tag corresponds to the **nutuple_v6** name
+of ntuple production.
+If the new code significantly changes the format of the ntuples (substantial changes to class definitions etc.) then the first number of a tag should be incremented
 (to v7.1 etc.) and the ntuple production path-name should be changed correspondingly.  Otherwise, incremental changes should be reflected in changes to the second digit.
 
 

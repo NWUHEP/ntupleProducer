@@ -12,7 +12,7 @@ class TCTriggerObject : public TLorentzVector {
         int _id;
         string _HLTName;
         string _moduleName;
-
+        
     public:
         TCTriggerObject();
         virtual ~TCTriggerObject();

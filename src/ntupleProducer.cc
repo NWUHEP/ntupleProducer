@@ -417,7 +417,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     iEvent.getByLabel(edm::InputTag("eleRegressionEnergy","eneErrorRegForGsfEle"), regErr_handle);
     const edm::ValueMap<double> ele_regErr = (*regErr_handle.product());
 
-    /* DO NOT delete it yet, it maybe useful later for Dalitz electron isolation
+    // DO NOT delete it yet, it maybe useful later for Dalitz electron isolation
     //This stuff is for modified isolation for close electrons,
     //following prescription here: https://twiki.cern.ch/twiki/bin/viewauth/CMS/BoostedZToEEModIso
     edm::Handle<edm::ValueMap<double> > h_modElectronIso_Tk;
@@ -429,7 +429,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     const edm::ValueMap<double> modElectronIso_Tk     = (*h_modElectronIso_Tk.product());
     const edm::ValueMap<double> modElectronIso_Ecal   = (*h_modElectronIso_Ecal.product());
     const edm::ValueMap<double> modElectronIso_HcalD1 = (*h_modElectronIso_HcalD1.product());
-    */
+
 
     Int_t eee=0;
     for (vector<reco::GsfElectron>::const_iterator iElectron = electrons->begin(); iElectron != electrons->end(); ++iElectron) {
@@ -502,14 +502,14 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       // ** *************
       // Assosited GSF tracks:
       // ** ************
-      
+
       TCElectron::Track *t = new TCElectron::Track();
       t->SetXYZM(iElectron->gsfTrack()->px(), iElectron->gsfTrack()->py(), iElectron->gsfTrack()->pz(),  0);
       t->SetVtx(iElectron->gsfTrack()->vx(),  iElectron->gsfTrack()->vy(), iElectron->gsfTrack()->vz());
       t->SetCharge(iElectron->gsfTrack()->chargeMode());
       t->SetNormalizedChi2(iElectron->gsfTrack()->normalizedChi2());
       t->SetPtError(iElectron->gsfTrack()->ptError());
-      TCTrack::ConversionInfo convInfo = ntupleProducer::CheckForConversions(hConversions, iElectron->gsfTrack(), 
+      TCTrack::ConversionInfo convInfo = ntupleProducer::CheckForConversions(hConversions, iElectron->gsfTrack(),
                                                                              vertexBeamSpot.position(), (*myVtxRef).position());
       t->SetConversionInfo(convInfo);
       //This is the main track, directly assosiated with an Electron
@@ -530,7 +530,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
           t->SetNormalizedChi2((*gtr)->normalizedChi2());
           t->SetPtError((*gtr)->ptError());
           //re-using the same object
-          convInfo = ntupleProducer::CheckForConversions(hConversions, *gtr, 
+          convInfo = ntupleProducer::CheckForConversions(hConversions, *gtr,
                                                        vertexBeamSpot.position(), (*myVtxRef).position());
           t->SetConversionInfo(convInfo);
           eleCon->AddTrack(*t);
@@ -540,7 +540,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       eleCon->SetConversionDcot(iElectron->convDcot());
       eleCon->SetConversionDist(iElectron->convDist());
       eleCon->SetConversionRadius(iElectron->convRadius());
-      
+
       bool validKF= false;
       reco::TrackRef myTrackRef = iElectron->closestCtfTrackRef();
       validKF = (myTrackRef.isAvailable());
@@ -630,13 +630,21 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       float m_HZZ = ele_mvaNonTrigV0.get(eee-1);
       eleCon->SetMvaID_HZZ(m_HZZ);
 
+      //cout<<eee<<"  mva0 = "<<m<<endl;
+
       //Regression energy
       double ene = ele_regEne.get(eee-1);
       double err = ele_regErr.get(eee-1);
       eleCon->SetEnergyRegression(ene);
       eleCon->SetEnergyRegressionErr(err);
 
-      //cout<<eee<<"  mva0 = "<<m<<endl;
+      eleCon->SetIdMap("modElectronIso_Tk",    modElectronIso_Tk.get(eee-1));
+      eleCon->SetIdMap("modElectronIso_Ecal",  modElectronIso_Ecal.get(eee-1));
+      eleCon->SetIdMap("modElectronIso_HcalD1",modElectronIso_HcalD1.get(eee-1));
+
+      //cout<<eee-1<<"Bosted iso vars: tk="<<modElectronIso_Tk.get(eee-1)
+      //   <<"   ecal="<<modElectronIso_Ecal.get(eee-1)
+      //  <<" hcald1="<<modElectronIso_HcalD1.get(eee-1)<<endl;
 
       const reco::GsfElectron &iElectronTmp   ( (*calibratedElectrons)[eee-1]);
 
@@ -683,14 +691,14 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         // remove bad ES rechits
         if (it->recoFlag()==1 || it->recoFlag()==14 || (it->recoFlag()<=10 && it->recoFlag()>=5)) continue;
         //Make the map of DetID, EcalRecHit pairs
-        rechits_map_.insert(std::make_pair(it->id(), *it));   
+        rechits_map_.insert(std::make_pair(it->id(), *it));
       }
     }
 
     Handle<EcalRecHitCollection> Brechit;
     iEvent.getByLabel("reducedEcalRecHitsEB",Brechit);
     //const EcalRecHitCollection* barrelRecHits= Brechit.product();
-    
+
     Handle<vector<reco::Photon> > photons;
     iEvent.getByLabel(photonTag_, photons);
 
@@ -753,7 +761,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         /*
            vector<TCPhoton::CrystalInfo> savedCrystals = myPhoton->GetCrystalVect();
            for (int y = 0; y< myPhoton->GetNCrystals();y++){
-           std::cout << "savedCrystals[y].time : " << savedCrystals[y].time << std::endl; 
+           std::cout << "savedCrystals[y].time : " << savedCrystals[y].time << std::endl;
            std::cout << "savedCrystals[y].timeErr : " << savedCrystals[y].timeErr << std::endl;
            std::cout << "savedCrystals[y].energy : " << savedCrystals[y].energy <<std::endl;
            std::cout << "savedCrystals[y].ieta: " << savedCrystals[y].ieta << std::endl;
@@ -782,8 +790,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       myPhoton->SetSCEta(iPhoton->superCluster()->eta());
       myPhoton->SetSCPhi(iPhoton->superCluster()->phi());
       myPhoton->SetSigmaIEtaIEta(iPhoton->sigmaIetaIeta());
-      myPhoton->SetSigmaIEtaIPhi(phoCov[1]); 
-      myPhoton->SetSigmaIPhiIPhi(phoCov[2]); 
+      myPhoton->SetSigmaIEtaIPhi(phoCov[1]);
+      myPhoton->SetSigmaIPhiIPhi(phoCov[2]);
 
       myPhoton->SetSCEtaWidth(  iPhoton->superCluster()->etaWidth());
       myPhoton->SetSCPhiWidth(  iPhoton->superCluster()->phiWidth());
@@ -880,7 +888,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       float phoESEffSigmaRR_x = 0.;
       float phoESEffSigmaRR_y = 0.;
       float phoESEffSigmaRR_z = 0.;
-      
+
       if (ESRecHits.isValid() && (fabs(iPhoton->superCluster()->eta()) > 1.6 && fabs(iPhoton->superCluster()->eta()) < 3)) {
 
         vector<float> phoESHits0 = getESHits((*iPhoton).superCluster()->x(), (*iPhoton).superCluster()->y(), (*iPhoton).superCluster()->z(), rechits_map_, geometry_p, topology_p.get(), 0);
@@ -997,8 +1005,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
   // Noise filters //
   ///////////////////
 
-  //if (isRealData) {
-
   myNoiseFilters.isScraping = false; //isFilteredOutScraping(iEvent, iSetup, 10, 0.25);
 
   Handle<bool> hcalNoiseFilterHandle;
@@ -1061,7 +1067,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
   //  <<" isNoiseHcal HBHE "<<myNoiseFilters.isNoiseHcalHBHE<<"  laser "<<myNoiseFilters.isNoiseHcalLaser<<"\n"
   //  <<" ecal TP  "<<myNoiseFilters.isNoiseEcalTP<<"   ecal BE  "<<myNoiseFilters.isNoiseEcalBE;
 
-  //}
 
   ////////////////////////////
   // get trigger information//
@@ -1087,7 +1092,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       if (triggerPaths_[j] == "") continue;
 
       if (hlNames[i].compare(0, triggerPaths_[j].length(),triggerPaths_[j]) == 0) {
-        //cout << hlNames[i] << " ?= " << triggerPaths_[j] << endl;
+        //cout <<eventNumber<<"\n \t"<< hlNames[i] << " ?= " << triggerPaths_[j] <<"   is PASSED"<< endl;
         triggerStatus |= ULong64_t(0x01) << j;
         hltPrescale[j] = 1;
 
@@ -1098,11 +1103,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
            } */
       }
     }
+
+    if (saveTriggerObj_)
+      analyzeTrigger(hltResults, hltEvent, hlNames[i], &trigCount);
   }
 
-  for(unsigned int t = 1; t<hlNames.size();t++){
-    analyzeTrigger(hltResults, hltEvent, hlNames[t], &trigCount);
-  }
 
   ++nEvents;
   if (!skimLepton_){
@@ -1415,9 +1420,6 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults
     return;
   }
 
-  if (!saveTriggerObj_)
-    return;
-
   // modules on this trigger path
   // const unsigned int moduleIndex(hltResults->index(triggerIndex));
   const unsigned int moduleIndex(hltResults->index(triggerIndex));
@@ -1446,7 +1448,7 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults
 
   // Results from TriggerEvent product - Attention: must look only for
   // modules actually run in this path for this event!
-  std::vector < GlobalVector > passMomenta;
+  //std::vector < GlobalVector > passMomenta;
   for (unsigned int j=0; j<=moduleIndex; ++j) {
     const string& moduleLabel(moduleLabels[j]);
     const string  moduleType(hltConfig_.moduleType(moduleLabel));
@@ -1479,12 +1481,12 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults
       }
       const TriggerObjectCollection& TOC(hltEvent->getObjects());
       for (size_type i=0; i!=n; ++i) {
-        if(0==i){
-          passMomenta.clear();
-        }
+        //if(0==i){
+        // passMomenta.clear();
+        //}
         const TriggerObject& TO(TOC[KEYS[i]]);
         GlobalVector momentumT0(TO.px(),TO.py(),TO.pz());
-        if (TO.pt() < 10) continue;
+        if (TO.pt() < 5) continue;
         TCTriggerObject* trigObj = new ((*triggerObjects)[*trigCount]) TCTriggerObject;
 
         //std::cout<<" i_KEY = "<<i<<" id = "<<TO.id()<<" typ = "<<moduleType<<std::endl;
@@ -1493,12 +1495,13 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults
         ////std::cout<<" L1 object found"<<std::endl;
         //}
 
-        if(verboseTrigs){
-          std::cout<<" i = "<<i<<" moduleLabel/moduleType : "<<moduleLabel<<"/"<<moduleType<<std::endl;
-          cout << "   " << i << " " << VIDS[i] << "/" << KEYS[i] << ": "
-            << TO.id() << " " << TO.pt() << " " << TO.eta() << " " << TO.phi() << " " << TO.mass()
-            << endl;
-        }
+
+        //std::cout<<" i = "<<i<<" moduleLabel/moduleType : "<<moduleLabel<<"/"<<moduleType<<std::endl;
+        //cout << "   " << i << " " << VIDS[i] << "/" << KEYS[i] << ": \n"
+        //   <<"triggerName = "<<triggerName<<"   moduleLabel="<<moduleLabel<<"\n "
+        //   << TO.id() << " " << TO.pt() << " " << TO.eta() << " " << TO.phi() << " " << TO.mass()
+        //   << endl;
+
 
         trigObj->SetPtEtaPhiE(TO.pt(),TO.eta(),TO.phi(),TO.energy());
         trigObj->SetHLTName(triggerName);
@@ -1619,7 +1622,7 @@ vector<float> ntupleProducer::getESHits(double X, double Y, double Z, map<DetId,
   DetId esId1 = (dynamic_cast<const EcalPreshowerGeometry*>(geometry_p))->getClosestCellInPlane(point, 1);
   DetId esId2 = (dynamic_cast<const EcalPreshowerGeometry*>(geometry_p))->getClosestCellInPlane(point, 2);
   ESDetId esDetId1 = (esId1 == DetId(0)) ? ESDetId(0) : ESDetId(esId1);
-  ESDetId esDetId2 = (esId2 == DetId(0)) ? ESDetId(0) : ESDetId(esId2);  
+  ESDetId esDetId2 = (esId2 == DetId(0)) ? ESDetId(0) : ESDetId(esId2);
 
   map<DetId, EcalRecHit>::iterator it;
   ESDetId next;
@@ -1643,22 +1646,22 @@ vector<float> ntupleProducer::getESHits(double X, double Y, double Z, map<DetId,
     if (strip2 != ESDetId(0)) strip2 = theESNav2.west();
   }
 
-  // Plane 2 
+  // Plane 2
   if (strip1 == ESDetId(0)) {
     for (unsigned int i=0; i<31; ++i) esHits.push_back(0);
   } else {
 
     it = rechits_map.find(strip1);
-    if (it->second.energy() > 1.0e-10 && it != rechits_map.end()) esHits.push_back(it->second.energy());  
+    if (it->second.energy() > 1.0e-10 && it != rechits_map.end()) esHits.push_back(it->second.energy());
     else esHits.push_back(0);
-    //cout<<"center : "<<strip1<<" "<<it->second.energy()<<endl;      
+    //cout<<"center : "<<strip1<<" "<<it->second.energy()<<endl;
 
-    // east road 
+    // east road
     for (unsigned int i=0; i<15; ++i) {
       next = theESNav1.east();
       if (next != ESDetId(0)) {
         it = rechits_map.find(next);
-        if (it->second.energy() > 1.0e-10 && it != rechits_map.end()) esHits.push_back(it->second.energy());  
+        if (it->second.energy() > 1.0e-10 && it != rechits_map.end()) esHits.push_back(it->second.energy());
         else esHits.push_back(0);
         //cout<<"east "<<i<<" : "<<next<<" "<<it->second.energy()<<endl;
       } else {
@@ -1668,14 +1671,14 @@ vector<float> ntupleProducer::getESHits(double X, double Y, double Z, map<DetId,
       }
     }
 
-    // west road 
+    // west road
     theESNav1.setHome(strip1);
     theESNav1.home();
     for (unsigned int i=0; i<15; ++i) {
       next = theESNav1.west();
       if (next != ESDetId(0)) {
         it = rechits_map.find(next);
-        if (it->second.energy() > 1.0e-10 && it != rechits_map.end()) esHits.push_back(it->second.energy());  
+        if (it->second.energy() > 1.0e-10 && it != rechits_map.end()) esHits.push_back(it->second.energy());
         else esHits.push_back(0);
         //cout<<"west "<<i<<" : "<<next<<" "<<it->second.energy()<<endl;
       } else {
@@ -1691,18 +1694,18 @@ vector<float> ntupleProducer::getESHits(double X, double Y, double Z, map<DetId,
   } else {
 
     it = rechits_map.find(strip2);
-    if (it->second.energy() > 1.0e-10 && it != rechits_map.end()) esHits.push_back(it->second.energy());  
+    if (it->second.energy() > 1.0e-10 && it != rechits_map.end()) esHits.push_back(it->second.energy());
     else esHits.push_back(0);
-    //cout<<"center : "<<strip2<<" "<<it->second.energy()<<endl;      
+    //cout<<"center : "<<strip2<<" "<<it->second.energy()<<endl;
 
-    // north road 
+    // north road
     for (unsigned int i=0; i<15; ++i) {
       next = theESNav2.north();
       if (next != ESDetId(0)) {
         it = rechits_map.find(next);
         if (it->second.energy() > 1.0e-10 && it != rechits_map.end()) esHits.push_back(it->second.energy());
         else esHits.push_back(0);
-        //cout<<"north "<<i<<" : "<<next<<" "<<it->second.energy()<<endl;  
+        //cout<<"north "<<i<<" : "<<next<<" "<<it->second.energy()<<endl;
       } else {
         for (unsigned int j=i; j<15; ++j) esHits.push_back(0);
         break;
@@ -1710,14 +1713,14 @@ vector<float> ntupleProducer::getESHits(double X, double Y, double Z, map<DetId,
       }
     }
 
-    // south road 
+    // south road
     theESNav2.setHome(strip2);
     theESNav2.home();
     for (unsigned int i=0; i<15; ++i) {
       next = theESNav2.south();
       if (next != ESDetId(0)) {
         it = rechits_map.find(next);
-        if (it->second.energy() > 1.0e-10 && it != rechits_map.end()) esHits.push_back(it->second.energy());  
+        if (it->second.energy() > 1.0e-10 && it != rechits_map.end()) esHits.push_back(it->second.energy());
         else esHits.push_back(0);
         //cout<<"south "<<i<<" : "<<next<<" "<<it->second.energy()<<endl;
       } else {
@@ -1790,28 +1793,28 @@ TCTrack::ConversionInfo ntupleProducer::CheckForConversions(const edm::Handle<re
   //int iconv=-1;
   for (reco::ConversionCollection::const_iterator conv = convCol->begin(); conv!= convCol->end(); ++conv) {
     //iconv++;
-    
+
     reco::Vertex vtx = conv->conversionVertex();
     if (vtx.isValid()) {
       if (ConversionTools::matchesConversion(gsf, *conv)) {
-        
+
         (*convInfo).isValid = true;
-        
+
         (*convInfo).vtxProb = TMath::Prob( vtx.chi2(), vtx.ndof() );
         math::XYZVector mom(conv->refittedPairMomentum());
         double dbsx = vtx.x() - bs.x();
         double dbsy = vtx.y() - bs.y();
         (*convInfo).lxyBS = (mom.x()*dbsx + mom.y()*dbsy)/mom.rho();
-        
+
         double dpvx = vtx.x() - pv.x();
         double dpvy = vtx.y() - pv.y();
         (*convInfo).lxyPV = (mom.x()*dpvx + mom.y()*dpvy)/mom.rho();
-        
+
         (*convInfo).nHitsMax=0;
         for (std::vector<uint8_t>::const_iterator it = conv->nHitsBeforeVtx().begin(); it!=conv->nHitsBeforeVtx().end(); ++it) {
           if ((*it)>(*convInfo).nHitsMax) (*convInfo).nHitsMax = (*it);
         }
-        
+
         break;
       }
     }
