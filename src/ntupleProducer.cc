@@ -1106,6 +1106,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     if (saveTriggerObj_)
       analyzeTrigger(hltResults, hltEvent, hlNames[i], &trigCount);
+    //addTriggerObjects(hltEvent, hlNames[i], &trigCount);
   }
 
 
@@ -1384,6 +1385,19 @@ bool ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::Vertex
   return true;
 }
 
+/*
+void ntupleProducer::addTriggerObjects(edm::Handle<trigger::TriggerEvent> &hltEvent, const std::string& triggerName, int* trigCount) 
+{
+  const unsigned int n(hltConfig_.size());
+  const unsigned int triggerIndex(hltConfig_.triggerIndex(triggerName));
+
+  const unsigned int moduleIndex(hltResults->index(triggerIndex));
+  const unsigned int m(hltConfig_.size(triggerIndex));
+  const vector<string>& moduleLabels(hltConfig_.moduleLabels(triggerIndex));
+
+
+}
+*/
 
 void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults, edm::Handle<trigger::TriggerEvent> &hltEvent, const std::string& triggerName, int* trigCount) {
 
@@ -1392,7 +1406,7 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults
   const unsigned int n(hltConfig_.size());
   const unsigned int triggerIndex(hltConfig_.triggerIndex(triggerName));
 
-  TLorentzVector triggerLepton;
+  //TLorentzVector triggerLepton;
 
   // abort on invalid trigger name
 
