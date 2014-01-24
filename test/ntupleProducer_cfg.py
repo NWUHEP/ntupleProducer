@@ -15,9 +15,12 @@ options.maxEvents = 100
 #options.inputFiles = '/store/data/Run2012A/DoubleElectron/AOD/13Jul2012-v1/00000/00347915-EED9-E111-945A-848F69FD2817.root'
 #options.loadFromFile('inputFiles','dalitz_short.txt')
 #options.inputFiles = '/store/user/andrey/Higgs_To_MuMuGamma_Dalitz_MH125_Mll_0to50_MadgraphHEFT_pythia6/AODSIM_v2/39bf61f738ba3bdb8860f0848073cc88/aodsim_100_1_hLi.root'
-options.inputFiles = '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0000/02CDCF05-BED2-E111-85F4-0030486740BA.root'
+#options.inputFiles = '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0000/02CDCF05-BED2-E111-85F4-0030486740BA.root'
 #options.inputFiles = '/store/data/Run2012D/SinglePhotonParked/AOD/22Jan2013-v1/30004/144D7268-4086-E211-9DC1-001E673984C1.root'
 #options.inputFiles = 'file:/eos/uscms/store/user/bpollack/GenMC/H_ZG_p8175/AOD/bpollack/PYTHIA8_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_v3/STEP2_PYTHIA8_POWHEG_H_Zg_8TeV_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_v3/4bbb399a7a963db5df92706e62a42bd4/STEP2_PYTHIA8_POWHEG_H_Zg_8TeV_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_131_1_TmY.root'
+
+#options.inputFiles = '/store/user/cmkuo/Dalitz_H_eeg_125_MG_v1/Dalitz_H_eeg_m125_RECO_v1/d459946fa1e058e24b305fca3ec661c6/STEP2_RAW2DIGI_L1Reco_RECO_PU_100_1_jL0.root'
+options.inputFiles = '/store/data/Run2012B/DoublePhoton/AOD/22Jan2013-v1/20000/0013EBD3-FA6C-E211-A1DF-00261894384A.root'
 
 options.register("isRealData",
                  0,

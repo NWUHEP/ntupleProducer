@@ -39,6 +39,7 @@ float TCPhysObject::IdMap(string key) const {
     return _IdMap.find(key)->second; 
 }
 
+/*
 float TCPhysObject::IsoMap(string key) const { 
     
     //Check that key is present in the iso map
@@ -52,6 +53,7 @@ float TCPhysObject::IsoMap(string key) const {
 
     return _IsoMap.find(key)->second; 
 }
+*/
 
 TVector2 TCPhysObject::P2() const {
     TVector2 v2(this->Px(), this->Py());
@@ -66,7 +68,7 @@ bool TCPhysObject::IsPF()   const   { return _isPF; }
 
 void TCPhysObject::SetP4(TLorentzVector p4) { this->SetPxPyPzE(p4.Px(), p4.Py(), p4.Pz(), p4.E()); } 
 void TCPhysObject::SetIdMap(string s, float v){ _IdMap[s] = v; }
-void TCPhysObject::SetIsoMap(string s, float v){ _IsoMap[s] = v; }
+//void TCPhysObject::SetIsoMap(string s, float v){ _IsoMap[s] = v; }
 
 void TCPhysObject::SetVtx(float vx, float vy, float vz) {
     TVector3 v3(vx, vy, vz);
