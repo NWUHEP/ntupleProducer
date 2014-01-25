@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import re, os
-import getopt, sys 
+import getopt, sys
 import FjrParser as fp
 
 def usage (prog_name):
@@ -9,14 +9,14 @@ def usage (prog_name):
 
 def help (prog_name):
     usage(prog_name)
-    
+
     print """
-    -c\t\t\t (Mandatory) CRAB project directory 
+    -c\t\t\t (Mandatory) CRAB project directory
     --quiet, -q\t\t Wehn turned on, works silently
     --help, -h\t\t Print this message
     """
     sys.exit(1)
-    
+
 if __name__ == '__main__':
   (prog_path, prog_name) = os.path.split(sys.argv[0])
   if len(sys.argv) < 2:
@@ -47,6 +47,7 @@ if __name__ == '__main__':
 
   fjrs = fp.get_fjrs(directory)
   for f in fjrs:
+    if '57' not in f: continue
     if not quiet:
       print ">>> ", "processing fjr", f
 
@@ -60,9 +61,12 @@ if __name__ == '__main__':
 
     # if the job finished successfully get the PFN
     try:
-      if fp.is_goodfile(doc) : 
+      if fp.is_goodfile(doc) :
         (lfn, pfn, surl) = fp.get_filenames(doc)
         print pfn
+        if not os.path.isfile(pfn[45:]):
+          print pfn, 'does not actually exist'
+          raw_input()
     except:
       if not quiet:
         print ">>> ", "skipping fjr", f
