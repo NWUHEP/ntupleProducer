@@ -2,6 +2,11 @@
 ---------------
 The most important logs should go here. Other are monitored with git commits.
 
+2014-Jan-25,  _Brian_
+ * Updating to 9.5, andrey added back those important fucking electron variables he decided to remove
+ * It's like he just screws with me on purpose for his own amusement 
+
+
 2013-Dec-22,  _Andrey_
  * More conversion information added
  * Moved Brian's footprint into a struct inside Photon class  
