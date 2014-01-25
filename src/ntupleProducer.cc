@@ -359,14 +359,14 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       muCon->SetIsoMap("EmIso_R05",   iMuon->isolationR05().emEt);
       muCon->SetIsoMap("HadIso_R05",  iMuon->isolationR05().hadEt);
       muCon->SetIsoMap("SumPt_R05",   iMuon->isolationR05().sumPt);
-
+      */
       // PF-based isolation
-      muCon->SetIsoMap("pfPUPt_R03",      iMuon->pfIsolationR03().sumPUPt);
-      muCon->SetIsoMap("pfPhotonEt_R03",  iMuon->pfIsolationR03().sumPhotonEt);
-      muCon->SetIsoMap("pfChargedPt_R03", iMuon->pfIsolationR03().sumChargedParticlePt);
-      muCon->SetIsoMap("pfChargedHadronPt_R03", iMuon->pfIsolationR03().sumChargedHadronPt);
-      muCon->SetIsoMap("pfNeutralHadronEt_R03", iMuon->pfIsolationR03().sumNeutralHadronEt);
-
+      muCon->SetIdMap("Iso_pfPUPt_R03",      iMuon->pfIsolationR03().sumPUPt);
+      muCon->SetIdMap("Iso_pfPhotonEt_R03",  iMuon->pfIsolationR03().sumPhotonEt);
+      muCon->SetIdMap("Iso_pfChargedPt_R03", iMuon->pfIsolationR03().sumChargedParticlePt);
+      muCon->SetIdMap("Iso_pfChargedHadronPt_R03", iMuon->pfIsolationR03().sumChargedHadronPt);
+      muCon->SetIdMap("Iso_pfNeutralHadronEt_R03", iMuon->pfIsolationR03().sumNeutralHadronEt);
+      /*
       muCon->SetIsoMap("pfPUPt_R04",      iMuon->pfIsolationR04().sumPUPt);
       muCon->SetIsoMap("pfPhotonEt_R04",  iMuon->pfIsolationR04().sumPhotonEt);
       muCon->SetIsoMap("pfChargedPt_R04", iMuon->pfIsolationR04().sumChargedParticlePt);
@@ -460,7 +460,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       eleCon->SetEoPout( iElectron->eEleClusterOverPout());
       eleCon->SetESeedOverP(iElectron->eSeedClusterOverP());
 
-      //eleCon->SetHadOverEm(iElectron->hadronicOverEm());
       // ***** >> Switching to officially recommended method:  <<<<<<
       eleCon->SetHadOverEm(iElectron->hcalOverEcalBc());
       // !!!!!!!!!
@@ -611,16 +610,24 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       eleCon->SetPassConversionVeto(passConvVeto);
       eleCon->SetConversionMissHits(iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfHits());
 
+      //Variables for Triggering MVA pre-selection
+      eleCon->SetIdMap("hadronicOverEm",      iElectron->hadronicOverEm());
+      eleCon->SetIdMap("dr03TkSumPt",         iElectron->dr03TkSumPt());
+      eleCon->SetIdMap("dr03EcalRecHitSumEt", iElectron->dr03EcalRecHitSumEt());
+      eleCon->SetIdMap("dr03HcalTowerSumEt",  iElectron->dr03HcalTowerSumEt());
+      eleCon->SetIdMap("gsf_numberOfLostHits",iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfLostHits());
+      //eleCon->SetIdMap("",);
+      
       eleIsolator.fGetIsolation(&(*iElectron), &thePfColl, myVtxRef, primaryVtcs);
-      eleCon->SetIsoMap("pfChIso_R04", eleIsolator.getIsolationCharged());
-      eleCon->SetIsoMap("pfNeuIso_R04",eleIsolator.getIsolationNeutral());
-      eleCon->SetIsoMap("pfPhoIso_R04",eleIsolator.getIsolationPhoton());
+      eleCon->SetIdMap("Iso_pfCh_R04", eleIsolator.getIsolationCharged());
+      eleCon->SetIdMap("Iso_pfNeu_R04",eleIsolator.getIsolationNeutral());
+      eleCon->SetIdMap("Iso_pfPho_R04",eleIsolator.getIsolationPhoton());
 
       // Effective area for rho PU corrections (not sure if needed)
       float AEff03 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso03, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
       float AEff04 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso04, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
-      eleCon->SetIsoMap("EffArea_R03", AEff03);
-      eleCon->SetIsoMap("EffArea_R04", AEff04);
+      eleCon->SetIdMap("EffArea_R03", AEff03);
+      eleCon->SetIdMap("EffArea_R04", AEff04);
       eleCon->SetEffArea(AEff04);
 
 
@@ -826,25 +833,25 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       myPhoton->SetPfIsoPhoton( phoIsolator.getIsolationPhoton());
 
       if (saveMoreEgammaVars_){
-        myPhoton->SetIsoMap("chIso03",phoIsolator.getIsolationCharged());
-        myPhoton->SetIsoMap("nhIso03",phoIsolator.getIsolationNeutral());
-        myPhoton->SetIsoMap("phIso03",phoIsolator.getIsolationPhoton());
+        myPhoton->SetIdMap("chIso03",phoIsolator.getIsolationCharged());
+        myPhoton->SetIdMap("nhIso03",phoIsolator.getIsolationNeutral());
+        myPhoton->SetIdMap("phIso03",phoIsolator.getIsolationPhoton());
 
         // detector-based isolation
-        myPhoton->SetIsoMap("EmIso_R03",  (iPhoton->ecalRecHitSumEtConeDR03()));
-        myPhoton->SetIsoMap("HadIso_R03", (iPhoton->hcalTowerSumEtConeDR03()));
-        myPhoton->SetIsoMap("TrkIso_R03", (iPhoton->trkSumPtHollowConeDR03()));
+        myPhoton->SetIdMap("EmIso_R03",  (iPhoton->ecalRecHitSumEtConeDR03()));
+        myPhoton->SetIdMap("HadIso_R03", (iPhoton->hcalTowerSumEtConeDR03()));
+        myPhoton->SetIdMap("TrkIso_R03", (iPhoton->trkSumPtHollowConeDR03()));
 
 
-        myPhoton->SetIsoMap("EmIso_R04",  (iPhoton->ecalRecHitSumEtConeDR04()));
-        myPhoton->SetIsoMap("HadIso_R04", (iPhoton->hcalTowerSumEtConeDR04()));
-        myPhoton->SetIsoMap("TrkIso_R04", (iPhoton->trkSumPtHollowConeDR04()));
+        myPhoton->SetIdMap("EmIso_R04",  (iPhoton->ecalRecHitSumEtConeDR04()));
+        myPhoton->SetIdMap("HadIso_R04", (iPhoton->hcalTowerSumEtConeDR04()));
+        myPhoton->SetIdMap("TrkIso_R04", (iPhoton->trkSumPtHollowConeDR04()));
       }
 
       // Hcal isolation for 2012
-      //myPhoton->SetIsoMap("HadIso_R03",iPhoton->hcalTowerSumEtConeDR03() +
+      //myPhoton->SetIdMap("HadIso_R03",iPhoton->hcalTowerSumEtConeDR03() +
       //        (iPhoton->hadronicOverEm() - iPhoton->hadTowOverEm())*iPhoton->superCluster()->energy()/cosh(iPhoton->superCluster()->eta()));
-      //myPhoton->SetIsoMap("HadIso_R04",iPhoton->hcalTowerSumEtConeDR04() +
+      //myPhoton->SetIdMap("HadIso_R04",iPhoton->hcalTowerSumEtConeDR04() +
       //        (iPhoton->hadronicOverEm() - iPhoton->hadTowOverEm())*iPhoton->superCluster()->energy()/cosh(iPhoton->superCluster()->eta()));
 
       //Footprint removal
