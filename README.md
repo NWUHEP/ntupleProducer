@@ -51,7 +51,7 @@ every time when checkout from CVS. It is inconveniet, but we have to live with i
   scram b -j 9
 ```
 
- * MVA MET Code (Just for PU Jet ID) [9]:
+ * MVA MET Code (Just for PU Jet ID) [Jet PU ID][9]:
 ```
   cvs co -r METPU_5_3_X_v4 RecoJets/JetProducers
   cvs up -r HEAD RecoJets/JetProducers/data/
