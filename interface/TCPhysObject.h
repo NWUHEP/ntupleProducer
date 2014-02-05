@@ -18,7 +18,7 @@ class TCPhysObject : public TLorentzVector {
         TVector3 _vtx;
         map<string, float> _IdMap;
         //map<string, float> _IsoMap;
-        int _charge;
+        int  _charge;
         bool _isPF;
 
     public:

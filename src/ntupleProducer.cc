@@ -171,6 +171,12 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     iEvent.getByLabel("combinedSecondaryVertexBJetTags", bTagCollectionCSVMVA);
     const reco::JetTagCollection & bTagsCSVMVA = *(bTagCollectionCSVMVA.product());
 
+    // Jet flavor matching //
+    Handle<JetFlavourMatchingCollection> bJetFlavourMC;
+    if (!isRealData) {
+        iEvent.getByLabel("JetbyValAlgo", bJetFlavourMC);
+    }
+
     Handle<vector<reco::PFJet> > jets;
     iEvent.getByLabel(jetTag_, jets);
 
@@ -190,6 +196,18 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       jetCon->SetNumChPart(iJet->chargedMultiplicity());
 
       //jetCon->SetJetFlavor(iJet->partonFlavour());
+      if (!isRealData) {
+          int jetFlavor = 0;
+          for (JetFlavourMatchingCollection::const_iterator iFlavor = bJetFlavourMC->begin(); iFlavor != bJetFlavourMC->end(); iFlavor++) {
+              if (iFlavor->first.get()->pt() > 10 && iFlavor->first.get()->pt() == iJet->pt()) {
+                  jetFlavor = iFlavor->second.getFlavour();
+              }
+          }
+          //cout << iJet->pt() << "\t" << jetFlavor << endl;
+          jetCon->SetJetFlavor(jetFlavor);
+      } else {
+          jetCon->SetJetFlavor(0);
+      }
 
       jetCon->SetUncertaintyJES(-1);
 

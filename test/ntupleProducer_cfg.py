@@ -208,7 +208,7 @@ AllFilters = cms.Sequence(process.HBHENoiseFilterResultProducer
                           #* process.trkPOGFilters
                           * ~process.manystripclus53X #trkPOGFilter1
                           * ~process.toomanystripclus53X #trkPOGFilter2
-                          * ~process.logErrorTooManyClusters #trkPOGFilter 3
+                          * ~process.logErrrTooManyClusters #trkPOGFilter 3
                           )
 ##### END OF Noise Filters ############
 
@@ -285,6 +285,32 @@ process.pfNoPileUp = cms.EDProducer("TPPFCandidatesOnPFCandidates",
 
 process.pfNoPUSeq = cms.Sequence(process.pfPileUp + process.pfNoPileUp)
 
+############################
+### b-tag truth matching ###
+############################
+
+process.load("PhysicsTools.JetMCAlgos.CaloJetsMCFlavour_cfi")
+
+
+# Flavour by reference
+process.JetbyRef = cms.EDProducer("JetPartonMatcher",
+                                  jets = cms.InputTag("ak5PFJetsL1FastL2L3"),
+                                  coneSizeToAssociate = cms.double(0.3),
+                                  partons = cms.InputTag("myPartons")
+                                  )
+# Flavour by value PhysDef
+process.JetbyValPhys = cms.EDProducer("JetFlavourIdentifier",
+                                      srcByReference = cms.InputTag("JetbyRef"),
+                                      physicsDefinition = cms.bool(True),
+                                      leptonInfo = cms.bool(True)
+                                      )
+# Flavour by value AlgoDef
+process.JetbyValAlgo = cms.EDProducer("JetFlavourIdentifier",
+                                      srcByReference = cms.InputTag("JetbyRef"),
+                                      physicsDefinition = cms.bool(False),
+                                      leptonInfo = cms.bool(True)
+                                      )
+process.JetFlavour = cms.Sequence(process.JetbyRef*process.JetbyValPhys*process.JetbyValAlgo)
 
 
 from SHarper.HEEPAnalyzer.HEEPSelectionCuts_cfi import *
@@ -339,10 +365,10 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   saveMuons         =    cms.untracked.bool(True),
   saveJets          =    cms.untracked.bool(True),
   saveElectrons     =    cms.untracked.bool(True),
-  saveEleCrystals   =    cms.untracked.bool(True),
+  saveEleCrystals   =    cms.untracked.bool(False),
   savePhotons       =    cms.untracked.bool(True),
-  savePhoCrystals   =    cms.untracked.bool(True),
-  saveMoreEgammaVars=    cms.untracked.bool(True),
+  savePhoCrystals   =    cms.untracked.bool(False),
+  saveMoreEgammaVars=    cms.untracked.bool(False),
 
   saveMET           =    cms.untracked.bool(True),
   saveGenJets       =    cms.untracked.bool(True),
@@ -446,6 +472,9 @@ process.ntuplePath = cms.Path(
     * process.heepIdNoIso
     * process.heepIdNoIsoEles
     * process.modElectronIso
+
+    * process.myPartons
+    * process.JetFlavour
 
     * process.ntupleProducer
 )
