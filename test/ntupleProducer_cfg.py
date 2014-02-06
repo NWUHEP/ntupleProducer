@@ -208,7 +208,7 @@ AllFilters = cms.Sequence(process.HBHENoiseFilterResultProducer
                           #* process.trkPOGFilters
                           * ~process.manystripclus53X #trkPOGFilter1
                           * ~process.toomanystripclus53X #trkPOGFilter2
-                          * ~process.logErrrTooManyClusters #trkPOGFilter 3
+                          * ~process.logErrorTooManyClusters #trkPOGFilter 3
                           )
 ##### END OF Noise Filters ############
 
