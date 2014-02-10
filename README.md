@@ -13,7 +13,7 @@ Instructions for Users
   cd CMSSW_5_3_13_patch3/src
   cmsenv
 ```
-Replace the <cern-user-account> with your CERN account.
+Replace the ```<cern-user-account>``` with your CERN account.
 Since the new recipe for CVS connection is done through ssh to lxplus you will have to type your CERN password
 every time when checkout from CVS. It is inconveniet, but we have to live with it for now. 
 
@@ -51,7 +51,7 @@ every time when checkout from CVS. It is inconveniet, but we have to live with i
   scram b -j 9
 ```
 
- * MVA MET Code (Just for PU Jet ID) [need a ref]:
+ * MVA MET Code (Just for PU Jet ID) [Jet PU ID][9]:
 ```
   cvs co -r METPU_5_3_X_v4 RecoJets/JetProducers
   cvs up -r HEAD RecoJets/JetProducers/data/
@@ -170,3 +170,4 @@ If the new code significantly changes the format of the ntuples (substantial cha
 [6]: https://twiki.cern.ch/twiki/bin/viewauth/CMS/BoostedZToEEModIso
 [7]: https://twiki.cern.ch/twiki/bin/view/CMS/HEEPSelector
 [8]: https://twiki.cern.ch/twiki/bin/viewauth/CMS/SuperClusterFootprintRemoval
+[9]: https://twiki.cern.ch/twiki/bin/viewauth/CMS/PileupJetID
