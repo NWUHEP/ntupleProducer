@@ -6,7 +6,7 @@ from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 process = cms.Process("NTUPLE")
 
 options = VarParsing.VarParsing ('analysis')
-options.maxEvents = -1
+options.maxEvents = 10
 #options.inputFiles= '/store/data/Run2012C/SingleMu/AOD/22Jan2013-v1/30010/C0E05558-9078-E211-9E02-485B39800B65.root'
 #options.inputFiles= '/store/data/Run2012C/DoublePhoton/AOD/22Jan2013-v2/30001/72DE4526-F370-E211-B370-00304867920A.root'
 #options.inputFiles = '/store/user/cmkuo/Dalitz_H_eeg_125_MG_v1/Dalitz_H_eeg_m125_RECO_v1/d459946fa1e058e24b305fca3ec661c6/STEP2_RAW2DIGI_L1Reco_RECO_PU_100_1_jL0.root'
@@ -264,8 +264,8 @@ print '\n\nCommence ntuplization...\n\n'
 
 ### TFile service!
 process.TFileService = cms.Service('TFileService',
-    #fileName = cms.string('nuTuple.root')
-    fileName = cms.string('~/EOS/V09_05_8TeV/DoubleMu/nuTuple_Sync.root')
+    fileName = cms.string('nuTuple.root')
+    #fileName = cms.string('~/EOS/V09_05_8TeV/DoubleMu/nuTuple_Sync.root')
                                    )
 
 ### pfNoPU Sequence for electron MVA
@@ -338,6 +338,9 @@ from TSWilliams.BstdZeeTools.bstdzeemodisolproducer_cff import *
 process.modElectronIso = cms.EDProducer("BstdZeeModIsolProducer",
                                               bstdZeeModIsolParams, vetoGsfEles = cms.InputTag("heepIdNoIsoEles") )
 
+# Photon CiC stuff
+from NWU.ntupleProducer.hggPhotonIDCuts_cfi import *
+
 
 ### ntuple producer
 process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
@@ -396,6 +399,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   ebReducedRecHitCollection = cms.InputTag("reducedEcalRecHitsEB"),
   eeReducedRecHitCollection = cms.InputTag("reducedEcalRecHitsEE"),
   esReducedRecHitCollection = cms.InputTag("reducedEcalRecHitsES"),
+  hggPhotonIDConfiguration = hggPhotonIDCuts,
 
   #Trigger stuff
 

@@ -94,6 +94,7 @@
 #include "EgammaAnalysis/ElectronTools/interface/ElectronEffectiveArea.h"
 #include "EgammaAnalysis/ElectronTools/interface/PFIsolationEstimator.h"
 //#include "EgammaAnalysis/ElectronTools/interface/ElectronEnergyRegressionEvaluate.h"
+#include "CiCPhotonID.h"
 
 #include "TrackingTools/IPTools/interface/IPTools.h"
 
@@ -331,4 +332,5 @@ class ntupleProducer : public edm::EDAnalyzer {
   auto_ptr<EcalClusterLazyTools> lazyTool;
   map<DetId, EcalRecHit> rechits_map_;
   auto_ptr<CaloSubdetectorTopology> topology_p;
+  auto_ptr<CiCPhotonID> cicPhotonId_;
 };

@@ -57,6 +57,8 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig):
   eeReducedRecHitCollection_ = iConfig.getParameter<edm::InputTag>("eeReducedRecHitCollection");
   esReducedRecHitCollection_ = iConfig.getParameter<edm::InputTag>("esReducedRecHitCollection");
 
+  // CiCPhoton class
+  cicPhotonId_.reset(new CiCPhotonID(iConfig));
 }
 
 ntupleProducer::~ntupleProducer()
@@ -104,6 +106,24 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
   lazyTool.reset(new EcalClusterLazyTools(iEvent, iSetup, ebReducedRecHitCollection_, eeReducedRecHitCollection_));
 
+  //configure CiCPhoton
+  
+  Handle<reco::VertexCollection> recVtxsBS_;
+  iEvent.getByLabel(edm::InputTag("offlinePrimaryVerticesWithBS",""), recVtxsBS_);
+
+  Handle<reco::TrackCollection> tracksHandle_;
+  iEvent.getByLabel("generalTracks",tracksHandle_);
+
+  Handle<reco::GsfElectronCollection > gsfElectronHandle_;
+  iEvent.getByLabel(electronTag_, gsfElectronHandle_);
+
+  Handle<double> rhoCorr;
+  iEvent.getByLabel(rhoCorrTag_, rhoCorr);
+  rhoFactor = (float)(*rhoCorr);
+
+  
+  cicPhotonId_->configure(recVtxsBS_, tracksHandle_, gsfElectronHandle_, pfCands, rhoFactor);
+
 
   //////////////////////////
   //Get vertex information//
@@ -130,10 +150,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
   ///////////////////////
   //get jet information//
   ///////////////////////
-
-  Handle<double> rhoCorr;
-  iEvent.getByLabel(rhoCorrTag_, rhoCorr);
-  rhoFactor = (float)(*rhoCorr);
 
   Handle<double> rho25Corr;
   iEvent.getByLabel(rho25CorrTag_, rho25Corr);
@@ -730,8 +746,16 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     edm::Handle<reco::GsfElectronCollection> hElectrons;
     iEvent.getByLabel("gsfElectrons", hElectrons);
 
+
     for (vector<reco::Photon>::const_iterator iPhoton = photons->begin(); iPhoton != photons->end() ; ++iPhoton) {
       TCPhoton* myPhoton = new ((*recoPhotons)[photonCount]) TCPhoton();
+
+      size_t rightRecoPho = -1;
+      for (size_t iv = 0; iv < photons->size(); ++iv) {
+        reco::PhotonRef recophoRef2(photons, iv);
+        if (deltaR(iPhoton->eta(), iPhoton->phi(), recophoRef2->eta(), recophoRef2->phi()) < 0.01) rightRecoPho = iv;
+      }
+      reco::PhotonRef recophoRef(photons, rightRecoPho);
 
       if (savePhoCrystals_)
       {
@@ -833,7 +857,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         myPhoton->SetPreShowerOverRaw(iPhoton->superCluster()->preshowerEnergy() / iPhoton->superCluster()->rawEnergy());
 
 
-      myPhoton->SetE1x3(lazyTool->e3x1(*phoSeed));
+      myPhoton->SetE1x3(lazyTool->e1x3(*phoSeed));
       myPhoton->SetE1x5(iPhoton->e1x5());
       myPhoton->SetE2x2(lazyTool->e2x2(*phoSeed));
       myPhoton->SetE2x5(iPhoton->e2x5()); // <<-
@@ -850,6 +874,19 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       myPhoton->SetPfIsoNeutral(phoIsolator.getIsolationNeutral());
       myPhoton->SetPfIsoPhoton( phoIsolator.getIsolationPhoton());
 
+      // CiC track Iso
+      vector<float> vtxIsolations02 = cicPhotonId_->pfTkIsoWithVertex(recophoRef, 0.2, 0.02, 0.02, 0.0, 0.2, 0.1, reco::PFCandidate::h);
+      vector<float> vtxIsolations03 = cicPhotonId_->pfTkIsoWithVertex(recophoRef, 0.3, 0.02, 0.02, 0.0, 0.2, 0.1, reco::PFCandidate::h);
+      vector<float> vtxIsolations04 = cicPhotonId_->pfTkIsoWithVertex(recophoRef, 0.4, 0.02, 0.02, 0.0, 0.2, 0.1, reco::PFCandidate::h);
+
+      myPhoton->SetCiCPF4chgpfIso02(vtxIsolations02);
+      myPhoton->SetCiCPF4chgpfIso03(vtxIsolations03);
+      myPhoton->SetCiCPF4chgpfIso04(vtxIsolations04);
+
+      vector<float> testIso = myPhoton->CiCPF4chgpfIso02();
+      cout<<"test CiC: "<<testIso[0]<<endl;
+
+
       if (saveMoreEgammaVars_){
         myPhoton->SetIdMap("chIso03",phoIsolator.getIsolationCharged());
         myPhoton->SetIdMap("nhIso03",phoIsolator.getIsolationNeutral());
@@ -864,6 +901,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         myPhoton->SetIdMap("EmIso_R04",  (iPhoton->ecalRecHitSumEtConeDR04()));
         myPhoton->SetIdMap("HadIso_R04", (iPhoton->hcalTowerSumEtConeDR04()));
         myPhoton->SetIdMap("TrkIso_R04", (iPhoton->trkSumPtHollowConeDR04()));
+
       }
 
       // Hcal isolation for 2012
@@ -1220,6 +1258,7 @@ void  ntupleProducer::beginJob()
 
   // Initialize Jet PU ID
   myPUJetID.reset(new PileupJetIdAlgo(jetPUIdAlgo_));
+
 
 }
 
