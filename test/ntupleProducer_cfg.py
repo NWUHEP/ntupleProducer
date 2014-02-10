@@ -457,7 +457,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                )
                                           )
 
-process.ntuplePath = cms.Path(
+process.preNtuple = cms.Sequence(
     process.goodOfflinePrimaryVertices
     * process.correctionTermsPfMetType1Type2
     * process.correctionTermsPfMetType0PFCandidate
@@ -478,12 +478,14 @@ process.ntuplePath = cms.Path(
     * process.heepIdNoIso
     * process.heepIdNoIsoEles
     * process.modElectronIso
-
-    * process.myPartons
-    * process.JetFlavour
-
-    * process.ntupleProducer
 )
+
+process.JetMC = cms.Sequence(process.myPartons * process.JetFlavour)
+
+if isRealData:
+    process.ntuplePath = cms.Path(process.preNtuple * process.ntupleProducer)
+else:
+    process.ntuplePath = cms.Path(process.preNtuple * process.JetMC * process.ntupleProducer)
 
 #process.out = cms.OutputModule("PoolOutputModule",
 #                               fileName = cms.untracked.string('/tmp/myTuple.root'),
