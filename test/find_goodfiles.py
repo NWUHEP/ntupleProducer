@@ -47,7 +47,7 @@ if __name__ == '__main__':
 
   fjrs = fp.get_fjrs(directory)
   for f in fjrs:
-    if '57' not in f: continue
+    if '74' not in f: continue
     if not quiet:
       print ">>> ", "processing fjr", f
 
