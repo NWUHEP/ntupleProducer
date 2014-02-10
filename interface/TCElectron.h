@@ -101,7 +101,6 @@ class TCElectron : public TCEGamma {
   int NumberOfLostPixelHits() const;
   int NumberOfLostTrackerHits() const;
 
-
   TLorentzVector RegressionMomCombP4() const;
 
   float EffArea() const;
