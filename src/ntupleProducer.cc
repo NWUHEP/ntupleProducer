@@ -883,8 +883,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       myPhoton->SetCiCPF4chgpfIso03(vtxIsolations03);
       myPhoton->SetCiCPF4chgpfIso04(vtxIsolations04);
 
+      /*
       vector<float> testIso = myPhoton->CiCPF4chgpfIso02();
       cout<<"test CiC: "<<testIso[0]<<endl;
+      */
 
 
       if (saveMoreEgammaVars_){

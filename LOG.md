@@ -2,6 +2,13 @@
 ---------------
 The most important logs should go here. Other are monitored with git commits.
 
+
+2014-Feb-10,  _Brian_
+ * Updating to 9.6 
+ * Added new photon trkIso for MVA
+ * Fixed photon bug
+ * Nate added new bjet stuff
+
 2014-Jan-25,  _Brian_
  * Updating to 9.5, andrey added back those important fucking electron variables he decided to remove
  * It's like he just screws with me on purpose for his own amusement 
