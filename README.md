@@ -111,9 +111,42 @@ you should switch off the ```skimLeptons``` option in ntupleProducer_cfg.py
 In addition to this, there are various flags the configuration file, ntupleProducer_cfg.py, that allow to save/not save certain objects (muons, jets, etc). All are saved by default.
 
 #### Running with CRAB
-Look into ```crabNtuples_MC.cfg``` and ```crabNtuples_Data.cfg``` scripts.
 
-Multicrab added, will update with instructions soon.
+For running over individual datasets, it's best to use standard crab.  The configuration files for MC and data are ```crabNtuples_MC.cfg``` and ```crabNtuples_Data.cfg```.  Submission goes as follows,
+
+```
+crab -create -cfg crabNtuples_<type>.cfg
+crab -submit -c <ui_working_dir>
+```
+
+To check the status of your jobs,
+
+```
+crab -status -c <ui_working_dir>
+```
+
+and to get the log files,
+
+```
+crab -get -c <ui_working_dir>
+```
+
+More information can be found in the [CMS SW guide chapter on CRAB][10].  
+
+For submission of ntuple production of multiple datasets at once, the multicrab framework can be used.  It is described very briefly [here][11].  The important feature is that you can use most (?) of the standard crab commands for submission and checking on jobs status by replacing the  ```crab``` command with ```multicrab```.  For instance when jobs are submitted in multicrab you can do the following,
+
+```
+multicrab -create -cfg <cfg_file> -submit
+```
+
+and to check their status
+
+```
+multicrab -status -c <ui_working_dir>
+```
+
+which also works for ```crab```.  You can also check the status of individual datasets using standard ```crab``` commands.  The main difference is in the format of the configuration files.  For multicrab, there is a crab.cfg file with a set of global configuration parameters and a multicrab.cfg file where each dataset is given its own specific configuration.  As for the case of normal crab, two configuration files have been prepared for data and MC, ```multicrab_data.cfg``` and ```multicrab_mc.cfg```.  
+
 
 #### Checking Output
 After CRAB claims that your jobs are finished with exit codes 0 0, you will want to double check because it lies and large jobs tend to
@@ -182,3 +215,5 @@ If the new code significantly changes the format of the ntuples (substantial cha
 [7]: https://twiki.cern.ch/twiki/bin/view/CMS/HEEPSelector
 [8]: https://twiki.cern.ch/twiki/bin/viewauth/CMS/SuperClusterFootprintRemoval
 [9]: https://twiki.cern.ch/twiki/bin/viewauth/CMS/PileupJetID
+[10]: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideCrab
+[11]: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideMultiCrab
