@@ -113,7 +113,18 @@ In addition to this, there are various flags the configuration file, ntupleProdu
 #### Running with CRAB
 Look into ```crabNtuples_MC.cfg``` and ```crabNtuples_Data.cfg``` scripts.
 
-Will incorporate multicrab soon.
+Multicrab added, will update with instructions soon.
+
+#### Checking Output
+After CRAB claims that your jobs are finished with exit codes 0 0, you will want to double check because it lies and large jobs tend to
+have a few extra or missing files.
+
+Run the following command:
+```
+  ./find_goodfiles.py -c Path/To/CrabDir -q
+```
+This will check that all the jobs listed in the crab xml files are actually in your output area, and that your output area contains no
+extra or duplicate files.  If it does, the script will tell you what needs to be rerun or what needs to be deleted.
 
 Instructions for Developers
 --------------------------
