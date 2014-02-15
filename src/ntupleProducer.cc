@@ -20,20 +20,11 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig):
   triggerPaths_     = iConfig.getUntrackedParameter<vector<string> >("triggers");
 
   partFlowTag_      = iConfig.getUntrackedParameter<edm::InputTag>("partFlowTag");
-  skimLepton_       = iConfig.getUntrackedParameter<bool>("skimLepton");
 
-  saveMuons_        = iConfig.getUntrackedParameter<bool>("saveMuons");
-  saveJets_         = iConfig.getUntrackedParameter<bool>("saveJets");
-  saveElectrons_    = iConfig.getUntrackedParameter<bool>("saveElectrons");
   saveEleCrystals_  = iConfig.getUntrackedParameter<bool>("saveEleCrystals");
-  savePhotons_      = iConfig.getUntrackedParameter<bool>("savePhotons");
   savePhoCrystals_  = iConfig.getUntrackedParameter<bool>("savePhoCrystals");
-  saveMET_          = iConfig.getUntrackedParameter<bool>("saveMET");
 
-  saveMoreEgammaVars_= iConfig.getUntrackedParameter<bool>("saveMoreEgammaVars");
 
-  saveGenJets_      = iConfig.getUntrackedParameter<bool>("saveGenJets");
-  saveGenParticles_ = iConfig.getUntrackedParameter<bool>("saveGenParticles");
   saveTriggerObj_   = iConfig.getUntrackedParameter<bool>("saveTriggerObj");
 
   verboseTrigs       = iConfig.getUntrackedParameter<bool>("verboseTrigs");
@@ -161,261 +152,255 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
   //cout<<" RHOS. In eta 4.4 = "<<rhoFactor<<"   in eta25 "<<rho25Factor<<"  MUs: "<<rhoMuFactor<<endl;
 
-  if(saveJets_){
 
-    edm::Handle<reco::JetTagCollection> bTagCollectionTCHE;
-    iEvent.getByLabel("trackCountingHighEffBJetTags", bTagCollectionTCHE);
-    const reco::JetTagCollection & bTagsTCHE = *(bTagCollectionTCHE.product());
+  edm::Handle<reco::JetTagCollection> bTagCollectionTCHE;
+  iEvent.getByLabel("trackCountingHighEffBJetTags", bTagCollectionTCHE);
+  const reco::JetTagCollection & bTagsTCHE = *(bTagCollectionTCHE.product());
 
-    edm::Handle<reco::JetTagCollection> bTagCollectionTCHP;
-    iEvent.getByLabel("trackCountingHighPurBJetTags", bTagCollectionTCHP);
-    const reco::JetTagCollection & bTagsTCHP = *(bTagCollectionTCHP.product());
+  edm::Handle<reco::JetTagCollection> bTagCollectionTCHP;
+  iEvent.getByLabel("trackCountingHighPurBJetTags", bTagCollectionTCHP);
+  const reco::JetTagCollection & bTagsTCHP = *(bTagCollectionTCHP.product());
 
-    edm::Handle<reco::JetTagCollection> bTagCollectionSSVHE;
-    iEvent.getByLabel("simpleSecondaryVertexHighEffBJetTags", bTagCollectionSSVHE);
-    const reco::JetTagCollection & bTagsSSVHE = *(bTagCollectionSSVHE.product());
+  edm::Handle<reco::JetTagCollection> bTagCollectionSSVHE;
+  iEvent.getByLabel("simpleSecondaryVertexHighEffBJetTags", bTagCollectionSSVHE);
+  const reco::JetTagCollection & bTagsSSVHE = *(bTagCollectionSSVHE.product());
 
-    edm::Handle<reco::JetTagCollection> bTagCollectionJBP;
-    iEvent.getByLabel("jetBProbabilityBJetTags", bTagCollectionJBP);
-    const reco::JetTagCollection & bTagsJBP = *(bTagCollectionJBP.product());
+  edm::Handle<reco::JetTagCollection> bTagCollectionJBP;
+  iEvent.getByLabel("jetBProbabilityBJetTags", bTagCollectionJBP);
+  const reco::JetTagCollection & bTagsJBP = *(bTagCollectionJBP.product());
 
-    edm::Handle<reco::JetTagCollection> bTagCollectionCSV;
-    iEvent.getByLabel("combinedSecondaryVertexBJetTags", bTagCollectionCSV);
-    const reco::JetTagCollection & bTagsCSV = *(bTagCollectionCSV.product());
+  edm::Handle<reco::JetTagCollection> bTagCollectionCSV;
+  iEvent.getByLabel("combinedSecondaryVertexBJetTags", bTagCollectionCSV);
+  const reco::JetTagCollection & bTagsCSV = *(bTagCollectionCSV.product());
 
-    edm::Handle<reco::JetTagCollection> bTagCollectionCSVMVA;
-    iEvent.getByLabel("combinedSecondaryVertexBJetTags", bTagCollectionCSVMVA);
-    const reco::JetTagCollection & bTagsCSVMVA = *(bTagCollectionCSVMVA.product());
+  edm::Handle<reco::JetTagCollection> bTagCollectionCSVMVA;
+  iEvent.getByLabel("combinedSecondaryVertexBJetTags", bTagCollectionCSVMVA);
+  const reco::JetTagCollection & bTagsCSVMVA = *(bTagCollectionCSVMVA.product());
 
-    // Jet flavor matching //
-    Handle<JetFlavourMatchingCollection> bJetFlavourMC;
+  // Jet flavor matching //
+  Handle<JetFlavourMatchingCollection> bJetFlavourMC;
+  if (!isRealData) {
+    iEvent.getByLabel("JetbyValAlgo", bJetFlavourMC);
+  }
+
+  Handle<vector<reco::PFJet> > jets;
+  iEvent.getByLabel(jetTag_, jets);
+
+  for (vector<reco::PFJet>::const_iterator iJet = jets->begin(); iJet != jets->end(); ++iJet) {
+
+    if (iJet->pt() < 10.) continue;
+
+    TCJet* jetCon (new ((*recoJets)[jetCount]) TCJet);
+
+    jetCon->SetPxPyPzE(iJet->px(), iJet->py(), iJet->pz(), iJet->energy());
+    jetCon->SetVtx(0., 0., 0.);
+    jetCon->SetChHadFrac(iJet->chargedHadronEnergyFraction());
+    jetCon->SetNeuHadFrac(iJet->neutralHadronEnergyFraction());
+    jetCon->SetChEmFrac(iJet->chargedEmEnergyFraction());
+    jetCon->SetNeuEmFrac(iJet->neutralEmEnergyFraction());
+    jetCon->SetNumConstit(iJet->chargedMultiplicity() + iJet->neutralMultiplicity());
+    jetCon->SetNumChPart(iJet->chargedMultiplicity());
+
+    //jetCon->SetJetFlavor(iJet->partonFlavour());
     if (!isRealData) {
-        iEvent.getByLabel("JetbyValAlgo", bJetFlavourMC);
+      int jetFlavor = 0;
+      for (JetFlavourMatchingCollection::const_iterator iFlavor = bJetFlavourMC->begin(); iFlavor != bJetFlavourMC->end(); iFlavor++) {
+        if (iFlavor->first.get()->pt() > 10 && iFlavor->first.get()->pt() == iJet->pt()) {
+          jetFlavor = iFlavor->second.getFlavour();
+        }
+      }
+      //cout << iJet->pt() << "\t" << jetFlavor << endl;
+      jetCon->SetJetFlavor(jetFlavor);
+    } else {
+      jetCon->SetJetFlavor(0);
     }
 
-    Handle<vector<reco::PFJet> > jets;
-    iEvent.getByLabel(jetTag_, jets);
+    jetCon->SetUncertaintyJES(-1);
 
-    for (vector<reco::PFJet>::const_iterator iJet = jets->begin(); iJet != jets->end(); ++iJet) {
+    jetCon->SetBDiscriminatorMap("TCHE", MatchBTagsToJets(bTagsTCHE, *iJet));
+    jetCon->SetBDiscriminatorMap("TCHP", MatchBTagsToJets(bTagsTCHP, *iJet));
+    jetCon->SetBDiscriminatorMap("SSVHE", MatchBTagsToJets(bTagsSSVHE, *iJet));
+    jetCon->SetBDiscriminatorMap("JBP", MatchBTagsToJets(bTagsJBP, *iJet));
+    jetCon->SetBDiscriminatorMap("CSV", MatchBTagsToJets(bTagsCSV, *iJet));
+    jetCon->SetBDiscriminatorMap("CSVMVA", MatchBTagsToJets(bTagsCSVMVA, *iJet));
 
-      if (iJet->pt() < 10.) continue;
+    /////////////////////
+    // Get Hgg Id vars //
+    /////////////////////
 
-      TCJet* jetCon (new ((*recoJets)[jetCount]) TCJet);
-
-      jetCon->SetPxPyPzE(iJet->px(), iJet->py(), iJet->pz(), iJet->energy());
-      jetCon->SetVtx(0., 0., 0.);
-      jetCon->SetChHadFrac(iJet->chargedHadronEnergyFraction());
-      jetCon->SetNeuHadFrac(iJet->neutralHadronEnergyFraction());
-      jetCon->SetChEmFrac(iJet->chargedEmEnergyFraction());
-      jetCon->SetNeuEmFrac(iJet->neutralEmEnergyFraction());
-      jetCon->SetNumConstit(iJet->chargedMultiplicity() + iJet->neutralMultiplicity());
-      jetCon->SetNumChPart(iJet->chargedMultiplicity());
-
-      //jetCon->SetJetFlavor(iJet->partonFlavour());
-      if (!isRealData) {
-          int jetFlavor = 0;
-          for (JetFlavourMatchingCollection::const_iterator iFlavor = bJetFlavourMC->begin(); iFlavor != bJetFlavourMC->end(); iFlavor++) {
-              if (iFlavor->first.get()->pt() > 10 && iFlavor->first.get()->pt() == iJet->pt()) {
-                  jetFlavor = iFlavor->second.getFlavour();
-              }
-          }
-          //cout << iJet->pt() << "\t" << jetFlavor << endl;
-          jetCon->SetJetFlavor(jetFlavor);
-      } else {
-          jetCon->SetJetFlavor(0);
-      }
-
-      jetCon->SetUncertaintyJES(-1);
-
-      jetCon->SetBDiscriminatorMap("TCHE", MatchBTagsToJets(bTagsTCHE, *iJet));
-      jetCon->SetBDiscriminatorMap("TCHP", MatchBTagsToJets(bTagsTCHP, *iJet));
-      jetCon->SetBDiscriminatorMap("SSVHE", MatchBTagsToJets(bTagsSSVHE, *iJet));
-      jetCon->SetBDiscriminatorMap("JBP", MatchBTagsToJets(bTagsJBP, *iJet));
-      jetCon->SetBDiscriminatorMap("CSV", MatchBTagsToJets(bTagsCSV, *iJet));
-      jetCon->SetBDiscriminatorMap("CSVMVA", MatchBTagsToJets(bTagsCSVMVA, *iJet));
-
-      /////////////////////
-      // Get Hgg Id vars //
-      /////////////////////
-
-      PileupJetIdentifier puIdentifier;
-      // giving uncorrected input, must double check on this
-      float jec = 1.;
-      // jet corrector
-      if( jecCor.get() == 0 ) {
-        initJetEnergyCorrector( iSetup, iEvent.isRealData() );
-      }
-      jecCor->setJetPt(iJet->pt());
-      jecCor->setJetEta(iJet->eta());
-      jecCor->setJetA(iJet->jetArea());
-      jecCor->setRho(rhoFactor);
-      jec = jecCor->getCorrection();
-      //cout<<"jec:\t"<<jec<<endl;
-      VertexCollection::const_iterator vtx;
-      const VertexCollection & vertexes = *(primaryVtcs.product());
-      vtx = vertexes.begin();
-      while( vtx != vertexes.end() && ( vtx->isFake() || vtx->ndof() < 4 ) ) {
-        ++vtx;
-      }
-      if( vtx == vertexes.end() ) { vtx = vertexes.begin(); }
-      puIdentifier = myPUJetID->computeIdVariables(&(*iJet), jec,  &(*vtx),  vertexes, false);
-      //cout<<"betaStarClassic:\t"<<puIdentifier.betaStarClassic()<<"\t"<<"dR2Mean:\t"<<puIdentifier.dR2Mean()<<endl;
-      jetCon->SetBetaStarClassic(puIdentifier.betaStarClassic());
-      jetCon->SetDR2Mean(puIdentifier.dR2Mean());
-
-      /////////////////////////
-      // Associate to vertex //
-      /////////////////////////
-
-      associateJetToVertex(*iJet, primaryVtcs, jetCon);
-
-      ++jetCount;
+    PileupJetIdentifier puIdentifier;
+    // giving uncorrected input, must double check on this
+    float jec = 1.;
+    // jet corrector
+    if( jecCor.get() == 0 ) {
+      initJetEnergyCorrector( iSetup, iEvent.isRealData() );
     }
+    jecCor->setJetPt(iJet->pt());
+    jecCor->setJetEta(iJet->eta());
+    jecCor->setJetA(iJet->jetArea());
+    jecCor->setRho(rhoFactor);
+    jec = jecCor->getCorrection();
+    //cout<<"jec:\t"<<jec<<endl;
+    VertexCollection::const_iterator vtx;
+    const VertexCollection & vertexes = *(primaryVtcs.product());
+    vtx = vertexes.begin();
+    while( vtx != vertexes.end() && ( vtx->isFake() || vtx->ndof() < 4 ) ) {
+      ++vtx;
+    }
+    if( vtx == vertexes.end() ) { vtx = vertexes.begin(); }
+    puIdentifier = myPUJetID->computeIdVariables(&(*iJet), jec,  &(*vtx),  vertexes, false);
+    //cout<<"betaStarClassic:\t"<<puIdentifier.betaStarClassic()<<"\t"<<"dR2Mean:\t"<<puIdentifier.dR2Mean()<<endl;
+    jetCon->SetBetaStarClassic(puIdentifier.betaStarClassic());
+    jetCon->SetDR2Mean(puIdentifier.dR2Mean());
+
+    /////////////////////////
+    // Associate to vertex //
+    /////////////////////////
+
+    associateJetToVertex(*iJet, primaryVtcs, jetCon);
+
+    ++jetCount;
   }
 
-  if (saveMET_) {
 
-    /////////////
-    // Get MET //
-    /////////////
+  /////////////
+  // Get MET //
+  /////////////
 
 
-    Handle<PFMETCollection> MET;
-    iEvent.getByLabel(metTag_, MET);
-    PFMETCollection::const_iterator met = MET->begin();
+  Handle<PFMETCollection> MET;
+  iEvent.getByLabel(metTag_, MET);
+  PFMETCollection::const_iterator met = MET->begin();
 
-    if (MET->begin() != MET->end()) {
-      recoMET->SetSumEt(met->sumEt());
-      recoMET->SetMagPhi(met->et(), met->phi());
+  if (MET->begin() != MET->end()) {
+    recoMET->SetSumEt(met->sumEt());
+    recoMET->SetMagPhi(met->et(), met->phi());
 
-      // PF specififc methods
-      recoMET->SetMuonFraction(met->MuonEtFraction());
-      recoMET->SetNeutralHadronFraction(met->NeutralHadEtFraction());
-      recoMET->SetNeutralEMFraction(met->NeutralEMFraction());
-      recoMET->SetChargedHadronFraction(met->ChargedHadEtFraction());
-      recoMET->SetChargedEMFraction(met->ChargedEMEtFraction());
-
-    }
-
-    edm::Handle< edm::View<reco::PFMET> > pfMEThandle;
-    iEvent.getByLabel("pfMet", pfMEThandle);
-    //Significance
-    float significance = (pfMEThandle->front()).significance();
-    float sigmaX2 = (pfMEThandle->front()).getSignificanceMatrix()(0,0);
-    recoMET->SetSignificance( significance );
-    recoMET->SetSigmaX2( sigmaX2 );
+    // PF specififc methods
+    recoMET->SetMuonFraction(met->MuonEtFraction());
+    recoMET->SetNeutralHadronFraction(met->NeutralHadEtFraction());
+    recoMET->SetNeutralEMFraction(met->NeutralEMFraction());
+    recoMET->SetChargedHadronFraction(met->ChargedHadEtFraction());
+    recoMET->SetChargedEMFraction(met->ChargedEMEtFraction());
 
   }
+
+  edm::Handle< edm::View<reco::PFMET> > pfMEThandle;
+  iEvent.getByLabel("pfMet", pfMEThandle);
+  //Significance
+  float significance = (pfMEThandle->front()).significance();
+  float sigmaX2 = (pfMEThandle->front()).getSignificanceMatrix()(0,0);
+  recoMET->SetSignificance( significance );
+  recoMET->SetSigmaX2( sigmaX2 );
+
 
   ///////////////
   // Get muons //
   ///////////////
 
 
-  if (saveMuons_) {
 
-    Handle<vector<reco::Muon> > muons;
-    iEvent.getByLabel(muonTag_, muons);
+  Handle<vector<reco::Muon> > muons;
+  iEvent.getByLabel(muonTag_, muons);
 
-    for (vector<reco::Muon>::const_iterator iMuon = muons->begin(); iMuon != muons->end(); ++iMuon) {
-      //if (!iMuon->isGlobalMuon() || iMuon->pt() < 3.) continue;
-      //if (iMuon->pt() < 3.) continue;
-      //if (!iMuon->isGlobalMuon()) continue;
+  for (vector<reco::Muon>::const_iterator iMuon = muons->begin(); iMuon != muons->end(); ++iMuon) {
+    //if (!iMuon->isGlobalMuon() || iMuon->pt() < 3.) continue;
+    //if (iMuon->pt() < 3.) continue;
+    //if (!iMuon->isGlobalMuon()) continue;
 
-      TCMuon* muCon = new ((*recoMuons)[muCount]) TCMuon;
+    TCMuon* muCon = new ((*recoMuons)[muCount]) TCMuon;
 
-      muCon->SetPxPyPzE(iMuon->px(), iMuon->py(), iMuon->pz(), iMuon->energy());
-      muCon->SetCharge(iMuon->charge());
+    muCon->SetPxPyPzE(iMuon->px(), iMuon->py(), iMuon->pz(), iMuon->energy());
+    muCon->SetCharge(iMuon->charge());
 
-      muCon->SetIsPF(iMuon->isPFMuon());
-      muCon->SetIsGLB(iMuon->isGlobalMuon());
-      muCon->SetIsTRK(iMuon->isTrackerMuon());
+    muCon->SetIsPF(iMuon->isPFMuon());
+    muCon->SetIsGLB(iMuon->isGlobalMuon());
+    muCon->SetIsTRK(iMuon->isTrackerMuon());
 
 
-      muCon->SetIsGood(muon::isGoodMuon(*iMuon, muon::TMOneStationTight));
-      muCon->SetIsGoodLoose(muon::isGoodMuon(*iMuon, muon::TMOneStationLoose));
+    muCon->SetIsGood(muon::isGoodMuon(*iMuon, muon::TMOneStationTight));
+    muCon->SetIsGoodLoose(muon::isGoodMuon(*iMuon, muon::TMOneStationLoose));
 
-      if (primaryVtcs->size()>0){
-        muCon->SetIsTight(muon::isTightMuon(*iMuon, *primaryVtcs->begin()));
-        muCon->SetIsSoft( muon::isSoftMuon( *iMuon, *primaryVtcs->begin()));
-      }
-      else{
-        muCon->SetIsTight(0);
-        muCon->SetIsSoft(0);
-      }
-
-      muCon->SetCaloComp(iMuon->caloCompatibility());
-      muCon->SetSegComp(muon::segmentCompatibility(*iMuon));
-      muCon->SetNumberOfMatchedStations(iMuon->numberOfMatchedStations());
-      muCon->SetNumberOfMatches(iMuon->numberOfMatches());
-
-      if (iMuon->isGlobalMuon()){
-        muCon->SetNormalizedChi2(       iMuon->globalTrack()->normalizedChi2());
-        muCon->SetNumberOfValidMuonHits(iMuon->globalTrack()->hitPattern().numberOfValidMuonHits());
-      }
-      else{
-        muCon->SetNormalizedChi2(-1);
-        muCon->SetNumberOfValidMuonHits(-1);
-      }
-
-      if (iMuon->isTrackerMuon()){
-        muCon->SetVtx(iMuon->track()->vx(),iMuon->track()->vy(),iMuon->track()->vz());
-        muCon->SetPtError(iMuon->track()->ptError());
-
-        muCon->SetTrackLayersWithMeasurement(iMuon->track()->hitPattern().trackerLayersWithMeasurement());
-        muCon->SetPixelLayersWithMeasurement(iMuon->innerTrack()->hitPattern().pixelLayersWithMeasurement());
-        muCon->SetNumberOfValidPixelHits(    iMuon->innerTrack()->hitPattern().numberOfValidPixelHits());
-        muCon->SetNormalizedChi2_tracker(    iMuon->innerTrack()->normalizedChi2());
-        muCon->SetNumberOfValidTrackerHits(iMuon->track()->hitPattern().numberOfValidTrackerHits());
-        muCon->SetNumberOfLostPixelHits(   iMuon->track()->hitPattern().numberOfLostPixelHits());
-        muCon->SetNumberOfLostTrackerHits( iMuon->track()->hitPattern().numberOfLostTrackerHits());
-      }
-      else{
-        muCon->SetVtx(-1,-1,-1);
-        muCon->SetPtError(-1);
-        muCon->SetTrackLayersWithMeasurement(-1);
-        muCon->SetNumberOfValidPixelHits(-1);
-        muCon->SetNormalizedChi2_tracker(-1);
-        muCon->SetNumberOfValidTrackerHits(-1);
-        muCon->SetNumberOfLostPixelHits(-1);
-        muCon->SetNumberOfLostTrackerHits(-1);
-      }
-      // Set isolation map values
-      // Detector-based isolation
-
-      /*
-      muCon->SetIsoMap("NTracks_R03", iMuon->isolationR03().nTracks);
-      muCon->SetIsoMap("EmIso_R03",   iMuon->isolationR03().emEt);
-      muCon->SetIsoMap("HadIso_R03",  iMuon->isolationR03().hadEt);
-      muCon->SetIsoMap("SumPt_R03",   iMuon->isolationR03().sumPt);
-
-      muCon->SetIsoMap("NTracks_R05", iMuon->isolationR05().nTracks);
-      muCon->SetIsoMap("EmIso_R05",   iMuon->isolationR05().emEt);
-      muCon->SetIsoMap("HadIso_R05",  iMuon->isolationR05().hadEt);
-      muCon->SetIsoMap("SumPt_R05",   iMuon->isolationR05().sumPt);
-      */
-      // PF-based isolation
-      muCon->SetIdMap("Iso_pfPUPt_R03",      iMuon->pfIsolationR03().sumPUPt);
-      muCon->SetIdMap("Iso_pfPhotonEt_R03",  iMuon->pfIsolationR03().sumPhotonEt);
-      muCon->SetIdMap("Iso_pfChargedPt_R03", iMuon->pfIsolationR03().sumChargedParticlePt);
-      muCon->SetIdMap("Iso_pfChargedHadronPt_R03", iMuon->pfIsolationR03().sumChargedHadronPt);
-      muCon->SetIdMap("Iso_pfNeutralHadronEt_R03", iMuon->pfIsolationR03().sumNeutralHadronEt);
-      /*
-      muCon->SetIsoMap("pfPUPt_R04",      iMuon->pfIsolationR04().sumPUPt);
-      muCon->SetIsoMap("pfPhotonEt_R04",  iMuon->pfIsolationR04().sumPhotonEt);
-      muCon->SetIsoMap("pfChargedPt_R04", iMuon->pfIsolationR04().sumChargedParticlePt);
-      muCon->SetIsoMap("pfChargedHadronPt_R04", iMuon->pfIsolationR04().sumChargedHadronPt);
-      muCon->SetIsoMap("pfNeutralHadronEt_R04", iMuon->pfIsolationR04().sumNeutralHadronEt);
-      */
-
-      muCon->SetPfIsoPU(iMuon->pfIsolationR04().sumPUPt);
-      muCon->SetPfIsoChargedPart(iMuon->pfIsolationR04().sumChargedParticlePt);
-      muCon->SetPfIsoChargedHad( iMuon->pfIsolationR04().sumChargedHadronPt);
-      muCon->SetPfIsoNeutral(iMuon->pfIsolationR04().sumNeutralHadronEt);
-      muCon->SetPfIsoPhoton( iMuon->pfIsolationR04().sumPhotonEt);
-
-      muCount++;
+    if (primaryVtcs->size()>0){
+      muCon->SetIsTight(muon::isTightMuon(*iMuon, *primaryVtcs->begin()));
+      muCon->SetIsSoft( muon::isSoftMuon( *iMuon, *primaryVtcs->begin()));
     }
+    else{
+      muCon->SetIsTight(0);
+      muCon->SetIsSoft(0);
+    }
+
+    muCon->SetCaloComp(iMuon->caloCompatibility());
+    muCon->SetSegComp(muon::segmentCompatibility(*iMuon));
+    muCon->SetNumberOfMatchedStations(iMuon->numberOfMatchedStations());
+    muCon->SetNumberOfMatches(iMuon->numberOfMatches());
+
+    if (iMuon->isGlobalMuon()){
+      muCon->SetNormalizedChi2(       iMuon->globalTrack()->normalizedChi2());
+      muCon->SetNumberOfValidMuonHits(iMuon->globalTrack()->hitPattern().numberOfValidMuonHits());
+    }
+    else{
+      muCon->SetNormalizedChi2(-1);
+      muCon->SetNumberOfValidMuonHits(-1);
+    }
+
+    if (iMuon->isTrackerMuon()){
+      muCon->SetVtx(iMuon->track()->vx(),iMuon->track()->vy(),iMuon->track()->vz());
+      muCon->SetPtError(iMuon->track()->ptError());
+
+      muCon->SetTrackLayersWithMeasurement(iMuon->track()->hitPattern().trackerLayersWithMeasurement());
+      muCon->SetPixelLayersWithMeasurement(iMuon->innerTrack()->hitPattern().pixelLayersWithMeasurement());
+      muCon->SetNumberOfValidPixelHits(    iMuon->innerTrack()->hitPattern().numberOfValidPixelHits());
+      muCon->SetNormalizedChi2_tracker(    iMuon->innerTrack()->normalizedChi2());
+      muCon->SetNumberOfValidTrackerHits(iMuon->track()->hitPattern().numberOfValidTrackerHits());
+      muCon->SetNumberOfLostPixelHits(   iMuon->track()->hitPattern().numberOfLostPixelHits());
+      muCon->SetNumberOfLostTrackerHits( iMuon->track()->hitPattern().numberOfLostTrackerHits());
+    }
+    else{
+      muCon->SetVtx(-1,-1,-1);
+      muCon->SetPtError(-1);
+      muCon->SetTrackLayersWithMeasurement(-1);
+      muCon->SetNumberOfValidPixelHits(-1);
+      muCon->SetNormalizedChi2_tracker(-1);
+      muCon->SetNumberOfValidTrackerHits(-1);
+      muCon->SetNumberOfLostPixelHits(-1);
+      muCon->SetNumberOfLostTrackerHits(-1);
+    }
+    // Set isolation map values
+    // Detector-based isolation
+
+    /*
+       muCon->SetIsoMap("NTracks_R03", iMuon->isolationR03().nTracks);
+       muCon->SetIsoMap("EmIso_R03",   iMuon->isolationR03().emEt);
+       muCon->SetIsoMap("HadIso_R03",  iMuon->isolationR03().hadEt);
+       muCon->SetIsoMap("SumPt_R03",   iMuon->isolationR03().sumPt);
+
+       muCon->SetIsoMap("NTracks_R05", iMuon->isolationR05().nTracks);
+       muCon->SetIsoMap("EmIso_R05",   iMuon->isolationR05().emEt);
+       muCon->SetIsoMap("HadIso_R05",  iMuon->isolationR05().hadEt);
+       muCon->SetIsoMap("SumPt_R05",   iMuon->isolationR05().sumPt);
+       */
+    // PF-based isolation
+    muCon->SetIdMap("Iso_pfPUPt_R03",      iMuon->pfIsolationR03().sumPUPt);
+    muCon->SetIdMap("Iso_pfPhotonEt_R03",  iMuon->pfIsolationR03().sumPhotonEt);
+    muCon->SetIdMap("Iso_pfChargedPt_R03", iMuon->pfIsolationR03().sumChargedParticlePt);
+    muCon->SetIdMap("Iso_pfChargedHadronPt_R03", iMuon->pfIsolationR03().sumChargedHadronPt);
+    muCon->SetIdMap("Iso_pfNeutralHadronEt_R03", iMuon->pfIsolationR03().sumNeutralHadronEt);
+    /*
+       muCon->SetIsoMap("pfPUPt_R04",      iMuon->pfIsolationR04().sumPUPt);
+       muCon->SetIsoMap("pfPhotonEt_R04",  iMuon->pfIsolationR04().sumPhotonEt);
+       muCon->SetIsoMap("pfChargedPt_R04", iMuon->pfIsolationR04().sumChargedParticlePt);
+       muCon->SetIsoMap("pfChargedHadronPt_R04", iMuon->pfIsolationR04().sumChargedHadronPt);
+       muCon->SetIsoMap("pfNeutralHadronEt_R04", iMuon->pfIsolationR04().sumNeutralHadronEt);
+       */
+
+    muCon->SetPfIsoPU(iMuon->pfIsolationR04().sumPUPt);
+    muCon->SetPfIsoChargedPart(iMuon->pfIsolationR04().sumChargedParticlePt);
+    muCon->SetPfIsoChargedHad( iMuon->pfIsolationR04().sumChargedHadronPt);
+    muCon->SetPfIsoNeutral(iMuon->pfIsolationR04().sumNeutralHadronEt);
+    muCon->SetPfIsoPhoton( iMuon->pfIsolationR04().sumPhotonEt);
+
+    muCount++;
   }
 
 
@@ -427,546 +412,536 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
   edm::Handle<reco::ConversionCollection> hConversions;
   iEvent.getByLabel("allConversions", hConversions);
 
-  if (saveElectrons_) {
 
-    Handle<reco::GsfElectronCollection > electrons;
-    iEvent.getByLabel(electronTag_, electrons);
+  Handle<reco::GsfElectronCollection > electrons;
+  iEvent.getByLabel(electronTag_, electrons);
 
-    Handle<reco::GsfElectronCollection > calibratedElectrons;
-    iEvent.getByLabel(edm::InputTag("calibratedElectrons","calibratedGsfElectrons"), calibratedElectrons);
+  Handle<reco::GsfElectronCollection > calibratedElectrons;
+  iEvent.getByLabel(edm::InputTag("calibratedElectrons","calibratedGsfElectrons"), calibratedElectrons);
 
-    edm::Handle<edm::ValueMap<float>> mvaTrigV0_handle;
-    iEvent.getByLabel("mvaTrigV0", mvaTrigV0_handle);
-    const edm::ValueMap<float> ele_mvaTrigV0 = (*mvaTrigV0_handle.product());
+  edm::Handle<edm::ValueMap<float>> mvaTrigV0_handle;
+  iEvent.getByLabel("mvaTrigV0", mvaTrigV0_handle);
+  const edm::ValueMap<float> ele_mvaTrigV0 = (*mvaTrigV0_handle.product());
 
-    edm::Handle<edm::ValueMap<float>> mvaNonTrigV0_handle;
-    iEvent.getByLabel("mvaNonTrigV0", mvaNonTrigV0_handle);
-    const edm::ValueMap<float> ele_mvaNonTrigV0 = (*mvaNonTrigV0_handle.product());
+  edm::Handle<edm::ValueMap<float>> mvaNonTrigV0_handle;
+  iEvent.getByLabel("mvaNonTrigV0", mvaNonTrigV0_handle);
+  const edm::ValueMap<float> ele_mvaNonTrigV0 = (*mvaNonTrigV0_handle.product());
 
-    edm::Handle<edm::ValueMap<double>> regEne_handle;
-    iEvent.getByLabel(edm::InputTag("eleRegressionEnergy","eneRegForGsfEle"), regEne_handle);
-    const edm::ValueMap<double> ele_regEne = (*regEne_handle.product());
+  edm::Handle<edm::ValueMap<double>> regEne_handle;
+  iEvent.getByLabel(edm::InputTag("eleRegressionEnergy","eneRegForGsfEle"), regEne_handle);
+  const edm::ValueMap<double> ele_regEne = (*regEne_handle.product());
 
-    edm::Handle<edm::ValueMap<double>> regErr_handle;
-    iEvent.getByLabel(edm::InputTag("eleRegressionEnergy","eneErrorRegForGsfEle"), regErr_handle);
-    const edm::ValueMap<double> ele_regErr = (*regErr_handle.product());
+  edm::Handle<edm::ValueMap<double>> regErr_handle;
+  iEvent.getByLabel(edm::InputTag("eleRegressionEnergy","eneErrorRegForGsfEle"), regErr_handle);
+  const edm::ValueMap<double> ele_regErr = (*regErr_handle.product());
 
-    // DO NOT delete it yet, it maybe useful later for Dalitz electron isolation
-    //This stuff is for modified isolation for close electrons,
-    //following prescription here: https://twiki.cern.ch/twiki/bin/viewauth/CMS/BoostedZToEEModIso
-    edm::Handle<edm::ValueMap<double> > h_modElectronIso_Tk;
-    edm::Handle<edm::ValueMap<double> > h_modElectronIso_Ecal;
-    edm::Handle<edm::ValueMap<double> > h_modElectronIso_HcalD1;
-    iEvent.getByLabel("modElectronIso","track",      h_modElectronIso_Tk);
-    iEvent.getByLabel("modElectronIso","ecal",       h_modElectronIso_Ecal);
-    iEvent.getByLabel("modElectronIso","hcalDepth1", h_modElectronIso_HcalD1);
-    const edm::ValueMap<double> modElectronIso_Tk     = (*h_modElectronIso_Tk.product());
-    const edm::ValueMap<double> modElectronIso_Ecal   = (*h_modElectronIso_Ecal.product());
-    const edm::ValueMap<double> modElectronIso_HcalD1 = (*h_modElectronIso_HcalD1.product());
-
-
-    Int_t eee=0;
-    for (vector<reco::GsfElectron>::const_iterator iElectron = electrons->begin(); iElectron != electrons->end(); ++iElectron) {
-      eee++;
-      if (iElectron->pt() < 5) continue;
-
-      TCElectron* eleCon = new ((*recoElectrons)[eleCount]) TCElectron;
-
-      // Basic physics object info
-      eleCon->SetPtEtaPhiM(iElectron->pt(), iElectron->eta(), iElectron->phi(), iElectron->mass());
-      eleCon->SetVtx(iElectron->gsfTrack()->vx(),iElectron->gsfTrack()->vy(),iElectron->gsfTrack()->vz());
-      eleCon->SetCharge(iElectron->charge());
-
-      // Fiducial variables
-      eleCon->SetIsEB(iElectron->isEB());
-      eleCon->SetIsEE(iElectron->isEE());
-      eleCon->SetIsInGap(iElectron->isGap());
+  // DO NOT delete it yet, it maybe useful later for Dalitz electron isolation
+  //This stuff is for modified isolation for close electrons,
+  //following prescription here: https://twiki.cern.ch/twiki/bin/viewauth/CMS/BoostedZToEEModIso
+  edm::Handle<edm::ValueMap<double> > h_modElectronIso_Tk;
+  edm::Handle<edm::ValueMap<double> > h_modElectronIso_Ecal;
+  edm::Handle<edm::ValueMap<double> > h_modElectronIso_HcalD1;
+  iEvent.getByLabel("modElectronIso","track",      h_modElectronIso_Tk);
+  iEvent.getByLabel("modElectronIso","ecal",       h_modElectronIso_Ecal);
+  iEvent.getByLabel("modElectronIso","hcalDepth1", h_modElectronIso_HcalD1);
+  const edm::ValueMap<double> modElectronIso_Tk     = (*h_modElectronIso_Tk.product());
+  const edm::ValueMap<double> modElectronIso_Ecal   = (*h_modElectronIso_Ecal.product());
+  const edm::ValueMap<double> modElectronIso_HcalD1 = (*h_modElectronIso_HcalD1.product());
 
 
-      // Electron ID variables
+  Int_t eee=0;
+  for (vector<reco::GsfElectron>::const_iterator iElectron = electrons->begin(); iElectron != electrons->end(); ++iElectron) {
+    eee++;
+    if (iElectron->pt() < 5) continue;
 
-      //Methods that are availabel for the electrons can be found here:
-      //http://cmslxr.fnal.gov/lxr/source/DataFormats/EgammaCandidates/interface/GsfElectron.h?v=CMSSW_5_3_11
+    TCElectron* eleCon = new ((*recoElectrons)[eleCount]) TCElectron;
 
-      eleCon->SetR9(     iElectron->r9());
-      eleCon->SetFBrem(  iElectron->fbrem());
-      eleCon->SetEoP(    iElectron->eSuperClusterOverP());
-      eleCon->SetEoPout( iElectron->eEleClusterOverPout());
-      eleCon->SetESeedOverP(iElectron->eSeedClusterOverP());
+    // Basic physics object info
+    eleCon->SetPtEtaPhiM(iElectron->pt(), iElectron->eta(), iElectron->phi(), iElectron->mass());
+    eleCon->SetVtx(iElectron->gsfTrack()->vx(),iElectron->gsfTrack()->vy(),iElectron->gsfTrack()->vz());
+    eleCon->SetCharge(iElectron->charge());
 
-      // ***** >> Switching to officially recommended method:  <<<<<<
-      eleCon->SetHadOverEm(iElectron->hcalOverEcalBc());
-      // !!!!!!!!!
-      // QUESTION: Does the eleIsolator below returns the recommended isolation for Hcal??
-      //!!!!!!!!!!
-
-      //cout<<"H/E compare: hcalOverEcalBc = "<<iElectron->hcalOverEcalBc()<<"   hadronicOverEm = "<<iElectron->hadronicOverEm()<<endl;
-
-      eleCon->SetSCEta(  iElectron->superCluster()->eta());
-      eleCon->SetSCPhi(  iElectron->superCluster()->phi());
-
-      //*** --> Notice that previously some variables were defined in the IdMap, differently:
-      //one has to perform a selections on analysis level to recover this behaviour:
-      //(cut at over/underflow values)
-
-      eleCon->SetSCDeltaEta(   iElectron->deltaEtaSuperClusterTrackAtVtx());
-      eleCon->SetSCDeltaPhi(   iElectron->deltaPhiSuperClusterTrackAtVtx());
-      eleCon->SetSigmaIEtaIEta(iElectron->sigmaIetaIeta());
-      eleCon->SetSigmaIPhiIPhi(iElectron->sigmaIphiIphi());
-      eleCon->SetSCEtaWidth(   iElectron->superCluster()->etaWidth());
-      eleCon->SetSCPhiWidth(   iElectron->superCluster()->phiWidth());
-      eleCon->SetSCEnergy(     iElectron->superCluster()->energy());
-      if (iElectron->superCluster()->rawEnergy()!=0)
-        eleCon->SetPreShowerOverRaw(iElectron->superCluster()->preshowerEnergy() / iElectron->superCluster()->rawEnergy());
+    // Fiducial variables
+    eleCon->SetIsEB(iElectron->isEB());
+    eleCon->SetIsEE(iElectron->isEE());
+    eleCon->SetIsInGap(iElectron->isGap());
 
 
-      eleCon->SetE1x5(iElectron->e1x5());
-      eleCon->SetE2x5(iElectron->e2x5Max());
-      eleCon->SetE5x5(iElectron->e5x5());
+    // Electron ID variables
 
-      eleCon->SetDeltaEtaSeedCluster(iElectron->deltaEtaSeedClusterTrackAtCalo());
-      eleCon->SetDeltaPhiSeedCluster(iElectron->deltaPhiSeedClusterTrackAtCalo());
+    //Methods that are availabel for the electrons can be found here:
+    //http://cmslxr.fnal.gov/lxr/source/DataFormats/EgammaCandidates/interface/GsfElectron.h?v=CMSSW_5_3_11
 
-      //std::vector vCov = iElectron->superCluster()->localCovariances(*(iElectron->superCluster()->seed())) ;
+    eleCon->SetR9(     iElectron->r9());
+    eleCon->SetFBrem(  iElectron->fbrem());
+    eleCon->SetEoP(    iElectron->eSuperClusterOverP());
+    eleCon->SetEoPout( iElectron->eEleClusterOverPout());
+    eleCon->SetESeedOverP(iElectron->eSeedClusterOverP());
+
+    // ***** >> Switching to officially recommended method:  <<<<<<
+    eleCon->SetHadOverEm(iElectron->hcalOverEcalBc());
+    // !!!!!!!!!
+    // QUESTION: Does the eleIsolator below returns the recommended isolation for Hcal??
+    //!!!!!!!!!!
+
+    //cout<<"H/E compare: hcalOverEcalBc = "<<iElectron->hcalOverEcalBc()<<"   hadronicOverEm = "<<iElectron->hadronicOverEm()<<endl;
+
+    eleCon->SetSCEta(  iElectron->superCluster()->eta());
+    eleCon->SetSCPhi(  iElectron->superCluster()->phi());
+
+    //*** --> Notice that previously some variables were defined in the IdMap, differently:
+    //one has to perform a selections on analysis level to recover this behaviour:
+    //(cut at over/underflow values)
+
+    eleCon->SetSCDeltaEta(   iElectron->deltaEtaSuperClusterTrackAtVtx());
+    eleCon->SetSCDeltaPhi(   iElectron->deltaPhiSuperClusterTrackAtVtx());
+    eleCon->SetSigmaIEtaIEta(iElectron->sigmaIetaIeta());
+    eleCon->SetSigmaIPhiIPhi(iElectron->sigmaIphiIphi());
+    eleCon->SetSCEtaWidth(   iElectron->superCluster()->etaWidth());
+    eleCon->SetSCPhiWidth(   iElectron->superCluster()->phiWidth());
+    eleCon->SetSCEnergy(     iElectron->superCluster()->energy());
+    if (iElectron->superCluster()->rawEnergy()!=0)
+      eleCon->SetPreShowerOverRaw(iElectron->superCluster()->preshowerEnergy() / iElectron->superCluster()->rawEnergy());
 
 
-      eleCon->SetEoP(iElectron->eSuperClusterOverP());
+    eleCon->SetE1x5(iElectron->e1x5());
+    eleCon->SetE2x5(iElectron->e2x5Max());
+    eleCon->SetE5x5(iElectron->e5x5());
 
-      // ** *************
-      // Assosited GSF tracks:
-      // ** ************
+    eleCon->SetDeltaEtaSeedCluster(iElectron->deltaEtaSeedClusterTrackAtCalo());
+    eleCon->SetDeltaPhiSeedCluster(iElectron->deltaPhiSeedClusterTrackAtCalo());
 
-      TCElectron::Track *t = new TCElectron::Track();
-      t->SetXYZM(iElectron->gsfTrack()->px(), iElectron->gsfTrack()->py(), iElectron->gsfTrack()->pz(),  0);
-      t->SetVtx(iElectron->gsfTrack()->vx(),  iElectron->gsfTrack()->vy(), iElectron->gsfTrack()->vz());
-      t->SetCharge(iElectron->gsfTrack()->chargeMode());
-      t->SetNormalizedChi2(iElectron->gsfTrack()->normalizedChi2());
-      t->SetPtError(iElectron->gsfTrack()->ptError());
-      TCTrack::ConversionInfo convInfo = ntupleProducer::CheckForConversions(hConversions, iElectron->gsfTrack(),
-                                                                             vertexBeamSpot.position(), (*myVtxRef).position());
+    //std::vector vCov = iElectron->superCluster()->localCovariances(*(iElectron->superCluster()->seed())) ;
+
+
+    eleCon->SetEoP(iElectron->eSuperClusterOverP());
+
+    // ** *************
+    // Assosited GSF tracks:
+    // ** ************
+
+    TCElectron::Track *t = new TCElectron::Track();
+    t->SetXYZM(iElectron->gsfTrack()->px(), iElectron->gsfTrack()->py(), iElectron->gsfTrack()->pz(),  0);
+    t->SetVtx(iElectron->gsfTrack()->vx(),  iElectron->gsfTrack()->vy(), iElectron->gsfTrack()->vz());
+    t->SetCharge(iElectron->gsfTrack()->chargeMode());
+    t->SetNormalizedChi2(iElectron->gsfTrack()->normalizedChi2());
+    t->SetPtError(iElectron->gsfTrack()->ptError());
+    TCTrack::ConversionInfo convInfo = ntupleProducer::CheckForConversions(hConversions, iElectron->gsfTrack(),
+        vertexBeamSpot.position(), (*myVtxRef).position());
+    t->SetConversionInfo(convInfo);
+    //This is the main track, directly assosiated with an Electron
+    eleCon->AddTrack(*t);
+
+    eleCon->SetPtError(iElectron->gsfTrack()->ptError());
+
+    //Int_t ntr=0;
+    //Adding more tracks from the ambiguos collection:
+    for (reco::GsfTrackRefVector::const_iterator gtr = iElectron->ambiguousGsfTracksBegin(); gtr != iElectron->ambiguousGsfTracksEnd(); ++gtr)
+    {
+      //ntr++;
+      //cout<<ntr<<" ambigious loop pt="<<(*gtr)->pt()<<" eta="<<(*gtr)->eta()<<" "<<" phi="<<(*gtr)->phi()<<endl;
+
+      t->SetXYZM((*gtr)->px(), (*gtr)->py(), (*gtr)->pz(),  0);
+      t->SetVtx((*gtr)->vx(), (*gtr)->vy(), (*gtr)->vz());
+      t->SetCharge((*gtr)->chargeMode());
+      t->SetNormalizedChi2((*gtr)->normalizedChi2());
+      t->SetPtError((*gtr)->ptError());
+      //re-using the same object
+      convInfo = ntupleProducer::CheckForConversions(hConversions, *gtr,
+          vertexBeamSpot.position(), (*myVtxRef).position());
       t->SetConversionInfo(convInfo);
-      //This is the main track, directly assosiated with an Electron
       eleCon->AddTrack(*t);
 
-      eleCon->SetPtError(iElectron->gsfTrack()->ptError());
-
-      //Int_t ntr=0;
-      //Adding more tracks from the ambiguos collection:
-      for (reco::GsfTrackRefVector::const_iterator gtr = iElectron->ambiguousGsfTracksBegin(); gtr != iElectron->ambiguousGsfTracksEnd(); ++gtr)
-        {
-          //ntr++;
-          //cout<<ntr<<" ambigious loop pt="<<(*gtr)->pt()<<" eta="<<(*gtr)->eta()<<" "<<" phi="<<(*gtr)->phi()<<endl;
-
-          t->SetXYZM((*gtr)->px(), (*gtr)->py(), (*gtr)->pz(),  0);
-          t->SetVtx((*gtr)->vx(), (*gtr)->vy(), (*gtr)->vz());
-          t->SetCharge((*gtr)->chargeMode());
-          t->SetNormalizedChi2((*gtr)->normalizedChi2());
-          t->SetPtError((*gtr)->ptError());
-          //re-using the same object
-          convInfo = ntupleProducer::CheckForConversions(hConversions, *gtr,
-                                                       vertexBeamSpot.position(), (*myVtxRef).position());
-          t->SetConversionInfo(convInfo);
-          eleCon->AddTrack(*t);
-
-        }
-
-      eleCon->SetConversionDcot(iElectron->convDcot());
-      eleCon->SetConversionDist(iElectron->convDist());
-      eleCon->SetConversionRadius(iElectron->convRadius());
-
-      bool validKF= false;
-      reco::TrackRef myTrackRef = iElectron->closestCtfTrackRef();
-      validKF = (myTrackRef.isAvailable());
-      validKF = (myTrackRef.isNonnull());
-
-      if (validKF){
-        eleCon->SetTrackerLayersWithMeasurement( myTrackRef->hitPattern().trackerLayersWithMeasurement());
-        eleCon->SetNormalizedChi2Kf( myTrackRef->normalizedChi2());
-        eleCon->SetNumberOfValidHits(myTrackRef->numberOfValidHits());
-
-      }
-      else{
-        eleCon->SetTrackerLayersWithMeasurement(-1);
-        eleCon->SetNormalizedChi2Kf(-1);
-        eleCon->SetNumberOfValidHits(-1);
-      }
-
-
-      Handle<reco::VertexCollection> thePrimaryVertexColl;
-      iEvent.getByLabel("offlinePrimaryVertices",thePrimaryVertexColl);
-
-      Vertex dummy;
-      const Vertex *pv = &dummy;
-      if (thePrimaryVertexColl->size() != 0) {
-        pv = &*thePrimaryVertexColl->begin();
-      } else { // create a dummy PV
-        Vertex::Error e;
-        e(0, 0) = 0.0015 * 0.0015;
-        e(1, 1) = 0.0015 * 0.0015;
-        e(2, 2) = 15. * 15.;
-        Vertex::Point p(0, 0, 0);
-        dummy = Vertex(p, e, 0, 0, 0);
-      }
-
-      float ip3d    = -999.0;
-      float ip3derr = 1.0;
-      float ip3dSig = 0.0;
-
-      edm::ESHandle<TransientTrackBuilder> builder;
-      iSetup.get<TransientTrackRecord>().get("TransientTrackBuilder", builder);
-      TransientTrackBuilder thebuilder = *(builder.product());
-
-      if (iElectron->gsfTrack().isNonnull()) {
-        const double gsfsign   = ( (-iElectron->gsfTrack()->dxy(pv->position()))   >=0 ) ? 1. : -1.;
-
-        const reco::TransientTrack &tt = thebuilder.build(iElectron->gsfTrack());
-        const std::pair<bool,Measurement1D> &ip3dpv =  IPTools::absoluteImpactParameter3D(tt,*pv);
-        if (ip3dpv.first) {
-          ip3d = gsfsign*ip3dpv.second.value();
-          ip3derr = ip3dpv.second.error();
-          ip3dSig = ip3d/ip3derr;
-        }
-      }
-
-      eleCon->SetIP3d(ip3d);
-      eleCon->SetIP3dSig(ip3dSig);
-
-      eleCon->SetNumberOfValidPixelHits(  iElectron->gsfTrack()->hitPattern().numberOfValidPixelHits());
-      eleCon->SetNumberOfValidTrackerHits(iElectron->gsfTrack()->hitPattern().numberOfValidTrackerHits());
-      eleCon->SetNumberOfLostPixelHits(   iElectron->gsfTrack()->hitPattern().numberOfLostPixelHits());
-      eleCon->SetNumberOfLostTrackerHits( iElectron->gsfTrack()->hitPattern().numberOfLostTrackerHits());
-
-      eleCon->SetInverseEnergyMomentumDiff(fabs((1/iElectron->ecalEnergy()) - (1/iElectron->trackMomentumAtVtx().R())));
-
-      // Conversion information
-      // See definition from here: https://twiki.cern.ch/twiki/bin/view/CMS/ConversionTools
-      bool passConvVeto = !(ConversionTools::hasMatchedConversion(*iElectron,hConversions,vertexBeamSpot.position()));
-      eleCon->SetPassConversionVeto(passConvVeto);
-      eleCon->SetConversionMissHits(iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfHits());
-
-      //Variables for Triggering MVA pre-selection
-      eleCon->SetIdMap("hadronicOverEm",      iElectron->hadronicOverEm());
-      eleCon->SetIdMap("dr03TkSumPt",         iElectron->dr03TkSumPt());
-      eleCon->SetIdMap("dr03EcalRecHitSumEt", iElectron->dr03EcalRecHitSumEt());
-      eleCon->SetIdMap("dr03HcalTowerSumEt",  iElectron->dr03HcalTowerSumEt());
-      eleCon->SetIdMap("gsf_numberOfLostHits",iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfLostHits());
-      //eleCon->SetIdMap("",);
-      
-      eleIsolator.fGetIsolation(&(*iElectron), &thePfColl, myVtxRef, primaryVtcs);
-      eleCon->SetIdMap("Iso_pfCh_R04", eleIsolator.getIsolationCharged());
-      eleCon->SetIdMap("Iso_pfNeu_R04",eleIsolator.getIsolationNeutral());
-      eleCon->SetIdMap("Iso_pfPho_R04",eleIsolator.getIsolationPhoton());
-
-      // Effective area for rho PU corrections (not sure if needed)
-      float AEff03 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso03, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
-      float AEff04 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso04, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
-      eleCon->SetIdMap("EffArea_R03", AEff03);
-      eleCon->SetIdMap("EffArea_R04", AEff04);
-      eleCon->SetEffArea(AEff04);
-
-
-      //MVA output:
-      float m_old = ele_mvaTrigV0.get(eee-1);
-      eleCon->SetMvaID_Old(m_old);
-      float m_HZZ = ele_mvaNonTrigV0.get(eee-1);
-      eleCon->SetMvaID_HZZ(m_HZZ);
-
-      //cout<<eee<<"  mva0 = "<<m<<endl;
-
-      //Regression energy
-      double ene = ele_regEne.get(eee-1);
-      double err = ele_regErr.get(eee-1);
-      eleCon->SetEnergyRegression(ene);
-      eleCon->SetEnergyRegressionErr(err);
-
-      eleCon->SetIdMap("modElectronIso_Tk",    modElectronIso_Tk.get(eee-1));
-      eleCon->SetIdMap("modElectronIso_Ecal",  modElectronIso_Ecal.get(eee-1));
-      eleCon->SetIdMap("modElectronIso_HcalD1",modElectronIso_HcalD1.get(eee-1));
-
-      //cout<<eee-1<<"Bosted iso vars: tk="<<modElectronIso_Tk.get(eee-1)
-      //   <<"   ecal="<<modElectronIso_Ecal.get(eee-1)
-      //  <<" hcald1="<<modElectronIso_HcalD1.get(eee-1)<<endl;
-
-      const reco::GsfElectron &iElectronTmp   ( (*calibratedElectrons)[eee-1]);
-
-      //cout<<"ielectron , pt ="<<iElectron->pt()<<" eta="<<iElectron->eta()<<endl;
-      //cout<<"  calibra , pt ="<<iElectronTmp.pt()<<" eta="<<iElectronTmp.eta()<<endl;
-
-      TLorentzVector tmpP4;
-      tmpP4.SetPtEtaPhiE(iElectronTmp.pt(), iElectronTmp.eta(), iElectronTmp.phi(), iElectronTmp.energy());
-      eleCon->SetRegressionMomCombP4(tmpP4);
-
-
-      eleIsolator.fGetIsolation(&(*iElectron), &thePfColl, myVtxRef, primaryVtcs);
-      eleCon->SetPfIsoCharged(eleIsolator.getIsolationCharged());
-      eleCon->SetPfIsoNeutral(eleIsolator.getIsolationNeutral());
-      eleCon->SetPfIsoPhoton( eleIsolator.getIsolationPhoton());
-
-
-      eleCount++;
     }
+
+    eleCon->SetConversionDcot(iElectron->convDcot());
+    eleCon->SetConversionDist(iElectron->convDist());
+    eleCon->SetConversionRadius(iElectron->convRadius());
+
+    bool validKF= false;
+    reco::TrackRef myTrackRef = iElectron->closestCtfTrackRef();
+    validKF = (myTrackRef.isAvailable());
+    validKF = (myTrackRef.isNonnull());
+
+    if (validKF){
+      eleCon->SetTrackerLayersWithMeasurement( myTrackRef->hitPattern().trackerLayersWithMeasurement());
+      eleCon->SetNormalizedChi2Kf( myTrackRef->normalizedChi2());
+      eleCon->SetNumberOfValidHits(myTrackRef->numberOfValidHits());
+
+    }
+    else{
+      eleCon->SetTrackerLayersWithMeasurement(-1);
+      eleCon->SetNormalizedChi2Kf(-1);
+      eleCon->SetNumberOfValidHits(-1);
+    }
+
+
+    Handle<reco::VertexCollection> thePrimaryVertexColl;
+    iEvent.getByLabel("offlinePrimaryVertices",thePrimaryVertexColl);
+
+    Vertex dummy;
+    const Vertex *pv = &dummy;
+    if (thePrimaryVertexColl->size() != 0) {
+      pv = &*thePrimaryVertexColl->begin();
+    } else { // create a dummy PV
+      Vertex::Error e;
+      e(0, 0) = 0.0015 * 0.0015;
+      e(1, 1) = 0.0015 * 0.0015;
+      e(2, 2) = 15. * 15.;
+      Vertex::Point p(0, 0, 0);
+      dummy = Vertex(p, e, 0, 0, 0);
+    }
+
+    float ip3d    = -999.0;
+    float ip3derr = 1.0;
+    float ip3dSig = 0.0;
+
+    edm::ESHandle<TransientTrackBuilder> builder;
+    iSetup.get<TransientTrackRecord>().get("TransientTrackBuilder", builder);
+    TransientTrackBuilder thebuilder = *(builder.product());
+
+    if (iElectron->gsfTrack().isNonnull()) {
+      const double gsfsign   = ( (-iElectron->gsfTrack()->dxy(pv->position()))   >=0 ) ? 1. : -1.;
+
+      const reco::TransientTrack &tt = thebuilder.build(iElectron->gsfTrack());
+      const std::pair<bool,Measurement1D> &ip3dpv =  IPTools::absoluteImpactParameter3D(tt,*pv);
+      if (ip3dpv.first) {
+        ip3d = gsfsign*ip3dpv.second.value();
+        ip3derr = ip3dpv.second.error();
+        ip3dSig = ip3d/ip3derr;
+      }
+    }
+
+    eleCon->SetIP3d(ip3d);
+    eleCon->SetIP3dSig(ip3dSig);
+
+    eleCon->SetNumberOfValidPixelHits(  iElectron->gsfTrack()->hitPattern().numberOfValidPixelHits());
+    eleCon->SetNumberOfValidTrackerHits(iElectron->gsfTrack()->hitPattern().numberOfValidTrackerHits());
+    eleCon->SetNumberOfLostPixelHits(   iElectron->gsfTrack()->hitPattern().numberOfLostPixelHits());
+    eleCon->SetNumberOfLostTrackerHits( iElectron->gsfTrack()->hitPattern().numberOfLostTrackerHits());
+
+    eleCon->SetInverseEnergyMomentumDiff(fabs((1/iElectron->ecalEnergy()) - (1/iElectron->trackMomentumAtVtx().R())));
+
+    // Conversion information
+    // See definition from here: https://twiki.cern.ch/twiki/bin/view/CMS/ConversionTools
+    bool passConvVeto = !(ConversionTools::hasMatchedConversion(*iElectron,hConversions,vertexBeamSpot.position()));
+    eleCon->SetPassConversionVeto(passConvVeto);
+    eleCon->SetConversionMissHits(iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfHits());
+
+    //Variables for Triggering MVA pre-selection
+    eleCon->SetIdMap("hadronicOverEm",      iElectron->hadronicOverEm());
+    eleCon->SetIdMap("dr03TkSumPt",         iElectron->dr03TkSumPt());
+    eleCon->SetIdMap("dr03EcalRecHitSumEt", iElectron->dr03EcalRecHitSumEt());
+    eleCon->SetIdMap("dr03HcalTowerSumEt",  iElectron->dr03HcalTowerSumEt());
+    eleCon->SetIdMap("gsf_numberOfLostHits",iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfLostHits());
+    //eleCon->SetIdMap("",);
+
+    eleIsolator.fGetIsolation(&(*iElectron), &thePfColl, myVtxRef, primaryVtcs);
+    eleCon->SetIdMap("Iso_pfCh_R04", eleIsolator.getIsolationCharged());
+    eleCon->SetIdMap("Iso_pfNeu_R04",eleIsolator.getIsolationNeutral());
+    eleCon->SetIdMap("Iso_pfPho_R04",eleIsolator.getIsolationPhoton());
+
+    // Effective area for rho PU corrections (not sure if needed)
+    float AEff03 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso03, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
+    float AEff04 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso04, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
+    eleCon->SetIdMap("EffArea_R03", AEff03);
+    eleCon->SetIdMap("EffArea_R04", AEff04);
+    eleCon->SetEffArea(AEff04);
+
+
+    //MVA output:
+    float m_old = ele_mvaTrigV0.get(eee-1);
+    eleCon->SetMvaID_Old(m_old);
+    float m_HZZ = ele_mvaNonTrigV0.get(eee-1);
+    eleCon->SetMvaID_HZZ(m_HZZ);
+
+    //cout<<eee<<"  mva0 = "<<m<<endl;
+
+    //Regression energy
+    double ene = ele_regEne.get(eee-1);
+    double err = ele_regErr.get(eee-1);
+    eleCon->SetEnergyRegression(ene);
+    eleCon->SetEnergyRegressionErr(err);
+
+    eleCon->SetIdMap("modElectronIso_Tk",    modElectronIso_Tk.get(eee-1));
+    eleCon->SetIdMap("modElectronIso_Ecal",  modElectronIso_Ecal.get(eee-1));
+    eleCon->SetIdMap("modElectronIso_HcalD1",modElectronIso_HcalD1.get(eee-1));
+
+    //cout<<eee-1<<"Bosted iso vars: tk="<<modElectronIso_Tk.get(eee-1)
+    //   <<"   ecal="<<modElectronIso_Ecal.get(eee-1)
+    //  <<" hcald1="<<modElectronIso_HcalD1.get(eee-1)<<endl;
+
+    const reco::GsfElectron &iElectronTmp   ( (*calibratedElectrons)[eee-1]);
+
+    //cout<<"ielectron , pt ="<<iElectron->pt()<<" eta="<<iElectron->eta()<<endl;
+    //cout<<"  calibra , pt ="<<iElectronTmp.pt()<<" eta="<<iElectronTmp.eta()<<endl;
+
+    TLorentzVector tmpP4;
+    tmpP4.SetPtEtaPhiE(iElectronTmp.pt(), iElectronTmp.eta(), iElectronTmp.phi(), iElectronTmp.energy());
+    eleCon->SetRegressionMomCombP4(tmpP4);
+
+
+    eleIsolator.fGetIsolation(&(*iElectron), &thePfColl, myVtxRef, primaryVtcs);
+    eleCon->SetPfIsoCharged(eleIsolator.getIsolationCharged());
+    eleCon->SetPfIsoNeutral(eleIsolator.getIsolationNeutral());
+    eleCon->SetPfIsoPhoton( eleIsolator.getIsolationPhoton());
+
+
+    eleCount++;
   }
 
 
   /////////////////
   // Get photons //
   /////////////////
-  if (savePhotons_) {
 
-    // ES geometry
-    ESHandle<CaloGeometry> geoHandle;
-    iSetup.get<CaloGeometryRecord>().get(geoHandle);
-    const CaloSubdetectorGeometry *geometry = geoHandle->getSubdetectorGeometry(DetId::Ecal, EcalPreshower);
-    const CaloSubdetectorGeometry *& geometry_p = geometry;
+  // ES geometry
+  ESHandle<CaloGeometry> geoHandle;
+  iSetup.get<CaloGeometryRecord>().get(geoHandle);
+  const CaloSubdetectorGeometry *geometry = geoHandle->getSubdetectorGeometry(DetId::Ecal, EcalPreshower);
+  const CaloSubdetectorGeometry *& geometry_p = geometry;
 
-    if (geometry) topology_p.reset(new EcalPreshowerTopology(geoHandle));
+  if (geometry) topology_p.reset(new EcalPreshowerTopology(geoHandle));
 
-    // make the map of rechits
-    Handle<EcalRecHitCollection> ESRecHits;
-    iEvent.getByLabel(esReducedRecHitCollection_,ESRecHits);
+  // make the map of rechits
+  Handle<EcalRecHitCollection> ESRecHits;
+  iEvent.getByLabel(esReducedRecHitCollection_,ESRecHits);
 
-    rechits_map_.clear();
-    if (ESRecHits.isValid()) {
-      EcalRecHitCollection::const_iterator it;
-      for (it = ESRecHits->begin(); it != ESRecHits->end(); ++it) {
-        // remove bad ES rechits
-        if (it->recoFlag()==1 || it->recoFlag()==14 || (it->recoFlag()<=10 && it->recoFlag()>=5)) continue;
-        //Make the map of DetID, EcalRecHit pairs
-        rechits_map_.insert(std::make_pair(it->id(), *it));
-      }
+  rechits_map_.clear();
+  if (ESRecHits.isValid()) {
+    EcalRecHitCollection::const_iterator it;
+    for (it = ESRecHits->begin(); it != ESRecHits->end(); ++it) {
+      // remove bad ES rechits
+      if (it->recoFlag()==1 || it->recoFlag()==14 || (it->recoFlag()<=10 && it->recoFlag()>=5)) continue;
+      //Make the map of DetID, EcalRecHit pairs
+      rechits_map_.insert(std::make_pair(it->id(), *it));
     }
+  }
 
-    Handle<EcalRecHitCollection> Brechit;
-    iEvent.getByLabel("reducedEcalRecHitsEB",Brechit);
-    //const EcalRecHitCollection* barrelRecHits= Brechit.product();
+  Handle<EcalRecHitCollection> Brechit;
+  iEvent.getByLabel("reducedEcalRecHitsEB",Brechit);
+  //const EcalRecHitCollection* barrelRecHits= Brechit.product();
 
-    Handle<vector<reco::Photon> > photons;
-    iEvent.getByLabel(photonTag_, photons);
+  Handle<vector<reco::Photon> > photons;
+  iEvent.getByLabel(photonTag_, photons);
 
-    edm::Handle<reco::GsfElectronCollection> hElectrons;
-    iEvent.getByLabel("gsfElectrons", hElectrons);
+  edm::Handle<reco::GsfElectronCollection> hElectrons;
+  iEvent.getByLabel("gsfElectrons", hElectrons);
 
 
-    for (vector<reco::Photon>::const_iterator iPhoton = photons->begin(); iPhoton != photons->end() ; ++iPhoton) {
-      TCPhoton* myPhoton = new ((*recoPhotons)[photonCount]) TCPhoton();
+  for (vector<reco::Photon>::const_iterator iPhoton = photons->begin(); iPhoton != photons->end() ; ++iPhoton) {
+    TCPhoton* myPhoton = new ((*recoPhotons)[photonCount]) TCPhoton();
 
-      size_t rightRecoPho = -1;
-      for (size_t iv = 0; iv < photons->size(); ++iv) {
-        reco::PhotonRef recophoRef2(photons, iv);
-        if (deltaR(iPhoton->eta(), iPhoton->phi(), recophoRef2->eta(), recophoRef2->phi()) < 0.01) rightRecoPho = iv;
-      }
-      reco::PhotonRef recophoRef(photons, rightRecoPho);
+    size_t rightRecoPho = -1;
+    for (size_t iv = 0; iv < photons->size(); ++iv) {
+      reco::PhotonRef recophoRef2(photons, iv);
+      if (deltaR(iPhoton->eta(), iPhoton->phi(), recophoRef2->eta(), recophoRef2->phi()) < 0.01) rightRecoPho = iv;
+    }
+    reco::PhotonRef recophoRef(photons, rightRecoPho);
 
-      if (savePhoCrystals_)
+    if (savePhoCrystals_)
+    {
+      //Crystal Info:
+      std::vector< std::pair<DetId, float> >  PhotonHit_DetIds  = iPhoton->superCluster()->hitsAndFractions();
+      std::vector<TCEGamma::CrystalInfo> crystalinfo_container;
+      crystalinfo_container.clear();
+      TCPhoton::CrystalInfo crystal = {};
+      float timing_avg =0.0;
+      int ncrys   = 0;
+      vector< std::pair<DetId, float> >::const_iterator detitr;
+
+      for(detitr = PhotonHit_DetIds.begin(); detitr != PhotonHit_DetIds.end(); ++detitr)
       {
-        //Crystal Info:
-        std::vector< std::pair<DetId, float> >  PhotonHit_DetIds  = iPhoton->superCluster()->hitsAndFractions();
-        std::vector<TCEGamma::CrystalInfo> crystalinfo_container;
-        crystalinfo_container.clear();
-        TCPhoton::CrystalInfo crystal = {};
-        float timing_avg =0.0;
-        int ncrys   = 0;
-        vector< std::pair<DetId, float> >::const_iterator detitr;
 
-        for(detitr = PhotonHit_DetIds.begin(); detitr != PhotonHit_DetIds.end(); ++detitr)
-        {
+        if (((*detitr).first).det() == DetId::Ecal && ((*detitr).first).subdetId() == EcalBarrel) {
+          EcalRecHitCollection::const_iterator j= Brechit->find(((*detitr).first));
+          EcalRecHitCollection::const_iterator thishit;
+          if ( j!= Brechit->end())  thishit = j;
+          if ( j== Brechit->end()){
+            continue;
+          }
 
-          if (((*detitr).first).det() == DetId::Ecal && ((*detitr).first).subdetId() == EcalBarrel) {
-            EcalRecHitCollection::const_iterator j= Brechit->find(((*detitr).first));
-            EcalRecHitCollection::const_iterator thishit;
-            if ( j!= Brechit->end())  thishit = j;
-            if ( j== Brechit->end()){
-              continue;
-            }
-
-            EBDetId detId  = (EBDetId)((*detitr).first);
-            crystal.rawId  = thishit->id().rawId();
-            crystal.energy = thishit->energy();
-            crystal.time   = thishit->time();
-            crystal.timeErr= thishit->timeError();
-            crystal.recoFlag = thishit->recoFlag();
-            crystal.ieta   = detId.ieta();
-            crystal.iphi   = detId.iphi();
-            if(crystal.energy > 0.1){
-              timing_avg  = timing_avg + crystal.time;
-              ncrys++;
-            }
-          }//end of if ((*detitr).det() == DetId::Ecal && (*detitr).subdetId() == EcalBarrel)
-          crystalinfo_container.push_back(crystal);
-        }//End loop over detids
-        std::sort(crystalinfo_container.begin(),crystalinfo_container.end(),EnergySortCriterium);
+          EBDetId detId  = (EBDetId)((*detitr).first);
+          crystal.rawId  = thishit->id().rawId();
+          crystal.energy = thishit->energy();
+          crystal.time   = thishit->time();
+          crystal.timeErr= thishit->timeError();
+          crystal.recoFlag = thishit->recoFlag();
+          crystal.ieta   = detId.ieta();
+          crystal.iphi   = detId.iphi();
+          if(crystal.energy > 0.1){
+            timing_avg  = timing_avg + crystal.time;
+            ncrys++;
+          }
+        }//end of if ((*detitr).det() == DetId::Ecal && (*detitr).subdetId() == EcalBarrel)
+        crystalinfo_container.push_back(crystal);
+      }//End loop over detids
+      std::sort(crystalinfo_container.begin(),crystalinfo_container.end(),EnergySortCriterium);
 
 
-        //Without taking into account uncertainty, this time makes no sense.
-        if (ncrys !=0) timing_avg = timing_avg/(float)ncrys;
-        else timing_avg = -99.;
+      //Without taking into account uncertainty, this time makes no sense.
+      if (ncrys !=0) timing_avg = timing_avg/(float)ncrys;
+      else timing_avg = -99.;
 
-        myPhoton->SetNCrystals(crystalinfo_container.size());
+      myPhoton->SetNCrystals(crystalinfo_container.size());
 
-        for (unsigned int y =0; y < crystalinfo_container.size() && y < 100;y++){
-          myPhoton->AddCrystal(crystalinfo_container[y]);
-        }
-
-        /*
-           vector<TCPhoton::CrystalInfo> savedCrystals = myPhoton->GetCrystalVect();
-           for (int y = 0; y< myPhoton->GetNCrystals();y++){
-           std::cout << "savedCrystals[y].time : " << savedCrystals[y].time << std::endl;
-           std::cout << "savedCrystals[y].timeErr : " << savedCrystals[y].timeErr << std::endl;
-           std::cout << "savedCrystals[y].energy : " << savedCrystals[y].energy <<std::endl;
-           std::cout << "savedCrystals[y].ieta: " << savedCrystals[y].ieta << std::endl;
-
-           std::cout << "savedCrystals[y].rawId: " << savedCrystals[y].rawId <<std::endl;
-           }
-           */
-
+      for (unsigned int y =0; y < crystalinfo_container.size() && y < 100;y++){
+        myPhoton->AddCrystal(crystalinfo_container[y]);
       }
 
-      myPhoton->SetPxPyPzE(iPhoton->px(), iPhoton->py(), iPhoton->pz(), iPhoton->p());
-      myPhoton->SetVtx(iPhoton->vx(), iPhoton->vy(), iPhoton->vz());
-
-      // ID variables
-      //Methods that are availabel for the electrons can be found here:
-      //http://cmslxr.fnal.gov/lxr/source/DataFormats/EgammaCandidates/interface/Photon.h?v=CMSSW_5_3_11
-
-      vector<float> phoCov;
-      const reco::CaloClusterPtr phoSeed = iPhoton->superCluster()->seed();
-      phoCov = lazyTool->localCovariances(*phoSeed);
-
-      myPhoton->SetHadOverEm(iPhoton->hadTowOverEm());
-      myPhoton->SetR9(iPhoton->r9());
-      myPhoton->SetTrackVeto(iPhoton->hasPixelSeed());
-
-      myPhoton->SetSCEta(iPhoton->superCluster()->eta());
-      myPhoton->SetSCPhi(iPhoton->superCluster()->phi());
-      myPhoton->SetSigmaIEtaIEta(iPhoton->sigmaIetaIeta());
-      myPhoton->SetSigmaIEtaIPhi(phoCov[1]);
-      myPhoton->SetSigmaIPhiIPhi(phoCov[2]);
-
-      myPhoton->SetSCEtaWidth(  iPhoton->superCluster()->etaWidth());
-      myPhoton->SetSCPhiWidth(  iPhoton->superCluster()->phiWidth());
-
-      //these don't exist either
-      //eleCon->SetSCDeltaEta( );
-      //eleCon->SetSCDeltaPhi( );
-
-      myPhoton->SetSCEnergy(iPhoton->superCluster()->energy());
-      myPhoton->SetSCRawEnergy(iPhoton->superCluster()->rawEnergy());
-      myPhoton->SetSCPSEnergy(iPhoton->superCluster()->preshowerEnergy());
-
-      if (iPhoton->superCluster()->rawEnergy()!=0)
-        myPhoton->SetPreShowerOverRaw(iPhoton->superCluster()->preshowerEnergy() / iPhoton->superCluster()->rawEnergy());
-
-
-      myPhoton->SetE1x3(lazyTool->e1x3(*phoSeed));
-      myPhoton->SetE1x5(iPhoton->e1x5());
-      myPhoton->SetE2x2(lazyTool->e2x2(*phoSeed));
-      myPhoton->SetE2x5(iPhoton->e2x5()); // <<-
-      // How come these two aren't  the same?!
-      myPhoton->SetE2x5Max(lazyTool->e2x5Max(*phoSeed)); //<<-
-      //if (iPhoton->e2x5() != lazyTool->e2x5Max(*phoSeed))
-      //cout<<"No, it's not the same! : "<< iPhoton->e2x5()<<" vs "<< lazyTool->e2x5Max(*phoSeed)<<endl;
-
-      myPhoton->SetE5x5(iPhoton->e5x5());
-
-      // PF Iso for photons
-      phoIsolator.fGetIsolation(&(*iPhoton),&thePfColl, myVtxRef, primaryVtcs);
-      myPhoton->SetPfIsoCharged(phoIsolator.getIsolationCharged());
-      myPhoton->SetPfIsoNeutral(phoIsolator.getIsolationNeutral());
-      myPhoton->SetPfIsoPhoton( phoIsolator.getIsolationPhoton());
-
-      // CiC track Iso
-      vector<float> vtxIsolations02 = cicPhotonId_->pfTkIsoWithVertex(recophoRef, 0.2, 0.02, 0.02, 0.0, 0.2, 0.1, reco::PFCandidate::h);
-      vector<float> vtxIsolations03 = cicPhotonId_->pfTkIsoWithVertex(recophoRef, 0.3, 0.02, 0.02, 0.0, 0.2, 0.1, reco::PFCandidate::h);
-      vector<float> vtxIsolations04 = cicPhotonId_->pfTkIsoWithVertex(recophoRef, 0.4, 0.02, 0.02, 0.0, 0.2, 0.1, reco::PFCandidate::h);
-
-      myPhoton->SetCiCPF4chgpfIso02(vtxIsolations02);
-      myPhoton->SetCiCPF4chgpfIso03(vtxIsolations03);
-      myPhoton->SetCiCPF4chgpfIso04(vtxIsolations04);
-
       /*
-      vector<float> testIso = myPhoton->CiCPF4chgpfIso02();
-      cout<<"test CiC: "<<testIso[0]<<endl;
-      */
+         vector<TCPhoton::CrystalInfo> savedCrystals = myPhoton->GetCrystalVect();
+         for (int y = 0; y< myPhoton->GetNCrystals();y++){
+         std::cout << "savedCrystals[y].time : " << savedCrystals[y].time << std::endl;
+         std::cout << "savedCrystals[y].timeErr : " << savedCrystals[y].timeErr << std::endl;
+         std::cout << "savedCrystals[y].energy : " << savedCrystals[y].energy <<std::endl;
+         std::cout << "savedCrystals[y].ieta: " << savedCrystals[y].ieta << std::endl;
 
-
-      if (saveMoreEgammaVars_){
-        myPhoton->SetIdMap("chIso03",phoIsolator.getIsolationCharged());
-        myPhoton->SetIdMap("nhIso03",phoIsolator.getIsolationNeutral());
-        myPhoton->SetIdMap("phIso03",phoIsolator.getIsolationPhoton());
-
-        // detector-based isolation
-        myPhoton->SetIdMap("EmIso_R03",  (iPhoton->ecalRecHitSumEtConeDR03()));
-        myPhoton->SetIdMap("HadIso_R03", (iPhoton->hcalTowerSumEtConeDR03()));
-        myPhoton->SetIdMap("TrkIso_R03", (iPhoton->trkSumPtHollowConeDR03()));
-
-
-        myPhoton->SetIdMap("EmIso_R04",  (iPhoton->ecalRecHitSumEtConeDR04()));
-        myPhoton->SetIdMap("HadIso_R04", (iPhoton->hcalTowerSumEtConeDR04()));
-        myPhoton->SetIdMap("TrkIso_R04", (iPhoton->trkSumPtHollowConeDR04()));
-
-      }
-
-      // Hcal isolation for 2012
-      //myPhoton->SetIdMap("HadIso_R03",iPhoton->hcalTowerSumEtConeDR03() +
-      //        (iPhoton->hadronicOverEm() - iPhoton->hadTowOverEm())*iPhoton->superCluster()->energy()/cosh(iPhoton->superCluster()->eta()));
-      //myPhoton->SetIdMap("HadIso_R04",iPhoton->hcalTowerSumEtConeDR04() +
-      //        (iPhoton->hadronicOverEm() - iPhoton->hadTowOverEm())*iPhoton->superCluster()->energy()/cosh(iPhoton->superCluster()->eta()));
-
-      //Footprint removal
-      edm::ParameterSet myConfig;
-      myConfig.addUntrackedParameter("isolation_cone_size_forSCremoval",SCFPRemovalCone_);
-      SuperClusterFootprintRemoval remover(iEvent,iSetup,myConfig);
-      PFIsolation_struct mySCFPstruct = remover.PFIsolation(iPhoton->superCluster(),edm::Ptr<Vertex>(primaryVtcs, 0));
-      /*
-         cout<<"chargediso: "<<mySCFPstruct.chargediso<<endl;
-         cout<<"chargediso_primvtx: "<<mySCFPstruct.chargediso_primvtx<<endl;
-         cout<<"neutraliso: "<<mySCFPstruct.neutraliso<<endl;
-         cout<<"photoniso: "<<mySCFPstruct.photoniso<<endl;
-         cout<<"chargediso_rcone: "<<mySCFPstruct.chargediso_rcone<<endl;
-         cout<<"chargediso_primvtx_rcone: "<<mySCFPstruct.chargediso_primvtx_rcone<<endl;
-         cout<<"neutraliso_rcone: "<<mySCFPstruct.neutraliso_rcone<<endl;
-         cout<<"photoniso_rcone: "<<mySCFPstruct.photoniso_rcone<<endl;
-         cout<<"eta_rcone: "<<mySCFPstruct.eta_rcone<<endl;
-         cout<<"phi_rcone: "<<mySCFPstruct.phi_rcone<<endl;
-         cout<<"rcone_isOK: "<<mySCFPstruct.rcone_isOK<<endl;
+         std::cout << "savedCrystals[y].rawId: " << savedCrystals[y].rawId <<std::endl;
+         }
          */
-      TCPhoton::FootprintRemoval foot;
-      foot.chargediso = mySCFPstruct.chargediso;
-      foot.chargediso_primvtx = mySCFPstruct.chargediso_primvtx;
-      foot.neutraliso = mySCFPstruct.neutraliso;
-      foot.photoniso = mySCFPstruct.photoniso;
-      foot.chargediso_rcone = mySCFPstruct.chargediso_rcone;
-      foot.chargediso_primvtx_rcone = mySCFPstruct.chargediso_primvtx_rcone;
-      foot.neutraliso_rcone = mySCFPstruct.neutraliso_rcone;
-      foot.photoniso_rcone = mySCFPstruct.photoniso_rcone;
-      foot.eta_rcone = mySCFPstruct.eta_rcone;
-      foot.phi_rcone = mySCFPstruct.phi_rcone;
-      foot.rcone_isOK = mySCFPstruct.rcone_isOK;
 
-      myPhoton->SetSCFootprintRemovalStruct(foot);
-
-      //Conversion info
-      bool passElectronVeto = !(ConversionTools::hasMatchedPromptElectron(iPhoton->superCluster(), hElectrons, hConversions, vertexBeamSpot.position()));
-      myPhoton->SetConversionVeto(passElectronVeto);
-
-      //Effective energy shit
-      float phoESEffSigmaRR_x = 0.;
-      float phoESEffSigmaRR_y = 0.;
-      float phoESEffSigmaRR_z = 0.;
-
-      if (ESRecHits.isValid() && (fabs(iPhoton->superCluster()->eta()) > 1.6 && fabs(iPhoton->superCluster()->eta()) < 3)) {
-
-        vector<float> phoESHits0 = getESHits((*iPhoton).superCluster()->x(), (*iPhoton).superCluster()->y(), (*iPhoton).superCluster()->z(), rechits_map_, geometry_p, topology_p.get(), 0);
-
-        vector<float> phoESShape = getESEffSigmaRR(phoESHits0);
-        phoESEffSigmaRR_x = phoESShape[0];
-        phoESEffSigmaRR_y = phoESShape[1];
-        phoESEffSigmaRR_z = phoESShape[2];
-      }
-      myPhoton->SetESEffSigmaRR(phoESEffSigmaRR_x, phoESEffSigmaRR_y, phoESEffSigmaRR_z);
-
-      ++photonCount;
     }
+
+    myPhoton->SetPxPyPzE(iPhoton->px(), iPhoton->py(), iPhoton->pz(), iPhoton->p());
+    myPhoton->SetVtx(iPhoton->vx(), iPhoton->vy(), iPhoton->vz());
+
+    // ID variables
+    //Methods that are availabel for the electrons can be found here:
+    //http://cmslxr.fnal.gov/lxr/source/DataFormats/EgammaCandidates/interface/Photon.h?v=CMSSW_5_3_11
+
+    vector<float> phoCov;
+    const reco::CaloClusterPtr phoSeed = iPhoton->superCluster()->seed();
+    phoCov = lazyTool->localCovariances(*phoSeed);
+
+    myPhoton->SetHadOverEm(iPhoton->hadTowOverEm());
+    myPhoton->SetR9(iPhoton->r9());
+    myPhoton->SetTrackVeto(iPhoton->hasPixelSeed());
+
+    myPhoton->SetSCEta(iPhoton->superCluster()->eta());
+    myPhoton->SetSCPhi(iPhoton->superCluster()->phi());
+    myPhoton->SetSigmaIEtaIEta(iPhoton->sigmaIetaIeta());
+    myPhoton->SetSigmaIEtaIPhi(phoCov[1]);
+    myPhoton->SetSigmaIPhiIPhi(phoCov[2]);
+
+    myPhoton->SetSCEtaWidth(  iPhoton->superCluster()->etaWidth());
+    myPhoton->SetSCPhiWidth(  iPhoton->superCluster()->phiWidth());
+
+    //these don't exist either
+    //eleCon->SetSCDeltaEta( );
+    //eleCon->SetSCDeltaPhi( );
+
+    myPhoton->SetSCEnergy(iPhoton->superCluster()->energy());
+    myPhoton->SetSCRawEnergy(iPhoton->superCluster()->rawEnergy());
+    myPhoton->SetSCPSEnergy(iPhoton->superCluster()->preshowerEnergy());
+
+    if (iPhoton->superCluster()->rawEnergy()!=0)
+      myPhoton->SetPreShowerOverRaw(iPhoton->superCluster()->preshowerEnergy() / iPhoton->superCluster()->rawEnergy());
+
+
+    myPhoton->SetE1x3(lazyTool->e1x3(*phoSeed));
+    myPhoton->SetE1x5(iPhoton->e1x5());
+    myPhoton->SetE2x2(lazyTool->e2x2(*phoSeed));
+    myPhoton->SetE2x5(iPhoton->e2x5()); // <<-
+    // How come these two aren't  the same?!
+    myPhoton->SetE2x5Max(lazyTool->e2x5Max(*phoSeed)); //<<-
+    //if (iPhoton->e2x5() != lazyTool->e2x5Max(*phoSeed))
+    //cout<<"No, it's not the same! : "<< iPhoton->e2x5()<<" vs "<< lazyTool->e2x5Max(*phoSeed)<<endl;
+
+    myPhoton->SetE5x5(iPhoton->e5x5());
+
+    // PF Iso for photons
+    phoIsolator.fGetIsolation(&(*iPhoton),&thePfColl, myVtxRef, primaryVtcs);
+    myPhoton->SetPfIsoCharged(phoIsolator.getIsolationCharged());
+    myPhoton->SetPfIsoNeutral(phoIsolator.getIsolationNeutral());
+    myPhoton->SetPfIsoPhoton( phoIsolator.getIsolationPhoton());
+
+    // CiC track Iso
+    vector<float> vtxIsolations02 = cicPhotonId_->pfTkIsoWithVertex(recophoRef, 0.2, 0.02, 0.02, 0.0, 0.2, 0.1, reco::PFCandidate::h);
+    vector<float> vtxIsolations03 = cicPhotonId_->pfTkIsoWithVertex(recophoRef, 0.3, 0.02, 0.02, 0.0, 0.2, 0.1, reco::PFCandidate::h);
+    vector<float> vtxIsolations04 = cicPhotonId_->pfTkIsoWithVertex(recophoRef, 0.4, 0.02, 0.02, 0.0, 0.2, 0.1, reco::PFCandidate::h);
+
+    myPhoton->SetCiCPF4chgpfIso02(vtxIsolations02);
+    myPhoton->SetCiCPF4chgpfIso03(vtxIsolations03);
+    myPhoton->SetCiCPF4chgpfIso04(vtxIsolations04);
+
+    /*
+       vector<float> testIso = myPhoton->CiCPF4chgpfIso02();
+       cout<<"test CiC: "<<testIso[0]<<endl;
+       */
+
+
+    // detector-based isolation
+    myPhoton->SetIdMap("EmIso_R03",  (iPhoton->ecalRecHitSumEtConeDR03()));
+    myPhoton->SetIdMap("HadIso_R03", (iPhoton->hcalTowerSumEtConeDR03()));
+    myPhoton->SetIdMap("TrkIso_R03", (iPhoton->trkSumPtHollowConeDR03()));
+
+
+    myPhoton->SetIdMap("EmIso_R04",  (iPhoton->ecalRecHitSumEtConeDR04()));
+    myPhoton->SetIdMap("HadIso_R04", (iPhoton->hcalTowerSumEtConeDR04()));
+    myPhoton->SetIdMap("TrkIso_R04", (iPhoton->trkSumPtHollowConeDR04()));
+
+
+    // Hcal isolation for 2012
+    //myPhoton->SetIdMap("HadIso_R03",iPhoton->hcalTowerSumEtConeDR03() +
+    //        (iPhoton->hadronicOverEm() - iPhoton->hadTowOverEm())*iPhoton->superCluster()->energy()/cosh(iPhoton->superCluster()->eta()));
+    //myPhoton->SetIdMap("HadIso_R04",iPhoton->hcalTowerSumEtConeDR04() +
+    //        (iPhoton->hadronicOverEm() - iPhoton->hadTowOverEm())*iPhoton->superCluster()->energy()/cosh(iPhoton->superCluster()->eta()));
+
+    //Footprint removal
+    edm::ParameterSet myConfig;
+    myConfig.addUntrackedParameter("isolation_cone_size_forSCremoval",SCFPRemovalCone_);
+    SuperClusterFootprintRemoval remover(iEvent,iSetup,myConfig);
+    PFIsolation_struct mySCFPstruct = remover.PFIsolation(iPhoton->superCluster(),edm::Ptr<Vertex>(primaryVtcs, 0));
+    /*
+       cout<<"chargediso: "<<mySCFPstruct.chargediso<<endl;
+       cout<<"chargediso_primvtx: "<<mySCFPstruct.chargediso_primvtx<<endl;
+       cout<<"neutraliso: "<<mySCFPstruct.neutraliso<<endl;
+       cout<<"photoniso: "<<mySCFPstruct.photoniso<<endl;
+       cout<<"chargediso_rcone: "<<mySCFPstruct.chargediso_rcone<<endl;
+       cout<<"chargediso_primvtx_rcone: "<<mySCFPstruct.chargediso_primvtx_rcone<<endl;
+       cout<<"neutraliso_rcone: "<<mySCFPstruct.neutraliso_rcone<<endl;
+       cout<<"photoniso_rcone: "<<mySCFPstruct.photoniso_rcone<<endl;
+       cout<<"eta_rcone: "<<mySCFPstruct.eta_rcone<<endl;
+       cout<<"phi_rcone: "<<mySCFPstruct.phi_rcone<<endl;
+       cout<<"rcone_isOK: "<<mySCFPstruct.rcone_isOK<<endl;
+       */
+    TCPhoton::FootprintRemoval foot;
+    foot.chargediso = mySCFPstruct.chargediso;
+    foot.chargediso_primvtx = mySCFPstruct.chargediso_primvtx;
+    foot.neutraliso = mySCFPstruct.neutraliso;
+    foot.photoniso = mySCFPstruct.photoniso;
+    foot.chargediso_rcone = mySCFPstruct.chargediso_rcone;
+    foot.chargediso_primvtx_rcone = mySCFPstruct.chargediso_primvtx_rcone;
+    foot.neutraliso_rcone = mySCFPstruct.neutraliso_rcone;
+    foot.photoniso_rcone = mySCFPstruct.photoniso_rcone;
+    foot.eta_rcone = mySCFPstruct.eta_rcone;
+    foot.phi_rcone = mySCFPstruct.phi_rcone;
+    foot.rcone_isOK = mySCFPstruct.rcone_isOK;
+
+    myPhoton->SetSCFootprintRemovalStruct(foot);
+
+    //Conversion info
+    bool passElectronVeto = !(ConversionTools::hasMatchedPromptElectron(iPhoton->superCluster(), hElectrons, hConversions, vertexBeamSpot.position()));
+    myPhoton->SetConversionVeto(passElectronVeto);
+
+    //Effective energy shit
+    float phoESEffSigmaRR_x = 0.;
+    float phoESEffSigmaRR_y = 0.;
+    float phoESEffSigmaRR_z = 0.;
+
+    if (ESRecHits.isValid() && (fabs(iPhoton->superCluster()->eta()) > 1.6 && fabs(iPhoton->superCluster()->eta()) < 3)) {
+
+      vector<float> phoESHits0 = getESHits((*iPhoton).superCluster()->x(), (*iPhoton).superCluster()->y(), (*iPhoton).superCluster()->z(), rechits_map_, geometry_p, topology_p.get(), 0);
+
+      vector<float> phoESShape = getESEffSigmaRR(phoESHits0);
+      phoESEffSigmaRR_x = phoESShape[0];
+      phoESEffSigmaRR_y = phoESShape[1];
+      phoESEffSigmaRR_z = phoESShape[2];
+    }
+    myPhoton->SetESEffSigmaRR(phoESEffSigmaRR_x, phoESEffSigmaRR_y, phoESEffSigmaRR_z);
+
+    ++photonCount;
   }
 
 
@@ -1008,60 +983,56 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     // Get genParticles //
     //////////////////////
 
-    if (saveGenParticles_) {
-      Handle<GenParticleCollection> genParticleColl;
-      iEvent.getByLabel("genParticles", genParticleColl);
+    Handle<GenParticleCollection> genParticleColl;
+    iEvent.getByLabel("genParticles", genParticleColl);
 
-      map<const reco::GenParticle*, TCGenParticle*> genMap;
-      for (GenParticleCollection::const_iterator myParticle= genParticleColl->begin(); myParticle != genParticleColl->end(); ++myParticle) {
+    map<const reco::GenParticle*, TCGenParticle*> genMap;
+    for (GenParticleCollection::const_iterator myParticle= genParticleColl->begin(); myParticle != genParticleColl->end(); ++myParticle) {
 
-        ////  Leptons and photons and b's, (oh my)
-        //// Z's, W's, H's, and now big juicy Gravitons
-        if (
-            (abs(myParticle->pdgId()) >= 11 && abs(myParticle->pdgId()) <= 16)
-            || myParticle->pdgId() == 22
-            || abs(myParticle->pdgId()) == 5
-            || abs(myParticle->pdgId()) == 23
-            || abs(myParticle->pdgId()) == 24
-            || abs(myParticle->pdgId()) == 25   //higgs
-            || abs(myParticle->pdgId()) == 35   // another higgs
-            || abs(myParticle->pdgId()) == 36   // more higgses
-            || abs(myParticle->pdgId()) == 39   //graviton (sometimes higgs too)
-            || abs(myParticle->pdgId()) == 443  //jpsi
-            || abs(myParticle->pdgId()) == 553  //upsilon
-           ) {
-          addGenParticle(&(*myParticle), genPartCount, genMap);
-
-        }
+      ////  Leptons and photons and b's, (oh my)
+      //// Z's, W's, H's, and now big juicy Gravitons
+      if (
+          (abs(myParticle->pdgId()) >= 11 && abs(myParticle->pdgId()) <= 16)
+          || myParticle->pdgId() == 22
+          || abs(myParticle->pdgId()) == 5
+          || abs(myParticle->pdgId()) == 23
+          || abs(myParticle->pdgId()) == 24
+          || abs(myParticle->pdgId()) == 25   //higgs
+          || abs(myParticle->pdgId()) == 35   // another higgs
+          || abs(myParticle->pdgId()) == 36   // more higgses
+          || abs(myParticle->pdgId()) == 39   //graviton (sometimes higgs too)
+          || abs(myParticle->pdgId()) == 443  //jpsi
+          || abs(myParticle->pdgId()) == 553  //upsilon
+         ) {
+        addGenParticle(&(*myParticle), genPartCount, genMap);
 
       }
 
     }
 
 
+
     /////////////////
     // Get genJets //
     /////////////////
 
-    if (saveGenJets_) {
 
-      Handle<reco::GenJetCollection> GenJets;
-      iEvent.getByLabel(genJetTag_, GenJets);
+    Handle<reco::GenJetCollection> GenJets;
+    iEvent.getByLabel(genJetTag_, GenJets);
 
-      for (GenJetCollection::const_iterator iJet = GenJets->begin(); iJet!= GenJets->end(); ++iJet) {
-        reco::GenJet myJet = reco::GenJet(*iJet);
-        if (myJet.pt() > 10) {
-          TCGenJet* jetCon = new ((*genJets)[genCount]) TCGenJet;
-          jetCon->SetPxPyPzE(myJet.px(), myJet.py(), myJet.pz(), myJet.energy());
-          jetCon->SetHadEnergy(myJet.hadEnergy());
-          jetCon->SetEmEnergy(myJet.emEnergy());
-          jetCon->SetInvEnergy(myJet.invisibleEnergy());
-          jetCon->SetAuxEnergy(myJet.auxiliaryEnergy());
-          jetCon->SetNumConstit(myJet.getGenConstituents().size());
-          jetCon->SetJetFlavor(0);
-        }
-        ++genCount;
+    for (GenJetCollection::const_iterator iJet = GenJets->begin(); iJet!= GenJets->end(); ++iJet) {
+      reco::GenJet myJet = reco::GenJet(*iJet);
+      if (myJet.pt() > 10) {
+        TCGenJet* jetCon = new ((*genJets)[genCount]) TCGenJet;
+        jetCon->SetPxPyPzE(myJet.px(), myJet.py(), myJet.pz(), myJet.energy());
+        jetCon->SetHadEnergy(myJet.hadEnergy());
+        jetCon->SetEmEnergy(myJet.emEnergy());
+        jetCon->SetInvEnergy(myJet.invisibleEnergy());
+        jetCon->SetAuxEnergy(myJet.auxiliaryEnergy());
+        jetCon->SetNumConstit(myJet.getGenConstituents().size());
+        jetCon->SetJetFlavor(0);
       }
+      ++genCount;
     }
   }
 
@@ -1169,17 +1140,12 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       }
     }
 
-    if (saveTriggerObj_)
-      analyzeTrigger(hltResults, hltEvent, hlNames[i], &trigCount);
+    if (saveTriggerObj_) analyzeTrigger(hltResults, hltEvent, hlNames[i], &trigCount);
   }
 
 
   ++nEvents;
-  if (!skimLepton_){
-    eventTree -> Fill();
-  }
-  else if(skimLepton_ && (eleCount > 0 || muCount > 0)) // possibly specify a cut in configuration
-    eventTree -> Fill();
+  eventTree -> Fill();
 
   beamSpot->Clear();
   primaryVtx    -> Clear("C");

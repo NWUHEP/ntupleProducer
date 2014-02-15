@@ -107,6 +107,9 @@ if __name__ == '__main__':
 
   #symmetric diff
   if len(obsList ^ expList) != 0:
-    print 'these are missing:',expList-obsList
-    print 'these are extra:',obsList-expList
+    print 'these are missing:'
+    for x in expList-obsList: print x
+    print 'these are extra:',
+    for x in obsList-expList: print x
+  else: print 'everything seems ok'
 

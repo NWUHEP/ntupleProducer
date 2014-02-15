@@ -364,19 +364,9 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   rhoMuCorrTag      =    cms.untracked.InputTag('kt6PFJetsCentralNeutral', 'rho','RECO'),  # specifically for muon iso
 
   partFlowTag       =  cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
-  skimLepton        =  cms.untracked.bool(False),
 
-  saveMuons         =    cms.untracked.bool(True),
-  saveJets          =    cms.untracked.bool(True),
-  saveElectrons     =    cms.untracked.bool(True),
   saveEleCrystals   =    cms.untracked.bool(False),
-  savePhotons       =    cms.untracked.bool(True),
   savePhoCrystals   =    cms.untracked.bool(False),
-  saveMoreEgammaVars=    cms.untracked.bool(False),
-
-  saveMET           =    cms.untracked.bool(True),
-  saveGenJets       =    cms.untracked.bool(True),
-  saveGenParticles  =    cms.untracked.bool(True),
 
   saveTriggerObj    =    cms.untracked.bool(False),
 
