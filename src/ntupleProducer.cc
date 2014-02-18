@@ -1023,12 +1023,12 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             || abs(myParticle->pdgId()) == 5
             || abs(myParticle->pdgId()) == 23
             || abs(myParticle->pdgId()) == 24
-            || abs(myParticle->pdgId()) == 25   //higgs
+            || abs(myParticle->pdgId()) == 25   // higgs
             || abs(myParticle->pdgId()) == 35   // another higgs
             || abs(myParticle->pdgId()) == 36   // more higgses
-            || abs(myParticle->pdgId()) == 39   //graviton (sometimes higgs too)
-            || abs(myParticle->pdgId()) == 443  //jpsi
-            || abs(myParticle->pdgId()) == 553  //upsilon
+            || abs(myParticle->pdgId()) == 39   // graviton (sometimes higgs too)
+            || abs(myParticle->pdgId()) == 443  // jpsi
+            || abs(myParticle->pdgId()) == 553  // upsilon
            ) {
           addGenParticle(&(*myParticle), genPartCount, genMap);
 
