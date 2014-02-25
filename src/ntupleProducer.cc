@@ -983,33 +983,31 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         // Get genParticles //
         //////////////////////
 
-        if (saveGenParticles_) {
-            Handle<GenParticleCollection> genParticleColl;
-            iEvent.getByLabel("genParticles", genParticleColl);
+        Handle<GenParticleCollection> genParticleColl;
+        iEvent.getByLabel("genParticles", genParticleColl);
 
-            map<const reco::GenParticle*, TCGenParticle*> genMap;
-            for (GenParticleCollection::const_iterator myParticle= genParticleColl->begin(); myParticle != genParticleColl->end(); ++myParticle) {
+        map<const reco::GenParticle*, TCGenParticle*> genMap;
+        for (GenParticleCollection::const_iterator myParticle= genParticleColl->begin(); myParticle != genParticleColl->end(); ++myParticle) {
 
-                ////  Leptons and photons and b's, (oh my)
-                //// Z's, W's, H's, and now big juicy Gravitons
-                if (
-                        (abs(myParticle->pdgId()) >= 11 && abs(myParticle->pdgId()) <= 16)
-                        || myParticle->pdgId() == 22
-                        || abs(myParticle->pdgId()) == 5
-                        || abs(myParticle->pdgId()) == 6
-                        || abs(myParticle->pdgId()) == 23
-                        || abs(myParticle->pdgId()) == 24
-                        || abs(myParticle->pdgId()) == 25   // higgs
-                        || abs(myParticle->pdgId()) == 35   // another higgs
-                        || abs(myParticle->pdgId()) == 36   // more higgses
-                        || abs(myParticle->pdgId()) == 39   // graviton (sometimes higgs too)
-                        || abs(myParticle->pdgId()) == 443  // jpsi
-                        || abs(myParticle->pdgId()) == 553  // upsilon
-                   ) {
-                    addGenParticle(&(*myParticle), genPartCount, genMap);
+          ////  Leptons and photons and b's, (oh my)
+          //// Z's, W's, H's, and now big juicy Gravitons
+          if (
+              (abs(myParticle->pdgId()) >= 11 && abs(myParticle->pdgId()) <= 16)
+              || myParticle->pdgId() == 22
+              || abs(myParticle->pdgId()) == 5
+              || abs(myParticle->pdgId()) == 6
+              || abs(myParticle->pdgId()) == 23
+              || abs(myParticle->pdgId()) == 24
+              || abs(myParticle->pdgId()) == 25   // higgs
+              || abs(myParticle->pdgId()) == 35   // another higgs
+              || abs(myParticle->pdgId()) == 36   // more higgses
+              || abs(myParticle->pdgId()) == 39   // graviton (sometimes higgs too)
+              || abs(myParticle->pdgId()) == 443  // jpsi
+              || abs(myParticle->pdgId()) == 553  // upsilon
+             ) {
+            addGenParticle(&(*myParticle), genPartCount, genMap);
 
-                }
-            }
+          }
         }
 
 
