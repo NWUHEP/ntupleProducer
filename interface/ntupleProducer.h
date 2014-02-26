@@ -94,6 +94,7 @@
 #include "EgammaAnalysis/ElectronTools/interface/ElectronEffectiveArea.h"
 #include "EgammaAnalysis/ElectronTools/interface/PFIsolationEstimator.h"
 //#include "EgammaAnalysis/ElectronTools/interface/ElectronEnergyRegressionEvaluate.h"
+#include "CiCPhotonID.h"
 
 #include "TrackingTools/IPTools/interface/IPTools.h"
 
@@ -268,20 +269,11 @@ class ntupleProducer : public edm::EDAnalyzer {
   edm::InputTag eeReducedRecHitCollection_;
   edm::InputTag esReducedRecHitCollection_;
 
-  bool skimLepton_;
-  bool saveMuons_;
-  bool saveJets_;
-  bool saveElectrons_;
   bool saveEleCrystals_;
-  bool savePhotons_;
   bool savePhoCrystals_;
-  bool saveMET_;
-  bool saveGenJets_;
-  bool saveGenParticles_;
   bool isRealData;
   bool verboseTrigs;
   bool verboseMVAs;
-  bool saveMoreEgammaVars_;
   bool saveTriggerObj_;
   double SCFPRemovalCone_;
   
@@ -331,4 +323,5 @@ class ntupleProducer : public edm::EDAnalyzer {
   auto_ptr<EcalClusterLazyTools> lazyTool;
   map<DetId, EcalRecHit> rechits_map_;
   auto_ptr<CaloSubdetectorTopology> topology_p;
+  auto_ptr<CiCPhotonID> cicPhotonId_;
 };

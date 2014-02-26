@@ -25,6 +25,18 @@ int TCPhoton::NTrkSolidConeDR03() const {
   return _nTrkSolidConeDR03;
 }
 
+vector<float> TCPhoton::CiCPF4chgpfIso02() const {
+  return _phoCiCPF4chgpfIso02;
+}
+
+vector<float> TCPhoton::CiCPF4chgpfIso03() const {
+  return _phoCiCPF4chgpfIso03;
+}
+
+vector<float> TCPhoton::CiCPF4chgpfIso04() const {
+  return _phoCiCPF4chgpfIso04;
+}
+
 // "set" methods ---------------------------------------------
 
 void TCPhoton::SetSCFootprintRemovalStruct (TCPhoton::FootprintRemoval f) {
@@ -41,4 +53,16 @@ void TCPhoton::SetConversionVeto(bool v) {
 
 void TCPhoton::SetNTrkSolidConeDR03(int n){
   _nTrkSolidConeDR03 = n;
+}
+
+void TCPhoton::SetCiCPF4chgpfIso02(vector<float> v){
+  _phoCiCPF4chgpfIso02 = v;
+}
+
+void TCPhoton::SetCiCPF4chgpfIso03(vector<float> v){
+  _phoCiCPF4chgpfIso03 = v;
+}
+
+void TCPhoton::SetCiCPF4chgpfIso04(vector<float> v){
+  _phoCiCPF4chgpfIso04 = v;
 }

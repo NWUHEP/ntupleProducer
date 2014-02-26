@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import re, os
-import getopt, sys 
+import getopt, sys
 import FjrParser as fp
 
 def usage (prog_name):
@@ -9,14 +9,14 @@ def usage (prog_name):
 
 def help (prog_name):
     usage(prog_name)
-    
+
     print """
-    -c\t\t\t (Mandatory) CRAB project directory 
+    -c\t\t\t (Mandatory) CRAB project directory
     --quiet, -q\t\t Wehn turned on, works silently
     --help, -h\t\t Print this message
     """
     sys.exit(1)
-    
+
 if __name__ == '__main__':
   (prog_path, prog_name) = os.path.split(sys.argv[0])
   if len(sys.argv) < 2:
@@ -46,7 +46,12 @@ if __name__ == '__main__':
     help(prog_name)
 
   fjrs = fp.get_fjrs(directory)
+  localPath = None
+  expList = []
+  if not quiet:
+    print 'This is the expected list:'
   for f in fjrs:
+    #if '74' not in f: continue
     if not quiet:
       print ">>> ", "processing fjr", f
 
@@ -59,10 +64,52 @@ if __name__ == '__main__':
       continue
 
     # if the job finished successfully get the PFN
-    try:
-      if fp.is_goodfile(doc) : 
-        (lfn, pfn, surl) = fp.get_filenames(doc)
-        print pfn
-    except:
+    # check to make sure that file actually exists in your storage space (set for EOS)
+    #try:
+    if fp.is_goodfile(doc) :
+      (lfn, pfn, surl) = fp.get_filenames(doc)
+      localFile = '/'+'/'.join(pfn.split('/')[6:])
       if not quiet:
-        print ">>> ", "skipping fjr", f
+        print localFile
+      if localPath == None:
+        localPath = '/'+'/'.join(pfn.split('/')[6:-1])
+      if not os.path.isfile(localFile):
+        print pfn, 'does not actually exist'
+        raw_input('resubmit this job, something is wrong')
+      expList.append(pfn.split('/')[-1])
+
+  #except:
+    #if not quiet:
+      #print ">>> ", "skipping fjr", f
+
+
+  if not quiet:
+    print 'This is the observed list:'
+  obsList = None
+  for dirname, dirnames, filenames in os.walk(localPath):
+    obsList = set(filenames)
+    # print path to all subdirectories first.
+    #for subdirname in dirnames:
+        #print os.path.join(dirname, subdirname)
+
+    # print path to all filenames.
+    for filename in filenames:
+      if not quiet:
+        print os.path.join(dirname, filename)
+
+
+  expList = set(expList)
+  #print obsList, expList
+  # is obsList in expList?
+  #if obsList <= expList: print 'obs is a subset of exp'
+  # is expList in obsList?
+  #if obsList >= expList: print 'exp is a subset of obs'
+
+  #symmetric diff
+  if len(obsList ^ expList) != 0:
+    print 'these are missing:'
+    for x in expList-obsList: print x
+    print 'these are extra:',
+    for x in obsList-expList: print x
+  else: print 'everything seems ok'
+

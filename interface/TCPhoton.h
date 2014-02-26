@@ -45,6 +45,11 @@ private:
 
   TCPhoton::FootprintRemoval _SCFootprintRemoval;
 
+  // CiC iso vectors
+  vector<float> _phoCiCPF4chgpfIso02;
+  vector<float> _phoCiCPF4chgpfIso03;
+  vector<float> _phoCiCPF4chgpfIso04;
+
  public:
     TCPhoton();
     virtual ~TCPhoton();
@@ -57,12 +62,20 @@ private:
     bool  ConversionVeto() const;
     int NTrkSolidConeDR03() const;
 
+    vector<float> CiCPF4chgpfIso02() const;
+    vector<float> CiCPF4chgpfIso03() const;
+    vector<float> CiCPF4chgpfIso04() const;
+
     // "set" methods ---------
     void SetSCFootprintRemovalStruct(TCPhoton::FootprintRemoval);
 
     void SetTrackVeto(bool);
     void SetConversionVeto(bool);
     void SetNTrkSolidConeDR03(int);
+
+    void SetCiCPF4chgpfIso02(vector<float>);
+    void SetCiCPF4chgpfIso03(vector<float>);
+    void SetCiCPF4chgpfIso04(vector<float>);
 
     ClassDef(TCPhoton, 1);
 };

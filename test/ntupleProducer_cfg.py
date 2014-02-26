@@ -7,17 +7,19 @@ process = cms.Process("NTUPLE")
 
 options = VarParsing.VarParsing ('analysis')
 options.maxEvents = 100
+options.inputFiles = '/store/mc/Summer12_DR53X/TTH_HToZG_M-135_8TeV-pythia8175/AODSIM/PU_RD1_START53_V7N-v2/00000/0A4C1013-9287-E311-937C-003048D4397E.root'
 #options.inputFiles= '/store/data/Run2012C/SingleMu/AOD/22Jan2013-v1/30010/C0E05558-9078-E211-9E02-485B39800B65.root'
 #options.inputFiles= '/store/data/Run2012C/DoublePhoton/AOD/22Jan2013-v2/30001/72DE4526-F370-E211-B370-00304867920A.root'
 #options.inputFiles = '/store/user/cmkuo/Dalitz_H_eeg_125_MG_v1/Dalitz_H_eeg_m125_RECO_v1/d459946fa1e058e24b305fca3ec661c6/STEP2_RAW2DIGI_L1Reco_RECO_PU_100_1_jL0.root'
 #options.loadFromFile('inputFiles','PYTHIA8_175_H_Zg_8TeV.txt')
 #options.loadFromFile('inputFiles','PYTHIA8_175_POWHEG_PDF7_H_Zg_8TeV.txt')
 #options.inputFiles = '/store/data/Run2012A/DoubleElectron/AOD/13Jul2012-v1/00000/00347915-EED9-E111-945A-848F69FD2817.root'
-#options.loadFromFile('inputFiles','dalitz_short.txt')
+#options.loadFromFile('inputFiles','ggHZG_S10.txt')
 #options.inputFiles = '/store/user/andrey/Higgs_To_MuMuGamma_Dalitz_MH125_Mll_0to50_MadgraphHEFT_pythia6/AODSIM_v2/39bf61f738ba3bdb8860f0848073cc88/aodsim_100_1_hLi.root'
 #options.inputFiles = '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0000/02CDCF05-BED2-E111-85F4-0030486740BA.root'
 #options.inputFiles = '/store/data/Run2012D/SinglePhotonParked/AOD/22Jan2013-v1/30004/144D7268-4086-E211-9DC1-001E673984C1.root'
-#options.inputFiles = 'file:/eos/uscms/store/user/bpollack/GenMC/H_ZG_p8175/AOD/bpollack/PYTHIA8_POWHEG_H_Zg_8TeV_cff_py_GEN_SIM_v3/STEP2_PYTHIA8_POWHEG_H_Zg_8TeV_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_v3/4bbb399a7a963db5df92706e62a42bd4/STEP2_PYTHIA8_POWHEG_H_Zg_8TeV_RAW2DIGI_L1Reco_RECO_VALIDATION_DQM_PU_131_1_TmY.root'
+#options.inputFiles= '/store/data/Run2012C/DoubleMuParked/AOD/22Jan2013-v1/10000/00858723-296D-E211-A4B3-00259073E488.root'
+
 
 #options.inputFiles = '/store/user/cmkuo/Dalitz_H_eeg_125_MG_v1/Dalitz_H_eeg_m125_RECO_v1/d459946fa1e058e24b305fca3ec661c6/STEP2_RAW2DIGI_L1Reco_RECO_PU_100_1_jL0.root'
 #options.inputFiles = '/store/data/Run2012B/DoublePhoton/AOD/22Jan2013-v1/20000/0013EBD3-FA6C-E211-A1DF-00261894384A.root'
@@ -265,6 +267,7 @@ print '\n\nCommence ntuplization...\n\n'
 ### TFile service!
 process.TFileService = cms.Service('TFileService',
     fileName = cms.string('nuTuple.root')
+    #fileName = cms.string('~/EOS/V09_05_8TeV/DoubleMu/nuTuple_Sync.root')
                                    )
 
 ### pfNoPU Sequence for electron MVA
@@ -286,6 +289,32 @@ process.pfNoPileUp = cms.EDProducer("TPPFCandidatesOnPFCandidates",
 
 process.pfNoPUSeq = cms.Sequence(process.pfPileUp + process.pfNoPileUp)
 
+############################
+### b-tag truth matching ###
+############################
+
+process.load("PhysicsTools.JetMCAlgos.CaloJetsMCFlavour_cfi")
+
+
+# Flavour by reference
+process.JetbyRef = cms.EDProducer("JetPartonMatcher",
+                                  jets = cms.InputTag("ak5PFJetsL1FastL2L3"),
+                                  coneSizeToAssociate = cms.double(0.3),
+                                  partons = cms.InputTag("myPartons")
+                                  )
+# Flavour by value PhysDef
+process.JetbyValPhys = cms.EDProducer("JetFlavourIdentifier",
+                                      srcByReference = cms.InputTag("JetbyRef"),
+                                      physicsDefinition = cms.bool(True),
+                                      leptonInfo = cms.bool(True)
+                                      )
+# Flavour by value AlgoDef
+process.JetbyValAlgo = cms.EDProducer("JetFlavourIdentifier",
+                                      srcByReference = cms.InputTag("JetbyRef"),
+                                      physicsDefinition = cms.bool(False),
+                                      leptonInfo = cms.bool(True)
+                                      )
+process.JetFlavour = cms.Sequence(process.JetbyRef*process.JetbyValPhys*process.JetbyValAlgo)
 
 
 from SHarper.HEEPAnalyzer.HEEPSelectionCuts_cfi import *
@@ -311,6 +340,9 @@ from TSWilliams.BstdZeeTools.bstdzeemodisolproducer_cff import *
 process.modElectronIso = cms.EDProducer("BstdZeeModIsolProducer",
                                               bstdZeeModIsolParams, vetoGsfEles = cms.InputTag("heepIdNoIsoEles") )
 
+# Photon CiC stuff
+from NWU.ntupleProducer.hggPhotonIDCuts_cfi import *
+
 
 ### ntuple producer
 process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
@@ -335,19 +367,9 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   rhoMuCorrTag      =    cms.untracked.InputTag('kt6PFJetsCentralNeutral', 'rho','RECO'),  # specifically for muon iso
 
   partFlowTag       =  cms.untracked.InputTag("particleFlow"), #,"Cleaned"),
-  skimLepton        =  cms.untracked.bool(False),
 
-  saveMuons         =    cms.untracked.bool(True),
-  saveJets          =    cms.untracked.bool(True),
-  saveElectrons     =    cms.untracked.bool(True),
-  saveEleCrystals   =    cms.untracked.bool(True),
-  savePhotons       =    cms.untracked.bool(True),
-  savePhoCrystals   =    cms.untracked.bool(True),
-  saveMoreEgammaVars=    cms.untracked.bool(True),
-
-  saveMET           =    cms.untracked.bool(True),
-  saveGenJets       =    cms.untracked.bool(True),
-  saveGenParticles  =    cms.untracked.bool(True),
+  saveEleCrystals   =    cms.untracked.bool(False),
+  savePhoCrystals   =    cms.untracked.bool(False),
 
   saveTriggerObj    =    cms.untracked.bool(False),
 
@@ -369,6 +391,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   ebReducedRecHitCollection = cms.InputTag("reducedEcalRecHitsEB"),
   eeReducedRecHitCollection = cms.InputTag("reducedEcalRecHitsEE"),
   esReducedRecHitCollection = cms.InputTag("reducedEcalRecHitsES"),
+  hggPhotonIDConfiguration = hggPhotonIDCuts,
 
   #Trigger stuff
 
@@ -426,7 +449,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                )
                                           )
 
-process.ntuplePath = cms.Path(
+process.preNtuple = cms.Sequence(
     process.goodOfflinePrimaryVertices
     * process.correctionTermsPfMetType1Type2
     * process.correctionTermsPfMetType0PFCandidate
@@ -447,9 +470,14 @@ process.ntuplePath = cms.Path(
     * process.heepIdNoIso
     * process.heepIdNoIsoEles
     * process.modElectronIso
-
-    * process.ntupleProducer
 )
+
+process.JetMC = cms.Sequence(process.myPartons * process.JetFlavour)
+
+if isRealData:
+    process.ntuplePath = cms.Path(process.preNtuple * process.ntupleProducer)
+else:
+    process.ntuplePath = cms.Path(process.preNtuple * process.JetMC * process.ntupleProducer)
 
 #process.out = cms.OutputModule("PoolOutputModule",
 #                               fileName = cms.untracked.string('/tmp/myTuple.root'),
