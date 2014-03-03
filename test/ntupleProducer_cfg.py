@@ -20,11 +20,11 @@ options.inputFiles = '/store/mc/Summer12_DR53X/TTH_HToZG_M-135_8TeV-pythia8175/A
 #options.inputFiles = '/store/data/Run2012D/SinglePhotonParked/AOD/22Jan2013-v1/30004/144D7268-4086-E211-9DC1-001E673984C1.root'
 #options.inputFiles= '/store/data/Run2012C/DoubleMuParked/AOD/22Jan2013-v1/10000/00858723-296D-E211-A4B3-00259073E488.root'
 
-
-#options.inputFiles = '/store/user/cmkuo/Dalitz_H_eeg_125_MG_v1/Dalitz_H_eeg_m125_RECO_v1/d459946fa1e058e24b305fca3ec661c6/STEP2_RAW2DIGI_L1Reco_RECO_PU_100_1_jL0.root'
 #options.inputFiles = '/store/data/Run2012B/DoublePhoton/AOD/22Jan2013-v1/20000/0013EBD3-FA6C-E211-A1DF-00261894384A.root'
 
-options.inputFiles = '/store/data/Run2012D/DoublePhoton/AOD/22Jan2013-v1/30002/FEA0AD2A-A284-E211-9B86-180373FF8D6A.root'
+#options.inputFiles = '/store/data/Run2012D/DoublePhoton/AOD/22Jan2013-v1/30002/FEA0AD2A-A284-E211-9B86-180373FF8D6A.root'
+
+options.inputFiles = '/store/results/higgs/Higgs_To_MuMuGamma_Dalitz_MH120_Mll_0to50_MadgraphHEFT_pythia6/StoreResults-AODSIM-806aa7eec3da93d97a65d9505a063592/Higgs_To_MuMuGamma_Dalitz_MH120_Mll_0to50_MadgraphHEFT_pythia6/USER/StoreResults-AODSIM-806aa7eec3da93d97a65d9505a063592/0000/9C5AB317-7B79-E311-9FF2-002590593878.root'
 
 options.register("isRealData",
                  0,
