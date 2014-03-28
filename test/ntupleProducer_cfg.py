@@ -391,6 +391,19 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   esReducedRecHitCollection = cms.InputTag("reducedEcalRecHitsES"),
   hggPhotonIDConfiguration = hggPhotonIDCuts,
 
+  #for proper electron pf iso calculation. EGamma group should be embarrassed that this is not in AOD
+  IsoDepElectron = cms.VInputTag(
+    cms.InputTag('elPFIsoDepositChargedPFIso'),
+    cms.InputTag('elPFIsoDepositNeutralPFIso'),
+    cms.InputTag('elPFIsoDepositGammaPFIso')),
+  IsoValElectronPF = cms.VInputTag(
+    cms.InputTag('elPFIsoValueCharged03PFIdPFIso'),
+    cms.InputTag('elPFIsoValueGamma03PFIdPFIso'),
+    cms.InputTag('elPFIsoValueNeutral03PFIdPFIso'),
+    cms.InputTag('elPFIsoValueCharged04PFIdPFIso'),
+    cms.InputTag('elPFIsoValueGamma04PFIdPFIso'),
+    cms.InputTag('elPFIsoValueNeutral04PFIdPFIso')),
+
   #Trigger stuff
 
   hltName           =    cms.untracked.string("HLT"),
