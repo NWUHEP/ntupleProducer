@@ -69,6 +69,7 @@ process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 process.load("CondCore.DBCommon.CondDBCommon_cfi")
 
 
+
 if (isRealData):
     # 53X b-jet discriminator calibration
     process.GlobalTag.toGet = cms.VPSet(
@@ -267,25 +268,31 @@ process.TFileService = cms.Service('TFileService',
     fileName = cms.string('nuTuple.root')
     #fileName = cms.string('~/EOS/V09_05_8TeV/DoubleMu/nuTuple_Sync.root')
                                    )
+# Electron Iso Stuff
+# PF isolations for electronss
+from CommonTools.ParticleFlow.Tools.pfIsolation import setupPFElectronIso, setupPFPhotonIso
+process.eleIsoSequence = setupPFElectronIso(process, 'gsfElectrons')
 
 ### pfNoPU Sequence for electron MVA
-process.pfPileUp = cms.EDProducer("PFPileUp",
-    PFCandidates = cms.InputTag("particleFlow"),
-    Enable = cms.bool(True),
-    checkClosestZVertex = cms.bool(True),
-    verbose = cms.untracked.bool(False),
-    Vertices = cms.InputTag("offlinePrimaryVertices")
-)
+#process.pfPileUp = cms.EDProducer("PFPileUp",
+#    PFCandidates = cms.InputTag("particleFlow"),
+#    Enable = cms.bool(True),
+#    checkClosestZVertex = cms.bool(True),
+#    verbose = cms.untracked.bool(False),
+#    Vertices = cms.InputTag("offlinePrimaryVertices")
+#)
 
-process.pfNoPileUp = cms.EDProducer("TPPFCandidatesOnPFCandidates",
-    bottomCollection = cms.InputTag("particleFlow"),
-    enable = cms.bool(True),
-    topCollection = cms.InputTag("pfPileUp"),
-    name = cms.untracked.string('pileUpOnPFCandidates'),
-    verbose = cms.untracked.bool(False)
-)
+#process.pfNoPileUp = cms.EDProducer("TPPFCandidatesOnPFCandidates",
+#    bottomCollection = cms.InputTag("particleFlow"),
+#    enable = cms.bool(True),
+#    topCollection = cms.InputTag("pfPileUp"),
+#    name = cms.untracked.string('pileUpOnPFCandidates'),
+#    verbose = cms.untracked.bool(False)
+#)
 
-process.pfNoPUSeq = cms.Sequence(process.pfPileUp + process.pfNoPileUp)
+#process.pfNoPUSeq = cms.Sequence(process.pfPileUp + process.pfNoPileUp)
+
+
 
 ############################
 ### b-tag truth matching ###
@@ -462,11 +469,12 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
 process.preNtuple = cms.Sequence(
     process.goodOfflinePrimaryVertices
+    * process.pfParticleSelectionSequence
     * process.correctionTermsPfMetType1Type2
     * process.correctionTermsPfMetType0PFCandidate
     * process.correctionTermsPfMetShiftXY
     * process.pfMetT0pcT1Txy
-    * process.pfNoPUSeq
+    #    * process.pfNoPUSeq
     * process.kt6PFJetsIso
     * process.ak5PFJetsL1FastL2L3
     * process.ak5JetTracksAssociatorAtVertex
@@ -478,6 +486,7 @@ process.preNtuple = cms.Sequence(
     * process.mvaTrigV0
     * process.mvaNonTrigV0
 
+    * process.eleIsoSequence
     * process.heepIdNoIso
     * process.heepIdNoIsoEles
     * process.modElectronIso
