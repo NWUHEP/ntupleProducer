@@ -41,5 +41,6 @@
 <use   name="Geometry/EcalAlgo"/>
 <use   name="RecoCaloTools/Navigation"/>
 <use   name="DataFormats/DetId"/>
+<use   name="CommonTools/ParticleFlow"/>
 <flags   EDM_PLUGIN="1"/>
 #<Flags CXXFLAGS="-g"/>

@@ -239,6 +239,9 @@ class ntupleProducer : public edm::EDAnalyzer {
   TTree* eventTree;
   TTree* jobTree;
 
+  typedef std::vector< edm::Handle< edm::ValueMap<reco::IsoDeposit> > > IsoDepositMaps;
+  typedef std::vector< edm::Handle< edm::ValueMap<double> > > IsoDepositVals;
+
   edm::InputTag jetTag_;
   string        jecTag_;
   edm::InputTag metTag_;
@@ -268,6 +271,8 @@ class ntupleProducer : public edm::EDAnalyzer {
   edm::InputTag ebReducedRecHitCollection_;
   edm::InputTag eeReducedRecHitCollection_;
   edm::InputTag esReducedRecHitCollection_;
+  std::vector<edm::InputTag> inputTagIsoDepElectrons_;
+  std::vector<edm::InputTag> inputTagIsoValElectronsPFId_;
 
   bool saveEleCrystals_;
   bool savePhoCrystals_;

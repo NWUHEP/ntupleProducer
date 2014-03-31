@@ -89,10 +89,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     iEvent.getByLabel(partFlowTag_,pfCands);
     const  PFCandidateCollection thePfColl = *(pfCands.product());
 
-    Handle<PFCandidateCollection> pfCandsEleIso;
-    iEvent.getByLabel("pfNoPileUp",pfCandsEleIso);
-    const  PFCandidateCollection thePfCollEleIso = *(pfCandsEleIso.product());
-
     //get a lazyTool
 
     lazyTool.reset(new EcalClusterLazyTools(iEvent, iSetup, ebReducedRecHitCollection_, eeReducedRecHitCollection_));
@@ -114,6 +110,25 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 
     cicPhotonId_->configure(recVtxsBS_, tracksHandle_, gsfElectronHandle_, pfCands, rhoFactor);
+
+    //configure electron PF Iso setup
+
+    // get the iso deposits. 3 (charged hadrons, photons, neutral hadrons)                                                                   
+    unsigned nTypes=3;
+    IsoDepositMaps electronIsoDep(nTypes);
+    for (size_t j = 0; j<inputTagIsoDepElectrons_.size(); ++j) {
+      iEvent.getByLabel(inputTagIsoDepElectrons_[j], electronIsoDep[j]);
+    }
+
+    IsoDepositVals electronIsoValPFId03(nTypes);
+    IsoDepositVals electronIsoValPFId04(nTypes);
+    const IsoDepositVals * electronIsoVals03 = &electronIsoValPFId03;
+    const IsoDepositVals * electronIsoVals04 = &electronIsoValPFId04;
+
+    for (size_t j = 0; j<inputTagIsoValElectronsPFId_.size(); ++j) {
+      if (j < 3) iEvent.getByLabel(inputTagIsoValElectronsPFId_[j], electronIsoValPFId03[j]);
+      else iEvent.getByLabel(inputTagIsoValElectronsPFId_[j], electronIsoValPFId04[j-3]);
+    }
 
 
     //////////////////////////
@@ -686,6 +701,20 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         eleCon->SetPfIsoNeutral(eleIsolator.getIsolationNeutral());
         eleCon->SetPfIsoPhoton( eleIsolator.getIsolationPhoton());
 
+        // Access PF isolation
+        reco::GsfElectronRef myElectronRef(electrons,eee);
+
+        //elePFChIso03_  .push_back((*(*electronIsoVals03)[0])[recoEleRef]);
+        //elePFPhoIso03_ .push_back((*(*electronIsoVals03)[1])[recoEleRef]);
+        //elePFNeuIso03_ .push_back((*(*electronIsoVals03)[2])[recoEleRef]);
+
+        //elePFChIso04_  .push_back((*(*electronIsoVals04)[0])[recoEleRef]);
+        //elePFPhoIso04_ .push_back((*(*electronIsoVals04)[1])[recoEleRef]);
+        //elePFNeuIso04_ .push_back((*(*electronIsoVals04)[2])[recoEleRef]);
+        
+        cout<<"segFault?"<<endl;
+        cout<<"old pf Photon: "<<eleIsolator.getIsolationPhoton()<<" new pf Photon: "<<(*(*electronIsoVals04)[1])[myElectronRef]<<endl;
+
 
         eleCount++;
     }
@@ -1217,9 +1246,11 @@ void  ntupleProducer::beginJob()
     // Start counting number of events per job //
     nEvents = 0;
 
-    // Photon and Electron PF Iso maker init
+    // Photon PF Iso maker init
     phoIsolator.initializePhotonIsolation(kTRUE);
     phoIsolator.setConeSize(0.3);
+
+    // Electron PF Iso maker init 
 
     eleIsolator.initializeElectronIsolation(kTRUE);
     eleIsolator.setConeSize(0.4);
