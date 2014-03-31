@@ -24,7 +24,6 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig):
     saveEleCrystals_  = iConfig.getUntrackedParameter<bool>("saveEleCrystals");
     savePhoCrystals_  = iConfig.getUntrackedParameter<bool>("savePhoCrystals");
 
-
     saveTriggerObj_   = iConfig.getUntrackedParameter<bool>("saveTriggerObj");
 
     verboseTrigs       = iConfig.getUntrackedParameter<bool>("verboseTrigs");
@@ -117,18 +116,18 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     unsigned nTypes=3;
     IsoDepositMaps electronIsoDep(nTypes);
     for (size_t j = 0; j<inputTagIsoDepElectrons_.size(); ++j) {
-      iEvent.getByLabel(inputTagIsoDepElectrons_[j], electronIsoDep[j]);
+        iEvent.getByLabel(inputTagIsoDepElectrons_[j], electronIsoDep[j]);
     }
 
-    IsoDepositVals electronIsoValPFId03(nTypes);
+    //IsoDepositVals electronIsoValPFId03(nTypes);
     IsoDepositVals electronIsoValPFId04(nTypes);
-    const IsoDepositVals * electronIsoVals03 = &electronIsoValPFId03;
+    //const IsoDepositVals * electronIsoVals03 = &electronIsoValPFId03;
     const IsoDepositVals * electronIsoVals04 = &electronIsoValPFId04;
 
-    for (size_t j = 0; j<inputTagIsoValElectronsPFId_.size(); ++j) {
-      if (j < 3) iEvent.getByLabel(inputTagIsoValElectronsPFId_[j], electronIsoValPFId03[j]);
-      else iEvent.getByLabel(inputTagIsoValElectronsPFId_[j], electronIsoValPFId04[j-3]);
-    }
+    //for (size_t j = 0; j<inputTagIsoValElectronsPFId_.size(); ++j) {
+    //  if (j < 3) iEvent.getByLabel(inputTagIsoValElectronsPFId_[j], electronIsoValPFId03[j]);
+    //  else iEvent.getByLabel(inputTagIsoValElectronsPFId_[j], electronIsoValPFId04[j-3]);
+    //}
 
 
     //////////////////////////
@@ -649,7 +648,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         eleCon->SetIdMap("dr03EcalRecHitSumEt", iElectron->dr03EcalRecHitSumEt());
         eleCon->SetIdMap("dr03HcalTowerSumEt",  iElectron->dr03HcalTowerSumEt());
         eleCon->SetIdMap("gsf_numberOfLostHits",iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfLostHits());
-        //eleCon->SetIdMap("",);
 
         eleIsolator.fGetIsolation(&(*iElectron), &thePfColl, myVtxRef, primaryVtcs);
         eleCon->SetIdMap("Iso_pfCh_R04", eleIsolator.getIsolationCharged());
@@ -683,10 +681,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         eleCon->SetIdMap("modElectronIso_HcalD1",modElectronIso_HcalD1.get(eee-1));
 
         //cout<<eee-1<<"Bosted iso vars: tk="<<modElectronIso_Tk.get(eee-1)
-        //   <<"   ecal="<<modElectronIso_Ecal.get(eee-1)
+        //  <<"   ecal="<<modElectronIso_Ecal.get(eee-1)
         //  <<" hcald1="<<modElectronIso_HcalD1.get(eee-1)<<endl;
 
-        const reco::GsfElectron &iElectronTmp   ( (*calibratedElectrons)[eee-1]);
+        const reco::GsfElectron &iElectronTmp((*calibratedElectrons)[eee-1]);
 
         //cout<<"ielectron , pt ="<<iElectron->pt()<<" eta="<<iElectron->eta()<<endl;
         //cout<<"  calibra , pt ="<<iElectronTmp.pt()<<" eta="<<iElectronTmp.eta()<<endl;
@@ -711,9 +709,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         //elePFChIso04_  .push_back((*(*electronIsoVals04)[0])[recoEleRef]);
         //elePFPhoIso04_ .push_back((*(*electronIsoVals04)[1])[recoEleRef]);
         //elePFNeuIso04_ .push_back((*(*electronIsoVals04)[2])[recoEleRef]);
-        
+
         cout<<"segFault?"<<endl;
-        cout<<"old pf Photon: "<<eleIsolator.getIsolationPhoton()<<" new pf Photon: "<<(*(*electronIsoVals04)[1])[myElectronRef]<<endl;
+        cout<<"old pf Photon: "<<eleIsolator.getIsolationPhoton()<<" new pf Photon: "<< (*(*electronIsoVals04)[1]) << endl; //[myElectronRef]<<endl;
 
 
         eleCount++;
@@ -1018,25 +1016,25 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         map<const reco::GenParticle*, TCGenParticle*> genMap;
         for (GenParticleCollection::const_iterator myParticle= genParticleColl->begin(); myParticle != genParticleColl->end(); ++myParticle) {
 
-          ////  Leptons and photons and b's, (oh my)
-          //// Z's, W's, H's, and now big juicy Gravitons
-          if (
-              (abs(myParticle->pdgId()) >= 11 && abs(myParticle->pdgId()) <= 16)
-              || myParticle->pdgId() == 22
-              || abs(myParticle->pdgId()) == 5
-              || abs(myParticle->pdgId()) == 6
-              || abs(myParticle->pdgId()) == 23
-              || abs(myParticle->pdgId()) == 24
-              || abs(myParticle->pdgId()) == 25   // higgs
-              || abs(myParticle->pdgId()) == 35   // another higgs
-              || abs(myParticle->pdgId()) == 36   // more higgses
-              || abs(myParticle->pdgId()) == 39   // graviton (sometimes higgs too)
-              || abs(myParticle->pdgId()) == 443  // jpsi
-              || abs(myParticle->pdgId()) == 553  // upsilon
-             ) {
-            addGenParticle(&(*myParticle), genPartCount, genMap);
+            ////  Leptons and photons and b's, (oh my)
+            //// Z's, W's, H's, and now big juicy Gravitons
+            if (
+                    (abs(myParticle->pdgId()) >= 11 && abs(myParticle->pdgId()) <= 16)
+                    || myParticle->pdgId() == 22
+                    || abs(myParticle->pdgId()) == 5
+                    || abs(myParticle->pdgId()) == 6
+                    || abs(myParticle->pdgId()) == 23
+                    || abs(myParticle->pdgId()) == 24
+                    || abs(myParticle->pdgId()) == 25   // higgs
+                    || abs(myParticle->pdgId()) == 35   // another higgs
+                    || abs(myParticle->pdgId()) == 36   // more higgses
+                    || abs(myParticle->pdgId()) == 39   // graviton (sometimes higgs too)
+                    || abs(myParticle->pdgId()) == 443  // jpsi
+                    || abs(myParticle->pdgId()) == 553  // upsilon
+               ) {
+                addGenParticle(&(*myParticle), genPartCount, genMap);
 
-          }
+            }
         }
 
 
