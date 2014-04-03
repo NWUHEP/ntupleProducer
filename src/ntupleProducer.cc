@@ -41,7 +41,8 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig):
     photonIsoCalcTag_   = iConfig.getParameter<edm::ParameterSet>("photonIsoCalcTag");
     jetPUIdAlgo_        = iConfig.getParameter<edm::ParameterSet>("jetPUIdAlgo");
 
-    SCFPRemovalCone_     = iConfig.getUntrackedParameter<double>("isolation_cone_size_forSCremoval");
+    SCFPRemovalConePho_     = iConfig.getUntrackedParameter<double>("isolation_cone_size_forSCremoval_pho");
+    SCFPRemovalConeEl_     = iConfig.getUntrackedParameter<double>("isolation_cone_size_forSCremoval_el");
 
     ebReducedRecHitCollection_ = iConfig.getParameter<edm::InputTag>("ebReducedRecHitCollection");
     eeReducedRecHitCollection_ = iConfig.getParameter<edm::InputTag>("eeReducedRecHitCollection");
@@ -119,15 +120,15 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         iEvent.getByLabel(inputTagIsoDepElectrons_[j], electronIsoDep[j]);
     }
 
-    //IsoDepositVals electronIsoValPFId03(nTypes);
+    IsoDepositVals electronIsoValPFId03(nTypes);
     IsoDepositVals electronIsoValPFId04(nTypes);
-    //const IsoDepositVals * electronIsoVals03 = &electronIsoValPFId03;
+    const IsoDepositVals * electronIsoVals03 = &electronIsoValPFId03;
     const IsoDepositVals * electronIsoVals04 = &electronIsoValPFId04;
 
-    //for (size_t j = 0; j<inputTagIsoValElectronsPFId_.size(); ++j) {
-    //  if (j < 3) iEvent.getByLabel(inputTagIsoValElectronsPFId_[j], electronIsoValPFId03[j]);
-    //  else iEvent.getByLabel(inputTagIsoValElectronsPFId_[j], electronIsoValPFId04[j-3]);
-    //}
+    for (size_t j = 0; j<inputTagIsoValElectronsPFId_.size(); ++j) {
+      if (j < 3) iEvent.getByLabel(inputTagIsoValElectronsPFId_[j], electronIsoValPFId03[j]);
+      else iEvent.getByLabel(inputTagIsoValElectronsPFId_[j], electronIsoValPFId04[j-3]);
+    }
 
 
     //////////////////////////
@@ -690,12 +691,12 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 
         eleIsolator.fGetIsolation(&(*iElectron), &thePfColl, myVtxRef, primaryVtcs);
-        eleCon->SetIdMap("phoIso_corr", eleIsolator.getIsolationCharged());
+        eleCon->SetIdMap("chIso_corr", eleIsolator.getIsolationCharged());
         eleCon->SetIdMap("neuIso_corr", eleIsolator.getIsolationNeutral());
-        eleCon->SetIdMap("chIso_corr",  eleIsolator.getIsolationPhoton());
+        eleCon->SetIdMap("phoIso_corr",  eleIsolator.getIsolationPhoton());
 
         // Access PF isolation
-        reco::GsfElectronRef myElectronRef(electrons,eee);
+        reco::GsfElectronRef myElectronRef(electrons,eee-1);
 
         //elePFChIso03_  .push_back((*(*electronIsoVals03)[0])[recoEleRef]);
         //elePFPhoIso03_ .push_back((*(*electronIsoVals03)[1])[recoEleRef]);
@@ -707,15 +708,16 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
         //Footprint removal
         edm::ParameterSet myConfig;
-        myConfig.addUntrackedParameter("isolation_cone_size_forSCremoval",SCFPRemovalCone_);
+        myConfig.addUntrackedParameter("isolation_cone_size_forSCremoval",SCFPRemovalConeEl_);
         SuperClusterFootprintRemoval remover(iEvent,iSetup,myConfig);
         PFIsolation_struct mySCFPstruct = remover.PFIsolation(iElectron->superCluster(),edm::Ptr<Vertex>(primaryVtcs, 0));
-        eleCon->SetPfIsoCharged(mySCFPstruct.photoniso);
+        eleCon->SetPfIsoCharged(mySCFPstruct.chargediso);
         eleCon->SetPfIsoNeutral(mySCFPstruct.neutraliso);
-        eleCon->SetPfIsoPhoton(mySCFPstruct.chargediso);
+        eleCon->SetPfIsoPhoton(mySCFPstruct.photoniso);
 
-        //cout<<"old pf Photon: "<<eleIsolator.getIsolationPhoton()<<" new pf Photon: "<< mySCFPstruct.photoniso << ", " << iElectron->pt() << endl;
+        //cout<<"event\n"<<"old pfcharge: "<<eleIsolator.getIsolationCharged()<<" new pfcharge: "<<mySCFPstruct.chargediso<<"\nold pfneutral: "<<eleIsolator.getIsolationNeutral()<<" new pfneutral: "<<mySCFPstruct.neutraliso<<"\nold pfphoton: "<<eleIsolator.getIsolationPhoton()<<" new pfphoton: "<<mySCFPstruct.photoniso<<"\n"<<endl;
 
+        //cout<<(*(*electronIsoVals04)[1])[myElectronRef]<<endl;
 
         eleCount++;
     }
@@ -920,7 +922,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
         //Footprint removal
         edm::ParameterSet myConfig;
-        myConfig.addUntrackedParameter("isolation_cone_size_forSCremoval",SCFPRemovalCone_);
+        myConfig.addUntrackedParameter("isolation_cone_size_forSCremoval",SCFPRemovalConePho_);
         SuperClusterFootprintRemoval remover(iEvent,iSetup,myConfig);
         PFIsolation_struct mySCFPstruct = remover.PFIsolation(iPhoton->superCluster(),edm::Ptr<Vertex>(primaryVtcs, 0));
         /*

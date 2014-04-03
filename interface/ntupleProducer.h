@@ -280,7 +280,8 @@ class ntupleProducer : public edm::EDAnalyzer {
   bool verboseTrigs;
   bool verboseMVAs;
   bool saveTriggerObj_;
-  double SCFPRemovalCone_;
+  double SCFPRemovalConePho_;
+  double SCFPRemovalConeEl_;
   
   //Physics object containers
   TClonesArray* recoJets;

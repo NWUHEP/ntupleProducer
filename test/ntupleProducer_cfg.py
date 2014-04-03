@@ -390,7 +390,8 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
   #for SC footprint removal
 
-  isolation_cone_size_forSCremoval = cms.untracked.double(0.3),
+  isolation_cone_size_forSCremoval_pho = cms.untracked.double(0.3),
+  isolation_cone_size_forSCremoval_el = cms.untracked.double(0.4),
 
   #for Ecal LazyTools and photon items
   ebReducedRecHitCollection = cms.InputTag("reducedEcalRecHitsEB"),
@@ -467,14 +468,14 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                )
                                           )
 
+process.eleIso = cms.Sequence(process.pfParticleSelectionSequence+process.eleIsoSequence)
+
 process.preNtuple = cms.Sequence(
     process.goodOfflinePrimaryVertices
-    * process.pfParticleSelectionSequence
     * process.correctionTermsPfMetType1Type2
     * process.correctionTermsPfMetType0PFCandidate
     * process.correctionTermsPfMetShiftXY
     * process.pfMetT0pcT1Txy
-    #    * process.pfNoPUSeq
     * process.kt6PFJetsIso
     * process.ak5PFJetsL1FastL2L3
     * process.ak5JetTracksAssociatorAtVertex
@@ -486,7 +487,6 @@ process.preNtuple = cms.Sequence(
     * process.mvaTrigV0
     * process.mvaNonTrigV0
 
-    * process.eleIsoSequence
     * process.heepIdNoIso
     * process.heepIdNoIsoEles
     * process.modElectronIso
@@ -495,9 +495,9 @@ process.preNtuple = cms.Sequence(
 process.JetMC = cms.Sequence(process.myPartons * process.JetFlavour)
 
 if isRealData:
-    process.ntuplePath = cms.Path(process.preNtuple * process.ntupleProducer)
+    process.ntuplePath = cms.Path(process.eleIso * process.preNtuple * process.ntupleProducer)
 else:
-    process.ntuplePath = cms.Path(process.preNtuple * process.JetMC * process.ntupleProducer)
+    process.ntuplePath = cms.Path(process.eleIso * process.preNtuple * process.JetMC * process.ntupleProducer)
 
 #process.out = cms.OutputModule("PoolOutputModule",
 #                               fileName = cms.untracked.string('/tmp/myTuple.root'),
