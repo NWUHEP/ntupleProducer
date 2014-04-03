@@ -649,11 +649,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         eleCon->SetIdMap("dr03HcalTowerSumEt",  iElectron->dr03HcalTowerSumEt());
         eleCon->SetIdMap("gsf_numberOfLostHits",iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfLostHits());
 
-        eleIsolator.fGetIsolation(&(*iElectron), &thePfColl, myVtxRef, primaryVtcs);
-        eleCon->SetIdMap("Iso_pfCh_R04", eleIsolator.getIsolationCharged());
-        eleCon->SetIdMap("Iso_pfNeu_R04",eleIsolator.getIsolationNeutral());
-        eleCon->SetIdMap("Iso_pfPho_R04",eleIsolator.getIsolationPhoton());
-
         // Effective area for rho PU corrections (not sure if needed)
         float AEff03 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso03, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
         float AEff04 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso04, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
@@ -695,9 +690,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 
         eleIsolator.fGetIsolation(&(*iElectron), &thePfColl, myVtxRef, primaryVtcs);
-        eleCon->SetPfIsoCharged(eleIsolator.getIsolationCharged());
-        eleCon->SetPfIsoNeutral(eleIsolator.getIsolationNeutral());
-        eleCon->SetPfIsoPhoton( eleIsolator.getIsolationPhoton());
+        eleCon->SetIdMap("phoIso_corr", eleIsolator.getIsolationCharged());
+        eleCon->SetIdMap("neuIso_corr", eleIsolator.getIsolationNeutral());
+        eleCon->SetIdMap("chIso_corr",  eleIsolator.getIsolationPhoton());
 
         // Access PF isolation
         reco::GsfElectronRef myElectronRef(electrons,eee);
@@ -710,8 +705,16 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         //elePFPhoIso04_ .push_back((*(*electronIsoVals04)[1])[recoEleRef]);
         //elePFNeuIso04_ .push_back((*(*electronIsoVals04)[2])[recoEleRef]);
 
-        cout<<"segFault?"<<endl;
-        cout<<"old pf Photon: "<<eleIsolator.getIsolationPhoton()<<" new pf Photon: "<< (*(*electronIsoVals04)[1]) << endl; //[myElectronRef]<<endl;
+        //Footprint removal
+        edm::ParameterSet myConfig;
+        myConfig.addUntrackedParameter("isolation_cone_size_forSCremoval",SCFPRemovalCone_);
+        SuperClusterFootprintRemoval remover(iEvent,iSetup,myConfig);
+        PFIsolation_struct mySCFPstruct = remover.PFIsolation(iElectron->superCluster(),edm::Ptr<Vertex>(primaryVtcs, 0));
+        eleCon->SetPfIsoCharged(mySCFPstruct.photoniso);
+        eleCon->SetPfIsoNeutral(mySCFPstruct.neutraliso);
+        eleCon->SetPfIsoPhoton(mySCFPstruct.chargediso);
+
+        //cout<<"old pf Photon: "<<eleIsolator.getIsolationPhoton()<<" new pf Photon: "<< mySCFPstruct.photoniso << ", " << iElectron->pt() << endl;
 
 
         eleCount++;
