@@ -41,7 +41,7 @@ ntupleProducer::ntupleProducer(const edm::ParameterSet& iConfig):
     photonIsoCalcTag_   = iConfig.getParameter<edm::ParameterSet>("photonIsoCalcTag");
     jetPUIdAlgo_        = iConfig.getParameter<edm::ParameterSet>("jetPUIdAlgo");
 
-    SCFPRemovalConePho_     = iConfig.getUntrackedParameter<double>("isolation_cone_size_forSCremoval_pho");
+    SCFPRemovalConePho_    = iConfig.getUntrackedParameter<double>("isolation_cone_size_forSCremoval_pho");
     SCFPRemovalConeEl_     = iConfig.getUntrackedParameter<double>("isolation_cone_size_forSCremoval_el");
 
     ebReducedRecHitCollection_ = iConfig.getParameter<edm::InputTag>("ebReducedRecHitCollection");
@@ -134,6 +134,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 
     // get the iso deposits. 3 (charged hadrons, photons, neutral hadrons)
+    /* This is stupid, don't need that
     unsigned nTypes=3;
     IsoDepositMaps electronIsoDep(nTypes);
 
@@ -149,6 +150,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       iEvent.getByLabel(inputTagIsoValElectronsPFId_[j], electronIsoValPFId[j]);
     }
 
+    */
 
     //////////////////////////
     //Get vertex information//
@@ -469,6 +471,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     iEvent.getByLabel(edm::InputTag("eleRegressionEnergy","eneErrorRegForGsfEle"), regErr_handle);
     const edm::ValueMap<double> ele_regErr = (*regErr_handle.product());
 
+
+
     // DO NOT delete it yet, it maybe useful later for Dalitz electron isolation
     //This stuff is for modified isolation for close electrons,
     //following prescription here: https://twiki.cern.ch/twiki/bin/viewauth/CMS/BoostedZToEEModIso
@@ -482,6 +486,20 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     const edm::ValueMap<double> modElectronIso_Ecal   = (*h_modElectronIso_Ecal.product());
     const edm::ValueMap<double> modElectronIso_HcalD1 = (*h_modElectronIso_HcalD1.product());
 
+
+    // These are the Value Maps for Iso deposits:
+
+    edm::Handle<edm::ValueMap<double>> iso_charged_handle;
+    iEvent.getByLabel(edm::InputTag("elPFIsoValueCharged03PFIdPFIso",""), iso_charged_handle);
+    const edm::ValueMap<double> ele_iso_charged = (*iso_charged_handle.product());
+
+    edm::Handle<edm::ValueMap<double>> iso_gamma_handle;
+    iEvent.getByLabel(edm::InputTag("elPFIsoValueGamma03PFIdPFIso",""), iso_gamma_handle);
+    const edm::ValueMap<double> ele_iso_gamma = (*iso_gamma_handle.product());
+
+    edm::Handle<edm::ValueMap<double>> iso_neutral_handle;
+    iEvent.getByLabel(edm::InputTag("elPFIsoValueNeutral03PFIdPFIso",""), iso_neutral_handle);
+    const edm::ValueMap<double> ele_iso_neutral = (*iso_neutral_handle.product());
 
     Int_t eee=0;
     for (vector<reco::GsfElectron>::const_iterator iElectron = electrons->begin(); iElectron != electrons->end(); ++iElectron) {
@@ -710,25 +728,19 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 
         eleIsolator.fGetIsolation(&(*iElectron), &thePfColl, myVtxRef, primaryVtcs);
-        eleCon->SetIdMap("chIso_corr", eleIsolator.getIsolationCharged());
+        eleCon->SetIdMap("chIso_corr",  eleIsolator.getIsolationCharged());
         eleCon->SetIdMap("neuIso_corr", eleIsolator.getIsolationNeutral());
-        eleCon->SetIdMap("phoIso_corr",  eleIsolator.getIsolationPhoton());
+        eleCon->SetIdMap("phoIso_corr", eleIsolator.getIsolationPhoton());
 
         // Access PF isolation
-        reco::GsfElectronRef myElectronRef(gsfElectronHandle_,eee-1);
+        //reco::GsfElectronRef myElectronRef(gsfElectronHandle_,eee-1);
 
-        double charged =  (*(*electronIsoVals)[0])[myElectronRef];
-        double photon = (*(*electronIsoVals)[1])[myElectronRef];
-        double neutral = (*(*electronIsoVals)[2])[myElectronRef];
-        cout<<charged<<endl;
+        double iso_charged = ele_iso_charged.get(eee-1);
+        double iso_gamma   = ele_iso_gamma.get(eee-1);
+        double iso_neutral = ele_iso_neutral.get(eee-1);
+        cout<<"Electron isolation printout for electron # "<<eee-1<<"   pt ="<<iElectron->pt()<<endl;
+        cout<<"charged = "<<iso_charged<<"\t gamma = "<<iso_gamma<<"\t neutral = "<<iso_neutral<<endl;
 
-        //elePFChIso03_  .push_back((*(*electronIsoVals03)[0])[recoEleRef]);
-        //elePFPhoIso03_ .push_back((*(*electronIsoVals03)[1])[recoEleRef]);
-        //elePFNeuIso03_ .push_back((*(*electronIsoVals03)[2])[recoEleRef]);
-
-        //elePFChIso04_  .push_back((*(*electronIsoVals04)[0])[recoEleRef]);
-        //elePFPhoIso04_ .push_back((*(*electronIsoVals04)[1])[recoEleRef]);
-        //elePFNeuIso04_ .push_back((*(*electronIsoVals04)[2])[recoEleRef]);
 
         //Footprint removal
         edm::ParameterSet myConfig;
