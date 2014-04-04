@@ -716,8 +716,15 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         eleCon->SetPfIsoPhoton(mySCFPstruct.photoniso);
 
         //cout<<"event\n"<<"old pfcharge: "<<eleIsolator.getIsolationCharged()<<" new pfcharge: "<<mySCFPstruct.chargediso<<"\nold pfneutral: "<<eleIsolator.getIsolationNeutral()<<" new pfneutral: "<<mySCFPstruct.neutraliso<<"\nold pfphoton: "<<eleIsolator.getIsolationPhoton()<<" new pfphoton: "<<mySCFPstruct.photoniso<<"\n"<<endl;
+        cout<<"event\n"<<"old pfcharge: "<<eleIsolator.getIsolationCharged()<<" new pfcharge: "<<iElectron->dr04IsolationVariables().sumChargedParticlePt<<"\nold pfneutral: "<<eleIsolator.getIsolationNeutral()<<" new pfneutral: "<<mySCFPstruct.neutraliso<<"\nold pfphoton: "<<eleIsolator.getIsolationPhoton()<<" new pfphoton: "<<mySCFPstruct.photoniso<<"\n"<<endl;
 
         //cout<<(*(*electronIsoVals04)[1])[myElectronRef]<<endl;
+        //iMuon->pfIsolationR04().sumPhotonEt
+        //muCon->SetPfIsoPU(iMuon->pfIsolationR04().sumPUPt);
+        //muCon->SetPfIsoChargedPart(iMuon->pfIsolationR04().sumChargedParticlePt);
+        //muCon->SetPfIsoChargedHad( iMuon->pfIsolationR04().sumChargedHadronPt);
+        //muCon->SetPfIsoNeutral(iMuon->pfIsolationR04().sumNeutralHadronEt);
+        //muCon->SetPfIsoPhoton( iMuon->pfIsolationR04().sumPhotonEt);
 
         eleCount++;
     }

@@ -40,6 +40,11 @@ every time when checkout from CVS. It is inconveniet, but we have to live with i
 ```
   git cms-addpkg RecoEcal/EgammaCoreTools
 ```
+ 
+ * Tools for recommended Electron Iso [EgammaPFBasedIsolation][12]
+```
+  git-cms-addpkg CommonTools/ParticleFlow
+```
 
  * Egamma tools from [MVA Electron ID][5]:
 ```
@@ -217,3 +222,4 @@ If the new code significantly changes the format of the ntuples (substantial cha
 [9]: https://twiki.cern.ch/twiki/bin/viewauth/CMS/PileupJetID
 [10]: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideCrab
 [11]: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideMultiCrab
+[12]: https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaPFBasedIsolation#Computing_the_isolation_in_CMSSW 
