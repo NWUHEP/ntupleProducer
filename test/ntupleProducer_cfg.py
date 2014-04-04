@@ -270,7 +270,7 @@ process.TFileService = cms.Service('TFileService',
                                    )
 # Electron Iso Stuff
 # PF isolations for electronss
-from CommonTools.ParticleFlow.Tools.pfIsolation import setupPFElectronIso, setupPFPhotonIso
+from CommonTools.ParticleFlow.Tools.pfIsolation import setupPFElectronIso
 process.eleIsoSequence = setupPFElectronIso(process, 'gsfElectrons')
 
 ### pfNoPU Sequence for electron MVA
@@ -407,10 +407,10 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   IsoValElectronPF = cms.VInputTag(
     cms.InputTag('elPFIsoValueCharged03PFIdPFIso'),
     cms.InputTag('elPFIsoValueGamma03PFIdPFIso'),
-    cms.InputTag('elPFIsoValueNeutral03PFIdPFIso'),
-    cms.InputTag('elPFIsoValueCharged04PFIdPFIso'),
-    cms.InputTag('elPFIsoValueGamma04PFIdPFIso'),
-    cms.InputTag('elPFIsoValueNeutral04PFIdPFIso')),
+    cms.InputTag('elPFIsoValueNeutral03PFIdPFIso')),
+  #cms.InputTag('elPFIsoValueCharged04PFIdPFIso'),
+  #  cms.InputTag('elPFIsoValueGamma04PFIdPFIso'),
+   # cms.InputTag('elPFIsoValueNeutral04PFIdPFIso')),
 
   #Trigger stuff
 
@@ -468,7 +468,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                )
                                           )
 
-process.eleIso = cms.Sequence(process.pfParticleSelectionSequence+process.eleIsoSequence)
+process.eleIso = cms.Sequence(process.pfParticleSelectionSequence*process.eleIsoSequence)
 
 process.preNtuple = cms.Sequence(
     process.goodOfflinePrimaryVertices
@@ -495,9 +495,9 @@ process.preNtuple = cms.Sequence(
 process.JetMC = cms.Sequence(process.myPartons * process.JetFlavour)
 
 if isRealData:
-    process.ntuplePath = cms.Path(process.eleIso * process.preNtuple * process.ntupleProducer)
+    process.ntuplePath = cms.Path(process.preNtuple * process.eleIso * process.ntupleProducer)
 else:
-    process.ntuplePath = cms.Path(process.eleIso * process.preNtuple * process.JetMC * process.ntupleProducer)
+    process.ntuplePath = cms.Path(process.preNtuple * process.JetMC * process.eleIso * process.ntupleProducer)
 
 #process.out = cms.OutputModule("PoolOutputModule",
 #                               fileName = cms.untracked.string('/tmp/myTuple.root'),
