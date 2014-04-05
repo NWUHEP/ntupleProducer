@@ -273,25 +273,6 @@ process.TFileService = cms.Service('TFileService',
 from CommonTools.ParticleFlow.Tools.pfIsolation import setupPFElectronIso
 process.eleIsoSequence = setupPFElectronIso(process, 'gsfElectrons')
 
-### pfNoPU Sequence for electron MVA
-#process.pfPileUp = cms.EDProducer("PFPileUp",
-#    PFCandidates = cms.InputTag("particleFlow"),
-#    Enable = cms.bool(True),
-#    checkClosestZVertex = cms.bool(True),
-#    verbose = cms.untracked.bool(False),
-#    Vertices = cms.InputTag("offlinePrimaryVertices")
-#)
-
-#process.pfNoPileUp = cms.EDProducer("TPPFCandidatesOnPFCandidates",
-#    bottomCollection = cms.InputTag("particleFlow"),
-#    enable = cms.bool(True),
-#    topCollection = cms.InputTag("pfPileUp"),
-#    name = cms.untracked.string('pileUpOnPFCandidates'),
-#    verbose = cms.untracked.bool(False)
-#)
-
-#process.pfNoPUSeq = cms.Sequence(process.pfPileUp + process.pfNoPileUp)
-
 
 
 ############################
@@ -408,7 +389,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
  #   cms.InputTag('elPFIsoValueCharged03PFIdPFIso'),
  #   cms.InputTag('elPFIsoValueGamma03PFIdPFIso'),
  #   cms.InputTag('elPFIsoValueNeutral03PFIdPFIso')),
-                  
+
   #cms.InputTag('elPFIsoValueCharged04PFIdPFIso'),
   #  cms.InputTag('elPFIsoValueGamma04PFIdPFIso'),
    # cms.InputTag('elPFIsoValueNeutral04PFIdPFIso')),
