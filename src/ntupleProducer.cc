@@ -111,47 +111,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     cicPhotonId_->configure(recVtxsBS_, tracksHandle_, gsfElectronHandle_, pfCands, rhoFactor);
 
-    //configure electron PF Iso setup
-
-    // get the iso deposits. 3 (charged hadrons, photons, neutral hadrons)                                                                   
-    /*
-    unsigned nTypes=3;
-    IsoDepositMaps electronIsoDep(nTypes);
-    for (size_t j = 0; j<inputTagIsoDepElectrons_.size(); ++j) {
-        iEvent.getByLabel(inputTagIsoDepElectrons_[j], electronIsoDep[j]);
-    }
-
-    IsoDepositVals electronIsoValPFId03(nTypes);
-    IsoDepositVals electronIsoValPFId04(nTypes);
-    const IsoDepositVals * electronIsoVals03 = &electronIsoValPFId03;
-    const IsoDepositVals * electronIsoVals04 = &electronIsoValPFId04;
-
-    for (size_t j = 0; j<inputTagIsoValElectronsPFId_.size(); ++j) {
-      if (j < 3) iEvent.getByLabel(inputTagIsoValElectronsPFId_[j], electronIsoValPFId03[j]);
-      else iEvent.getByLabel(inputTagIsoValElectronsPFId_[j], electronIsoValPFId04[j-3]);
-    }
-    */
-
-
-    // get the iso deposits. 3 (charged hadrons, photons, neutral hadrons)
-    /* This is stupid, don't need that
-    unsigned nTypes=3;
-    IsoDepositMaps electronIsoDep(nTypes);
-
-    for (size_t j = 0; j<inputTagIsoDepElectrons_.size(); ++j) {
-      iEvent.getByLabel(inputTagIsoDepElectrons_[j], electronIsoDep[j]);
-    }
-
-    IsoDepositVals electronIsoValPFId(nTypes);
-    // just renaming
-    const IsoDepositVals * electronIsoVals = &electronIsoValPFId;
-
-    for (size_t j = 0; j<inputTagIsoValElectronsPFId_.size(); ++j) {
-      iEvent.getByLabel(inputTagIsoValElectronsPFId_[j], electronIsoValPFId[j]);
-    }
-
-    */
-
     //////////////////////////
     //Get vertex information//
     //////////////////////////
@@ -490,15 +449,15 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     // These are the Value Maps for Iso deposits:
 
     edm::Handle<edm::ValueMap<double>> iso_charged_handle;
-    iEvent.getByLabel(edm::InputTag("elPFIsoValueCharged03PFIdPFIso",""), iso_charged_handle);
+    iEvent.getByLabel(edm::InputTag("elPFIsoValueCharged04PFIdPFIso",""), iso_charged_handle);
     const edm::ValueMap<double> ele_iso_charged = (*iso_charged_handle.product());
 
     edm::Handle<edm::ValueMap<double>> iso_gamma_handle;
-    iEvent.getByLabel(edm::InputTag("elPFIsoValueGamma03PFIdPFIso",""), iso_gamma_handle);
+    iEvent.getByLabel(edm::InputTag("elPFIsoValueGamma04PFIdPFIso",""), iso_gamma_handle);
     const edm::ValueMap<double> ele_iso_gamma = (*iso_gamma_handle.product());
 
     edm::Handle<edm::ValueMap<double>> iso_neutral_handle;
-    iEvent.getByLabel(edm::InputTag("elPFIsoValueNeutral03PFIdPFIso",""), iso_neutral_handle);
+    iEvent.getByLabel(edm::InputTag("elPFIsoValueNeutral04PFIdPFIso",""), iso_neutral_handle);
     const edm::ValueMap<double> ele_iso_neutral = (*iso_neutral_handle.product());
 
     Int_t eee=0;
@@ -738,8 +697,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         double iso_charged = ele_iso_charged.get(eee-1);
         double iso_gamma   = ele_iso_gamma.get(eee-1);
         double iso_neutral = ele_iso_neutral.get(eee-1);
-        cout<<"Electron isolation printout for electron # "<<eee-1<<"   pt ="<<iElectron->pt()<<endl;
-        cout<<"charged = "<<iso_charged<<"\t gamma = "<<iso_gamma<<"\t neutral = "<<iso_neutral<<endl;
 
 
         //Footprint removal
@@ -751,16 +708,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         eleCon->SetPfIsoNeutral(mySCFPstruct.neutraliso);
         eleCon->SetPfIsoPhoton(mySCFPstruct.photoniso);
 
-        //cout<<"event\n"<<"old pfcharge: "<<eleIsolator.getIsolationCharged()<<" new pfcharge: "<<mySCFPstruct.chargediso<<"\nold pfneutral: "<<eleIsolator.getIsolationNeutral()<<" new pfneutral: "<<mySCFPstruct.neutraliso<<"\nold pfphoton: "<<eleIsolator.getIsolationPhoton()<<" new pfphoton: "<<mySCFPstruct.photoniso<<"\n"<<endl;
-        //cout<<"event\n"<<"old pfcharge: "<<eleIsolator.getIsolationCharged()<<" new pfcharge: "<<iElectron->dr04IsolationVariables().sumChargedParticlePt<<"\nold pfneutral: "<<eleIsolator.getIsolationNeutral()<<" new pfneutral: "<<mySCFPstruct.neutraliso<<"\nold pfphoton: "<<eleIsolator.getIsolationPhoton()<<" new pfphoton: "<<mySCFPstruct.photoniso<<"\n"<<endl;
+        cout<<"Electron isolation printout for electron # "<<eee-1<<"   pt ="<<iElectron->pt()<<endl;
+        cout<<"old charged = "<<eleIsolator.getIsolationCharged()<<"\t gamma = "<<eleIsolator.getIsolationPhoton()<<"\t neutral = "<<eleIsolator.getIsolationNeutral()<<endl;
+        cout<<"new charged = "<<iso_charged<<"\t gamma = "<<iso_gamma<<"\t neutral = "<<iso_neutral<<endl;
+        cout<<"alt charged = "<<mySCFPstruct.chargediso<<"\t gamma = "<<mySCFPstruct.photoniso<<"\t neutral = "<<mySCFPstruct.neutraliso<<endl;
 
-        //cout<<(*(*electronIsoVals04)[1])[myElectronRef]<<endl;
-        //iMuon->pfIsolationR04().sumPhotonEt
-        //muCon->SetPfIsoPU(iMuon->pfIsolationR04().sumPUPt);
-        //muCon->SetPfIsoChargedPart(iMuon->pfIsolationR04().sumChargedParticlePt);
-        //muCon->SetPfIsoChargedHad( iMuon->pfIsolationR04().sumChargedHadronPt);
-        //muCon->SetPfIsoNeutral(iMuon->pfIsolationR04().sumNeutralHadronEt);
-        //muCon->SetPfIsoPhoton( iMuon->pfIsolationR04().sumPhotonEt);
 
         eleCount++;
     }
