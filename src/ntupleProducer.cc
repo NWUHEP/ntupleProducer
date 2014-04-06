@@ -687,16 +687,19 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
 
         eleIsolator.fGetIsolation(&(*iElectron), &thePfColl, myVtxRef, primaryVtcs);
-        eleCon->SetIdMap("chIso_corr",  eleIsolator.getIsolationCharged());
-        eleCon->SetIdMap("neuIso_corr", eleIsolator.getIsolationNeutral());
-        eleCon->SetIdMap("phoIso_corr", eleIsolator.getIsolationPhoton());
+        eleCon->SetIdMap("chIso_old",  eleIsolator.getIsolationCharged());
+        eleCon->SetIdMap("neuIso_old", eleIsolator.getIsolationNeutral());
+        eleCon->SetIdMap("phoIso_old", eleIsolator.getIsolationPhoton());
 
         // Access PF isolation
         //reco::GsfElectronRef myElectronRef(gsfElectronHandle_,eee-1);
 
         double iso_charged = ele_iso_charged.get(eee-1);
-        double iso_gamma   = ele_iso_gamma.get(eee-1);
         double iso_neutral = ele_iso_neutral.get(eee-1);
+        double iso_gamma   = ele_iso_gamma.get(eee-1);
+        eleCon->SetIdMap("chIso_new",  iso_charged);
+        eleCon->SetIdMap("neuIso_new", iso_neutral);
+        eleCon->SetIdMap("phoIso_new", iso_gamma);
 
 
         //Footprint removal
@@ -708,10 +711,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         eleCon->SetPfIsoNeutral(mySCFPstruct.neutraliso);
         eleCon->SetPfIsoPhoton(mySCFPstruct.photoniso);
 
-        cout<<"Electron isolation printout for electron # "<<eee-1<<"   pt ="<<iElectron->pt()<<endl;
-        cout<<"old charged = "<<eleIsolator.getIsolationCharged()<<"\t gamma = "<<eleIsolator.getIsolationPhoton()<<"\t neutral = "<<eleIsolator.getIsolationNeutral()<<endl;
-        cout<<"new charged = "<<iso_charged<<"\t gamma = "<<iso_gamma<<"\t neutral = "<<iso_neutral<<endl;
-        cout<<"alt charged = "<<mySCFPstruct.chargediso<<"\t gamma = "<<mySCFPstruct.photoniso<<"\t neutral = "<<mySCFPstruct.neutraliso<<endl;
+        //cout<<"Electron isolation printout for electron # "<<eee-1<<"   pt ="<<iElectron->pt()<<endl;
+        //cout<<"old charged = "<<eleIsolator.getIsolationCharged()<<"\t gamma = "<<eleIsolator.getIsolationPhoton()<<"\t neutral = "<<eleIsolator.getIsolationNeutral()<<endl;
+        //cout<<"new charged = "<<iso_charged<<"\t gamma = "<<iso_gamma<<"\t neutral = "<<iso_neutral<<endl;
+        //cout<<"alt charged = "<<mySCFPstruct.chargediso<<"\t gamma = "<<mySCFPstruct.photoniso<<"\t neutral = "<<mySCFPstruct.neutraliso<<endl;
 
 
         eleCount++;
