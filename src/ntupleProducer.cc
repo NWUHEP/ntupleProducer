@@ -248,12 +248,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         jetCon->SetBetaStarClassic(puIdentifier.betaStarClassic());
         jetCon->SetDR2Mean(puIdentifier.dR2Mean());
 
-        /////////////////////////
-        // Associate to vertex //
-        /////////////////////////
-
-        associateJetToVertex(*iJet, primaryVtcs, jetCon);
-
         ++jetCount;
     }
 
@@ -646,7 +640,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         eleCon->SetIdMap("dr03HcalTowerSumEt",  iElectron->dr03HcalTowerSumEt());
         eleCon->SetIdMap("gsf_numberOfLostHits",iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfLostHits());
 
-        // Effective area for rho PU corrections (not sure if needed)
+        // Effective area for rho PU corrections 
         float AEff03 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso03, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
         float AEff04 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso04, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
         eleCon->SetIdMap("EffArea_R03", AEff03);
@@ -685,36 +679,39 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         tmpP4.SetPtEtaPhiE(iElectronTmp.pt(), iElectronTmp.eta(), iElectronTmp.phi(), iElectronTmp.energy());
         eleCon->SetRegressionMomCombP4(tmpP4);
 
+        //3 types of Pf Iso
 
+        // 1 PFIsolationEstimator
         eleIsolator.fGetIsolation(&(*iElectron), &thePfColl, myVtxRef, primaryVtcs);
-        eleCon->SetIdMap("chIso_old",  eleIsolator.getIsolationCharged());
-        eleCon->SetIdMap("neuIso_old", eleIsolator.getIsolationNeutral());
-        eleCon->SetIdMap("phoIso_old", eleIsolator.getIsolationPhoton());
 
-        // Access PF isolation
-        //reco::GsfElectronRef myElectronRef(gsfElectronHandle_,eee-1);
-
+        // 2 CommonTools/ParticleFlow
         double iso_charged = ele_iso_charged.get(eee-1);
         double iso_neutral = ele_iso_neutral.get(eee-1);
         double iso_gamma   = ele_iso_gamma.get(eee-1);
-        eleCon->SetIdMap("chIso_new",  iso_charged);
-        eleCon->SetIdMap("neuIso_new", iso_neutral);
-        eleCon->SetIdMap("phoIso_new", iso_gamma);
 
-
-        //Footprint removal
+        // 3 SCFootprint removal
         edm::ParameterSet myConfig;
         myConfig.addUntrackedParameter("isolation_cone_size_forSCremoval",SCFPRemovalConeEl_);
         SuperClusterFootprintRemoval remover(iEvent,iSetup,myConfig);
         PFIsolation_struct mySCFPstruct = remover.PFIsolation(iElectron->superCluster(),edm::Ptr<Vertex>(primaryVtcs, 0));
-        eleCon->SetPfIsoCharged(mySCFPstruct.chargediso);
-        eleCon->SetPfIsoNeutral(mySCFPstruct.neutraliso);
-        eleCon->SetPfIsoPhoton(mySCFPstruct.photoniso);
 
         //cout<<"Electron isolation printout for electron # "<<eee-1<<"   pt ="<<iElectron->pt()<<endl;
         //cout<<"old charged = "<<eleIsolator.getIsolationCharged()<<"\t gamma = "<<eleIsolator.getIsolationPhoton()<<"\t neutral = "<<eleIsolator.getIsolationNeutral()<<endl;
         //cout<<"new charged = "<<iso_charged<<"\t gamma = "<<iso_gamma<<"\t neutral = "<<iso_neutral<<endl;
         //cout<<"alt charged = "<<mySCFPstruct.chargediso<<"\t gamma = "<<mySCFPstruct.photoniso<<"\t neutral = "<<mySCFPstruct.neutraliso<<endl;
+
+        eleCon->SetPfIsoCharged(eleIsolator.getIsolationCharged());
+        eleCon->SetPfIsoNeutral(eleIsolator.getIsolationNeutral());
+        eleCon->SetPfIsoPhoton(eleIsolator.getIsolationPhoton());
+
+        eleCon->SetIdMap("chIso_std",  iso_charged);
+        eleCon->SetIdMap("neuIso_std", iso_neutral);
+        eleCon->SetIdMap("phoIso_std", iso_gamma);
+
+        eleCon->SetIdMap("chIso_scfp", mySCFPstruct.chargediso);
+        eleCon->SetIdMap("neuIso_scfp", mySCFPstruct.neutraliso);
+        eleCon->SetIdMap("phoIso_scfp", mySCFPstruct.photoniso);
+
 
 
         eleCount++;
@@ -1350,104 +1347,6 @@ bool ntupleProducer::isFilteredOutScraping( const edm::Event& iEvent, const edm:
     }
     return !accepted;  //if filtered out it's not accepted.
 }
-
-
-bool ntupleProducer::associateJetToVertex(reco::PFJet inJet, Handle<reco::VertexCollection> vtxCollection, TCJet *outJet)
-{
-    if(fabs(inJet.eta()) > 2.5){
-        outJet->SetVtxSumPtFrac(-1);
-        outJet->SetVtxSumPt(-1);
-        outJet->SetVtxTrackFrac(-1);
-        outJet->SetVtxNTracks(-1);
-        outJet->SetVtxSumPtIndex(0);
-        outJet->SetVtxCountIndex(0);
-
-        return false;
-    }
-
-    vector<float>  associatedTrackSumPt;
-    vector<float>  associatedTrackCount;
-    vector<const reco::Track*> jetTracks;
-    float sumTrackX, sumTrackY, sumTrackZ, sumTrackPt;
-    int   nJetTracks = 0;
-    int   vCount = 0;
-
-    sumTrackX = sumTrackY = sumTrackZ  = sumTrackPt = 0;
-
-    //const reco::TrackRefVector &tracks = inJet.associatedTracks();
-    const reco::TrackRefVector &tracks = inJet.getTrackRefs();
-
-    for (TrackRefVector::const_iterator iTrack = tracks.begin(); iTrack != tracks.end(); ++iTrack) {
-        const reco::Track &jetTrack = **iTrack;
-
-        sumTrackPt += jetTrack.pt();
-        sumTrackX  += jetTrack.vx();
-        sumTrackY  += jetTrack.vy();
-        sumTrackZ  += jetTrack.vz();
-        jetTracks.push_back(&jetTrack);
-        ++nJetTracks;
-    }
-
-    if(jetTracks.size() == 0){
-        outJet->SetVtxSumPtFrac(-1);
-        outJet->SetVtxSumPt(0);
-        outJet->SetVtxTrackFrac(-1);
-        outJet->SetVtxNTracks(0);
-        outJet->SetVtxSumPtIndex(0);
-        outJet->SetVtxCountIndex(0);
-        outJet->SetVtx(0., 0., 0.);
-    } else {
-        outJet->SetVtx(sumTrackX/nJetTracks, sumTrackY/nJetTracks, sumTrackZ/nJetTracks);
-
-        for (VertexCollection::const_iterator iVtx = vtxCollection->begin(); iVtx!= vtxCollection->end(); ++iVtx) {
-            reco::Vertex myVtx = reco::Vertex(*iVtx);
-            if(!myVtx.isValid() || myVtx.isFake()) continue;
-            associatedTrackSumPt.push_back(0);
-            associatedTrackCount.push_back(0);
-
-            for(Vertex::trackRef_iterator iTrackRef = myVtx.tracks_begin(); iTrackRef != myVtx.tracks_end(); ++iTrackRef){
-                const edm::RefToBase<reco::Track> &myTrackRef = *iTrackRef;
-
-                if(myTrackRef.isAvailable()){
-                    const reco::Track &myVertexTrack = *myTrackRef.get();
-
-                    for(vector<const reco::Track*>::const_iterator iTrack = jetTracks.begin(); iTrack != jetTracks.end(); ++iTrack){
-                        if (*iTrack == &myVertexTrack) {
-                            associatedTrackSumPt.at(vCount) += myVertexTrack.pt()/sumTrackPt;
-                            associatedTrackCount.at(vCount) += 1/nJetTracks;
-                        }
-                    }
-                }
-            }
-            ++vCount;
-        }
-
-        float maxSumPtFraction = 0; float maxCountFraction = 0;
-        int   vtxSumPtIndex = 0; int vtxCountIndex = 0;
-        int count = 0;
-
-        for (int i = 0; i < vCount; ++i) {
-            if (associatedTrackSumPt.at(i) > maxSumPtFraction) {
-                maxSumPtFraction = associatedTrackSumPt.at(i);
-                vtxSumPtIndex = count + 1;
-            }
-            if (associatedTrackCount.at(i) > maxCountFraction) {
-                maxCountFraction = associatedTrackCount.at(i);
-                vtxCountIndex = count + 1;
-            }
-            ++count;
-        }
-        outJet->SetVtxSumPtFrac(maxSumPtFraction);
-        outJet->SetVtxSumPt(sumTrackPt);
-        outJet->SetVtxTrackFrac(maxCountFraction);
-        outJet->SetVtxNTracks(nJetTracks);
-        outJet->SetVtxSumPtIndex(vtxSumPtIndex);
-        outJet->SetVtxCountIndex(vtxCountIndex);
-    }
-
-    return true;
-}
-
 
 void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults, edm::Handle<trigger::TriggerEvent> &hltEvent, const std::string& triggerName, int* trigCount) {
 
