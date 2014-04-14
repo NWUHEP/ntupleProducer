@@ -5,21 +5,22 @@
 TCPhysObject::TCPhysObject():
   _vtx(-9,-9,-9),
   _charge(0),
-  _isPF(false)
+  _isPF(false),
+  _isTriggered(false)
 {
 }
 
 TCPhysObject::TCPhysObject(TLorentzVector p4, int charge):
   _vtx(-9,-9,-9),
   _charge(charge),
-  _isPF(false)
+  _isPF(false),
+  _isTriggered(false)
 {
     this->SetP4(p4);
 }
 
 
-TCPhysObject::~TCPhysObject() {
-}
+TCPhysObject::~TCPhysObject() {}
 
 // "get" methods -------------------------------------
 
@@ -63,6 +64,7 @@ TVector2 TCPhysObject::P2() const {
 TVector3 TCPhysObject::Vtx()  const { return _vtx; }
 int  TCPhysObject::Charge() const   { return _charge; }
 bool TCPhysObject::IsPF()   const   { return _isPF; }
+bool TCPhysObject::IsTriggered() const {return _isTriggered;}
 
 // "set" methods ---------------------------------------------
 
@@ -77,6 +79,7 @@ void TCPhysObject::SetVtx(float vx, float vy, float vz) {
 
 void TCPhysObject::SetCharge(int c) { _charge = c; }
 void TCPhysObject::SetPF(bool p)    { _isPF = p;}
+void TCPhysObject::SetTriggered(bool t)    { _isTriggered = t;}
 
 // generally useful methods -----------------------------------
 
