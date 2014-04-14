@@ -172,6 +172,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         }
     }
 
+    //for (unsigned i = 0; i < triggerObjects.size(); ++i) 
+    //    if (fabs(triggerObjects[i].GetId()) == 13)
+    //        cout << triggerObjects[i].Pt() << ", " << triggerObjects[i].Eta() << endl;
+
 
     ///////////////////////
     //get jet information//
@@ -430,6 +434,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         muCon->SetPfIsoNeutral(iMuon->pfIsolationR04().sumNeutralHadronEt);
         muCon->SetPfIsoPhoton( iMuon->pfIsolationR04().sumPhotonEt);
 
+        //cout << "\t" << iMuon->pt() << ", " << iMuon->eta() << endl;
         // Match muon to trigger object //
         for (unsigned j = 0; j < triggerObjects.size(); ++j) {
             float deltaR = triggerObjects[j].DeltaR(*muCon);
