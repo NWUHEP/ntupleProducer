@@ -438,7 +438,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         // Match muon to trigger object //
         for (unsigned j = 0; j < triggerObjects.size(); ++j) {
             float deltaR = triggerObjects[j].DeltaR(*muCon);
-            if (deltaR < 0.3) {
+            if (deltaR < 0.3 && fabs(triggerObjects[j].GetId()) == 13) {
                 muCon->SetTriggered(true);
                 break;
             } 
@@ -769,7 +769,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         // Match muon to trigger object //
         for (unsigned j = 0; j < triggerObjects.size(); ++j) {
             float deltaR = triggerObjects[j].DeltaR(*eleCon);
-            if (deltaR < 0.3) {
+            if (deltaR < 0.3 && fabs(triggerObjects[j].GetId()) == 11) {
                 eleCon->SetTriggered(true);
                 break;
             } 
@@ -1189,9 +1189,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     //LogWarning("Filters")<<"\n csc1  "<< myNoiseFilters.isCSCTightHalo<<"  csc2  "<<myNoiseFilters.isCSCLooseHalo
     //  <<" isNoiseHcal HBHE "<<myNoiseFilters.isNoiseHcalHBHE<<"  laser "<<myNoiseFilters.isNoiseHcalLaser<<"\n"
     //  <<" ecal TP  "<<myNoiseFilters.isNoiseEcalTP<<"   ecal BE  "<<myNoiseFilters.isNoiseEcalBE;
-
-
-
 
     ++nEvents;
     eventTree -> Fill();
