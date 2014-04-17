@@ -12,7 +12,7 @@ def help (prog_name):
 
     print """
     -c\t\t\t (Mandatory) CRAB project directory
-    --quiet, -q\t\t Wehn turned on, works silently
+    --quiet, -q\t\t When turned on, works silently
     --help, -h\t\t Print this message
     """
     sys.exit(1)
@@ -106,10 +106,19 @@ if __name__ == '__main__':
   #if obsList >= expList: print 'exp is a subset of obs'
 
   #symmetric diff
+  duplicateFile = file('duplicates.txt','w')
   if len(obsList ^ expList) != 0:
     print 'these are missing:'
-    for x in expList-obsList: print x
+    for x in expList-obsList: 
+        print x
     print 'these are extra:',
-    for x in obsList-expList: print x
-  else: print 'everything seems ok'
+    for x in obsList-expList: 
+        print x
+        duplicateFile.write('{0}/{1}\n'.format(dirname,x))
+  else: 
+      print 'everything seems ok'
+
+  duplicateFile.close()
+
+    
 

@@ -11,7 +11,6 @@ class TCMuon : public TCPhysObject {
     private:
 
         float _ptError; 
-        bool _isPF;
         bool _isTRK;
         bool _isGLB;
         bool _isSoft;
@@ -51,7 +50,6 @@ class TCMuon : public TCPhysObject {
 
         bool IsGLB() const;
         bool IsTRK() const;
-        bool IsPF() const;
         bool IsSoft() const;
         bool IsTight() const;
         bool IsGood() const;
@@ -81,7 +79,6 @@ class TCMuon : public TCPhysObject {
         void SetPtError(float er);
         void SetIsGLB(bool t);
         void SetIsTRK(bool t);
-        void SetIsPF(bool t);
         void SetIsSoft(bool t);
         void SetIsTight(bool t);
         void SetIsGood(bool g);
