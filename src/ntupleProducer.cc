@@ -768,8 +768,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
         // Match muon to trigger object //
         for (unsigned j = 0; j < triggerObjects.size(); ++j) {
-            float deltaR = triggerObjects[j].DeltaR(*eleCon);
-            if (deltaR < 0.3 && fabs(triggerObjects[j].GetId()) == 11) {
+            float deltaR    = triggerObjects[j].DeltaR(*eleCon);
+            float deltaPt   = fabs(triggerObjects[j].Pt() - eleCon->Pt())/eleCon->Pt();
+            if (deltaR < 0.1 && fabs(triggerObjects[j].GetId()) == 11) {
+                //cout << triggerObjects[j].GetHLTName() << "\t" << triggerObjects[j].GetModuleName() << "\t" << deltaR << "\t" << deltaPt << endl;;
                 eleCon->SetTriggered(true);
                 break;
             } 
@@ -1372,38 +1374,25 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults
     const unsigned int triggerIndex(hltConfig_.triggerIndex(triggerName));
 
     // abort on invalid trigger name
-
-    /*
-    bool goodTrigger = false;
-    for (unsigned int i =0; i< triggerPaths_.size(); i++){
-        if (triggerName.find(triggerPaths_[i]) != string::npos){
-            goodTrigger = true;
-            break;
-        }
+    if(verboseTrigs){
+        std::cout<<" n = "<<n<<" triggerIndex = "<<triggerIndex<<" size = "<<hltConfig_.size()<<std::endl;
+        std::cout<<" Analyze triggerName : "<<triggerName<<std::endl;
     }
 
-    if(!goodTrigger) return;*/
-
-    //if(verboseTrigs){
-    // std::cout<<" n = "<<n<<" triggerIndex = "<<triggerIndex<<" size = "<<hltConfig_.size()<<std::endl;
-    // std::cout<<" Analyze triggerName : "<<triggerName<<std::endl;
-    //}
-    //std::cout<<" Analyze triggerName : "<<triggerName<<std::endl;
-
-    /*if (triggerIndex>=n) {
+    if (triggerIndex>=n) {
         if(verboseTrigs){
-            cout << "DimuonAna::analyzeTrigger: path "
-                << triggerName << " - not found!" << endl;
+            cout << "DimuonAna::analyzeTrigger: path " << triggerName << " - not found!" << endl;
         }
         return;
-    }*/
+    }
 
     // modules on this trigger path
-    // const unsigned int moduleIndex(hltResults->index(triggerIndex));
     const unsigned int moduleIndex(hltResults->index(triggerIndex));
     const unsigned int m(hltConfig_.size(triggerIndex));
     const vector<string>& moduleLabels(hltConfig_.moduleLabels(triggerIndex));
+
     if (moduleIndex != m-1) return;
+
     if(verboseTrigs){
         cout << "DimuonAna::analyzeTrigger: path "
             << triggerName << " [" << triggerIndex << "]" << endl;
@@ -1422,14 +1411,14 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults
             << " [" << moduleIndex << " out of 0-" << (m-1) << " on this path]"
             << endl;
     }
-    assert (moduleIndex<m);
+    assert(moduleIndex<m);
 
     // Results from TriggerEvent product - Attention: must look only for
     // modules actually run in this path for this event!
     //std::vector < GlobalVector > passMomenta;
     for (unsigned int j=0; j<=moduleIndex; ++j) {
-        const string& moduleLabel(moduleLabels[j]);
-        const string moduleType(hltConfig_.moduleType(moduleLabel));
+        const string&   moduleLabel(moduleLabels[j]);
+        const string    moduleType(hltConfig_.moduleType(moduleLabel));
 
         // check whether the module is packed up in TriggerEvent product
         //cout<<hltEvent->filterIndex(InputTag(moduleLabel,"",hltProcess_))<<endl;
@@ -1444,6 +1433,7 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults
         if(verboseTrigs){
             std::cout<<" j = "<<j<<" modLabel/moduleType = "<<moduleLabel<<"/"<<moduleType<<" filterIndex = "<<filterIndex<<" sizeF = "<<hltEvent->sizeFilters()<<std::endl;
         }
+
         if (filterIndex < hltEvent->sizeFilters()) {
             if(verboseTrigs){
                 cout << " 'L3' (or 'L1', 'L2') filter in slot " << j << " - label/type " << moduleLabel << "/" << moduleType << endl;
@@ -1465,11 +1455,13 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults
 
                 //cout<<" i = "<<i<<" moduleLabel/moduleType : "<<moduleLabel<<"/"<<moduleType<<endl;
                 //cout << " " << i << " " << VIDS[i] << "/" << KEYS[i] << ": \n"
-                // <<"triggerName = "<<triggerName<<" moduleLabel="<<moduleLabel<<"\n "
+                // << "triggerName = "<<triggerName<<" moduleLabel="<<moduleLabel<<"\n "
                 // << TO.id() << " " << TO.pt() << " " << TO.eta() << " " << TO.phi() << " " << TO.mass()
                 // << endl;
 
-                trigObj.SetPtEtaPhiE(TO.pt(),TO.eta(),TO.phi(),TO.energy());
+                if (TO.mass() <= 0) continue;
+
+                trigObj.SetPtEtaPhiE(TO.pt(), TO.eta(), TO.phi(), TO.energy());
                 trigObj.SetHLTName(triggerName);
                 trigObj.SetModuleName(moduleLabel);
                 trigObj.SetId(TO.id());
@@ -1477,7 +1469,7 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults
                 float minDeltaR = 99.;
                 for (unsigned j = 0; j < triggerObjects.size(); ++j) {
                     float deltaR = triggerObjects[j].DeltaR(trigObj);
-                    if (deltaR < minDeltaR) minDeltaR = deltaR;
+                    if (deltaR < minDeltaR && trigObj.GetId() == triggerObjects[j].GetId()) minDeltaR = deltaR;
                 }
 
                 if (minDeltaR < 0.1) continue;
@@ -1485,7 +1477,6 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults
                 triggerObjects.push_back(trigObj);
                 (*trigCount)++;
             }
-            //
         }
     }
     //cout<<endl;
@@ -1796,6 +1787,18 @@ TCTrack::ConversionInfo ntupleProducer::CheckForConversions(const edm::Handle<re
     return (*convInfo);
 }
 
+void ntupleProducer::MatchTriggerObject(TCPhysObject& physObj, const unsigned pdgID)
+{
+    for (unsigned j = 0; j < triggerObjects.size(); ++j) {
+        float deltaR    = triggerObjects[j].DeltaR(physObj);
+        float deltaPt   = fabs(triggerObjects[j].Pt() - physObj.Pt())/physObj.Pt();
+        if (deltaR < 0.1 && fabs(triggerObjects[j].GetId()) == pdgID) {
+            //cout << triggerObjects[j].GetHLTName() << "\t" << triggerObjects[j].GetModuleName() << "\t" << deltaR << "\t" << deltaPt << endl;;
+            physObj.SetTriggered(true);
+            break;
+        } 
+    }
+}
 
 //define this as a plug-in
 DEFINE_FWK_MODULE(ntupleProducer);
