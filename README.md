@@ -91,7 +91,7 @@ every time when checkout from CVS. It is inconveniet, but we have to live with i
 ```
  git clone https://github.com/NWUHEP/ntupleProducer NWU/ntupleProducer
  cd NWU/ntupleProducer
- git checkout v9.6.2
+ git checkout v9.7
  cd ../..
  scram b -j 9
 ```
