@@ -772,7 +772,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         if(saveTriggerObj_){
           for (unsigned j = 0; j < triggerObjects.size(); ++j) {
               float deltaR    = triggerObjects[j].DeltaR(*eleCon);
-              float deltaPt   = fabs(triggerObjects[j].Pt() - eleCon->Pt())/eleCon->Pt();
+              //float deltaPt   = fabs(triggerObjects[j].Pt() - eleCon->Pt())/eleCon->Pt();
               if (deltaR < 0.1 && fabs(triggerObjects[j].GetId()) == 11) {
                   //cout << triggerObjects[j].GetHLTName() << "\t" << triggerObjects[j].GetModuleName() << "\t" << deltaR << "\t" << deltaPt << endl;;
                   eleCon->SetTriggered(true);
@@ -1457,11 +1457,11 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults
                 if (TO.pt() < 5 || (fabs(TO.id()) != 13 && fabs(TO.id()) != 11)) continue;
                 TCTriggerObject trigObj = TCTriggerObject();
 
-                cout<<" i = "<<i<<" moduleLabel/moduleType : "<<moduleLabel<<"/"<<moduleType<<endl;
-                cout << " " << i << " " << VIDS[i] << "/" << KEYS[i] << ": \n"
-                 << "triggerName = "<<triggerName<<" moduleLabel="<<moduleLabel<<"\n "
-                 << TO.id() << " " << TO.pt() << " " << TO.eta() << " " << TO.phi() << " " << TO.mass() << " " << TO.energy()
-                 << endl;
+                //cout<<" i = "<<i<<" moduleLabel/moduleType : "<<moduleLabel<<"/"<<moduleType<<endl;
+                //cout << " " << i << " " << VIDS[i] << "/" << KEYS[i] << ": \n"
+                // << "triggerName = "<<triggerName<<" moduleLabel="<<moduleLabel<<"\n "
+                // << TO.id() << " " << TO.pt() << " " << TO.eta() << " " << TO.phi() << " " << TO.mass() << " " << TO.energy()
+                //<< endl;
 
                 if (TO.mass() <= 0 || TO.pt() <= 0) continue;
 
@@ -1795,7 +1795,7 @@ void ntupleProducer::MatchTriggerObject(TCPhysObject& physObj, const unsigned pd
 {
     for (unsigned j = 0; j < triggerObjects.size(); ++j) {
         float deltaR    = triggerObjects[j].DeltaR(physObj);
-        float deltaPt   = fabs(triggerObjects[j].Pt() - physObj.Pt())/physObj.Pt();
+        //float deltaPt   = fabs(triggerObjects[j].Pt() - physObj.Pt())/physObj.Pt();
         if (deltaR < 0.1 && fabs(triggerObjects[j].GetId()) == pdgID) {
             //cout << triggerObjects[j].GetHLTName() << "\t" << triggerObjects[j].GetModuleName() << "\t" << deltaR << "\t" << deltaPt << endl;;
             physObj.SetTriggered(true);
