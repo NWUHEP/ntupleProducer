@@ -162,7 +162,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 triggerStatus |= ULong64_t(0x01) << j;
                 hltPrescale[j] = 1;
 
-                analyzeTrigger(hltResults, hltEvent, hlNames[i], &trigCount);
+                if(saveTriggerObj_) analyzeTrigger(hltResults, hltEvent, hlNames[i], &trigCount);
                 /* if (isRealData) {
                    pair<int, int> preScales;
                    preScales = hltConfig_.prescaleValues(iEvent, iSetup, hlNames[i]);
@@ -436,12 +436,14 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
         //cout << "\t" << iMuon->pt() << ", " << iMuon->eta() << endl;
         // Match muon to trigger object //
-        for (unsigned j = 0; j < triggerObjects.size(); ++j) {
-            float deltaR = triggerObjects[j].DeltaR(*muCon);
-            if (deltaR < 0.3 && fabs(triggerObjects[j].GetId()) == 13) {
-                muCon->SetTriggered(true);
-                break;
-            } 
+        if (saveTriggerObj_){
+          for (unsigned j = 0; j < triggerObjects.size(); ++j) {
+              float deltaR = triggerObjects[j].DeltaR(*muCon);
+              if (deltaR < 0.3 && fabs(triggerObjects[j].GetId()) == 13) {
+                  muCon->SetTriggered(true);
+                  break;
+              } 
+          }
         }
         muCount++;
     }
@@ -767,14 +769,16 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         eleCon->SetIdMap("phoIso_scfp", mySCFPstruct.photoniso);
 
         // Match muon to trigger object //
-        for (unsigned j = 0; j < triggerObjects.size(); ++j) {
-            float deltaR    = triggerObjects[j].DeltaR(*eleCon);
-            float deltaPt   = fabs(triggerObjects[j].Pt() - eleCon->Pt())/eleCon->Pt();
-            if (deltaR < 0.1 && fabs(triggerObjects[j].GetId()) == 11) {
-                //cout << triggerObjects[j].GetHLTName() << "\t" << triggerObjects[j].GetModuleName() << "\t" << deltaR << "\t" << deltaPt << endl;;
-                eleCon->SetTriggered(true);
-                break;
-            } 
+        if(saveTriggerObj_){
+          for (unsigned j = 0; j < triggerObjects.size(); ++j) {
+              float deltaR    = triggerObjects[j].DeltaR(*eleCon);
+              float deltaPt   = fabs(triggerObjects[j].Pt() - eleCon->Pt())/eleCon->Pt();
+              if (deltaR < 0.1 && fabs(triggerObjects[j].GetId()) == 11) {
+                  //cout << triggerObjects[j].GetHLTName() << "\t" << triggerObjects[j].GetModuleName() << "\t" << deltaR << "\t" << deltaPt << endl;;
+                  eleCon->SetTriggered(true);
+                  break;
+              } 
+          }
         }
         eleCount++;
     }
@@ -1453,13 +1457,13 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults
                 if (TO.pt() < 5 || (fabs(TO.id()) != 13 && fabs(TO.id()) != 11)) continue;
                 TCTriggerObject trigObj = TCTriggerObject();
 
-                //cout<<" i = "<<i<<" moduleLabel/moduleType : "<<moduleLabel<<"/"<<moduleType<<endl;
-                //cout << " " << i << " " << VIDS[i] << "/" << KEYS[i] << ": \n"
-                // << "triggerName = "<<triggerName<<" moduleLabel="<<moduleLabel<<"\n "
-                // << TO.id() << " " << TO.pt() << " " << TO.eta() << " " << TO.phi() << " " << TO.mass()
-                // << endl;
+                cout<<" i = "<<i<<" moduleLabel/moduleType : "<<moduleLabel<<"/"<<moduleType<<endl;
+                cout << " " << i << " " << VIDS[i] << "/" << KEYS[i] << ": \n"
+                 << "triggerName = "<<triggerName<<" moduleLabel="<<moduleLabel<<"\n "
+                 << TO.id() << " " << TO.pt() << " " << TO.eta() << " " << TO.phi() << " " << TO.mass() << " " << TO.energy()
+                 << endl;
 
-                if (TO.mass() <= 0) continue;
+                if (TO.mass() <= 0 || TO.pt() <= 0) continue;
 
                 trigObj.SetPtEtaPhiE(TO.pt(), TO.eta(), TO.phi(), TO.energy());
                 trigObj.SetHLTName(triggerName);
