@@ -43,4 +43,4 @@
 <use   name="DataFormats/DetId"/>
 <use   name="CommonTools/ParticleFlow"/>
 <flags   EDM_PLUGIN="1"/>
-<Flags CXXFLAGS="-g"/>
+#<Flags CXXFLAGS="-g"/>
