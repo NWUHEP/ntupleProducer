@@ -200,7 +200,17 @@ void TCMuon::SetPfIsoPhoton(float f) {
 
 
 ostream& TCMuon::TCprint(ostream& os) const {
- return TCPhysObject::TCprint(os) << " isPF: "<<  this->IsPF();
+ return TCPhysObject::TCprint(os) << 
+   " IsPF: "<< IsPF() << " IsGLB: " << IsGLB() << " IsTRK: " << IsTRK() << " IsSoft: "<< IsSoft() << " IsTight: "<< IsTight() <<
+   " IsGood: " << IsGood() << " IsGoodLoose: " << IsGoodLoose() << " CaloComp: " << CaloComp() << " SegComp: " << SegComp() <<
+   " NumberOfValidPixelHits: " << NumberOfValidPixelHits() << " NumberOfValidTrackerHits: " << NumberOfValidTrackerHits() <<
+   " NumberOfValidMuonHits: " << NumberOfValidMuonHits() << " NumberOfLostPixelHits: " << NumberOfLostPixelHits() << 
+   " NumberOfLostTrackerHits: " << NumberOfLostTrackerHits() << " NumberOfMatches: " << NumberOfMatches() << 
+   " NumberOfMatchedStations: " << NumberOfMatchedStations() << " TrackLayersWithMeasurement: " << TrackLayersWithMeasurement() <<
+   " PixelLayersWithMeasurement: " << PixelLayersWithMeasurement() << " NormalizedChi2: " << NormalizedChi2() << 
+   " NormalizedChi2_tracker: " << NormalizedChi2_tracker() << " PfIsoPU: " << PfIsoPU() << " PfIsoChargedPart: " << PfIsoChargedPart() <<
+   " PfIsoChargedHad: " << PfIsoChargedHad() << " PfIsoCharged: " << PfIsoCharged() << " PfIsoNeutral: " << PfIsoNeutral() << 
+   " PfIsoPhoton: " << PfIsoPhoton();
  //return TCPhysObject::TCprint(os); 
 }
 

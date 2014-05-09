@@ -446,7 +446,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
           }
         }
         muCount++;
-        cout<< (*muCon) <<endl;
+        cout<< "ev num: " << eventNumber << " MUON: " <<(*muCon) <<endl;
     }
 
 
