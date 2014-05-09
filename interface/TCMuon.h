@@ -105,6 +105,9 @@ class TCMuon : public TCPhysObject {
         void SetPfIsoNeutral(float f);
         void SetPfIsoPhoton(float f);
 
+        // print method
+        virtual ostream& TCprint(ostream& out) const;
+
         ClassDef(TCMuon, 1);
 };
 

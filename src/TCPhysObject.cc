@@ -88,7 +88,7 @@ float TCPhysObject::Dz(TVector3 *primVtx) const {
 }
 
 ostream& TCPhysObject::TCprint(ostream& os) const {
- return os << "pt: "<< this->Pt() << " eta: " << this->Eta() << " phi: "<< this->Phi() <<" e: " << this->E();
+ return os << "pt: "<< this->Pt() << " eta: " << this->Eta() << " phi: "<< this->Phi() <<" e: " << this->E() << " charge: "<<this->Charge();
 }
 
 

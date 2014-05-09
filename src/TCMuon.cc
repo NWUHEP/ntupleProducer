@@ -198,3 +198,9 @@ void TCMuon::SetPfIsoPhoton(float f) {
   _pfIsoPhoton = f;
 }
 
+
+ostream& TCMuon::TCprint(ostream& os) const {
+ return TCPhysObject::TCprint(os) << " isPF: "<<  this->IsPF();
+ //return TCPhysObject::TCprint(os); 
+}
+
