@@ -40,21 +40,6 @@ float TCPhysObject::IdMap(string key) const {
     return _IdMap.find(key)->second; 
 }
 
-/*
-float TCPhysObject::IsoMap(string key) const { 
-    
-    //Check that key is present in the iso map
-    try {
-        string exception = "Can't find " + key + " in isolation map"; 
-        if (_IsoMap.count(key) == 0)
-            throw exception;
-    } catch (string ex) {
-        cout << ex << endl;
-    }
-
-    return _IsoMap.find(key)->second; 
-}
-*/
 
 TVector2 TCPhysObject::P2() const {
     TVector2 v2(this->Px(), this->Py());
@@ -70,7 +55,6 @@ bool TCPhysObject::IsTriggered() const {return _isTriggered;}
 
 void TCPhysObject::SetP4(TLorentzVector p4) { this->SetPxPyPzE(p4.Px(), p4.Py(), p4.Pz(), p4.E()); } 
 void TCPhysObject::SetIdMap(string s, float v){ _IdMap[s] = v; }
-//void TCPhysObject::SetIsoMap(string s, float v){ _IsoMap[s] = v; }
 
 void TCPhysObject::SetVtx(float vx, float vy, float vz) {
     TVector3 v3(vx, vy, vz);
@@ -102,3 +86,9 @@ float TCPhysObject::Dz(TVector3 *primVtx) const {
     float ret =  (vz-pvz)-((vx-pvx)*px +(vy-pvy)*py)/pt*(pz/pt);
     return ret;
 }
+
+ostream& TCPhysObject::TCprint(ostream& os) const {
+ return os << "pt: "<< this->Pt() << " eta: " << this->Eta() << " phi: "<< this->Phi() <<" e: " << this->E();
+}
+
+

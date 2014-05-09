@@ -17,7 +17,6 @@ class TCPhysObject : public TLorentzVector {
     private:
         TVector3 _vtx;
         map<string, float> _IdMap;
-        //map<string, float> _IsoMap;
         int  _charge;
         bool _isPF;
         bool _isTriggered;
@@ -30,7 +29,6 @@ class TCPhysObject : public TLorentzVector {
         // "get" methods -----------
 
         float IdMap(string key) const;
-        //float IsoMap(string key) const;
         TVector2 P2() const;
         TVector3 Vtx() const;
         int Charge() const;  
@@ -49,7 +47,14 @@ class TCPhysObject : public TLorentzVector {
         void SetPF(bool);
         void SetTriggered(bool);
 
+        // print method
+        virtual ostream& TCprint(ostream& out) const;
+
         ClassDef(TCPhysObject, 1);
 };
+
+inline ostream& operator<<(ostream& os, const TCPhysObject& ph){ 
+  return ph.TCprint(os);
+}
 
 #endif	/* _TCPHYSOBJECT_H */
