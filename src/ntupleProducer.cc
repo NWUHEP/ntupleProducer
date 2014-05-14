@@ -782,10 +782,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
           }
         }
         eleCount++;
-        //cout << "electron: " << (*eleCon) << endl;
-        //eleCon->TCPhysObject::TCprint(cout);
-        //cout<<endl;
-        cout << "electron: " << TCPhysObject(*eleCon) << endl;
     }
 
 
@@ -924,10 +920,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
         myPhoton->SetSCEtaWidth(  iPhoton->superCluster()->etaWidth());
         myPhoton->SetSCPhiWidth(  iPhoton->superCluster()->phiWidth());
-
-        //these don't exist either
-        //eleCon->SetSCDeltaEta( );
-        //eleCon->SetSCDeltaPhi( );
 
         myPhoton->SetSCEnergy(iPhoton->superCluster()->energy());
         myPhoton->SetSCRawEnergy(iPhoton->superCluster()->rawEnergy());
@@ -1544,6 +1536,8 @@ TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticl
         genCon->SetPDGId( myParticle->pdgId());
         genCon->SetStatus(myParticle->status());
         map<const reco::GenParticle*,TCGenParticle*>::iterator momIt;
+
+        genCon->SetMotherId(myParticle->mother()->pdgId());
 
         if (myParticle->numberOfMothers() == 0){
             genCon->SetMother(0);

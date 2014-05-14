@@ -1,11 +1,13 @@
 #include "../interface/TCGenParticle.h"
 #include "TCGenParticleLinkDef.h"
 
-TCGenParticle::TCGenParticle() {
-  _mother = 0;
-  _PDGID = 0;
-  _status = 0;
-  _isParton = 0;
+TCGenParticle::TCGenParticle():
+  _momID(-99),
+  _mother(0),
+  _PDGID(-99),
+  _status(-99),
+  _isParton(0)
+{
 }
 
 TCGenParticle::~TCGenParticle() {
@@ -26,15 +28,19 @@ TCGenParticle* TCGenParticle::Mother() {
     return _mother;
 }
 
-int TCGenParticle::GetPDGId() {
+int TCGenParticle::GetPDGId() const{
     return _PDGID;
 }
 
-unsigned TCGenParticle::GetStatus() {
+int TCGenParticle::MotherId() const{
+    return _momID;
+}
+
+unsigned TCGenParticle::GetStatus() const{
     return _status;
 }
 
-bool TCGenParticle::IsParton() {
+bool TCGenParticle::IsParton() const{
   return _isParton;
 }
 
@@ -52,4 +58,13 @@ void TCGenParticle::SetStatus(unsigned s)
 }
 void TCGenParticle::SetIsParton(bool a) {
     _isParton = a;
+}
+
+void TCGenParticle::SetMotherId(int id) {
+    _momID = id;
+}
+
+ostream& TCGenParticle::TCprint(ostream& os) const {
+ return TCPhysObject::TCprint(os) << 
+   " PDGId: " << GetPDGId() << " Status: " << GetStatus() << " IsParton: " << IsParton() << " MotherId: " << MotherId();
 }

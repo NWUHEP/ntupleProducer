@@ -4,31 +4,36 @@
 #include "TCPhysObject.h"
 
 class TCGenParticle : public TCPhysObject {
-    private:
-        TCGenParticle* _mother;
-        int _PDGID;
-        unsigned _status;
-        bool _isParton;
+  private:
+    int _momID;
+    TCGenParticle* _mother;
+    int _PDGID;
+    unsigned _status;
+    bool _isParton;
 
 
-    public:
-        TCGenParticle();
-        virtual ~TCGenParticle();
+  public:
+    TCGenParticle();
+    virtual ~TCGenParticle();
 
-        TCGenParticle* Mother();
-        //TCGenParticle* PrimaryAncestor();
-        int GetPDGId();
-        unsigned GetStatus();
+    int MotherId() const;
+    TCGenParticle* Mother();
+    int GetPDGId() const;
+    unsigned GetStatus() const;
 
-        bool IsParton();
+    bool IsParton() const;
 
-        void SetMother(TCGenParticle* m);
-        void SetPDGId(int pdg_id);
-        void SetStatus(unsigned s);
+    void SetMotherId(int id);
+    void SetMother(TCGenParticle* m);
+    void SetPDGId(int pdg_id);
+    void SetStatus(unsigned s);
 
-        void SetIsParton(bool a);
+    void SetIsParton(bool a);
 
-        ClassDef(TCGenParticle, 1);
+    ClassDef(TCGenParticle, 1);
+
+    // print method
+    virtual ostream& TCprint(ostream& out) const;
 };
 
 #endif	

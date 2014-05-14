@@ -211,6 +211,5 @@ ostream& TCMuon::TCprint(ostream& os) const {
    " NormalizedChi2_tracker: " << NormalizedChi2_tracker() << " PfIsoPU: " << PfIsoPU() << " PfIsoChargedPart: " << PfIsoChargedPart() <<
    " PfIsoChargedHad: " << PfIsoChargedHad() << " PfIsoCharged: " << PfIsoCharged() << " PfIsoNeutral: " << PfIsoNeutral() << 
    " PfIsoPhoton: " << PfIsoPhoton();
- //return TCPhysObject::TCprint(os); 
 }
 
