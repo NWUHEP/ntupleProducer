@@ -1,7 +1,35 @@
 #include "../interface/TCMuon.h"
 #include "TCMuonLinkDef.h"
 
-TCMuon::TCMuon() {
+TCMuon::TCMuon():
+_ptError(-99), 
+_isTRK(0),
+_isGLB(0),
+_isSoft(0),
+_isTight(0),
+_isGood(0),
+_isGoodLoose(0),
+_isArbitrated(0),
+_isTrkArbitrated(0),
+_caloComp(-99),
+_segComp(-99),
+_numberOfMatches(-99),
+_numberOfMatchedStations(-99),
+_numberOfValidPixelHits(-99),
+_numberOfValidTrackerHits(-99),
+_numberOfLostPixelHits(-99),
+_numberOfLostTrackerHits(-99),
+_numberOfValidMuonHits(-99),
+_trackLayersWithMeasurement(-99),
+_pixelLayersWithMeasurement(-99),
+_normalizedChi2(-99),
+_normalizedChi2_tracker(-99),
+_pfIsoPU(-99),
+_pfIsoChargedHad(-99),
+_pfIsoChargedPart(-99),
+_pfIsoNeutral(-99),
+_pfIsoPhoton(-99)
+{
 }
 TCMuon::~TCMuon() {
 }
@@ -21,7 +49,6 @@ bool TCMuon::IsTRK() const {
    return _isTRK;
 }
 
-
 bool TCMuon::IsSoft() const {
   return _isSoft;
 }
@@ -34,6 +61,13 @@ bool TCMuon::IsGood() const {
 }
 bool TCMuon::IsGoodLoose() const {
   return _isGoodLoose;
+}
+
+bool TCMuon::IsArbitrated() const {
+  return _isArbitrated;
+}
+bool TCMuon::IsTrkArbitrated() const {
+  return _isTrkArbitrated;
 }
 
 int TCMuon::NumberOfMatchedStations() const {
@@ -141,6 +175,12 @@ void TCMuon::SetIsGood(bool g){
 }
 void TCMuon::SetIsGoodLoose(bool g){
   _isGoodLoose = g;
+}
+void TCMuon::SetIsArbitrated(bool g){
+  _isArbitrated = g;
+}
+void TCMuon::SetIsTrkArbitrated(bool g){
+  _isTrkArbitrated= g;
 }
 
 void TCMuon::SetNumberOfValidMuonHits(int n) {

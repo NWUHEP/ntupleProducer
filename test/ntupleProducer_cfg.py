@@ -52,11 +52,13 @@ process.load("JetMETCorrections.Type1MET.correctionTermsPfMetShiftXY_cff")
 process.load("JetMETCorrections.Type1MET.correctedMet_cff")
 
 if (isRealData):
-    process.GlobalTag.globaltag = 'FT_53_V21_AN3::All'
+  #process.GlobalTag.globaltag = 'FT_53_V21_AN3::All'
+    process.GlobalTag.globaltag = 'FT_53_V21_AN4::All'
     process.corrPfMetType1.jetCorrLabel = cms.string("ak5PFL1FastL2L3Residual")
     process.corrPfMetShiftXY.parameter = process.pfMEtSysShiftCorrParameters_2012runABCDvsNvtx_data
 else:
-    process.GlobalTag.globaltag = 'START53_V7N::All'
+  #process.GlobalTag.globaltag = 'START53_V7N::All'
+    process.GlobalTag.globaltag = 'START53_V23::All'
     process.corrPfMetType1.jetCorrLabel = cms.string("ak5PFL1FastL2L3")
     process.corrPfMetShiftXY.parameter = process.pfMEtSysShiftCorrParameters_2012runABCDvsNvtx_mc
 

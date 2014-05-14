@@ -17,6 +17,8 @@ class TCMuon : public TCPhysObject {
     bool _isTight;
     bool _isGood;
     bool _isGoodLoose;
+    bool _isArbitrated;
+    bool _isTrkArbitrated;
     float _caloComp;
     float _segComp;
 
@@ -54,6 +56,8 @@ class TCMuon : public TCPhysObject {
     bool IsTight() const;
     bool IsGood() const;
     bool IsGoodLoose() const;
+    bool IsArbitrated() const;
+    bool IsTrkArbitrated() const;
     float CaloComp() const;
     float SegComp() const;
 
@@ -83,6 +87,8 @@ class TCMuon : public TCPhysObject {
     void SetIsTight(bool t);
     void SetIsGood(bool g);
     void SetIsGoodLoose(bool g);
+    void SetIsArbitrated(bool g);
+    void SetIsTrkArbitrated(bool g);
     void SetCaloComp(float c);
     void SetSegComp(float s);
 

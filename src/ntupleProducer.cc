@@ -342,111 +342,115 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         //if (iMuon->pt() < 3.) continue;
         //if (!iMuon->isGlobalMuon()) continue;
 
-        TCMuon* muCon = new ((*recoMuons)[muCount]) TCMuon;
+        TCMuon* myMuon = new ((*recoMuons)[muCount]) TCMuon;
 
-        muCon->SetPxPyPzE(iMuon->px(), iMuon->py(), iMuon->pz(), iMuon->energy());
-        muCon->SetCharge(iMuon->charge());
+        myMuon->SetPxPyPzE(iMuon->px(), iMuon->py(), iMuon->pz(), iMuon->energy());
+        myMuon->SetCharge(iMuon->charge());
 
-        muCon->SetPF(iMuon->isPFMuon());
-        muCon->SetIsGLB(iMuon->isGlobalMuon());
-        muCon->SetIsTRK(iMuon->isTrackerMuon());
+        myMuon->SetPF(iMuon->isPFMuon());
+        myMuon->SetIsGLB(iMuon->isGlobalMuon());
+        myMuon->SetIsTRK(iMuon->isTrackerMuon());
 
 
-        muCon->SetIsGood(muon::isGoodMuon(*iMuon, muon::TMOneStationTight));
-        muCon->SetIsGoodLoose(muon::isGoodMuon(*iMuon, muon::TMOneStationLoose));
+        myMuon->SetIsGood(muon::isGoodMuon(*iMuon, muon::TMOneStationTight));
+        myMuon->SetIsGoodLoose(muon::isGoodMuon(*iMuon, muon::TMOneStationLoose));
+
+        myMuon->SetIsArbitrated(muon::isGoodMuon(*iMuon, muon::AllArbitrated));
+        myMuon->SetIsTrkArbitrated(muon::isGoodMuon(*iMuon, muon::TrackerMuonArbitrated));
+
 
         if (primaryVtcs->size()>0){
-            muCon->SetIsTight(muon::isTightMuon(*iMuon, *primaryVtcs->begin()));
-            muCon->SetIsSoft( muon::isSoftMuon( *iMuon, *primaryVtcs->begin()));
+            myMuon->SetIsTight(muon::isTightMuon(*iMuon, *primaryVtcs->begin()));
+            myMuon->SetIsSoft( muon::isSoftMuon( *iMuon, *primaryVtcs->begin()));
         }
         else{
-            muCon->SetIsTight(0);
-            muCon->SetIsSoft(0);
+            myMuon->SetIsTight(0);
+            myMuon->SetIsSoft(0);
         }
 
-        muCon->SetCaloComp(iMuon->caloCompatibility());
-        muCon->SetSegComp(muon::segmentCompatibility(*iMuon));
-        muCon->SetNumberOfMatchedStations(iMuon->numberOfMatchedStations());
-        muCon->SetNumberOfMatches(iMuon->numberOfMatches());
+        myMuon->SetCaloComp(iMuon->caloCompatibility());
+        myMuon->SetSegComp(muon::segmentCompatibility(*iMuon));
+        myMuon->SetNumberOfMatchedStations(iMuon->numberOfMatchedStations());
+        myMuon->SetNumberOfMatches(iMuon->numberOfMatches());
 
         if (iMuon->isGlobalMuon()){
-            muCon->SetNormalizedChi2(       iMuon->globalTrack()->normalizedChi2());
-            muCon->SetNumberOfValidMuonHits(iMuon->globalTrack()->hitPattern().numberOfValidMuonHits());
+            myMuon->SetNormalizedChi2(       iMuon->globalTrack()->normalizedChi2());
+            myMuon->SetNumberOfValidMuonHits(iMuon->globalTrack()->hitPattern().numberOfValidMuonHits());
         }
         else{
-            muCon->SetNormalizedChi2(-1);
-            muCon->SetNumberOfValidMuonHits(-1);
+            myMuon->SetNormalizedChi2(-1);
+            myMuon->SetNumberOfValidMuonHits(-1);
         }
 
         if (iMuon->isTrackerMuon()){
-            muCon->SetVtx(iMuon->track()->vx(),iMuon->track()->vy(),iMuon->track()->vz());
-            muCon->SetPtError(iMuon->track()->ptError());
+            myMuon->SetVtx(iMuon->track()->vx(),iMuon->track()->vy(),iMuon->track()->vz());
+            myMuon->SetPtError(iMuon->track()->ptError());
 
-            muCon->SetTrackLayersWithMeasurement(iMuon->track()->hitPattern().trackerLayersWithMeasurement());
-            muCon->SetPixelLayersWithMeasurement(iMuon->innerTrack()->hitPattern().pixelLayersWithMeasurement());
-            muCon->SetNumberOfValidPixelHits(    iMuon->innerTrack()->hitPattern().numberOfValidPixelHits());
-            muCon->SetNormalizedChi2_tracker(    iMuon->innerTrack()->normalizedChi2());
-            muCon->SetNumberOfValidTrackerHits(iMuon->track()->hitPattern().numberOfValidTrackerHits());
-            muCon->SetNumberOfLostPixelHits(   iMuon->track()->hitPattern().numberOfLostPixelHits());
-            muCon->SetNumberOfLostTrackerHits( iMuon->track()->hitPattern().numberOfLostTrackerHits());
+            myMuon->SetTrackLayersWithMeasurement(iMuon->track()->hitPattern().trackerLayersWithMeasurement());
+            myMuon->SetPixelLayersWithMeasurement(iMuon->innerTrack()->hitPattern().pixelLayersWithMeasurement());
+            myMuon->SetNumberOfValidPixelHits(    iMuon->innerTrack()->hitPattern().numberOfValidPixelHits());
+            myMuon->SetNormalizedChi2_tracker(    iMuon->innerTrack()->normalizedChi2());
+            myMuon->SetNumberOfValidTrackerHits(iMuon->track()->hitPattern().numberOfValidTrackerHits());
+            myMuon->SetNumberOfLostPixelHits(   iMuon->track()->hitPattern().numberOfLostPixelHits());
+            myMuon->SetNumberOfLostTrackerHits( iMuon->track()->hitPattern().numberOfLostTrackerHits());
         }
         else{
-            muCon->SetVtx(-1,-1,-1);
-            muCon->SetPtError(-1);
-            muCon->SetTrackLayersWithMeasurement(-1);
-            muCon->SetNumberOfValidPixelHits(-1);
-            muCon->SetNormalizedChi2_tracker(-1);
-            muCon->SetNumberOfValidTrackerHits(-1);
-            muCon->SetNumberOfLostPixelHits(-1);
-            muCon->SetNumberOfLostTrackerHits(-1);
+            myMuon->SetVtx(-1,-1,-1);
+            myMuon->SetPtError(-1);
+            myMuon->SetTrackLayersWithMeasurement(-1);
+            myMuon->SetNumberOfValidPixelHits(-1);
+            myMuon->SetNormalizedChi2_tracker(-1);
+            myMuon->SetNumberOfValidTrackerHits(-1);
+            myMuon->SetNumberOfLostPixelHits(-1);
+            myMuon->SetNumberOfLostTrackerHits(-1);
         }
         // Set isolation map values
         // Detector-based isolation
 
         /*
-           muCon->SetIsoMap("NTracks_R03", iMuon->isolationR03().nTracks);
-           muCon->SetIsoMap("EmIso_R03",   iMuon->isolationR03().emEt);
-           muCon->SetIsoMap("HadIso_R03",  iMuon->isolationR03().hadEt);
-           muCon->SetIsoMap("SumPt_R03",   iMuon->isolationR03().sumPt);
+           myMuon->SetIsoMap("NTracks_R03", iMuon->isolationR03().nTracks);
+           myMuon->SetIsoMap("EmIso_R03",   iMuon->isolationR03().emEt);
+           myMuon->SetIsoMap("HadIso_R03",  iMuon->isolationR03().hadEt);
+           myMuon->SetIsoMap("SumPt_R03",   iMuon->isolationR03().sumPt);
 
-           muCon->SetIsoMap("NTracks_R05", iMuon->isolationR05().nTracks);
-           muCon->SetIsoMap("EmIso_R05",   iMuon->isolationR05().emEt);
-           muCon->SetIsoMap("HadIso_R05",  iMuon->isolationR05().hadEt);
-           muCon->SetIsoMap("SumPt_R05",   iMuon->isolationR05().sumPt);
+           myMuon->SetIsoMap("NTracks_R05", iMuon->isolationR05().nTracks);
+           myMuon->SetIsoMap("EmIso_R05",   iMuon->isolationR05().emEt);
+           myMuon->SetIsoMap("HadIso_R05",  iMuon->isolationR05().hadEt);
+           myMuon->SetIsoMap("SumPt_R05",   iMuon->isolationR05().sumPt);
          */
         // PF-based isolation
-        muCon->SetIdMap("Iso_pfPUPt_R03",      iMuon->pfIsolationR03().sumPUPt);
-        muCon->SetIdMap("Iso_pfPhotonEt_R03",  iMuon->pfIsolationR03().sumPhotonEt);
-        muCon->SetIdMap("Iso_pfChargedPt_R03", iMuon->pfIsolationR03().sumChargedParticlePt);
-        muCon->SetIdMap("Iso_pfChargedHadronPt_R03", iMuon->pfIsolationR03().sumChargedHadronPt);
-        muCon->SetIdMap("Iso_pfNeutralHadronEt_R03", iMuon->pfIsolationR03().sumNeutralHadronEt);
+        myMuon->SetIdMap("Iso_pfPUPt_R03",      iMuon->pfIsolationR03().sumPUPt);
+        myMuon->SetIdMap("Iso_pfPhotonEt_R03",  iMuon->pfIsolationR03().sumPhotonEt);
+        myMuon->SetIdMap("Iso_pfChargedPt_R03", iMuon->pfIsolationR03().sumChargedParticlePt);
+        myMuon->SetIdMap("Iso_pfChargedHadronPt_R03", iMuon->pfIsolationR03().sumChargedHadronPt);
+        myMuon->SetIdMap("Iso_pfNeutralHadronEt_R03", iMuon->pfIsolationR03().sumNeutralHadronEt);
         /*
-           muCon->SetIsoMap("pfPUPt_R04",      iMuon->pfIsolationR04().sumPUPt);
-           muCon->SetIsoMap("pfPhotonEt_R04",  iMuon->pfIsolationR04().sumPhotonEt);
-           muCon->SetIsoMap("pfChargedPt_R04", iMuon->pfIsolationR04().sumChargedParticlePt);
-           muCon->SetIsoMap("pfChargedHadronPt_R04", iMuon->pfIsolationR04().sumChargedHadronPt);
-           muCon->SetIsoMap("pfNeutralHadronEt_R04", iMuon->pfIsolationR04().sumNeutralHadronEt);
+           myMuon->SetIsoMap("pfPUPt_R04",      iMuon->pfIsolationR04().sumPUPt);
+           myMuon->SetIsoMap("pfPhotonEt_R04",  iMuon->pfIsolationR04().sumPhotonEt);
+           myMuon->SetIsoMap("pfChargedPt_R04", iMuon->pfIsolationR04().sumChargedParticlePt);
+           myMuon->SetIsoMap("pfChargedHadronPt_R04", iMuon->pfIsolationR04().sumChargedHadronPt);
+           myMuon->SetIsoMap("pfNeutralHadronEt_R04", iMuon->pfIsolationR04().sumNeutralHadronEt);
          */
 
-        muCon->SetPfIsoPU(iMuon->pfIsolationR04().sumPUPt);
-        muCon->SetPfIsoChargedPart(iMuon->pfIsolationR04().sumChargedParticlePt);
-        muCon->SetPfIsoChargedHad( iMuon->pfIsolationR04().sumChargedHadronPt);
-        muCon->SetPfIsoNeutral(iMuon->pfIsolationR04().sumNeutralHadronEt);
-        muCon->SetPfIsoPhoton( iMuon->pfIsolationR04().sumPhotonEt);
+        myMuon->SetPfIsoPU(iMuon->pfIsolationR04().sumPUPt);
+        myMuon->SetPfIsoChargedPart(iMuon->pfIsolationR04().sumChargedParticlePt);
+        myMuon->SetPfIsoChargedHad( iMuon->pfIsolationR04().sumChargedHadronPt);
+        myMuon->SetPfIsoNeutral(iMuon->pfIsolationR04().sumNeutralHadronEt);
+        myMuon->SetPfIsoPhoton( iMuon->pfIsolationR04().sumPhotonEt);
 
         //cout << "\t" << iMuon->pt() << ", " << iMuon->eta() << endl;
         // Match muon to trigger object //
         if (saveTriggerObj_){
           for (unsigned j = 0; j < triggerObjects.size(); ++j) {
-              float deltaR = triggerObjects[j].DeltaR(*muCon);
+              float deltaR = triggerObjects[j].DeltaR(*myMuon);
               if (deltaR < 0.3 && fabs(triggerObjects[j].GetId()) == 13) {
-                  muCon->SetTriggered(true);
+                  myMuon->SetTriggered(true);
                   break;
               } 
           }
         }
         muCount++;
-        //cout<<*muCon<<endl;
+        //cout<<*myMuon<<endl;
     }
 
 
@@ -516,17 +520,17 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         eee++;
         if (iElectron->pt() < 5) continue;
 
-        TCElectron* eleCon = new ((*recoElectrons)[eleCount]) TCElectron;
+        TCElectron* myElectron = new ((*recoElectrons)[eleCount]) TCElectron;
 
         // Basic physics object info
-        eleCon->SetPtEtaPhiM(iElectron->pt(), iElectron->eta(), iElectron->phi(), iElectron->mass());
-        eleCon->SetVtx(iElectron->gsfTrack()->vx(),iElectron->gsfTrack()->vy(),iElectron->gsfTrack()->vz());
-        eleCon->SetCharge(iElectron->charge());
+        myElectron->SetPtEtaPhiM(iElectron->pt(), iElectron->eta(), iElectron->phi(), iElectron->mass());
+        myElectron->SetVtx(iElectron->gsfTrack()->vx(),iElectron->gsfTrack()->vy(),iElectron->gsfTrack()->vz());
+        myElectron->SetCharge(iElectron->charge());
 
         // Fiducial variables
-        eleCon->SetIsEB(iElectron->isEB());
-        eleCon->SetIsEE(iElectron->isEE());
-        eleCon->SetIsInGap(iElectron->isGap());
+        myElectron->SetIsEB(iElectron->isEB());
+        myElectron->SetIsEE(iElectron->isEE());
+        myElectron->SetIsInGap(iElectron->isGap());
 
 
         // Electron ID variables
@@ -534,49 +538,49 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         //Methods that are availabel for the electrons can be found here:
         //http://cmslxr.fnal.gov/lxr/source/DataFormats/EgammaCandidates/interface/GsfElectron.h?v=CMSSW_5_3_11
 
-        eleCon->SetR9(     iElectron->r9());
-        eleCon->SetFBrem(  iElectron->fbrem());
-        eleCon->SetEoP(    iElectron->eSuperClusterOverP());
-        eleCon->SetEoPout( iElectron->eEleClusterOverPout());
-        eleCon->SetESeedOverP(iElectron->eSeedClusterOverP());
+        myElectron->SetR9(     iElectron->r9());
+        myElectron->SetFBrem(  iElectron->fbrem());
+        myElectron->SetEoP(    iElectron->eSuperClusterOverP());
+        myElectron->SetEoPout( iElectron->eEleClusterOverPout());
+        myElectron->SetESeedOverP(iElectron->eSeedClusterOverP());
 
         // ***** >> Switching to officially recommended method:  <<<<<<
-        eleCon->SetHadOverEm(iElectron->hcalOverEcalBc());
+        myElectron->SetHadOverEm(iElectron->hcalOverEcalBc());
         // !!!!!!!!!
         // QUESTION: Does the eleIsolator below returns the recommended isolation for Hcal??
         //!!!!!!!!!!
 
         //cout<<"H/E compare: hcalOverEcalBc = "<<iElectron->hcalOverEcalBc()<<"   hadronicOverEm = "<<iElectron->hadronicOverEm()<<endl;
 
-        eleCon->SetSCEta(  iElectron->superCluster()->eta());
-        eleCon->SetSCPhi(  iElectron->superCluster()->phi());
+        myElectron->SetSCEta(  iElectron->superCluster()->eta());
+        myElectron->SetSCPhi(  iElectron->superCluster()->phi());
 
         //*** --> Notice that previously some variables were defined in the IdMap, differently:
         //one has to perform a selections on analysis level to recover this behaviour:
         //(cut at over/underflow values)
 
-        eleCon->SetSCDeltaEta(   iElectron->deltaEtaSuperClusterTrackAtVtx());
-        eleCon->SetSCDeltaPhi(   iElectron->deltaPhiSuperClusterTrackAtVtx());
-        eleCon->SetSigmaIEtaIEta(iElectron->sigmaIetaIeta());
-        eleCon->SetSigmaIPhiIPhi(iElectron->sigmaIphiIphi());
-        eleCon->SetSCEtaWidth(   iElectron->superCluster()->etaWidth());
-        eleCon->SetSCPhiWidth(   iElectron->superCluster()->phiWidth());
-        eleCon->SetSCEnergy(     iElectron->superCluster()->energy());
+        myElectron->SetSCDeltaEta(   iElectron->deltaEtaSuperClusterTrackAtVtx());
+        myElectron->SetSCDeltaPhi(   iElectron->deltaPhiSuperClusterTrackAtVtx());
+        myElectron->SetSigmaIEtaIEta(iElectron->sigmaIetaIeta());
+        myElectron->SetSigmaIPhiIPhi(iElectron->sigmaIphiIphi());
+        myElectron->SetSCEtaWidth(   iElectron->superCluster()->etaWidth());
+        myElectron->SetSCPhiWidth(   iElectron->superCluster()->phiWidth());
+        myElectron->SetSCEnergy(     iElectron->superCluster()->energy());
         if (iElectron->superCluster()->rawEnergy()!=0)
-            eleCon->SetPreShowerOverRaw(iElectron->superCluster()->preshowerEnergy() / iElectron->superCluster()->rawEnergy());
+            myElectron->SetPreShowerOverRaw(iElectron->superCluster()->preshowerEnergy() / iElectron->superCluster()->rawEnergy());
 
 
-        eleCon->SetE1x5(iElectron->e1x5());
-        eleCon->SetE2x5(iElectron->e2x5Max());
-        eleCon->SetE5x5(iElectron->e5x5());
+        myElectron->SetE1x5(iElectron->e1x5());
+        myElectron->SetE2x5(iElectron->e2x5Max());
+        myElectron->SetE5x5(iElectron->e5x5());
 
-        eleCon->SetDeltaEtaSeedCluster(iElectron->deltaEtaSeedClusterTrackAtCalo());
-        eleCon->SetDeltaPhiSeedCluster(iElectron->deltaPhiSeedClusterTrackAtCalo());
+        myElectron->SetDeltaEtaSeedCluster(iElectron->deltaEtaSeedClusterTrackAtCalo());
+        myElectron->SetDeltaPhiSeedCluster(iElectron->deltaPhiSeedClusterTrackAtCalo());
 
         //std::vector vCov = iElectron->superCluster()->localCovariances(*(iElectron->superCluster()->seed())) ;
 
 
-        eleCon->SetEoP(iElectron->eSuperClusterOverP());
+        myElectron->SetEoP(iElectron->eSuperClusterOverP());
 
         // ** *************
         // Assosited GSF tracks:
@@ -592,9 +596,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 vertexBeamSpot.position(), (*myVtxRef).position());
         t->SetConversionInfo(convInfo);
         //This is the main track, directly assosiated with an Electron
-        eleCon->AddTrack(*t);
+        myElectron->AddTrack(*t);
 
-        eleCon->SetPtError(iElectron->gsfTrack()->ptError());
+        myElectron->SetPtError(iElectron->gsfTrack()->ptError());
 
         //Int_t ntr=0;
         //Adding more tracks from the ambiguos collection:
@@ -612,13 +616,13 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             convInfo = ntupleProducer::CheckForConversions(hConversions, *gtr,
                     vertexBeamSpot.position(), (*myVtxRef).position());
             t->SetConversionInfo(convInfo);
-            eleCon->AddTrack(*t);
+            myElectron->AddTrack(*t);
 
         }
 
-        eleCon->SetConversionDcot(iElectron->convDcot());
-        eleCon->SetConversionDist(iElectron->convDist());
-        eleCon->SetConversionRadius(iElectron->convRadius());
+        myElectron->SetConversionDcot(iElectron->convDcot());
+        myElectron->SetConversionDist(iElectron->convDist());
+        myElectron->SetConversionRadius(iElectron->convRadius());
 
         bool validKF= false;
         reco::TrackRef myTrackRef = iElectron->closestCtfTrackRef();
@@ -626,15 +630,15 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         validKF = (myTrackRef.isNonnull());
 
         if (validKF){
-            eleCon->SetTrackerLayersWithMeasurement( myTrackRef->hitPattern().trackerLayersWithMeasurement());
-            eleCon->SetNormalizedChi2Kf( myTrackRef->normalizedChi2());
-            eleCon->SetNumberOfValidHits(myTrackRef->numberOfValidHits());
+            myElectron->SetTrackerLayersWithMeasurement( myTrackRef->hitPattern().trackerLayersWithMeasurement());
+            myElectron->SetNormalizedChi2Kf( myTrackRef->normalizedChi2());
+            myElectron->SetNumberOfValidHits(myTrackRef->numberOfValidHits());
 
         }
         else{
-            eleCon->SetTrackerLayersWithMeasurement(-1);
-            eleCon->SetNormalizedChi2Kf(-1);
-            eleCon->SetNumberOfValidHits(-1);
+            myElectron->SetTrackerLayersWithMeasurement(-1);
+            myElectron->SetNormalizedChi2Kf(-1);
+            myElectron->SetNumberOfValidHits(-1);
         }
 
 
@@ -674,54 +678,54 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             }
         }
 
-        eleCon->SetIP3d(ip3d);
-        eleCon->SetIP3dSig(ip3dSig);
+        myElectron->SetIP3d(ip3d);
+        myElectron->SetIP3dSig(ip3dSig);
 
-        eleCon->SetNumberOfValidPixelHits(  iElectron->gsfTrack()->hitPattern().numberOfValidPixelHits());
-        eleCon->SetNumberOfValidTrackerHits(iElectron->gsfTrack()->hitPattern().numberOfValidTrackerHits());
-        eleCon->SetNumberOfLostPixelHits(   iElectron->gsfTrack()->hitPattern().numberOfLostPixelHits());
-        eleCon->SetNumberOfLostTrackerHits( iElectron->gsfTrack()->hitPattern().numberOfLostTrackerHits());
+        myElectron->SetNumberOfValidPixelHits(  iElectron->gsfTrack()->hitPattern().numberOfValidPixelHits());
+        myElectron->SetNumberOfValidTrackerHits(iElectron->gsfTrack()->hitPattern().numberOfValidTrackerHits());
+        myElectron->SetNumberOfLostPixelHits(   iElectron->gsfTrack()->hitPattern().numberOfLostPixelHits());
+        myElectron->SetNumberOfLostTrackerHits( iElectron->gsfTrack()->hitPattern().numberOfLostTrackerHits());
 
-        eleCon->SetInverseEnergyMomentumDiff(fabs((1/iElectron->ecalEnergy()) - (1/iElectron->trackMomentumAtVtx().R())));
+        myElectron->SetInverseEnergyMomentumDiff(fabs((1/iElectron->ecalEnergy()) - (1/iElectron->trackMomentumAtVtx().R())));
 
         // Conversion information
         // See definition from here: https://twiki.cern.ch/twiki/bin/view/CMS/ConversionTools
         bool passConvVeto = !(ConversionTools::hasMatchedConversion(*iElectron,hConversions,vertexBeamSpot.position()));
-        eleCon->SetPassConversionVeto(passConvVeto);
-        eleCon->SetConversionMissHits(iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfHits());
+        myElectron->SetPassConversionVeto(passConvVeto);
+        myElectron->SetConversionMissHits(iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfHits());
 
         //Variables for Triggering MVA pre-selection
-        eleCon->SetIdMap("hadronicOverEm",      iElectron->hadronicOverEm());
-        eleCon->SetIdMap("dr03TkSumPt",         iElectron->dr03TkSumPt());
-        eleCon->SetIdMap("dr03EcalRecHitSumEt", iElectron->dr03EcalRecHitSumEt());
-        eleCon->SetIdMap("dr03HcalTowerSumEt",  iElectron->dr03HcalTowerSumEt());
-        eleCon->SetIdMap("gsf_numberOfLostHits",iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfLostHits());
+        myElectron->SetIdMap("hadronicOverEm",      iElectron->hadronicOverEm());
+        myElectron->SetIdMap("dr03TkSumPt",         iElectron->dr03TkSumPt());
+        myElectron->SetIdMap("dr03EcalRecHitSumEt", iElectron->dr03EcalRecHitSumEt());
+        myElectron->SetIdMap("dr03HcalTowerSumEt",  iElectron->dr03HcalTowerSumEt());
+        myElectron->SetIdMap("gsf_numberOfLostHits",iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfLostHits());
 
         // Effective area for rho PU corrections 
         float AEff03 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso03, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
         float AEff04 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso04, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
-        eleCon->SetIdMap("EffArea_R03", AEff03);
-        eleCon->SetIdMap("EffArea_R04", AEff04);
-        eleCon->SetEffArea(AEff04);
+        myElectron->SetIdMap("EffArea_R03", AEff03);
+        myElectron->SetIdMap("EffArea_R04", AEff04);
+        myElectron->SetEffArea(AEff04);
 
 
         //MVA output:
         float m_old = ele_mvaTrigV0.get(eee-1);
-        eleCon->SetMvaID_Old(m_old);
+        myElectron->SetMvaID_Old(m_old);
         float m_HZZ = ele_mvaNonTrigV0.get(eee-1);
-        eleCon->SetMvaID_HZZ(m_HZZ);
+        myElectron->SetMvaID_HZZ(m_HZZ);
 
         //cout<<eee<<"  mva0 = "<<m<<endl;
 
         //Regression energy
         double ene = ele_regEne.get(eee-1);
         double err = ele_regErr.get(eee-1);
-        eleCon->SetEnergyRegression(ene);
-        eleCon->SetEnergyRegressionErr(err);
+        myElectron->SetEnergyRegression(ene);
+        myElectron->SetEnergyRegressionErr(err);
 
-        eleCon->SetIdMap("modElectronIso_Tk",    modElectronIso_Tk.get(eee-1));
-        eleCon->SetIdMap("modElectronIso_Ecal",  modElectronIso_Ecal.get(eee-1));
-        eleCon->SetIdMap("modElectronIso_HcalD1",modElectronIso_HcalD1.get(eee-1));
+        myElectron->SetIdMap("modElectronIso_Tk",    modElectronIso_Tk.get(eee-1));
+        myElectron->SetIdMap("modElectronIso_Ecal",  modElectronIso_Ecal.get(eee-1));
+        myElectron->SetIdMap("modElectronIso_HcalD1",modElectronIso_HcalD1.get(eee-1));
 
         //cout<<eee-1<<"Bosted iso vars: tk="<<modElectronIso_Tk.get(eee-1)
         //  <<"   ecal="<<modElectronIso_Ecal.get(eee-1)
@@ -734,7 +738,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
         TLorentzVector tmpP4;
         tmpP4.SetPtEtaPhiE(iElectronTmp.pt(), iElectronTmp.eta(), iElectronTmp.phi(), iElectronTmp.energy());
-        eleCon->SetRegressionMomCombP4(tmpP4);
+        myElectron->SetRegressionMomCombP4(tmpP4);
 
         //3 types of Pf Iso
 
@@ -757,26 +761,26 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         //cout<<"new charged = "<<iso_charged<<"\t gamma = "<<iso_gamma<<"\t neutral = "<<iso_neutral<<endl;
         //cout<<"alt charged = "<<mySCFPstruct.chargediso<<"\t gamma = "<<mySCFPstruct.photoniso<<"\t neutral = "<<mySCFPstruct.neutraliso<<endl;
 
-        eleCon->SetPfIsoCharged(eleIsolator.getIsolationCharged());
-        eleCon->SetPfIsoNeutral(eleIsolator.getIsolationNeutral());
-        eleCon->SetPfIsoPhoton(eleIsolator.getIsolationPhoton());
+        myElectron->SetPfIsoCharged(eleIsolator.getIsolationCharged());
+        myElectron->SetPfIsoNeutral(eleIsolator.getIsolationNeutral());
+        myElectron->SetPfIsoPhoton(eleIsolator.getIsolationPhoton());
 
-        eleCon->SetIdMap("chIso_std",  iso_charged);
-        eleCon->SetIdMap("neuIso_std", iso_neutral);
-        eleCon->SetIdMap("phoIso_std", iso_gamma);
+        myElectron->SetIdMap("chIso_std",  iso_charged);
+        myElectron->SetIdMap("neuIso_std", iso_neutral);
+        myElectron->SetIdMap("phoIso_std", iso_gamma);
 
-        eleCon->SetIdMap("chIso_scfp", mySCFPstruct.chargediso);
-        eleCon->SetIdMap("neuIso_scfp", mySCFPstruct.neutraliso);
-        eleCon->SetIdMap("phoIso_scfp", mySCFPstruct.photoniso);
+        myElectron->SetIdMap("chIso_scfp", mySCFPstruct.chargediso);
+        myElectron->SetIdMap("neuIso_scfp", mySCFPstruct.neutraliso);
+        myElectron->SetIdMap("phoIso_scfp", mySCFPstruct.photoniso);
 
         // Match muon to trigger object //
         if(saveTriggerObj_){
           for (unsigned j = 0; j < triggerObjects.size(); ++j) {
-              float deltaR    = triggerObjects[j].DeltaR(*eleCon);
-              //float deltaPt   = fabs(triggerObjects[j].Pt() - eleCon->Pt())/eleCon->Pt();
+              float deltaR    = triggerObjects[j].DeltaR(*myElectron);
+              //float deltaPt   = fabs(triggerObjects[j].Pt() - myElectron->Pt())/myElectron->Pt();
               if (deltaR < 0.1 && fabs(triggerObjects[j].GetId()) == 11) {
                   //cout << triggerObjects[j].GetHLTName() << "\t" << triggerObjects[j].GetModuleName() << "\t" << deltaR << "\t" << deltaPt << endl;;
-                  eleCon->SetTriggered(true);
+                  myElectron->SetTriggered(true);
                   break;
               } 
           }
