@@ -287,3 +287,17 @@ void TCElectron::SetEffArea(float a){
   _effArea = a;
 }
 
+ostream& TCElectron::TCprint(ostream& os) const {
+ return TCEGamma::TCprint(os) <<
+   " NormalizedChi2: " << NormalizedChi2() << " NormalizedChi2Gsf: " << NormalizedChi2Gsf() << " NormalizedChi2Kf: " << NormalizedChi2Kf() <<
+   " InverseEnergyMomentumDiff: " << InverseEnergyMomentumDiff() << " EoP: " << EoP() << " EoPout: " << EoPout() <<
+   " ESeedOverP: " << ESeedOverP() << " IP3d: " << IP3d() << " IP3dSig: " << IP3dSig() << " DeltaEtaSeedCluster: " << DeltaEtaSeedCluster() <<
+   " DeltaPhiSeedCluster: " << DeltaPhiSeedCluster() << " PtError: " << PtError() << " FBrem: " << FBrem() << " MvaID: " << MvaID() <<
+   " EnergyRegression: " << EnergyRegression() << " EnergyRegressionErr: " << EnergyRegressionErr() << " PassConversionVeto: " << PassConversionVeto() <<
+   " ConversionMissHits: " << ConversionMissHits() << " ConversionDcot: " << ConversionDcot() << " ConversionDist: " << ConversionDist() <<
+   " ConversionRadius: " << ConversionRadius() << " TrackerLayersWithMeasurement: " << TrackerLayersWithMeasurement() << 
+   " NumberOfValidHits: " << NumberOfValidHits() << " NumberOfValidPixelHits: " << NumberOfValidPixelHits() <<
+   " NumberOfValidTrackerHits: " << NumberOfValidTrackerHits() << " NumberOfLostPixelHits: " << NumberOfLostPixelHits() << 
+   " NumberOfLostTrackerHits: " << NumberOfLostTrackerHits() << " EffArea: " << EffArea();
+}
+

@@ -112,6 +112,7 @@ class TCEGamma : public TCPhysObject {
   float E2x5() const;
   float E2x5Max() const;
   float E5x5() const;
+  float E2OverE5() const;
 
   vector<float> ESEffSigmaRR() const;
 
@@ -119,7 +120,6 @@ class TCEGamma : public TCPhysObject {
   float PfIsoNeutral() const;
   float PfIsoPhoton() const;
 
-  float E2OverE5() const;
 
   //float MvaID() const;
   //float EnergyRegression() const;
@@ -176,6 +176,9 @@ class TCEGamma : public TCPhysObject {
   void SetPfIsoCharged(float);
   void SetPfIsoNeutral(float);
   void SetPfIsoPhoton(float);
+
+  // print method
+  virtual ostream& TCprint(ostream& out) const;
 
   ClassDef(TCEGamma, 1);
 };

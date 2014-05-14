@@ -2,7 +2,11 @@
 #include "TCPhotonLinkDef.h"
 #include <iostream>
 
-TCPhoton::TCPhoton() {
+TCPhoton::TCPhoton():
+  _trackVeto(0),
+  _convVeto(0),
+  _nTrkSolidConeDR03(-99)
+{
 
 }
 
@@ -65,4 +69,9 @@ void TCPhoton::SetCiCPF4chgpfIso03(vector<float> v){
 
 void TCPhoton::SetCiCPF4chgpfIso04(vector<float> v){
   _phoCiCPF4chgpfIso04 = v;
+}
+
+ostream& TCPhoton::TCprint(ostream& os) const {
+ return TCEGamma::TCprint(os) <<
+   " TrackVeto: " << TrackVeto() << " ConversionVeto: " << ConversionVeto() << " NTrkSolidConeDR03: " << NTrkSolidConeDR03(); 
 }

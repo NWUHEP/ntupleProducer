@@ -275,3 +275,16 @@ void TCEGamma::SetPfIsoNeutral(float f) {
 void TCEGamma::SetPfIsoPhoton(float f) {
   _pfIsoPhoton = f;
 }
+
+ostream& TCEGamma::TCprint(ostream& os) const {
+ return TCPhysObject::TCprint(os) << 
+   " R9: " << R9() << " SCEta: " << SCEta() << " SCPhi: " << SCPhi() << " SCDeltaEta: " << SCDeltaEta() <<
+   " SCDeltaPhi: " << SCDeltaPhi() << " SigmaIEtaIEta: " << SigmaIEtaIEta() << " SigmaIEtaIPhi: " << SigmaIEtaIPhi() <<
+   " SigmaIPhiIPhi: " << SigmaIPhiIPhi() << " SCEtaWidth: " << SCEtaWidth() << " SCPhiWidth: " << SCPhiWidth() <<
+   " SCRawEnergy: " << SCRawEnergy() << " SCEnergy: " << SCEnergy() << " SCPSEnergy: " << SCPSEnergy() << 
+   " PreShowerOverRaw: " << PreShowerOverRaw() << " E1x3: " << E1x3() << " E1x5: " << E1x5() << " E2x2: " << E2x2() <<
+   " E2x5: " << E2x5() << " E2x5Max: " << E2x5Max() << " E5x5: " << E5x5() << "E2OverE5: " << E2OverE5() <<
+   " PfIsoCharged: " << PfIsoCharged() << " PfIsoNeutral: " << PfIsoNeutral() << " PfIsoPhoton: " << PfIsoPhoton() <<
+   " IsEB: " << IsEB() << " IsEE: " << IsEE() << " IsInGap: " << IsInGap(); 
+ //return TCPhysObject::TCprint(os); 
+}

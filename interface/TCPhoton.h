@@ -77,6 +77,9 @@ private:
     void SetCiCPF4chgpfIso03(vector<float>);
     void SetCiCPF4chgpfIso04(vector<float>);
 
+    // print method
+    virtual ostream& TCprint(ostream& out) const;
+
     ClassDef(TCPhoton, 1);
 };
 

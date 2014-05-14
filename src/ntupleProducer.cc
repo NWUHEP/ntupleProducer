@@ -446,7 +446,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
           }
         }
         muCount++;
-        cout<< "ev num: " << eventNumber << " MUON: " <<(*muCon) <<endl;
+        //cout<<*muCon<<endl;
     }
 
 
@@ -782,6 +782,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
           }
         }
         eleCount++;
+        //cout << "electron: " << (*eleCon) << endl;
+        //eleCon->TCPhysObject::TCprint(cout);
+        //cout<<endl;
+        cout << "electron: " << TCPhysObject(*eleCon) << endl;
     }
 
 
@@ -1036,6 +1040,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         myPhoton->SetESEffSigmaRR(phoESEffSigmaRR_x, phoESEffSigmaRR_y, phoESEffSigmaRR_z);
 
         ++photonCount;
+
     }
 
 

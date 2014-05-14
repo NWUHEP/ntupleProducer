@@ -151,6 +151,9 @@ class TCElectron : public TCEGamma {
 
   void SetEffArea(float);
 
+  // print method
+  virtual ostream& TCprint(ostream& out) const;
+
   ClassDef(TCElectron, 1);
 };
 
