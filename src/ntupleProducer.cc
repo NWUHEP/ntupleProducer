@@ -322,8 +322,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     edm::Handle< edm::View<reco::PFMET> > pfMEThandle;
     iEvent.getByLabel("pfMet", pfMEThandle);
     //Significance
-    float significance = (pfMEThandle->front()).significance();
-    float sigmaX2 = (pfMEThandle->front()).getSignificanceMatrix()(0,0);
+    double sigmaX2= (pfMEThandle->front() ).getSignificanceMatrix()(0,0);
+    double sigmaY2= (pfMEThandle->front() ).getSignificanceMatrix()(1,1);
+    double significance = 0;
+    if(sigmaX2<1.e10 && sigmaY2<1.e10) significance = (pfMEThandle->front() ).significance();
     recoMET->SetSignificance( significance );
     recoMET->SetSigmaX2( sigmaX2 );
 
@@ -1084,6 +1086,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         map<const reco::GenParticle*, TCGenParticle*> genMap;
         for (GenParticleCollection::const_iterator myParticle= genParticleColl->begin(); myParticle != genParticleColl->end(); ++myParticle) {
 
+            if (myParticle->pt() < 0.0001) continue;
+
             ////  Leptons and photons and b's, (oh my)
             //// Z's, W's, H's, and now big juicy Gravitons
             if (
@@ -1534,15 +1538,16 @@ TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticl
         genCon = new ((*genParticles)[genPartCount]) TCGenParticle;
         ++genPartCount;
         genMap[myParticle] = genCon;
-        genCon->SetPxPyPzE(myParticle->px(), myParticle->py(), myParticle->pz(), myParticle->energy() );
+        genCon->SetPtEtaPhiE(myParticle->pt(), myParticle->eta(), myParticle->phi(), myParticle->energy() );
         genCon->SetVtx(myParticle->vx(), myParticle->vy(), myParticle->vz());
         genCon->SetCharge(myParticle->charge());
         genCon->SetPDGId( myParticle->pdgId());
         genCon->SetStatus(myParticle->status());
+        genCon->SetMotherId(myParticle->mother()->pdgId());
         map<const reco::GenParticle*,TCGenParticle*>::iterator momIt;
 
-        genCon->SetMotherId(myParticle->mother()->pdgId());
 
+        //if (true){
         if (myParticle->numberOfMothers() == 0){
             genCon->SetMother(0);
         }else if(
@@ -1578,6 +1583,7 @@ TCGenParticle* ntupleProducer::addGenParticle(const reco::GenParticle* myParticl
     else
         genCon = it->second;
 
+    //cout<<*genCon<<endl;
     return genCon;
 }
 

@@ -7,25 +7,20 @@ process = cms.Process("NTUPLE")
 
 options = VarParsing.VarParsing ('analysis')
 options.maxEvents = 100
-#options.inputFiles = '/store/mc/Summer12_DR53X/TTH_HToZG_M-135_8TeV-pythia8175/AODSIM/PU_RD1_START53_V7N-v2/00000/0A4C1013-9287-E311-937C-003048D4397E.root'
+options.inputFiles = '/store/mc/Summer12_DR53X/TTH_HToZG_M-135_8TeV-pythia8175/AODSIM/PU_RD1_START53_V7N-v2/00000/0A4C1013-9287-E311-937C-003048D4397E.root'
 #options.inputFiles= '/store/data/Run2012C/SingleMu/AOD/22Jan2013-v1/30010/C0E05558-9078-E211-9E02-485B39800B65.root'
-#options.inputFiles= '/store/data/Run2012C/DoublePhoton/AOD/22Jan2013-v2/30001/72DE4526-F370-E211-B370-00304867920A.root'
-#options.inputFiles = '/store/user/cmkuo/Dalitz_H_eeg_125_MG_v1/Dalitz_H_eeg_m125_RECO_v1/d459946fa1e058e24b305fca3ec661c6/STEP2_RAW2DIGI_L1Reco_RECO_PU_100_1_jL0.root'
 #options.loadFromFile('inputFiles','PYTHIA8_175_H_Zg_8TeV.txt')
 #options.loadFromFile('inputFiles','PYTHIA8_175_POWHEG_PDF7_H_Zg_8TeV.txt')
 #options.inputFiles = '/store/data/Run2012A/DoubleElectron/AOD/13Jul2012-v1/00000/00347915-EED9-E111-945A-848F69FD2817.root'
-#options.loadFromFile('inputFiles','ggHZG_S10.txt')
 #options.inputFiles = '/store/user/andrey/Higgs_To_MuMuGamma_Dalitz_MH125_Mll_0to50_MadgraphHEFT_pythia6/AODSIM/39bf61f738ba3bdb8860f0848073cc88/aodsim_1_1_S9V.root'
-options.inputFiles = '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0000/02CDCF05-BED2-E111-85F4-0030486740BA.root'
+#options.inputFiles = '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0000/02CDCF05-BED2-E111-85F4-0030486740BA.root'
 #options.inputFiles = '/store/data/Run2012D/SinglePhotonParked/AOD/22Jan2013-v1/30004/144D7268-4086-E211-9DC1-001E673984C1.root'
-#options.inputFiles= '/store/data/Run2012D/DoubleMuParked/AOD/22Jan2013-v1/30002/58E74AA2-5184-E211-9E82-485B39897219.root'
 #options.inputFiles='/store/data/Run2012C/MuEG/AOD/22Jan2013-v1/20000/5A2C6379-8867-E211-BB9E-00266CFFC7E4.root'
-#options.inputFiles='/store/data/Run2012D/DoubleMuParked/AOD/22Jan2013-v1/30000/6824E350-3382-E211-8AAD-001EC9D7F65F.root'
 #options.inputFiles = '/store/user/cmkuo/Dalitz_H_eeg_125_MG_v1/Dalitz_H_eeg_m125_RECO_v1/d459946fa1e058e24b305fca3ec661c6/STEP2_RAW2DIGI_L1Reco_RECO_PU_100_1_jL0.root'
-#options.inputFiles = '/store/data/Run2012B/DoublePhoton/AOD/22Jan2013-v1/20000/0013EBD3-FA6C-E211-A1DF-00261894384A.root'
 #options.inputFiles = '/store/data/Run2012D/DoublePhoton/AOD/22Jan2013-v1/30002/FEA0AD2A-A284-E211-9B86-180373FF8D6A.root'
 #options.inputFiles = '/store/data/Run2012C/DoubleMuParked/AOD/22Jan2013-v1/10000/00858723-296D-E211-A4B3-00259073E488.root'
 #options.inputFiles = '/store/data/Run2012C/DoubleElectron/AOD/22Jan2013-v1/20000/00ABC56B-3668-E211-A0A5-003048678FDE.root'
+#options.inputFiles = '/store/data/Run2011A/DoubleMu/AOD/21Jun2013-v1/10000/006AD75C-17DE-E211-B24E-003048678B0C.root'
 
 
 options.register("isRealData",
@@ -406,6 +401,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
   hltName           =    cms.untracked.string("HLT"),
   triggers          =    cms.untracked.vstring(
+                                               "HLT_DoubleMu7_v",
                                                "HLT_Mu13_Mu8_v",
                                                "HLT_Mu17_Mu8_v",
                                                "HLT_Mu17_TkMu8_v",

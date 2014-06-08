@@ -30,7 +30,7 @@ class TCGenParticle : public TCPhysObject {
 
     void SetIsParton(bool a);
 
-    ClassDef(TCGenParticle, 1);
+    ClassDef(TCGenParticle, 2);
 
     // print method
     virtual ostream& TCprint(ostream& out) const;
