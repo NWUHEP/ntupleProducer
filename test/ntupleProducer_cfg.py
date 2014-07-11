@@ -22,6 +22,7 @@ options.inputFiles = '/store/mc/Summer12_DR53X/TTH_HToZG_M-135_8TeV-pythia8175/A
 #options.inputFiles = '/store/data/Run2012C/DoubleElectron/AOD/22Jan2013-v1/20000/00ABC56B-3668-E211-A0A5-003048678FDE.root'
 #options.inputFiles = '/store/data/Run2011A/DoubleMu/AOD/21Jun2013-v1/10000/006AD75C-17DE-E211-B24E-003048678B0C.root'
 options.inputFiles = '/store/mc/Fall13dr/JPsiToMuMu_Pt20to100-pythia6-gun/GEN-SIM-RECO/tsg_PU40bx50_POSTLS162_V2-v1/20000/06252816-B574-E311-B296-0025907DCA72.root'
+options.inputFiles = '/store/mc/Fall13dr/JPsiToMuMu_Pt20to100-pythia6-gun/GEN-SIM-RECO/tsg_PU40bx50_POSTLS162_V2-v1/20000/06252816-B574-E311-B296-0025907DCA72.root'
 
 options.register("isRealData",
                  0,
