@@ -11,7 +11,6 @@ class TCElectron : public TCEGamma {
   class Track : public TCTrack{
                        ClassDef(Track, 1);
                      };
-
  private:
 
   float _normChi2kf;
@@ -53,6 +52,7 @@ class TCElectron : public TCEGamma {
   TLorentzVector _regressionMomCombP4;
   float _effArea;
 
+  vector<TCEGamma> _baseSC;
   vector<TCElectron::Track> _tracks;
 
  public:
@@ -61,7 +61,8 @@ class TCElectron : public TCEGamma {
 
   // "get" methods -----------
   vector<TCElectron::Track> GetTracks() const;
-
+  vector<TCEGamma> BaseSC() const;
+  
   float NormalizedChi2() const;
   float NormalizedChi2Gsf() const;
   float NormalizedChi2Kf() const;
@@ -108,6 +109,7 @@ class TCElectron : public TCEGamma {
   //--------------------------
   // "set" methods ---------
   //--------------------------
+  void AddBaseSC(TCEGamma);
   void AddTrack(TCElectron::Track);
 
   void SetNormalizedChi2Kf(float);
@@ -154,7 +156,7 @@ class TCElectron : public TCEGamma {
   // print method
   virtual ostream& TCprint(ostream& out) const;
 
-  ClassDef(TCElectron, 1);
+  ClassDef(TCElectron, 2);
 };
 
 #endif	/* _TCELECTRON_H */

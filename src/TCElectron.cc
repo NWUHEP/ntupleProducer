@@ -42,6 +42,10 @@ TCElectron::~TCElectron() {
 
 // "get" methods -------------------------------------
 
+std::vector<TCEGamma> TCElectron::BaseSC() const {
+  return _baseSC;
+}
+
 std::vector<TCElectron::Track> TCElectron::GetTracks() const { return _tracks; }
 
 float TCElectron::NormalizedChi2() const { 
@@ -61,7 +65,6 @@ float TCElectron::NormalizedChi2Kf()  const {
 float TCElectron::InverseEnergyMomentumDiff() const{
   return _inverseEnergyMomentumDiff;
 }
-
 
 float TCElectron::MvaID_Old() const { 
   return _mvaID_Old; 
@@ -173,6 +176,10 @@ float TCElectron::EffArea() const {
 //------------------------------------------------
 // "set" methods ---------------------------------------------
 //------------------------------------------------------------------------
+void TCElectron::AddBaseSC(TCEGamma sc){
+  _baseSC.push_back(sc);
+}
+
 void TCElectron::AddTrack(TCElectron::Track tr){
   //std::cout<<"Adding a track!  pt="<<tr.Pt()<<std::endl;
   _tracks.push_back(tr);

@@ -256,12 +256,12 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
         jetCon->SetUncertaintyJES(-1);
 
-        jetCon->SetBDiscriminatorMap("TCHE", MatchBTagsToJets(bTagsTCHE, *iJet));
-        jetCon->SetBDiscriminatorMap("TCHP", MatchBTagsToJets(bTagsTCHP, *iJet));
+        jetCon->SetBDiscriminatorMap("TCHE",  MatchBTagsToJets(bTagsTCHE,  *iJet));
+        jetCon->SetBDiscriminatorMap("TCHP",  MatchBTagsToJets(bTagsTCHP,  *iJet));
         jetCon->SetBDiscriminatorMap("SSVHE", MatchBTagsToJets(bTagsSSVHE, *iJet));
-        jetCon->SetBDiscriminatorMap("JBP", MatchBTagsToJets(bTagsJBP, *iJet));
-        jetCon->SetBDiscriminatorMap("CSV", MatchBTagsToJets(bTagsCSV, *iJet));
-        jetCon->SetBDiscriminatorMap("CSVMVA", MatchBTagsToJets(bTagsCSVMVA, *iJet));
+        jetCon->SetBDiscriminatorMap("JBP",   MatchBTagsToJets(bTagsJBP,   *iJet));
+        jetCon->SetBDiscriminatorMap("CSV",   MatchBTagsToJets(bTagsCSV,   *iJet));
+        jetCon->SetBDiscriminatorMap("CSVMVA",MatchBTagsToJets(bTagsCSVMVA,*iJet));
 
         /////////////////////
         // Get Hgg Id vars //
@@ -569,11 +569,35 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         myElectron->SetSCPhiWidth(   iElectron->superCluster()->phiWidth());
         myElectron->SetSCEnergy(     iElectron->superCluster()->energy());
         if (iElectron->superCluster()->rawEnergy()!=0)
-            myElectron->SetPreShowerOverRaw(iElectron->superCluster()->preshowerEnergy() / iElectron->superCluster()->rawEnergy());
+          myElectron->SetPreShowerOverRaw(iElectron->superCluster()->preshowerEnergy() / iElectron->superCluster()->rawEnergy());
+
+        //These piece of code is for Sub-Supercluster information
+        //needed far Dalitz electron object
+        //int sccount=0;
+        for (CaloCluster_iterator itbc = iElectron->superCluster()->clustersBegin(); itbc != iElectron->superCluster()->clustersEnd(); ++itbc) {
+          TCEGamma *sc = new TCEGamma();
+          vector<float> eleCov;
+          eleCov = lazyTool->localCovariances(**itbc);
+          
+          sc->SetSCEnergy((*itbc)->energy());
+          sc->SetSCEta((*itbc)->eta());
+          sc->SetSCPhi((*itbc)->phi());
+
+          sc->SetSCPhi((*itbc)->phi());
+          sc->SetE1x5(lazyTool->e1x5(**itbc));
+          sc->SetE2x5(lazyTool->e2x5Max(**itbc));
+          sc->SetE2x5Max(lazyTool->e2x5Max(**itbc));
+          sc->SetE5x5(lazyTool->e5x5(**itbc));
+
+          myElectron->AddBaseSC(*sc);
+          //sc->Dump();
+          //sccount++;
+        }
 
 
         myElectron->SetE1x5(iElectron->e1x5());
         myElectron->SetE2x5(iElectron->e2x5Max());
+        myElectron->SetE2x5Max(iElectron->e2x5Max());
         myElectron->SetE5x5(iElectron->e5x5());
 
         myElectron->SetDeltaEtaSeedCluster(iElectron->deltaEtaSeedClusterTrackAtCalo());
@@ -635,7 +659,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             myElectron->SetTrackerLayersWithMeasurement( myTrackRef->hitPattern().trackerLayersWithMeasurement());
             myElectron->SetNormalizedChi2Kf( myTrackRef->normalizedChi2());
             myElectron->SetNumberOfValidHits(myTrackRef->numberOfValidHits());
-
         }
         else{
             myElectron->SetTrackerLayersWithMeasurement(-1);
@@ -771,7 +794,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         myElectron->SetIdMap("neuIso_std", iso_neutral);
         myElectron->SetIdMap("phoIso_std", iso_gamma);
 
-        myElectron->SetIdMap("chIso_scfp", mySCFPstruct.chargediso);
+        myElectron->SetIdMap("chIso_scfp",  mySCFPstruct.chargediso);
         myElectron->SetIdMap("neuIso_scfp", mySCFPstruct.neutraliso);
         myElectron->SetIdMap("phoIso_scfp", mySCFPstruct.photoniso);
 
@@ -788,8 +811,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
           }
         }
         eleCount++;
-    }
 
+        //cout<<*myElectron<<endl;
+        //myElectron->Dump();
+    }
 
     /////////////////
     // Get photons //
@@ -852,7 +877,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
             for(detitr = PhotonHit_DetIds.begin(); detitr != PhotonHit_DetIds.end(); ++detitr)
             {
-
                 if (((*detitr).first).det() == DetId::Ecal && ((*detitr).first).subdetId() == EcalBarrel) {
                     EcalRecHitCollection::const_iterator j= Brechit->find(((*detitr).first));
                     EcalRecHitCollection::const_iterator thishit;
@@ -900,7 +924,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                std::cout << "savedCrystals[y].rawId: " << savedCrystals[y].rawId <<std::endl;
                }
              */
-
         }
 
         myPhoton->SetPxPyPzE(iPhoton->px(), iPhoton->py(), iPhoton->pz(), iPhoton->p());
