@@ -75,7 +75,7 @@ if __name__ == '__main__':
         localPath = '/'+'/'.join(pfn.split('/')[6:-1])
       if not os.path.isfile(localFile):
         print pfn, 'does not actually exist'
-        raw_input('resubmit this job, something is wrong')
+        raw_input('resubmit this job, something is wrong\n ENTER to continue')
       expList.append(pfn.split('/')[-1])
 
   #except:
