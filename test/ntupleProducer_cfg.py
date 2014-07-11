@@ -16,7 +16,7 @@ options.maxEvents = 100
 #options.inputFiles = '/store/data/Run2012A/DoubleElectron/AOD/13Jul2012-v1/00000/00347915-EED9-E111-945A-848F69FD2817.root'
 #options.loadFromFile('inputFiles','ggHZG_S10.txt')
 #options.inputFiles = '/store/user/andrey/Higgs_To_MuMuGamma_Dalitz_MH125_Mll_0to50_MadgraphHEFT_pythia6/AODSIM/39bf61f738ba3bdb8860f0848073cc88/aodsim_1_1_S9V.root'
-options.inputFiles = '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0000/02CDCF05-BED2-E111-85F4-0030486740BA.root'
+#options.inputFiles = '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0000/02CDCF05-BED2-E111-85F4-0030486740BA.root'
 #options.inputFiles = '/store/data/Run2012D/SinglePhotonParked/AOD/22Jan2013-v1/30004/144D7268-4086-E211-9DC1-001E673984C1.root'
 #options.inputFiles= '/store/data/Run2012D/DoubleMuParked/AOD/22Jan2013-v1/30002/58E74AA2-5184-E211-9E82-485B39897219.root'
 #options.inputFiles='/store/data/Run2012C/MuEG/AOD/22Jan2013-v1/20000/5A2C6379-8867-E211-BB9E-00266CFFC7E4.root'
@@ -26,6 +26,7 @@ options.inputFiles = '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-m
 #options.inputFiles = '/store/data/Run2012D/DoublePhoton/AOD/22Jan2013-v1/30002/FEA0AD2A-A284-E211-9B86-180373FF8D6A.root'
 #options.inputFiles = '/store/data/Run2012C/DoubleMuParked/AOD/22Jan2013-v1/10000/00858723-296D-E211-A4B3-00259073E488.root'
 #options.inputFiles = '/store/data/Run2012C/DoubleElectron/AOD/22Jan2013-v1/20000/00ABC56B-3668-E211-A0A5-003048678FDE.root'
+options.inputFiles = '/store/mc/Fall13dr/JPsiToMuMu_Pt20to100-pythia6-gun/GEN-SIM-RECO/tsg_PU40bx50_POSTLS162_V2-v1/20000/06252816-B574-E311-B296-0025907DCA72.root'
 
 
 options.register("isRealData",
