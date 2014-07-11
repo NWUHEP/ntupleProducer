@@ -1197,6 +1197,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     myNoiseFilters.isCSCTightHalo = TheSummary.CSCTightHaloId();
     myNoiseFilters.isCSCLooseHalo = TheSummary.CSCLooseHaloId();
 
+    //if (saveTriggerObj_)
+    //analyzeTrigger(hltResults, hltEvent, hlNames[i], &trigCount);
+    //addTriggerObjects(hltEvent, hlNames[i], &trigCount);
 
     //LogWarning("Filters")<<"\n csc1  "<< myNoiseFilters.isCSCTightHalo<<"  csc2  "<<myNoiseFilters.isCSCLooseHalo
     //  <<" isNoiseHcal HBHE "<<myNoiseFilters.isNoiseHcalHBHE<<"  laser "<<myNoiseFilters.isNoiseHcalLaser<<"\n"
@@ -1376,12 +1379,28 @@ bool ntupleProducer::isFilteredOutScraping( const edm::Event& iEvent, const edm:
     return !accepted;  //if filtered out it's not accepted.
 }
 
+/*
+void ntupleProducer::addTriggerObjects(edm::Handle<trigger::TriggerEvent> &hltEvent, const std::string& triggerName, int* trigCount) 
+{
+  const unsigned int n(hltConfig_.size());
+  const unsigned int triggerIndex(hltConfig_.triggerIndex(triggerName));
+
+  const unsigned int moduleIndex(hltResults->index(triggerIndex));
+  const unsigned int m(hltConfig_.size(triggerIndex));
+  const vector<string>& moduleLabels(hltConfig_.moduleLabels(triggerIndex));
+
+
+}
+*/
+
 void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults, edm::Handle<trigger::TriggerEvent> &hltEvent, const std::string& triggerName, int* trigCount) {
 
     using namespace trigger;
-
     const unsigned int n(hltConfig_.size());
     const unsigned int triggerIndex(hltConfig_.triggerIndex(triggerName));
+
+   //TLorentzVector triggerLepton;
+
 
     // abort on invalid trigger name
     if(verboseTrigs){
