@@ -1168,12 +1168,12 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     Handle<bool> hcalNoiseFilterHandle;
     iEvent.getByLabel(hcalHBHEFilterTag_, hcalNoiseFilterHandle);
     if (hcalNoiseFilterHandle.isValid())  myNoiseFilters.isNoiseHcalHBHE = !(Bool_t)(*hcalNoiseFilterHandle);
-    else LogWarning("Filters")<<"hcal noise NOT valid  ";
+    else LogWarning("Filters")<<"Hcal noise NOT valid  ";
 
     Handle<bool> hcalLaserFilterHandle;
     iEvent.getByLabel(hcalLaserFilterTag_, hcalLaserFilterHandle);
     if (hcalLaserFilterHandle.isValid())  myNoiseFilters.isNoiseHcalLaser = !(Bool_t)(*hcalLaserFilterHandle);
-    else LogWarning("Filters")<<"hcal Laser NOT valid  ";
+    else LogWarning("Filters")<<"Hcal Laser NOT valid  ";
 
     Handle<bool> ecalTPFilterHandle;
     iEvent.getByLabel(ecalTPFilterTag_, ecalTPFilterHandle);
@@ -1198,19 +1198,18 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
     Handle<bool> trkPOGFiltersHandle1;
     iEvent.getByLabel(trkPOGFiltersTag1_, trkPOGFiltersHandle1);
-    if(trkPOGFiltersHandle1.isValid()) myNoiseFilters.isNoisetrkPOG1 = !(Bool_t)(*trkPOGFiltersHandle1);
+    if(trkPOGFiltersHandle1.isValid()) myNoiseFilters.isNoisetrkPOG1 = (Bool_t)(*trkPOGFiltersHandle1);
     else LogWarning("Filters")<<"trkPOG1 NOT valid  ";
 
     Handle<bool> trkPOGFiltersHandle2;
     iEvent.getByLabel(trkPOGFiltersTag2_, trkPOGFiltersHandle2);
-    if(trkPOGFiltersHandle2.isValid()) myNoiseFilters.isNoisetrkPOG2 = !(Bool_t)(*trkPOGFiltersHandle2);
+    if(trkPOGFiltersHandle2.isValid()) myNoiseFilters.isNoisetrkPOG2 = (Bool_t)(*trkPOGFiltersHandle2);
     else LogWarning("Filters")<<"trkPOG2 NOT valid  ";
 
     Handle<bool> trkPOGFiltersHandle3;
     iEvent.getByLabel(trkPOGFiltersTag3_, trkPOGFiltersHandle3);
-    if(trkPOGFiltersHandle3.isValid()) myNoiseFilters.isNoisetrkPOG3 = !(Bool_t)(*trkPOGFiltersHandle3);
+    if(trkPOGFiltersHandle3.isValid()) myNoiseFilters.isNoisetrkPOG3 = (Bool_t)(*trkPOGFiltersHandle3);
     else LogWarning("Filters")<<"trkPOG3 NOT valid  ";
-
 
     edm::Handle<BeamHaloSummary> TheBeamHaloSummary;
     iEvent.getByLabel("BeamHaloSummary",TheBeamHaloSummary);
