@@ -981,8 +981,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         myPhoton->SetE2x5(iPhoton->e2x5()); // <<-
         // How come these two aren't  the same?!
         myPhoton->SetE2x5Max(lazyTool->e2x5Max(*phoSeed)); //<<-
-        if (iPhoton->e2x5() != lazyTool->e2x5Max(*phoSeed))
-          cout<<"No, it's not the same! : "<< iPhoton->e2x5()<<" vs "<< lazyTool->e2x5Max(*phoSeed)<<endl;
+        //if (iPhoton->e2x5() != lazyTool->e2x5Max(*phoSeed))
+        //cout<<"No, it's not the same! : "<< iPhoton->e2x5()<<" vs "<< lazyTool->e2x5Max(*phoSeed)<<endl;
 
         myPhoton->SetE5x5(iPhoton->e5x5());
 
