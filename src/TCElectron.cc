@@ -16,8 +16,6 @@ TCElectron::TCElectron():
   _mvaID_Old(-99),
   _mvaID_HZZ(-99),
 
-  _regEne(-99),
-  _regErr(-99),
   _passConvVeto(false),
   _convMissHits(0),
   _convDcot(-99),
@@ -77,12 +75,13 @@ float TCElectron::MvaID() const {
   return _mvaID_HZZ; 
 } 
 
-float TCElectron::EnergyRegression() const { 
-  return _regEne; 
-}
-float TCElectron::EnergyRegressionErr() const { 
-  return _regErr; 
-} 
+//These will be moved to TCEGamma parent class:
+//float TCElectron::EnergyRegression() const { 
+//  return _regEne; 
+//}
+//float TCElectron::EnergyRegressionErr() const { 
+//  return _regErr; 
+//} 
 
 float TCElectron::IP3d() const {
   return _ip3d;
@@ -201,12 +200,12 @@ void TCElectron::SetMvaID_HZZ(float m){
   _mvaID_HZZ = m; 
 }
 
-void TCElectron::SetEnergyRegression(float e){ 
-  _regEne = e; 
-}
-void TCElectron::SetEnergyRegressionErr(float e){ 
-  _regErr = e; 
-} 
+//void TCElectron::SetEnergyRegression(float e){ 
+//  _regEne = e; 
+//}
+//void TCElectron::SetEnergyRegressionErr(float e){ 
+//  _regErr = e; 
+//} 
 
 void TCElectron::SetIP3d(float d){
   _ip3d = d;
@@ -300,7 +299,7 @@ ostream& TCElectron::TCprint(ostream& os) const {
    " InverseEnergyMomentumDiff: " << InverseEnergyMomentumDiff() << " EoP: " << EoP() << " EoPout: " << EoPout() <<
    " ESeedOverP: " << ESeedOverP() << " IP3d: " << IP3d() << " IP3dSig: " << IP3dSig() << " DeltaEtaSeedCluster: " << DeltaEtaSeedCluster() <<
    " DeltaPhiSeedCluster: " << DeltaPhiSeedCluster() << " PtError: " << PtError() << " FBrem: " << FBrem() << " MvaID: " << MvaID() <<
-   " EnergyRegression: " << EnergyRegression() << " EnergyRegressionErr: " << EnergyRegressionErr() << " PassConversionVeto: " << PassConversionVeto() <<
+   " PassConversionVeto: " << PassConversionVeto() <<
    " ConversionMissHits: " << ConversionMissHits() << " ConversionDcot: " << ConversionDcot() << " ConversionDist: " << ConversionDist() <<
    " ConversionRadius: " << ConversionRadius() << " TrackerLayersWithMeasurement: " << TrackerLayersWithMeasurement() << 
    " NumberOfValidHits: " << NumberOfValidHits() << " NumberOfValidPixelHits: " << NumberOfValidPixelHits() <<

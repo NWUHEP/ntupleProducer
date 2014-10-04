@@ -629,7 +629,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         // ** *************
         // Assosited GSF tracks:
         // ** ************
-
+        
+        //This is the main track, directly assosiated with an Electron
         TCElectron::Track *t = new TCElectron::Track();
         t->SetXYZM(iElectron->gsfTrack()->px(), iElectron->gsfTrack()->py(), iElectron->gsfTrack()->pz(),  0);
         t->SetVtx(iElectron->gsfTrack()->vx(),  iElectron->gsfTrack()->vy(), iElectron->gsfTrack()->vz());
@@ -639,7 +640,13 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         TCTrack::ConversionInfo convInfo = ntupleProducer::CheckForConversions(hConversions, iElectron->gsfTrack(),
                                                                                vertexBeamSpot.position(), (*myVtxRef).position());
         t->SetConversionInfo(convInfo);
-        //This is the main track, directly assosiated with an Electron
+
+        //NOTE: above code would only work with modified ConversionTools!!
+        //Comment is out if doesn't compile (it wont compile with the current version of ntuple producer)
+        bool passconv = !ConversionTools::hasMatchedConversion(iElectron->gsfTrack(), hConversions, vertexBeamSpot.position(), 2.0, 1e-6, 0);
+        t->SetIdMap("GSF_PassConv", passconv);
+        t->SetIdMap("GSF_MissHits", iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfHits());
+
         myElectron->AddTrack(*t);
 
         myElectron->SetPtError(iElectron->gsfTrack()->ptError());
@@ -660,8 +667,13 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
           convInfo = ntupleProducer::CheckForConversions(hConversions, *gtr,
                                                          vertexBeamSpot.position(), (*myVtxRef).position());
           t->SetConversionInfo(convInfo);
-          myElectron->AddTrack(*t);
-          
+
+          //NOTE: same as above for ConversionTools
+          passconv = !ConversionTools::hasMatchedConversion(*gtr, hConversions, vertexBeamSpot.position(), 2.0, 1e-6, 0);
+          t->SetIdMap("GSF_PassConv", passconv);
+          t->SetIdMap("GSF_MissHits", (*gtr)->trackerExpectedHitsInner().numberOfHits());
+
+          myElectron->AddTrack(*t);          
         }
 
         myElectron->SetConversionDcot(iElectron->convDcot());
@@ -747,8 +759,10 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         //myElectron->SetIdMap("TrkIso_R03", (iElectron->phoTrkIsoHollowDR03());
 
         // Effective area for rho PU corrections
-        float AEff03 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso03, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
-        float AEff04 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso04, iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
+        float AEff03 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso03, 
+                                                                       iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
+        float AEff04 = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso04, 
+                                                                       iElectron->eta(), ElectronEffectiveArea::kEleEAData2012);
         myElectron->SetIdMap("EffArea_R03", AEff03);
         myElectron->SetIdMap("EffArea_R04", AEff04);
         myElectron->SetEffArea(AEff04);
@@ -1024,6 +1038,23 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         //myPhoton->SetIdMap("HadIso_R04",iPhoton->hcalTowerSumEtConeDR04() +
         //        (iPhoton->hadronicOverEm() - iPhoton->hadTowOverEm())*iPhoton->superCluster()->energy()/cosh(iPhoton->superCluster()->eta()));
 
+        //---------------------------------//
+        //-- Energy Regression Correction--//
+        //---------------------------------//
+        if (!egCorrPho_.IsInitialized()) {
+          std::string filenamePho = edm::FileInPath("NWU/ntupleProducer/data/gbrv3ph_52x.root").fullPath();
+          egCorrPho_.Initialize(iSetup, filenamePho);
+        }
+
+        std::pair<double,double> regrCorPho = egCorrPho_.CorrectedEnergyWithErrorV3(*iPhoton, *recVtxsBS_, *rhoCorr, *lazyTool, iSetup);
+
+        myPhoton->SetEnergyRegression(regrCorPho.first);
+        myPhoton->SetEnergyRegressionErr(regrCorPho.second);
+
+        //cout<<" DBG PHOTON  Energy regression"<<endl;
+        //cout<<"Photon SCEn = "<<myPhoton->SCEnergy()<<"  after regression "<<myPhoton->EnergyRegression()<<"  err = "<<myPhoton->EnergyRegressionErr()<<endl;
+        //cout<<regrCorPho.first<<"   "<<regrCorPho.second<<endl;
+
         //Footprint removal
         edm::ParameterSet myConfig;
         myConfig.addUntrackedParameter("isolation_cone_size_forSCremoval",SCFPRemovalConePho_);
@@ -1068,7 +1099,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
         if (ESRecHits.isValid() && (fabs(iPhoton->superCluster()->eta()) > 1.6 && fabs(iPhoton->superCluster()->eta()) < 3)) {
 
-            vector<float> phoESHits0 = getESHits((*iPhoton).superCluster()->x(), (*iPhoton).superCluster()->y(), (*iPhoton).superCluster()->z(), rechits_map_, geometry_p, topology_p.get(), 0);
+            vector<float> phoESHits0 = getESHits((*iPhoton).superCluster()->x(), (*iPhoton).superCluster()->y(), (*iPhoton).superCluster()->z(), 
+                                                 rechits_map_, geometry_p, topology_p.get(), 0);
 
             vector<float> phoESShape = getESEffSigmaRR(phoESHits0);
             phoESEffSigmaRR_x = phoESShape[0];

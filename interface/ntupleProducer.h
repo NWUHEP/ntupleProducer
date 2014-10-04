@@ -95,6 +95,8 @@
 #include "EgammaAnalysis/ElectronTools/interface/PFIsolationEstimator.h"
 //#include "EgammaAnalysis/ElectronTools/interface/ElectronEnergyRegressionEvaluate.h"
 #include "CiCPhotonID.h"
+// For photon regression:
+#include "RecoEgamma/EgammaTools/interface/EGEnergyCorrector.h"
 
 #include "TrackingTools/IPTools/interface/IPTools.h"
 
@@ -163,18 +165,18 @@ using namespace reco;
 //
 
 struct Filters {		//Filters 
-    Bool_t isScraping;
-    Bool_t isNoiseHcalHBHE;
-    Bool_t isNoiseHcalLaser;
-    Bool_t isNoiseEcalTP;
-    Bool_t isNoiseEcalBE;
-    Bool_t isCSCTightHalo;
-    Bool_t isCSCLooseHalo;
-    Bool_t isNoiseTracking;
-    Bool_t isNoiseEEBadSc;
-    Bool_t isNoisetrkPOG1;
-    Bool_t isNoisetrkPOG2;
-    Bool_t isNoisetrkPOG3;
+  Bool_t isScraping;
+  Bool_t isNoiseHcalHBHE;
+  Bool_t isNoiseHcalLaser;
+  Bool_t isNoiseEcalTP;
+  Bool_t isNoiseEcalBE;
+  Bool_t isCSCTightHalo;
+  Bool_t isCSCLooseHalo;
+  Bool_t isNoiseTracking;
+  Bool_t isNoiseEEBadSc;
+  Bool_t isNoisetrkPOG1;
+  Bool_t isNoisetrkPOG2;
+  Bool_t isNoisetrkPOG3;
 };
 
 
@@ -203,7 +205,8 @@ class ntupleProducer : public edm::EDAnalyzer {
         TCTrack::ConversionInfo CheckForConversions(const edm::Handle<reco::ConversionCollection> &convCol,
                 const reco::GsfTrackRef &trk,
                 const math::XYZPoint &bs, const math::XYZPoint &pv);
-        vector<float> getESHits(double X, double Y, double Z, map<DetId, EcalRecHit> rechits_map, const CaloSubdetectorGeometry*& geometry_p, CaloSubdetectorTopology *topology_p, int row=0);
+        vector<float> getESHits(double X, double Y, double Z, map<DetId, EcalRecHit> rechits_map, 
+                                const CaloSubdetectorGeometry*& geometry_p, CaloSubdetectorTopology *topology_p, int row=0);
         vector<float> getESEffSigmaRR(vector<float> ESHits0);
 
 
@@ -315,7 +318,7 @@ class ntupleProducer : public edm::EDAnalyzer {
         TH1F * h1_numOfEvents;
 
         // Electron Regression
-        //auto_ptr<ElectronEnergyRegressionEvaluate> myEleReg;
+        EGEnergyCorrector egCorrPho_;
 
         // PU Jet Id Algo
         auto_ptr<PileupJetIdAlgo> myPUJetID;

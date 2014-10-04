@@ -62,11 +62,9 @@ class TCEGamma : public TCPhysObject {
 
   vector<float> _esEffSigmaRR;
 
-
   //float _mvaID;
-  //float _regEne;
-  //float _regErr;
-
+  float _regEne;
+  float _regErr;
 
   // Notice that in case of electrons, the isolation variables are saved for the cone 0.4
   // while for the photons the cone is 0.3
@@ -122,8 +120,8 @@ class TCEGamma : public TCPhysObject {
 
 
   //float MvaID() const;
-  //float EnergyRegression() const;
-  //float EnergyRegressionErr() const;
+  float EnergyRegression() const;
+  float EnergyRegressionErr() const;
 
   bool IsEB() const;
   bool IsEE() const;
@@ -166,8 +164,8 @@ class TCEGamma : public TCPhysObject {
 
   void SetR9(float);
   //void SetMvaID(float m);
-  //void SetEnergyRegression(float e);
-  //void SetEnergyRegressionErr(float e);
+  void SetEnergyRegression(float);
+  void SetEnergyRegressionErr(float);
 
   void SetIsEB(bool);
   void SetIsEE(bool);
