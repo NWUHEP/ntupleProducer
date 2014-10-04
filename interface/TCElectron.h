@@ -11,7 +11,6 @@ class TCElectron : public TCEGamma {
   class Track : public TCTrack{
                        ClassDef(Track, 1);
                      };
-
  private:
 
   float _normChi2kf;
@@ -32,8 +31,6 @@ class TCElectron : public TCEGamma {
 
   float _mvaID_Old;
   float _mvaID_HZZ;
-  float _regEne;
-  float _regErr;
 
   bool  _passConvVeto;
   short _convMissHits;
@@ -53,6 +50,7 @@ class TCElectron : public TCEGamma {
   TLorentzVector _regressionMomCombP4;
   float _effArea;
 
+  vector<TCEGamma> _baseSC;
   vector<TCElectron::Track> _tracks;
 
  public:
@@ -61,7 +59,8 @@ class TCElectron : public TCEGamma {
 
   // "get" methods -----------
   vector<TCElectron::Track> GetTracks() const;
-
+  vector<TCEGamma> BaseSC() const;
+  
   float NormalizedChi2() const;
   float NormalizedChi2Gsf() const;
   float NormalizedChi2Kf() const;
@@ -84,8 +83,6 @@ class TCElectron : public TCEGamma {
   float MvaID_Old() const;
   float MvaID_HZZ() const;
   float MvaID() const;
-  float EnergyRegression() const;
-  float EnergyRegressionErr() const;
 
   bool  PassConversionVeto() const;
   short ConversionMissHits() const;
@@ -108,6 +105,7 @@ class TCElectron : public TCEGamma {
   //--------------------------
   // "set" methods ---------
   //--------------------------
+  void AddBaseSC(TCEGamma);
   void AddTrack(TCElectron::Track);
 
   void SetNormalizedChi2Kf(float);
@@ -144,8 +142,6 @@ class TCElectron : public TCEGamma {
 
   void SetMvaID_Old(float);
   void SetMvaID_HZZ(float);
-  void SetEnergyRegression(float);
-  void SetEnergyRegressionErr(float);
 
   void SetRegressionMomCombP4(TLorentzVector tmpP4);
 
@@ -154,7 +150,7 @@ class TCElectron : public TCEGamma {
   // print method
   virtual ostream& TCprint(ostream& out) const;
 
-  ClassDef(TCElectron, 1);
+  ClassDef(TCElectron, 2);
 };
 
 #endif	/* _TCELECTRON_H */
