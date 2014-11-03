@@ -70,6 +70,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     bunchCross   = (unsigned int)iEvent.bunchCrossing();
     isRealData   = iEvent.isRealData();
 
+    //if (eventNumber!=30785) return;
+
     edm::Handle<reco::BeamSpot> beamSpotHandle;
     iEvent.getByLabel("offlineBeamSpot", beamSpotHandle);
     reco::BeamSpot vertexBeamSpot = *beamSpotHandle;
@@ -741,6 +743,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         TLorentzVector tmpP4;
         tmpP4.SetPtEtaPhiE(iElectronTmp.pt(), iElectronTmp.eta(), iElectronTmp.phi(), iElectronTmp.energy());
         myElectron->SetRegressionMomCombP4(tmpP4);
+
+        //cout<< "electron before cor: "<<TCPhysObject(*myElectron)<<endl;
+        //cout<< "electron after cor: "<<iElectronTmp.pt()<<endl;
 
         //3 types of Pf Iso
 
