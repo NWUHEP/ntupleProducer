@@ -31,6 +31,8 @@ TCEGamma::TCEGamma():
   _e2x5Max(-99),
   _e5x5(-99),
   _esEffSigmaRR(),
+  _regEne(-99),
+  _regErr(-99),
 
   _pfIsoCharged(-99),
   _pfIsoNeutral(-99),
@@ -48,11 +50,16 @@ std::vector<TCEGamma::CrystalInfo> TCEGamma::GetCrystalVect() const { return _cr
 int   TCEGamma::GetNCrystals() const { return _nCrystals;}
 
 //float TCEGamma::MvaID() const { return _mvaID; }
-//float TCEGamma::EnergyRegression() const { return _regEne; }
-//float TCEGamma::EnergyRegressionErr() const { return _regErr; }
+float TCEGamma::EnergyRegression() const {
+  return _regEne;
+}
+float TCEGamma::EnergyRegressionErr() const {
+  return _regErr;
+}
 
-float TCEGamma::R9() const { return _r9; }
-
+float TCEGamma::R9() const {
+  return _r9;
+}
 
 bool TCEGamma::IsEB() const {
   return _isEB;
@@ -173,8 +180,12 @@ void TCEGamma::SetNCrystals(int n){ _nCrystals = n;}
 
 void TCEGamma::SetR9(float r){ _r9 = r; }
 
-//void TCEGamma::SetEnergyRegression(float e){ _regEne = e; }
-//void TCEGamma::SetEnergyRegressionErr(float e){ _regErr = e; }
+void TCEGamma::SetEnergyRegression(float e){
+  _regEne = e;
+}
+void TCEGamma::SetEnergyRegressionErr(float e){
+  _regErr = e;
+}
 
 void TCEGamma::SetHadOverEm(float he){
   _hadOverEm = he;
@@ -277,14 +288,15 @@ void TCEGamma::SetPfIsoPhoton(float f) {
 }
 
 ostream& TCEGamma::TCprint(ostream& os) const {
- return TCPhysObject::TCprint(os) << 
+ return TCPhysObject::TCprint(os) <<
    " R9: " << R9() << " SCEta: " << SCEta() << " SCPhi: " << SCPhi() << " SCDeltaEta: " << SCDeltaEta() <<
    " SCDeltaPhi: " << SCDeltaPhi() << " SigmaIEtaIEta: " << SigmaIEtaIEta() << " SigmaIEtaIPhi: " << SigmaIEtaIPhi() <<
    " SigmaIPhiIPhi: " << SigmaIPhiIPhi() << " SCEtaWidth: " << SCEtaWidth() << " SCPhiWidth: " << SCPhiWidth() <<
-   " SCRawEnergy: " << SCRawEnergy() << " SCEnergy: " << SCEnergy() << " SCPSEnergy: " << SCPSEnergy() << 
+   " SCRawEnergy: " << SCRawEnergy() << " SCEnergy: " << SCEnergy() << " SCPSEnergy: " << SCPSEnergy() <<
    " PreShowerOverRaw: " << PreShowerOverRaw() << " E1x3: " << E1x3() << " E1x5: " << E1x5() << " E2x2: " << E2x2() <<
    " E2x5: " << E2x5() << " E2x5Max: " << E2x5Max() << " E5x5: " << E5x5() << "E2OverE5: " << E2OverE5() <<
    " PfIsoCharged: " << PfIsoCharged() << " PfIsoNeutral: " << PfIsoNeutral() << " PfIsoPhoton: " << PfIsoPhoton() <<
-   " IsEB: " << IsEB() << " IsEE: " << IsEE() << " IsInGap: " << IsInGap(); 
- //return TCPhysObject::TCprint(os); 
+   " EnergyRegression: " << EnergyRegression() << " EnergyRegressionErr: " << EnergyRegressionErr() <<
+   " IsEB: " << IsEB() << " IsEE: " << IsEE() << " IsInGap: " << IsInGap();
+ //return TCPhysObject::TCprint(os);
 }
