@@ -7,9 +7,11 @@
 #include "TVector2.h"
 #include "TVector3.h"
 #include <map>
+#include <algorithm>
 #include <utility>
 #include <string>
 #include <iostream>
+#include <assert.h>
 
 using namespace std;
 
@@ -17,6 +19,7 @@ class TCPhysObject : public TLorentzVector {
     private:
         TVector3 _vtx;
         map<string, float> _IdMap;
+        map<string, vector<string> > _Triggers;
         int  _charge;
         bool _isPF;
         bool _isTriggered;
@@ -38,6 +41,9 @@ class TCPhysObject : public TLorentzVector {
         float Dxy(TVector3 *primVtx) const;
         float Dz(TVector3 *primVtx) const;
 
+        map<string, vector<string> > GetTriggers() const;
+
+
         // "set" methods ---------
         void SetP4(TLorentzVector p4);
         void SetIdMap(string s, float v);
@@ -46,6 +52,7 @@ class TCPhysObject : public TLorentzVector {
         void SetCharge(int c);  
         void SetPF(bool);
         void SetTriggered(bool);
+        void AddTrigger(string hlt, string l3, const vector<string> hlts);
 
         // print method
         virtual ostream& TCprint(ostream& out) const;

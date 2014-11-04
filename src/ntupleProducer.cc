@@ -63,6 +63,7 @@ ntupleProducer::~ntupleProducer()
 // ------------ method called to for each event  ------------
 void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
+    triggerObjects.clear();
     // this is for CVS check test
     eventNumber  = iEvent.id().event();
     runNumber    = iEvent.id().run();
@@ -444,15 +445,28 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
         //cout << "\t" << iMuon->pt() << ", " << iMuon->eta() << endl;
         // Match muon to trigger object //
+
+        
         if (saveTriggerObj_){
           for (unsigned j = 0; j < triggerObjects.size(); ++j) {
               float deltaR = triggerObjects[j].DeltaR(*myMuon);
-              if (deltaR < 0.3 && fabs(triggerObjects[j].GetId()) == 13) {
+              if (deltaR < 0.1 && fabs(triggerObjects[j].GetId()) == 13) {
                   myMuon->SetTriggered(true);
-                  break;
+                  myMuon->AddTrigger(triggerObjects[j].GetHLTName(), triggerObjects[j].GetModuleName(), triggerPaths_);
               }
           }
         }
+        
+        /*
+        map<string, vector<string> > myMap = myMuon->GetTriggers();
+        map<string, vector<string> >::iterator it;
+        for(it = myMap.begin(); it!=myMap.end(); it++){
+          cout<<it->first<<endl;
+          for(vector<string>::iterator vit=it->second.begin(); vit!=it->second.end(); vit++){
+            cout<<" "<<(*vit)<<endl;
+          }
+        }
+       */ 
         muCount++;
         //cout<<*myMuon<<endl;
     }
@@ -645,9 +659,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
         //NOTE: above code would only work with modified ConversionTools!!
         //Comment is out if doesn't compile (it wont compile with the current version of ntuple producer)
-        bool passconv = !ConversionTools::hasMatchedConversion(iElectron->gsfTrack(), hConversions, vertexBeamSpot.position(), 2.0, 1e-6, 0);
-        t->SetIdMap("GSF_PassConv", passconv);
-        t->SetIdMap("GSF_MissHits", iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfHits());
+        //bool passconv = !ConversionTools::hasMatchedConversion(iElectron->gsfTrack(), hConversions, vertexBeamSpot.position(), 2.0, 1e-6, 0);
+        //t->SetIdMap("GSF_PassConv", passconv);
+        //t->SetIdMap("GSF_MissHits", iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfHits());
 
         myElectron->AddTrack(*t);
 
@@ -671,9 +685,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
           t->SetConversionInfo(convInfo);
 
           //NOTE: same as above for ConversionTools
-          passconv = !ConversionTools::hasMatchedConversion(*gtr, hConversions, vertexBeamSpot.position(), 2.0, 1e-6, 0);
-          t->SetIdMap("GSF_PassConv", passconv);
-          t->SetIdMap("GSF_MissHits", (*gtr)->trackerExpectedHitsInner().numberOfHits());
+          //passconv = !ConversionTools::hasMatchedConversion(*gtr, hConversions, vertexBeamSpot.position(), 2.0, 1e-6, 0);
+          //t->SetIdMap("GSF_PassConv", passconv);
+          //t->SetIdMap("GSF_MissHits", (*gtr)->trackerExpectedHitsInner().numberOfHits());
 
           myElectron->AddTrack(*t);          
         }
@@ -837,18 +851,26 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         myElectron->SetIdMap("neuIso_scfp", mySCFPstruct.neutraliso);
         myElectron->SetIdMap("phoIso_scfp", mySCFPstruct.photoniso);
 
-        // Match muon to trigger object //
-        if(saveTriggerObj_){
+        // Match electron to trigger object //
+        if (saveTriggerObj_){
           for (unsigned j = 0; j < triggerObjects.size(); ++j) {
-              float deltaR    = triggerObjects[j].DeltaR(*myElectron);
-              //float deltaPt   = fabs(triggerObjects[j].Pt() - myElectron->Pt())/myElectron->Pt();
+              float deltaR = triggerObjects[j].DeltaR(*myElectron);
               if (deltaR < 0.1 && fabs(triggerObjects[j].GetId()) == 11) {
-                  //cout << triggerObjects[j].GetHLTName() << "\t" << triggerObjects[j].GetModuleName() << "\t" << deltaR << "\t" << deltaPt << endl;;
                   myElectron->SetTriggered(true);
-                  break;
+                  myElectron->AddTrigger(triggerObjects[j].GetHLTName(), triggerObjects[j].GetModuleName(), triggerPaths_);
               }
           }
         }
+        /*
+        map<string, vector<string> > myMap = myElectron->GetTriggers();
+        map<string, vector<string> >::iterator it;
+        for(it = myMap.begin(); it!=myMap.end(); it++){
+          cout<<it->first<<endl;
+          for(vector<string>::iterator vit=it->second.begin(); vit!=it->second.end(); vit++){
+            cout<<" "<<(*vit)<<endl;
+          }
+        }
+        */
         eleCount++;
 
         //cout<<*myElectron<<endl;
@@ -1273,13 +1295,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     myNoiseFilters.isCSCTightHalo = TheSummary.CSCTightHaloId();
     myNoiseFilters.isCSCLooseHalo = TheSummary.CSCLooseHaloId();
 
-    //if (saveTriggerObj_)
-    //analyzeTrigger(hltResults, hltEvent, hlNames[i], &trigCount);
-    //addTriggerObjects(hltEvent, hlNames[i], &trigCount);
-
-    //LogWarning("Filters")<<"\n csc1  "<< myNoiseFilters.isCSCTightHalo<<"  csc2  "<<myNoiseFilters.isCSCLooseHalo
-    //  <<" isNoiseHcal HBHE "<<myNoiseFilters.isNoiseHcalHBHE<<"  laser "<<myNoiseFilters.isNoiseHcalLaser<<"\n"
-    //  <<" ecal TP  "<<myNoiseFilters.isNoiseEcalTP<<"   ecal BE  "<<myNoiseFilters.isNoiseEcalBE;
 
     ++nEvents;
     eventTree -> Fill();
@@ -1292,7 +1307,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     recoPhotons   -> Clear("C");
     genJets       -> Clear("C");
     genParticles  -> Clear("C");
-    triggerObjects.clear();
 }
 
 // ------------ method called once each job just before starting event loop  ------------
@@ -1476,6 +1490,7 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults
     const unsigned int triggerIndex(hltConfig_.triggerIndex(triggerName));
 
    //TLorentzVector triggerLepton;
+   //if( triggerName.find("HLT_Mu17_Mu8_v") == string::npos) return;
 
 
     // abort on invalid trigger name
@@ -1539,9 +1554,10 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults
             std::cout<<" j = "<<j<<" modLabel/moduleType = "<<moduleLabel<<"/"<<moduleType<<" filterIndex = "<<filterIndex<<" sizeF = "<<hltEvent->sizeFilters()<<std::endl;
         }
 
+        //if (filterIndex < hltEvent->sizeFilters() && moduleLabel.find("L3") != string::npos) {
         if (filterIndex < hltEvent->sizeFilters()) {
             if(verboseTrigs){
-                cout << " 'L3' (or 'L1', 'L2') filter in slot " << j << " - label/type " << moduleLabel << "/" << moduleType << endl;
+                cout << " 'L3' filter in slot " << j << " - label/type " << moduleLabel << "/" << moduleType << endl;
             }
             const Vids& VIDS (hltEvent->filterIds(filterIndex));
             const Keys& KEYS(hltEvent->filterKeys(filterIndex));
@@ -1555,7 +1571,8 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults
             const TriggerObjectCollection& TOC(hltEvent->getObjects());
             for (size_type i = 0; i != n; ++i) {
                 const TriggerObject& TO(TOC[KEYS[i]]);
-                if (TO.pt() < 5 || (fabs(TO.id()) != 13 && fabs(TO.id()) != 11)) continue;
+                if (TO.pt() < 5 || TO.mass() < 0) continue;
+
                 TCTriggerObject trigObj = TCTriggerObject();
 
                 //cout<<" i = "<<i<<" moduleLabel/moduleType : "<<moduleLabel<<"/"<<moduleType<<endl;
@@ -1564,20 +1581,19 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults
                 // << TO.id() << " " << TO.pt() << " " << TO.eta() << " " << TO.phi() << " " << TO.mass() << " " << TO.energy()
                 //<< endl;
 
-                if (TO.mass() <= 0 || TO.pt() <= 0) continue;
 
                 trigObj.SetPtEtaPhiE(TO.pt(), TO.eta(), TO.phi(), TO.energy());
                 trigObj.SetHLTName(triggerName);
                 trigObj.SetModuleName(moduleLabel);
                 trigObj.SetId(TO.id());
 
-                float minDeltaR = 99.;
-                for (unsigned j = 0; j < triggerObjects.size(); ++j) {
-                    float deltaR = triggerObjects[j].DeltaR(trigObj);
-                    if (deltaR < minDeltaR && trigObj.GetId() == triggerObjects[j].GetId()) minDeltaR = deltaR;
-                }
+                //float minDeltaR = 99.;
+                //for (unsigned j = 0; j < triggerObjects.size(); ++j) {
+                //    float deltaR = triggerObjects[j].DeltaR(trigObj);
+                //    if (deltaR < minDeltaR && trigObj.GetId() == triggerObjects[j].GetId()) minDeltaR = deltaR;
+                //}
 
-                if (minDeltaR < 0.1) continue;
+                //if (minDeltaR < 0.1) continue;
 
                 triggerObjects.push_back(trigObj);
                 (*trigCount)++;
