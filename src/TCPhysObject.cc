@@ -51,6 +51,8 @@ int  TCPhysObject::Charge() const   { return _charge; }
 bool TCPhysObject::IsPF()   const   { return _isPF; }
 bool TCPhysObject::IsTriggered() const {return _isTriggered;}
 
+map<string, vector<string> > TCPhysObject::GetTriggers() const {return _Triggers;}
+
 // "set" methods ---------------------------------------------
 
 void TCPhysObject::SetP4(TLorentzVector p4) { this->SetPxPyPzE(p4.Px(), p4.Py(), p4.Pz(), p4.E()); } 
@@ -64,6 +66,22 @@ void TCPhysObject::SetVtx(float vx, float vy, float vz) {
 void TCPhysObject::SetCharge(int c) { _charge = c; }
 void TCPhysObject::SetPF(bool p)    { _isPF = p;}
 void TCPhysObject::SetTriggered(bool t)    { _isTriggered = t;}
+
+void TCPhysObject::AddTrigger(string hlt, string l3, const vector<string> hlts){
+  //trim the version numbers off the end of the HLT
+  for(vector<string>::const_iterator it=hlts.begin(); it!=hlts.end(); it++){
+    if(hlt.find(*it) != string::npos){
+      hlt = *it;
+      break;
+    }
+  }
+  if (find(_Triggers[hlt].begin(), _Triggers[hlt].end(), l3) == _Triggers[hlt].end()){
+    _Triggers[hlt].push_back(l3);
+  }
+
+  return;
+}
+
 
 // generally useful methods -----------------------------------
 

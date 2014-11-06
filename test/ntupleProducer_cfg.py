@@ -6,7 +6,7 @@ from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 process = cms.Process("NTUPLE")
 
 options = VarParsing.VarParsing ('analysis')
-options.maxEvents = 200
+options.maxEvents = 500
 #options.inputFiles = '/store/mc/Summer12_DR53X/TTH_HToZG_M-135_8TeV-pythia8175/AODSIM/PU_RD1_START53_V7N-v2/00000/0A4C1013-9287-E311-937C-003048D4397E.root'
 #options.inputFiles= '/store/data/Run2012C/SingleMu/AOD/22Jan2013-v1/30010/C0E05558-9078-E211-9E02-485B39800B65.root'
 #options.loadFromFile('inputFiles','PYTHIA8_175_H_Zg_8TeV.txt')
@@ -19,8 +19,9 @@ options.inputFiles = '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-m
 #options.inputFiles = '/store/data/Run2012C/DoubleMuParked/AOD/22Jan2013-v1/10000/00858723-296D-E211-A4B3-00259073E488.root'
 #options.inputFiles = '/store/data/Run2012C/DoubleElectron/AOD/22Jan2013-v1/20000/00ABC56B-3668-E211-A0A5-003048678FDE.root'
 #options.inputFiles = '/store/data/Run2011A/DoubleMu/AOD/21Jun2013-v1/10000/006AD75C-17DE-E211-B24E-003048678B0C.root'
-#options.inputFiles = '/store/mc/Summer12_DR53X/ggHToMuMuGamma-MH130_mll-0To50_Dalitz_8TeV_madgraph/AODSIM/PU_RD1_START53_V7N-v1/00000/30CA37F5-C220-E411-88F1-0025907B4F90.root'
-#options.inputFiles = '/store/mc/Summer12_DR53X/JPsiToMuMu_2MuPtEtaFilter_tuneD6T_8TeV-pythia6-evtgen/AODSIM/PU_S10_START53_V7A-v2/00000/0012F37A-CE09-E211-ABDA-00261894396F.root'
+#options.inputFiles = '/store/mc/Summer12_DR53X/GluGluToHToZZTo4L_M-125_8TeV-powheg-pythia6/AODSIM/PU_S10_START53_V7A-v1/0000/FEEEEFFF-7FFB-E111-8FE2-002618943810.root'
+#options.inputFiles = 'file:/uscms/home/bpollack/nobackup/genProd/CMSSW_5_3_13_cand1/src/MC_Gen/cfgs/STEP2_H_Zg_M500_Narrow_RAW2DIGI_L1Reco_RECO_VALIDATION_PU.root'
+
 
 options.register("isRealData",
                  0,
@@ -236,12 +237,18 @@ process.RandomNumberGeneratorService = cms.Service("RandomNumberGeneratorService
       engineName = cms.untracked.string('TRandom3')
     ),
 )
+#from IOMC.RandomEngine.RandomServiceHelper import RandomNumberServiceHelper
+#randSvc = RandomNumberServiceHelper(process.RandomNumberGeneratorService)
+#randSvc.populate()
+
 if (isRealData):
   process.calibratedElectrons.isMC = cms.bool(False)
   process.calibratedElectrons.inputDataset = cms.string("22Jan2013ReReco")
+  process.calibratedElectrons.applyLinearityCorrection = cms.bool(True)
 else:
   process.calibratedElectrons.isMC = cms.bool(True)
   process.calibratedElectrons.inputDataset = cms.string("Summer12_LegacyPaper")
+  process.calibratedElectrons.applyLinearityCorrection = cms.bool(False)
 
 process.calibratedElectrons.updateEnergyError = cms.bool(True)
 process.calibratedElectrons.correctionsType   = cms.int32(2)
@@ -249,9 +256,9 @@ process.calibratedElectrons.combinationType   = cms.int32(3)
 process.calibratedElectrons.lumiRatio         = cms.double(1.0)
 process.calibratedElectrons.verbose           = cms.bool(False)
 process.calibratedElectrons.synchronization   = cms.bool(False)
-process.calibratedElectrons.applyLinearityCorrection = cms.bool(True)
-#process.calibratedElectrons.scaleCorrectionsInputPath = cms.string("EgammaAnalysis/ElectronTools/data/scalesMoriond.csv")
-#process.calibratedElectrons.combinationRegressionInputPath = cms.string("EgammaAnalysis/ElectronTools/data/eleEnergyReg2012Weights_V1.root")
+process.calibratedElectrons.scaleCorrectionsInputPath = cms.string("EgammaAnalysis/ElectronTools/data/scalesNewReg-May2013.csv")
+process.calibratedElectrons.combinationRegressionInputPath = cms.string("EgammaAnalysis/ElectronTools/data/eleEnergyRegWeights_WithSubClusters_VApr15.root")
+process.calibratedElectrons.linearityCorrectionsInputPath = cms.string("EgammaAnalysis/ElectronTools/data/linearityNewReg-May2013.csv")
 
 
 # event source
@@ -359,7 +366,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   saveEleCrystals   =    cms.untracked.bool(False),
   savePhoCrystals   =    cms.untracked.bool(False),
 
-  saveTriggerObj    =    cms.untracked.bool(False),
+  saveTriggerObj    =    cms.untracked.bool(True),
 
   ecalTPFilterTag    =    cms.untracked.InputTag("EcalDeadCellTriggerPrimitiveFilter",""),
   ecalBEFilterTag    =    cms.untracked.InputTag("EcalDeadCellBoundaryEnergyFilter",""),
@@ -408,10 +415,14 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
                                                "HLT_Mu22_TkMu22_v",
                                                "HLT_IsoMu24_v",
                                                "HLT_IsoMu24_eta2p1_v",
+                                               "HLT_Mu17_v",
+                                               "HLT_Mu8_v",
 
                                                "HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL_v",
                                                "HLT_Ele17_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_Ele8_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_v",
                                                "HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
+                                               "HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
+                                               "HLT_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v",
                                                "HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_v",
 
                                                "HLT_Mu17_Ele8_CaloIdL_v",
