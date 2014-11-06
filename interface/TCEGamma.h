@@ -178,7 +178,7 @@ class TCEGamma : public TCPhysObject {
   // print method
   virtual ostream& TCprint(ostream& out) const;
 
-  ClassDef(TCEGamma, 1);
+  ClassDef(TCEGamma, 2);
 };
 
 #endif	/* _TCEGAMMA_H */

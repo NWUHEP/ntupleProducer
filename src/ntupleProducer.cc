@@ -1051,9 +1051,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         myPhoton->SetEnergyRegression(regrCorPho.first);
         myPhoton->SetEnergyRegressionErr(regrCorPho.second);
 
-        //cout<<" DBG PHOTON  Energy regression"<<endl;
-        //cout<<"Photon SCEn = "<<myPhoton->SCEnergy()<<"  after regression "<<myPhoton->EnergyRegression()<<"  err = "<<myPhoton->EnergyRegressionErr()<<endl;
-        //cout<<regrCorPho.first<<"   "<<regrCorPho.second<<endl;
+        cout<<" DBG PHOTON  Energy regression"<<endl;
+        cout<<"Photon SCEn = "<<myPhoton->SCEnergy()<<"  after regression "<<myPhoton->EnergyRegression()<<"  err = "<<myPhoton->EnergyRegressionErr()<<endl;
+        cout<<regrCorPho.first<<"   "<<regrCorPho.second<<endl;
 
         //Footprint removal
         edm::ParameterSet myConfig;

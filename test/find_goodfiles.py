@@ -111,9 +111,9 @@ if __name__ == '__main__':
     print 'these are missing:'
     for x in expList-obsList: 
         print x
-    print 'these are extra:',
+    print 'these are extra:\n',
     for x in obsList-expList: 
-        print x
+        print x, "\\"
         duplicateFile.write('{0}/{1}\n'.format(dirname,x))
   else: 
       print 'everything seems ok'
