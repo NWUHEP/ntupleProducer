@@ -11,7 +11,7 @@ options.maxEvents = 500
 #options.inputFiles= '/store/data/Run2012C/SingleMu/AOD/22Jan2013-v1/30010/C0E05558-9078-E211-9E02-485B39800B65.root'
 #options.loadFromFile('inputFiles','PYTHIA8_175_H_Zg_8TeV.txt')
 #options.loadFromFile('inputFiles','PYTHIA8_175_POWHEG_PDF7_H_Zg_8TeV.txt')
-options.inputFiles = '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0000/02CDCF05-BED2-E111-85F4-0030486740BA.root'
+#options.inputFiles = '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0000/02CDCF05-BED2-E111-85F4-0030486740BA.root'
 #options.inputFiles = '/store/data/Run2012D/SinglePhotonParked/AOD/22Jan2013-v1/30004/144D7268-4086-E211-9DC1-001E673984C1.root'
 #options.inputFiles = '/store/data/Run2012C/MuEG/AOD/22Jan2013-v1/20000/5A2C6379-8867-E211-BB9E-00266CFFC7E4.root'
 #options.inputFiles = '/store/user/cmkuo/Dalitz_H_eeg_125_MG_v2/Dalitz_H_eeg_m125_RECO_v3/d459946fa1e058e24b305fca3ec661c6/STEP2_RAW2DIGI_L1Reco_RECO_PU_100_1_U3S.root'
@@ -21,6 +21,7 @@ options.inputFiles = '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-m
 #options.inputFiles = '/store/data/Run2011A/DoubleMu/AOD/21Jun2013-v1/10000/006AD75C-17DE-E211-B24E-003048678B0C.root'
 #options.inputFiles = '/store/mc/Summer12_DR53X/GluGluToHToZZTo4L_M-125_8TeV-powheg-pythia6/AODSIM/PU_S10_START53_V7A-v1/0000/FEEEEFFF-7FFB-E111-8FE2-002618943810.root'
 #options.inputFiles = 'file:/uscms/home/bpollack/nobackup/genProd/CMSSW_5_3_13_cand1/src/MC_Gen/cfgs/STEP2_H_Zg_M500_Narrow_RAW2DIGI_L1Reco_RECO_VALIDATION_PU.root'
+options.inputFiles = '/store/data/Run2012B/MuEG/AOD/22Jan2013-v1/20000/D867A80B-9D6C-E211-B1F9-001E0B48D9A4.root'
 
 
 options.register("isRealData",
@@ -264,7 +265,8 @@ process.calibratedElectrons.linearityCorrectionsInputPath = cms.string("EgammaAn
 # event source
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(options.maxEvents))
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring(options.inputFiles)
+                            fileNames  = cms.untracked.vstring(options.inputFiles),
+                            skipEvents = cms.untracked.uint32(0)
 )
 
 

@@ -449,11 +449,11 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         
         if (saveTriggerObj_){
           for (unsigned j = 0; j < triggerObjects.size(); ++j) {
-              float deltaR = triggerObjects[j].DeltaR(*myMuon);
-              if (deltaR < 0.1 && fabs(triggerObjects[j].GetId()) == 13) {
-                  myMuon->SetTriggered(true);
-                  myMuon->AddTrigger(triggerObjects[j].GetHLTName(), triggerObjects[j].GetModuleName(), triggerPaths_);
-              }
+            float deltaR = triggerObjects[j].DeltaR(*myMuon);
+            if (deltaR < 0.1 && fabs(triggerObjects[j].GetId()) == 13) {
+              myMuon->SetTriggered(true);
+              myMuon->AddTrigger(triggerObjects[j].GetHLTName(), triggerObjects[j].GetModuleName(), triggerPaths_);
+            }
           }
         }
         
@@ -536,6 +536,16 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     Int_t eee=0;
     for (vector<reco::GsfElectron>::const_iterator iElectron = electrons->begin(); iElectron != electrons->end(); ++iElectron) {
         eee++;
+
+        if (std::isnan(iElectron->pt())) continue;
+        //"why do you need that?", you may ask
+        //well, it turns out there are a few events in Data, where this happens
+        //check out for example: run = 195749  evt = 171408231 in MuEG dataset, this file:
+        ///store/data/Run2012B/MuEG/AOD/22Jan2013-v1/20000/D867A80B-9D6C-E211-B1F9-001E0B48D9A4.root
+        //cout<<"\t run = "<<runNumber<<"  evt = "<<eventNumber<<endl;
+        //cout<<"DBG iele  pt = "<<iElectron->pt()<<"  eta="<<iElectron->eta()
+        //<<" phi="<<iElectron->phi()<<"  m="<<iElectron->mass()<<endl;
+
         if (iElectron->pt() < 5) continue;
 
         TCElectron* myElectron = new ((*recoElectrons)[eleCount]) TCElectron;
@@ -544,7 +554,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         myElectron->SetPtEtaPhiM(iElectron->pt(), iElectron->eta(), iElectron->phi(), iElectron->mass());
         myElectron->SetVtx(iElectron->gsfTrack()->vx(),iElectron->gsfTrack()->vy(),iElectron->gsfTrack()->vz());
         myElectron->SetCharge(iElectron->charge());
-
+        
         // Fiducial variables
         myElectron->SetIsEB(iElectron->isEB());
         myElectron->SetIsEE(iElectron->isEE());
@@ -659,9 +669,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
         //NOTE: above code would only work with modified ConversionTools!!
         //Comment is out if doesn't compile (it wont compile with the current version of ntuple producer)
-        //bool passconv = !ConversionTools::hasMatchedConversion(iElectron->gsfTrack(), hConversions, vertexBeamSpot.position(), 2.0, 1e-6, 0);
-        //t->SetIdMap("GSF_PassConv", passconv);
-        //t->SetIdMap("GSF_MissHits", iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfHits());
+        bool passconv = !ConversionTools::hasMatchedConversion(iElectron->gsfTrack(), hConversions, vertexBeamSpot.position(), 2.0, 1e-6, 0);
+        t->SetIdMap("GSF_PassConv", passconv);
+        t->SetIdMap("GSF_MissHits", iElectron->gsfTrack()->trackerExpectedHitsInner().numberOfHits());
 
         myElectron->AddTrack(*t);
 
@@ -685,9 +695,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
           t->SetConversionInfo(convInfo);
 
           //NOTE: same as above for ConversionTools
-          //passconv = !ConversionTools::hasMatchedConversion(*gtr, hConversions, vertexBeamSpot.position(), 2.0, 1e-6, 0);
-          //t->SetIdMap("GSF_PassConv", passconv);
-          //t->SetIdMap("GSF_MissHits", (*gtr)->trackerExpectedHitsInner().numberOfHits());
+          passconv = !ConversionTools::hasMatchedConversion(*gtr, hConversions, vertexBeamSpot.position(), 2.0, 1e-6, 0);
+          t->SetIdMap("GSF_PassConv", passconv);
+          t->SetIdMap("GSF_MissHits", (*gtr)->trackerExpectedHitsInner().numberOfHits());
 
           myElectron->AddTrack(*t);          
         }
@@ -852,13 +862,14 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         myElectron->SetIdMap("phoIso_scfp", mySCFPstruct.photoniso);
 
         // Match electron to trigger object //
+
         if (saveTriggerObj_){
           for (unsigned j = 0; j < triggerObjects.size(); ++j) {
-              float deltaR = triggerObjects[j].DeltaR(*myElectron);
-              if (deltaR < 0.1 && fabs(triggerObjects[j].GetId()) == 11) {
-                  myElectron->SetTriggered(true);
-                  myElectron->AddTrigger(triggerObjects[j].GetHLTName(), triggerObjects[j].GetModuleName(), triggerPaths_);
-              }
+            float deltaR = triggerObjects[j].DeltaR(*myElectron);
+            if (deltaR < 0.1 && fabs(triggerObjects[j].GetId()) == 11) {
+              myElectron->SetTriggered(true);
+              myElectron->AddTrigger(triggerObjects[j].GetHLTName(), triggerObjects[j].GetModuleName(), triggerPaths_);
+            }
           }
         }
         /*
@@ -1078,9 +1089,9 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         myPhoton->SetEnergyRegression(regrCorPho.first);
         myPhoton->SetEnergyRegressionErr(regrCorPho.second);
 
-        cout<<" DBG PHOTON  Energy regression"<<endl;
-        cout<<"Photon SCEn = "<<myPhoton->SCEnergy()<<"  after regression "<<myPhoton->EnergyRegression()<<"  err = "<<myPhoton->EnergyRegressionErr()<<endl;
-        cout<<regrCorPho.first<<"   "<<regrCorPho.second<<endl;
+        //cout<<" DBG PHOTON  Energy regression"<<endl;
+        //cout<<"Photon SCEn = "<<myPhoton->SCEnergy()<<"  after regression "<<myPhoton->EnergyRegression()<<"  err = "<<myPhoton->EnergyRegressionErr()<<endl;
+        //cout<<regrCorPho.first<<"   "<<regrCorPho.second<<endl;
 
         //Footprint removal
         edm::ParameterSet myConfig;
@@ -1551,7 +1562,8 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults
         // && (moduleLabel.find("hltEventle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoDoubleFilter") == string::npos) ) continue;
 
         if(verboseTrigs){
-            std::cout<<" j = "<<j<<" modLabel/moduleType = "<<moduleLabel<<"/"<<moduleType<<" filterIndex = "<<filterIndex<<" sizeF = "<<hltEvent->sizeFilters()<<std::endl;
+          std::cout<<" j = "<<j<<" modLabel/moduleType = "<<moduleLabel<<"/"<<moduleType<<
+            " filterIndex = "<<filterIndex<<" sizeF = "<<hltEvent->sizeFilters()<<std::endl;
         }
 
         //if (filterIndex < hltEvent->sizeFilters() && moduleLabel.find("L3") != string::npos) {
@@ -1577,9 +1589,9 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults
 
                 //cout<<" i = "<<i<<" moduleLabel/moduleType : "<<moduleLabel<<"/"<<moduleType<<endl;
                 //cout << " " << i << " " << VIDS[i] << "/" << KEYS[i] << ": \n"
-                // << "triggerName = "<<triggerName<<" moduleLabel="<<moduleLabel<<"\n "
-                // << TO.id() << " " << TO.pt() << " " << TO.eta() << " " << TO.phi() << " " << TO.mass() << " " << TO.energy()
-                //<< endl;
+                //     << "triggerName = "<<triggerName<<" moduleLabel="<<moduleLabel<<"\n "
+                //     << TO.id() << " " << TO.pt() << " " << TO.eta() << " " << TO.phi() << " " << TO.mass() << " " << TO.energy()
+                //     << endl;
 
 
                 trigObj.SetPtEtaPhiE(TO.pt(), TO.eta(), TO.phi(), TO.energy());
