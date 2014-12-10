@@ -1,0 +1,395 @@
+
+
+Commence ntuplization...
+
+
+
+Watch modules:     
+Ignore modules:    PhotonConversionTrajectorySeedProducerFromSingleLeg:photonConvTrajSeedFromSingleLeg, SeedGeneratorFromRegionHitsEDProducer:regionalCosmicTrackerSeeds, 
+Ignore categories: 
+Watch categories:  TooManyClusters, 
+ Finished initialization 
+[CalibratedGsfElectronProducer] Correcting scale for dataset Summer12_LegacyPaper
+--- Reader                   : Booking "BDT" of type "BDT" from /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_TrigV0_Cat1.weights.xml.
+--- MethodBase               : Reading weight file: /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_TrigV0_Cat1.weights.xml
+--- BDT                      : Read method "BDT" of type "BDT"
+--- BDT                      : MVA method was trained with TMVA Version: 4.0.7
+--- BDT                      : MVA method was trained with ROOT Version: 5.27/06
+--- Reader                   : Booked classifier "BDT" of type: "BDT"
+MVABin 0 : MethodName = BDT , type == 0 , Load weights file : /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_TrigV0_Cat1.weights.xml
+--- Reader                   : Booking "BDT" of type "BDT" from /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_TrigV0_Cat2.weights.xml.
+--- MethodBase               : Reading weight file: /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_TrigV0_Cat2.weights.xml
+--- BDT                      : Read method "BDT" of type "BDT"
+--- BDT                      : MVA method was trained with TMVA Version: 4.0.7
+--- BDT                      : MVA method was trained with ROOT Version: 5.27/06
+--- Reader                   : Booked classifier "BDT" of type: "BDT"
+MVABin 1 : MethodName = BDT , type == 0 , Load weights file : /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_TrigV0_Cat2.weights.xml
+--- Reader                   : Booking "BDT" of type "BDT" from /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_TrigV0_Cat3.weights.xml.
+--- MethodBase               : Reading weight file: /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_TrigV0_Cat3.weights.xml
+--- BDT                      : Read method "BDT" of type "BDT"
+--- BDT                      : MVA method was trained with TMVA Version: 4.0.7
+--- BDT                      : MVA method was trained with ROOT Version: 5.27/06
+--- Reader                   : Booked classifier "BDT" of type: "BDT"
+MVABin 2 : MethodName = BDT , type == 0 , Load weights file : /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_TrigV0_Cat3.weights.xml
+--- Reader                   : Booking "BDT" of type "BDT" from /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_TrigV0_Cat4.weights.xml.
+--- MethodBase               : Reading weight file: /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_TrigV0_Cat4.weights.xml
+--- BDT                      : Read method "BDT" of type "BDT"
+--- BDT                      : MVA method was trained with TMVA Version: 4.0.7
+--- BDT                      : MVA method was trained with ROOT Version: 5.27/06
+--- Reader                   : Booked classifier "BDT" of type: "BDT"
+MVABin 3 : MethodName = BDT , type == 0 , Load weights file : /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_TrigV0_Cat4.weights.xml
+--- Reader                   : Booking "BDT" of type "BDT" from /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_TrigV0_Cat5.weights.xml.
+--- MethodBase               : Reading weight file: /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_TrigV0_Cat5.weights.xml
+--- BDT                      : Read method "BDT" of type "BDT"
+--- BDT                      : MVA method was trained with TMVA Version: 4.0.7
+--- BDT                      : MVA method was trained with ROOT Version: 5.27/06
+--- Reader                   : Booked classifier "BDT" of type: "BDT"
+MVABin 4 : MethodName = BDT , type == 0 , Load weights file : /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_TrigV0_Cat5.weights.xml
+--- Reader                   : Booking "BDT" of type "BDT" from /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_TrigV0_Cat6.weights.xml.
+--- MethodBase               : Reading weight file: /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_TrigV0_Cat6.weights.xml
+--- BDT                      : Read method "BDT" of type "BDT"
+--- BDT                      : MVA method was trained with TMVA Version: 4.0.7
+--- BDT                      : MVA method was trained with ROOT Version: 5.27/06
+--- Reader                   : Booked classifier "BDT" of type: "BDT"
+MVABin 5 : MethodName = BDT , type == 0 , Load weights file : /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_TrigV0_Cat6.weights.xml
+Electron ID MVA Completed
+--- Reader                   : Booking "BDT" of type "BDT" from /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_NonTrigV0_Cat1.weights.xml.
+--- MethodBase               : Reading weight file: /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_NonTrigV0_Cat1.weights.xml
+--- BDT                      : Read method "BDT" of type "BDT"
+--- BDT                      : MVA method was trained with TMVA Version: 4.0.7
+--- BDT                      : MVA method was trained with ROOT Version: 5.27/06
+--- Reader                   : Booked classifier "BDT" of type: "BDT"
+MVABin 0 : MethodName = BDT , type == 2 , Load weights file : /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_NonTrigV0_Cat1.weights.xml
+--- Reader                   : Booking "BDT" of type "BDT" from /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_NonTrigV0_Cat2.weights.xml.
+--- MethodBase               : Reading weight file: /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_NonTrigV0_Cat2.weights.xml
+--- BDT                      : Read method "BDT" of type "BDT"
+--- BDT                      : MVA method was trained with TMVA Version: 4.0.7
+--- BDT                      : MVA method was trained with ROOT Version: 5.27/06
+--- Reader                   : Booked classifier "BDT" of type: "BDT"
+MVABin 1 : MethodName = BDT , type == 2 , Load weights file : /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_NonTrigV0_Cat2.weights.xml
+--- Reader                   : Booking "BDT" of type "BDT" from /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_NonTrigV0_Cat3.weights.xml.
+--- MethodBase               : Reading weight file: /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_NonTrigV0_Cat3.weights.xml
+--- BDT                      : Read method "BDT" of type "BDT"
+--- BDT                      : MVA method was trained with TMVA Version: 4.0.7
+--- BDT                      : MVA method was trained with ROOT Version: 5.27/06
+--- Reader                   : Booked classifier "BDT" of type: "BDT"
+MVABin 2 : MethodName = BDT , type == 2 , Load weights file : /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_NonTrigV0_Cat3.weights.xml
+--- Reader                   : Booking "BDT" of type "BDT" from /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_NonTrigV0_Cat4.weights.xml.
+--- MethodBase               : Reading weight file: /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_NonTrigV0_Cat4.weights.xml
+--- BDT                      : Read method "BDT" of type "BDT"
+--- BDT                      : MVA method was trained with TMVA Version: 4.0.7
+--- BDT                      : MVA method was trained with ROOT Version: 5.27/06
+--- Reader                   : Booked classifier "BDT" of type: "BDT"
+MVABin 3 : MethodName = BDT , type == 2 , Load weights file : /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_NonTrigV0_Cat4.weights.xml
+--- Reader                   : Booking "BDT" of type "BDT" from /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_NonTrigV0_Cat5.weights.xml.
+--- MethodBase               : Reading weight file: /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_NonTrigV0_Cat5.weights.xml
+--- BDT                      : Read method "BDT" of type "BDT"
+--- BDT                      : MVA method was trained with TMVA Version: 4.0.7
+--- BDT                      : MVA method was trained with ROOT Version: 5.27/06
+--- Reader                   : Booked classifier "BDT" of type: "BDT"
+MVABin 4 : MethodName = BDT , type == 2 , Load weights file : /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_NonTrigV0_Cat5.weights.xml
+--- Reader                   : Booking "BDT" of type "BDT" from /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_NonTrigV0_Cat6.weights.xml.
+--- MethodBase               : Reading weight file: /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_NonTrigV0_Cat6.weights.xml
+--- BDT                      : Read method "BDT" of type "BDT"
+--- BDT                      : MVA method was trained with TMVA Version: 4.0.7
+--- BDT                      : MVA method was trained with ROOT Version: 5.27/06
+--- Reader                   : Booked classifier "BDT" of type: "BDT"
+MVABin 5 : MethodName = BDT , type == 2 , Load weights file : /uscms_data/d2/bpollack/ntuplesGitNew/CMSSW_5_3_13_patch3/src/EgammaAnalysis/ElectronTools/data/Electrons_BDTG_NonTrigV0_Cat6.weights.xml
+Electron ID MVA Completed
+--- DataSetInfo              : Added class "data"	 with internal class number 0
+--- DataSetInfo              : Added class "data"	 with internal class number 0
+electron before cor: pt: 8.16926 eta: -1.16202 phi: 2.94142 e: 14.334 charge: -1
+electron after cor: 9.28981
+--- DataSetInfo              : Added class "data"	 with internal class number 0
+--- DataSetInfo              : Added class "data"	 with internal class number 0
+electron before cor: pt: 29.6448 eta: 1.28162 phi: -2.0902 e: 57.5117 charge: -1
+electron after cor: 28.8176
+electron before cor: pt: 41.9944 eta: 0.999597 phi: 0.157372 e: 64.7808 charge: 1
+electron after cor: 42.6699
+--- DataSetInfo              : Added class "data"	 with internal class number 0
+--- DataSetInfo              : Added class "data"	 with internal class number 0
+electron before cor: pt: 19.9261 eta: -0.323234 phi: 2.31176 e: 20.9761 charge: -1
+electron after cor: 19.128
+electron before cor: pt: 5.70349 eta: 0.843827 phi: 1.12454 e: 7.85745 charge: -1
+electron after cor: 5.71687
+--- DataSetInfo              : Added class "data"	 with internal class number 0
+--- DataSetInfo              : Added class "data"	 with internal class number 0
+--- DataSetInfo              : Added class "data"	 with internal class number 0
+electron before cor: pt: 22.7475 eta: 0.434449 phi: -2.28096 e: 24.9282 charge: 1
+electron after cor: 23.8603
+electron before cor: pt: 20.4064 eta: 1.65061 phi: -1.71779 e: 55.1185 charge: -1
+electron after cor: 22.2238
+electron before cor: pt: 20.6225 eta: 0.287113 phi: -2.38324 e: 21.4783 charge: 1
+electron after cor: 19.9115
+electron before cor: pt: 42.5834 eta: -1.54232 phi: 1.40866 e: 104.102 charge: 1
+electron after cor: 41.7624
+electron before cor: pt: 19.9618 eta: -0.558366 phi: -0.654334 e: 23.1553 charge: 1
+electron after cor: 19.6237
+electron before cor: pt: 31.4881 eta: -0.556726 phi: -1.46756 e: 36.4952 charge: -1
+electron after cor: 30.4393
+--- DataSetInfo              : Added class "data"	 with internal class number 0
+electron before cor: pt: 18.7727 eta: 1.58713 phi: 2.50043 e: 47.8162 charge: -1
+electron after cor: 18.6597
+--- DataSetInfo              : Added class "data"	 with internal class number 0
+electron before cor: pt: 7.7096 eta: 2.2947 phi: 0.25809 e: 38.6337 charge: 1
+electron after cor: 6.66855
+electron before cor: pt: 33.2807 eta: 1.4385 phi: -1.42566 e: 74.0771 charge: -1
+electron after cor: 33.66
+electron before cor: pt: 53.4413 eta: -0.775767 phi: 0.977275 e: 70.345 charge: -1
+electron after cor: 53.2833
+electron before cor: pt: 8.18479 eta: -1.69038 phi: -2.54953 e: 22.9419 charge: -1
+electron after cor: 8.5443
+electron before cor: pt: 24.6034 eta: -1.84733 phi: 0.867002 e: 79.967 charge: 1
+electron after cor: 24.1265
+electron before cor: pt: 55.8326 eta: -2.01536 phi: 2.059 e: 213.189 charge: 1
+electron after cor: 58.0863
+electron before cor: pt: 6.50909 eta: 0.889068 phi: -1.77903 e: 9.2556 charge: 1
+electron after cor: 6.50909
+electron before cor: pt: 13.0802 eta: 2.0749 phi: 1.23536 e: 52.9053 charge: -1
+electron after cor: 12.2796
+electron before cor: pt: 8.00749 eta: -1.91431 phi: 2.44208 e: 27.7449 charge: -1
+electron after cor: 8.71404
+electron before cor: pt: 23.6409 eta: -1.68041 phi: -0.418111 e: 65.6513 charge: 1
+electron after cor: 21.5055
+electron before cor: pt: 6.3136 eta: -0.921334 phi: 3.01 e: 9.18827 charge: -1
+electron after cor: 8.7611
+--- DataSetInfo              : Added class "data"	 with internal class number 0
+electron before cor: pt: 12.8252 eta: 1.18493 phi: 1.84885 e: 22.9329 charge: -1
+electron after cor: 13.5732
+electron before cor: pt: 9.67171 eta: 0.703422 phi: -1.06994 e: 12.1648 charge: -1
+electron after cor: 9.68566
+electron before cor: pt: 60.738 eta: 1.29411 phi: 1.84829 e: 119.103 charge: 1
+electron after cor: 71.7643
+electron before cor: pt: 23.9036 eta: 1.0673 phi: 0.052467 e: 38.8607 charge: -1
+electron after cor: 24.4983
+electron before cor: pt: 33.2583 eta: 2.19409 phi: 0.801407 e: 151.047 charge: 1
+electron after cor: 32.1861
+electron before cor: pt: 19.054 eta: -2.38642 phi: 1.10566 e: 104.477 charge: -1
+electron after cor: 17.6632
+electron before cor: pt: 11.6552 eta: -0.615889 phi: 2.09884 e: 13.9365 charge: 1
+electron after cor: 11.464
+electron before cor: pt: 25.8651 eta: 0.121235 phi: -2.33678 e: 26.0554 charge: 1
+electron after cor: 25.6822
+electron before cor: pt: 27.4715 eta: -1.99815 phi: 1.39016 e: 103.169 charge: -1
+electron after cor: 27.1056
+electron before cor: pt: 25.3696 eta: -1.23978 phi: 2.69755 e: 47.4957 charge: -1
+electron after cor: 24.6066
+electron before cor: pt: 51.6061 eta: -2.54006 phi: 2.11658 e: 329.229 charge: 1
+electron after cor: 52.1943
+electron before cor: pt: 41.3785 eta: -2.52174 phi: -0.911046 e: 259.247 charge: -1
+electron after cor: 38.2033
+electron before cor: pt: 21.186 eta: 0.141445 phi: 2.95658 e: 21.3983 charge: 1
+electron after cor: 20.7631
+electron before cor: pt: 5.89485 eta: 0.336936 phi: -0.94005 e: 6.23264 charge: -1
+electron after cor: 5.96231
+electron before cor: pt: 13.0731 eta: 0.992131 phi: 0.557147 e: 20.0526 charge: -1
+electron after cor: 12.2255
+electron before cor: pt: 10.3184 eta: 0.306 phi: -1.02913 e: 10.8053 charge: -1
+electron after cor: 9.60874
+electron before cor: pt: 20.4491 eta: -0.69496 phi: 2.66944 e: 25.5893 charge: 1
+electron after cor: 20.7451
+electron before cor: pt: 7.03215 eta: 1.03684 phi: 1.17729 e: 11.163 charge: -1
+electron after cor: 7.1218
+electron before cor: pt: 11.9801 eta: 0.476181 phi: 3.14154 e: 13.3642 charge: -1
+electron after cor: 12.0269
+electron before cor: pt: 12.9845 eta: -0.937137 phi: -2.61354 e: 19.1158 charge: -1
+electron after cor: 13.0332
+electron before cor: pt: 9.54834 eta: -1.18028 phi: 0.475998 e: 17.0078 charge: 1
+electron after cor: 9.70931
+electron before cor: pt: 35.7539 eta: -1.84112 phi: -0.459716 e: 115.524 charge: -1
+electron after cor: 49.2865
+electron before cor: pt: 23.8266 eta: -1.43107 phi: 2.0571 e: 52.6831 charge: 1
+electron after cor: 24.1327
+electron before cor: pt: 32.4363 eta: -0.359015 phi: -1.27153 e: 34.5492 charge: -1
+electron after cor: 32.4417
+electron before cor: pt: 184.835 eta: 0.730447 phi: -0.631216 e: 236.377 charge: 1
+electron after cor: 181.271
+electron before cor: pt: 33.9715 eta: 2.4992 phi: -0.0902718 e: 208.159 charge: -1
+electron after cor: 34.0582
+electron before cor: pt: 9.62732 eta: 1.66452 phi: -1.59828 e: 26.3424 charge: -1
+electron after cor: 9.62732
+electron before cor: pt: 12.466 eta: 0.860832 phi: -2.97904 e: 17.3771 charge: 1
+electron after cor: 12.4267
+electron before cor: pt: 34.9905 eta: -0.85517 phi: 1.86943 e: 48.5841 charge: 1
+electron after cor: 34.1202
+electron before cor: pt: 9.72088 eta: 0.38336 phi: 2.72083 e: 10.444 charge: -1
+electron after cor: 9.88328
+electron before cor: pt: 49.5916 eta: 0.118909 phi: -0.781668 e: 49.9426 charge: -1
+electron after cor: 49.5349
+electron before cor: pt: 8.30253 eta: -1.93172 phi: 0.85735 e: 29.251 charge: 1
+electron after cor: 8.04719
+electron before cor: pt: 23.4862 eta: -0.362097 phi: -0.866745 e: 25.0428 charge: 1
+electron after cor: 23.5754
+electron before cor: pt: 33.1889 eta: 0.0826352 phi: -3.04535 e: 33.3023 charge: -1
+electron after cor: 33.2111
+electron before cor: pt: 17.1616 eta: -0.0212891 phi: -2.72599 e: 17.1655 charge: 1
+electron after cor: 17.3547
+electron before cor: pt: 41.376 eta: 0.577904 phi: 2.34571 e: 48.4797 charge: -1
+electron after cor: 41.5704
+electron before cor: pt: 5.57657 eta: -1.07378 phi: -0.26806 e: 9.11253 charge: 1
+electron after cor: 5.57657
+electron before cor: pt: 6.07439 eta: 0.277456 phi: 2.25929 e: 6.30971 charge: 1
+electron after cor: 6.10261
+electron before cor: pt: 61.5813 eta: -1.62727 phi: -0.496148 e: 162.772 charge: -1
+electron after cor: 60.5782
+electron before cor: pt: 22.9348 eta: -0.610525 phi: 2.49591 e: 27.3436 charge: 1
+electron after cor: 22.447
+electron before cor: pt: 9.37352 eta: -2.15084 phi: 2.76096 e: 40.8145 charge: -1
+electron after cor: 7.448
+electron before cor: pt: 5.55375 eta: 0.648083 phi: 2.64313 e: 6.76147 charge: -1
+electron after cor: 5.85714
+electron before cor: pt: 7.95747 eta: -1.97732 phi: -1.89883 e: 29.2905 charge: -1
+electron after cor: 7.19897
+electron before cor: pt: 23.0541 eta: -0.347573 phi: -0.337339 e: 24.4607 charge: -1
+electron after cor: 22.6941
+electron before cor: pt: 10.101 eta: -0.124876 phi: 2.40916 e: 10.1799 charge: 1
+electron after cor: 11.64
+electron before cor: pt: 25.2649 eta: -0.981177 phi: -2.0028 e: 38.4338 charge: -1
+electron after cor: 25.2941
+electron before cor: pt: 35.1271 eta: -1.91386 phi: -0.158993 e: 121.658 charge: 1
+electron after cor: 35.9072
+electron before cor: pt: 9.98102 eta: -2.2606 phi: 2.55511 e: 48.3734 charge: -1
+electron after cor: 7.58164
+electron before cor: pt: 5.50805 eta: 2.20649 phi: -2.22347 e: 25.3201 charge: 1
+electron after cor: 5.23893
+electron before cor: pt: 18.3158 eta: 1.81077 phi: 2.2814 e: 57.4997 charge: -1
+electron after cor: 15.4496
+electron before cor: pt: 40.2335 eta: 1.3693 phi: -1.28471 e: 84.2267 charge: -1
+electron after cor: 40.909
+electron before cor: pt: 6.08931 eta: 2.13035 phi: 2.26674 e: 25.9911 charge: -1
+electron after cor: 5.07921
+electron before cor: pt: 20.5285 eta: 1.30971 phi: 2.19066 e: 40.8004 charge: -1
+electron after cor: 21.1885
+electron before cor: pt: 47.7445 eta: -0.00841801 phi: -0.960647 e: 47.7462 charge: 1
+electron after cor: 47.3038
+electron before cor: pt: 37.7299 eta: 0.0874095 phi: -1.63432 e: 37.8741 charge: 1
+electron after cor: 37.995
+electron before cor: pt: 18.932 eta: -0.742497 phi: -1.40304 e: 24.3949 charge: -1
+electron after cor: 19.1565
+electron before cor: pt: 5.29404 eta: -0.335397 phi: 1.06984 e: 5.59461 charge: 1
+electron after cor: 5.29617
+electron before cor: pt: 55.8596 eta: 0.213607 phi: 1.70031 e: 57.1388 charge: -1
+electron after cor: 56.1426
+electron before cor: pt: 89.1107 eta: -1.43603 phi: 2.06674 e: 197.908 charge: 1
+electron after cor: 88.5595
+electron before cor: pt: 45.8495 eta: -2.21765 phi: -3.12604 e: 213.076 charge: -1
+electron after cor: 44.3584
+electron before cor: pt: 6.16695 eta: 1.16143 phi: -1.49444 e: 10.8154 charge: -1
+electron after cor: 6.19794
+electron before cor: pt: 56.4453 eta: 2.23846 phi: -2.1786 e: 267.707 charge: 1
+electron after cor: 52.707
+electron before cor: pt: 46.7217 eta: 0.251159 phi: 1.34468 e: 48.2031 charge: -1
+electron after cor: 46.6998
+electron before cor: pt: 46.1357 eta: 0.204404 phi: -1.97664 e: 47.1028 charge: 1
+electron after cor: 46.0597
+electron before cor: pt: 14.8805 eta: -0.96252 phi: 2.39418 e: 22.3224 charge: -1
+electron after cor: 14.902
+electron before cor: pt: 59.063 eta: 1.40292 phi: 0.693757 e: 127.367 charge: -1
+electron after cor: 57.388
+electron before cor: pt: 28.357 eta: 1.39467 phi: -2.51113 e: 60.7059 charge: 1
+electron after cor: 30.715
+electron before cor: pt: 22.5658 eta: 2.49937 phi: -2.63378 e: 138.295 charge: -1
+electron after cor: 17.1528
+electron before cor: pt: 26.9928 eta: -0.0801561 phi: 0.329312 e: 27.0796 charge: -1
+electron after cor: 43.9524
+electron before cor: pt: 17.7733 eta: 0.246827 phi: -0.0881163 e: 18.3174 charge: 1
+electron after cor: 17.3145
+electron before cor: pt: 15.5753 eta: 1.01352 phi: 2.85043 e: 24.2836 charge: -1
+electron after cor: 16.787
+electron before cor: pt: 28.1725 eta: -0.478268 phi: -2.28484 e: 31.4565 charge: 1
+electron after cor: 27.7842
+electron before cor: pt: 34.6526 eta: 1.34459 phi: 1.57017 e: 70.9905 charge: -1
+electron after cor: 33.9434
+electron before cor: pt: 9.81668 eta: 1.26768 phi: -2.63242 e: 18.819 charge: 1
+electron after cor: 9.84446
+electron before cor: pt: 15.3575 eta: 1.80735 phi: 1.88011 e: 48.0566 charge: -1
+electron after cor: 14.929
+electron before cor: pt: 40.6588 eta: 1.82551 phi: -2.37011 e: 129.439 charge: -1
+electron after cor: 39.5867
+electron before cor: pt: 30.5417 eta: 0.633646 phi: 0.343053 e: 36.8809 charge: 1
+electron after cor: 29.3918
+electron before cor: pt: 17.4443 eta: 1.41356 phi: 0.0600826 e: 37.975 charge: -1
+electron after cor: 19.7641
+electron before cor: pt: 9.27838 eta: 0.243169 phi: 0.292921 e: 9.55405 charge: 1
+electron after cor: 9.29684
+electron before cor: pt: 10.1571 eta: 1.60969 phi: -0.255325 e: 26.4146 charge: -1
+electron after cor: 10.0506
+electron before cor: pt: 63.4984 eta: 0.536888 phi: 0.532323 e: 72.8721 charge: 1
+electron after cor: 62.1095
+electron before cor: pt: 12.8916 eta: -0.17763 phi: 2.68196 e: 13.0955 charge: 1
+electron after cor: 12.717
+electron before cor: pt: 63.9023 eta: -0.157832 phi: 1.75821 e: 64.6999 charge: -1
+electron after cor: 63.4039
+electron before cor: pt: 19.6819 eta: 0.00023195 phi: 2.14207 e: 19.6819 charge: -1
+electron after cor: 18.6627
+electron before cor: pt: 74.744 eta: 1.87731 phi: -2.46819 e: 249.978 charge: -1
+electron after cor: 77.1798
+electron before cor: pt: 15.6163 eta: -1.03355 phi: 2.08614 e: 24.7266 charge: 1
+electron after cor: 15.5677
+electron before cor: pt: 16.15 eta: 0.213237 phi: 1.59145 e: 16.5185 charge: 1
+electron after cor: 16.0633
+electron before cor: pt: 11.2688 eta: 0.451754 phi: 2.54013 e: 12.4384 charge: -1
+electron after cor: 11.262
+electron before cor: pt: 50.6171 eta: -2.0858 phi: 2.41993 e: 206.903 charge: -1
+electron after cor: 50.0655
+electron before cor: pt: 12.9209 eta: 1.274 phi: 0.276546 e: 24.9039 charge: -1
+electron after cor: 13.1098
+electron before cor: pt: 61.9769 eta: 1.78174 phi: 0.596177 e: 189.294 charge: 1
+electron after cor: 61.929
+electron before cor: pt: 13.4388 eta: -0.561002 phi: -2.45748 e: 15.6096 charge: -1
+electron after cor: 12.3047
+electron before cor: pt: 30.6288 eta: -2.48529 phi: 1.45385 e: 185.119 charge: 1
+electron after cor: 42.0651
+electron before cor: pt: 34.2333 eta: -0.75705 phi: 1.79854 e: 44.5208 charge: -1
+electron after cor: 33.9692
+electron before cor: pt: 7.59273 eta: 1.01503 phi: 1.24327 e: 11.8516 charge: 1
+electron after cor: 7.71659
+electron before cor: pt: 39.9923 eta: -1.41255 phi: 1.86702 e: 86.9819 charge: -1
+electron after cor: 42.8716
+electron before cor: pt: 15.7616 eta: 1.07754 phi: 1.81285 e: 25.8323 charge: 1
+electron after cor: 16.8573
+electron before cor: pt: 36.6415 eta: -0.790938 phi: -2.91725 e: 48.7127 charge: -1
+electron after cor: 36.5636
+electron before cor: pt: 12.6262 eta: -0.194484 phi: 0.380125 e: 12.8657 charge: -1
+electron after cor: 12.7604
+electron before cor: pt: 40.5419 eta: -1.93647 phi: -0.305389 e: 143.486 charge: 1
+electron after cor: 39.9451
+electron before cor: pt: 26.0772 eta: -2.4003 phi: 2.4415 e: 144.952 charge: -1
+electron after cor: 24.3106
+electron before cor: pt: 8.18237 eta: 1.25968 phi: -2.71142 e: 15.5794 charge: 1
+electron after cor: 8.30274
+electron before cor: pt: 55.8197 eta: 0.480086 phi: 2.47812 e: 62.3769 charge: 1
+electron after cor: 53.7778
+electron before cor: pt: 24.6729 eta: 0.1064 phi: 1.91585 e: 24.8127 charge: -1
+electron after cor: 23.8126
+electron before cor: pt: 23.4588 eta: -2.56074 phi: -1.85963 e: 152.747 charge: 1
+electron after cor: 23.2436
+electron before cor: pt: 6.89656 eta: -1.78303 phi: 1.04252 e: 21.0896 charge: -1
+electron after cor: 11.0941
+electron before cor: pt: 8.33148 eta: -0.0213508 phi: 1.72966 e: 8.33337 charge: -1
+electron after cor: 7.88007
+electron before cor: pt: 46.7341 eta: -0.304643 phi: -2.19138 e: 48.9196 charge: -1
+electron after cor: 46.3455
+electron before cor: pt: 51.3243 eta: -0.617148 phi: 1.59752 e: 61.4124 charge: 1
+electron after cor: 52.3556
+electron before cor: pt: 33.7578 eta: -0.0934946 phi: -2.29706 e: 33.9055 charge: 1
+electron after cor: 33.7057
+electron before cor: pt: 22.7391 eta: -0.658997 phi: -0.271154 e: 27.858 charge: -1
+electron after cor: 22.5228
+electron before cor: pt: 5.26791 eta: 2.41841 phi: -2.22345 e: 29.8087 charge: -1
+electron after cor: 7.5612
+electron before cor: pt: 20.4266 eta: 0.152549 phi: -2.48967 e: 20.6648 charge: 1
+electron after cor: 20.2637
+electron before cor: pt: 16.8328 eta: -2.3447 phi: -1.29579 e: 88.5907 charge: 1
+electron after cor: 22.2549
+electron before cor: pt: 36.5506 eta: -1.53761 phi: 0.0674133 e: 88.9701 charge: 1
+electron after cor: 39.2594
+electron before cor: pt: 42.1063 eta: -2.41028 phi: 2.48082 e: 236.36 charge: -1
+electron after cor: 40.851
+electron before cor: pt: 11.2766 eta: -0.689913 phi: -1.37269 e: 14.0685 charge: -1
+electron after cor: 9.86111
+electron before cor: pt: 14.8701 eta: -0.82273 phi: -2.65049 e: 20.1931 charge: 1
+electron after cor: 14.6594
+electron before cor: pt: 14.4083 eta: -0.356232 phi: 0.344099 e: 15.3322 charge: -1
+electron after cor: 14.3991
+100

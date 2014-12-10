@@ -450,7 +450,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         if (saveTriggerObj_){
           for (unsigned j = 0; j < triggerObjects.size(); ++j) {
               float deltaR = triggerObjects[j].DeltaR(*myMuon);
-              if (deltaR < 0.1 && fabs(triggerObjects[j].GetId()) == 13) {
+              if (deltaR < 0.3) {
                   myMuon->SetTriggered(true);
                   myMuon->AddTrigger(triggerObjects[j].GetHLTName(), triggerObjects[j].GetModuleName(), triggerPaths_);
               }
@@ -855,7 +855,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         if (saveTriggerObj_){
           for (unsigned j = 0; j < triggerObjects.size(); ++j) {
               float deltaR = triggerObjects[j].DeltaR(*myElectron);
-              if (deltaR < 0.1 && fabs(triggerObjects[j].GetId()) == 11) {
+              if (deltaR < 0.2) {
                   myElectron->SetTriggered(true);
                   myElectron->AddTrigger(triggerObjects[j].GetHLTName(), triggerObjects[j].GetModuleName(), triggerPaths_);
               }
