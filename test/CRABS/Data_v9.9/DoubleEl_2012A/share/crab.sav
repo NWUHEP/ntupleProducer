@@ -1,4 +1,0 @@
--jobtype=cmssw
--use_server=0
--cfg=crabNtuples_Data.cfg
--scheduler=remoteGlidein
