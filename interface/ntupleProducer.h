@@ -198,7 +198,6 @@ class ntupleProducer : public edm::EDAnalyzer {
         virtual bool  isFilteredOutScraping(const edm::Event& iEvent, const edm::EventSetup& iSetup, 
                 int numtrack=10, double thresh=0.25);
         virtual float MatchBTagsToJets(const reco::JetTagCollection, const reco::PFJet);
-        virtual void  MatchTriggerObject(TCPhysObject&, const unsigned);
         void analyzeTrigger(edm::Handle<edm::TriggerResults> &hltR, edm::Handle<trigger::TriggerEvent> &hltE, const std::string& triggerName, int* trigCount); 
         void initJetEnergyCorrector(const edm::EventSetup &iSetup, bool isData);
         TCGenParticle* addGenParticle(const reco::GenParticle* myParticle, int& genPartCount, std::map<const reco::GenParticle*,TCGenParticle*>& genMap);

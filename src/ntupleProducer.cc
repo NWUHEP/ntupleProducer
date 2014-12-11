@@ -449,7 +449,8 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         
         if (saveTriggerObj_){
           for (unsigned j = 0; j < triggerObjects.size(); ++j) {
-              float deltaR = triggerObjects[j].DeltaR(*myMuon);
+              //float deltaR = triggerObjects[j].DeltaR(*myMuon);
+              float deltaR = reco::deltaR(triggerObjects[j].Eta(), triggerObjects[j].Phi(), myMuon->Eta(), myMuon->Phi());
               if (deltaR < 0.3) {
                   myMuon->SetTriggered(true);
                   myMuon->AddTrigger(triggerObjects[j].GetHLTName(), triggerObjects[j].GetModuleName(), triggerPaths_);
@@ -854,14 +855,29 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         // Match electron to trigger object //
         if (saveTriggerObj_){
           for (unsigned j = 0; j < triggerObjects.size(); ++j) {
-              float deltaR = triggerObjects[j].DeltaR(*myElectron);
+              //float deltaR = triggerObjects[j].DeltaR(*myElectron);
+              float deltaR = reco::deltaR(triggerObjects[j].Eta(), triggerObjects[j].Phi(), myElectron->Eta(), myElectron->Phi());
               if (deltaR < 0.2) {
                   myElectron->SetTriggered(true);
                   myElectron->AddTrigger(triggerObjects[j].GetHLTName(), triggerObjects[j].GetModuleName(), triggerPaths_);
               }
           }
         }
-        /*
+
+          /*
+          map<string, vector<string> > trigMapProbe = myElectron->GetTriggers();
+          cout<<"new electron"<<endl;
+          for (map<string, vector<string> >::iterator it = trigMapProbe.begin(); it != trigMapProbe.end(); it++){
+            cout<<" "<<it->first<<endl;
+            if (it->second.size() == 0){
+              cout<<"hlt has no legs, how is this possible?"<<endl;
+              cin.ignore();
+            }
+            for (vector<string>::iterator itt = it->second.begin(); itt != it->second.end(); itt++){
+              cout<<"  "<<*itt<<endl;
+            }
+          }
+
         map<string, vector<string> > myMap = myElectron->GetTriggers();
         map<string, vector<string> >::iterator it;
         for(it = myMap.begin(); it!=myMap.end(); it++){
@@ -1571,7 +1587,6 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults
             const TriggerObjectCollection& TOC(hltEvent->getObjects());
             for (size_type i = 0; i != n; ++i) {
                 const TriggerObject& TO(TOC[KEYS[i]]);
-                if (TO.pt() < 5 || TO.mass() < 0) continue;
 
                 TCTriggerObject trigObj = TCTriggerObject();
 
@@ -1582,7 +1597,8 @@ void ntupleProducer::analyzeTrigger(edm::Handle<edm::TriggerResults> &hltResults
                 //<< endl;
 
 
-                trigObj.SetPtEtaPhiE(TO.pt(), TO.eta(), TO.phi(), TO.energy());
+                trigObj.SetEta(TO.eta());
+                trigObj.SetPhi(TO.phi());
                 trigObj.SetHLTName(triggerName);
                 trigObj.SetModuleName(moduleLabel);
                 trigObj.SetId(TO.id());
@@ -1910,19 +1926,6 @@ TCTrack::ConversionInfo ntupleProducer::CheckForConversions(const edm::Handle<re
         }
     }
     return (*convInfo);
-}
-
-void ntupleProducer::MatchTriggerObject(TCPhysObject& physObj, const unsigned pdgID)
-{
-    for (unsigned j = 0; j < triggerObjects.size(); ++j) {
-        float deltaR    = triggerObjects[j].DeltaR(physObj);
-        //float deltaPt   = fabs(triggerObjects[j].Pt() - physObj.Pt())/physObj.Pt();
-        if (deltaR < 0.1 && fabs(triggerObjects[j].GetId()) == pdgID) {
-            //cout << triggerObjects[j].GetHLTName() << "\t" << triggerObjects[j].GetModuleName() << "\t" << deltaR << "\t" << deltaPt << endl;;
-            physObj.SetTriggered(true);
-            break;
-        }
-    }
 }
 
 //define this as a plug-in
