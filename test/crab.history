@@ -3484,3 +3484,953 @@
 141108_165627: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1/python/crab.py -status -get -c CRABS/MC_v9.9/DYToEE_M-20/
 141111_110532: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1/python/crab.py -report -c CRABS/MC_v9.9/DYToEE_M-20/
 141111_110539: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1/python/crab.py -report -c CRABS/MC_v9.9/DYToEE_M-20/
+141211_164328: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_Data.cfg -submit
+141211_164724: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_Data.cfg -submit 500
+141211_164919: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/DoubleEl_2012B/
+141211_165101: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_Data.cfg -submit 500
+141211_165354: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/DoubleEl_2012C
+141211_165613: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/DoubleEl_2012C
+141211_165800: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_Data.cfg -submit 500
+141211_165942: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/DoubleEl_2012D
+141211_170026: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/DoubleEl_2012D
+141211_170135: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit 500
+141211_170529: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/MC_v9.9/DYToEE_M-20/
+141212_090013: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -c CRABS/Data_v9.9/DoubleEl_2012A/
+141212_090054: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012A/
+141212_090155: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012A/
+141212_090212: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/DoubleEl_2012A/
+141212_090256: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012A/
+141212_090310: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012B
+141212_090619: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012B
+141212_090645: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/DoubleEl_2012B
+141212_090854: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012C
+141212_091322: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012C
+141212_091349: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/DoubleEl_2012C
+141212_091416: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012D
+141212_092616: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012D
+141212_092720: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/DoubleEl_2012D
+141212_092755: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/MC_v9.9/DYToEE_M-20/
+141212_093214: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/MC_v9.9/DYToEE_M-20/
+141212_093918: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/DYToEE_M-20/
+141212_094350: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/MC_v9.9/DYToEE_M-20/
+141212_094425: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/MC_v9.9/DYToEE_M-20/
+141212_094506: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/MC_v9.9/DYToEE_M-20/
+141212_095044: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012A/
+141212_095133: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012A/
+141212_095457: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012B
+141212_095544: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012C
+141212_101957: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012D
+141212_102036: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/MC_v9.9/DYToEE_M-20/
+141212_102131: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/MC_v9.9/DYToEE_M-20/
+141212_102421: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012A
+141212_102438: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012A
+141212_103251: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012B
+141212_103320: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012C
+141212_115526: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012A
+141212_115547: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012B
+141212_115618: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012C
+141212_115727: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012D
+141212_115816: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/MC_v9.9/DYToEE_M-20/
+141212_132705: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/MC_v9.9/DYToEE_M-20/
+141212_132750: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012D
+141212_132835: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012C
+141212_132919: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012B
+141212_140113: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012A
+141212_140140: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012B
+141212_144145: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012A
+141212_144158: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012B
+141212_144216: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012C
+141212_144246: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012D
+141212_144328: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/MC_v9.9/DYToEE_M-20/
+141212_144403: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/DYToEE_M-20/
+141212_145228: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/MC_v9.9/DYToEE_M-20/
+141212_145507: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012D
+141212_145538: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012C
+141212_145602: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012B
+141212_145624: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012A
+141212_151019: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012A
+141212_151048: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/DoubleEl_2012A
+141212_151255: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012B
+141212_151321: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/DoubleEl_2012B
+141212_152100: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/DoubleEl_2012C
+141212_152116: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012C
+141212_152138: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012D
+141212_152204: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/MC_v9.9/DYToEE_M-20/
+141212_152239: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012A/
+141212_152321: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012B/
+141212_152352: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/DoubleEl_2012B/
+141212_152459: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/DoubleEl_2012C/
+141212_152503: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012C
+141212_152840: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012D
+141212_153003: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/MC_v9.9/DYToEE_M-20/
+141212_153934: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012A/
+141212_153947: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012B
+141212_154010: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/DoubleEl_2012B
+141212_154043: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012C
+141212_154121: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012D
+141212_155659: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012A/
+141212_160618: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012A/
+141212_160637: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012B
+141212_160749: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012C
+141212_160820: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/DoubleEl_2012C
+141212_160923: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/DoubleEl_2012D
+141212_160927: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012D
+141212_160953: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/MC_v9.9/DYToEE_M-20/
+141212_161023: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/MC_v9.9/DYToEE_M-20/
+141212_161114: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012A/
+141212_193248: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/MC_v9.9/DYToEE_M-20/
+141213_084656: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/MC_v9.9/DYToEE_M-20/
+141213_084934: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -report -c CRABS/MC_v9.9/DYToEE_M-20/
+141213_085234: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012A/
+141213_085331: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -report -c CRABS/Data_v9.9/DoubleEl_2012A/
+141213_085424: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012B/
+141213_085518: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012C
+141213_085555: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/DoubleEl_2012C
+141213_085621: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012D
+141213_085656: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/DoubleEl_2012D
+141213_085742: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012B/
+141213_085937: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -kill 10,201,429 -c CRABS/Data_v9.9/DoubleEl_2012B/
+141213_085952: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit 10,201,429 -c CRABS/Data_v9.9/DoubleEl_2012B/
+141213_090110: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012C
+141213_090145: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -kill 249,433,435,506,697,836,958,978 -c CRABS/Data_v9.9/DoubleEl_2012C
+141213_090205: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit 249,433,435,506,697,836,958,978 -c CRABS/Data_v9.9/DoubleEl_2012C
+141213_104452: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012A
+141213_104747: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012B
+141213_104808: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012C
+141213_104839: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012C
+141213_104905: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/DoubleEl_2012C
+141213_104948: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012D
+141213_105019: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012D
+141213_110539: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012B
+141213_110736: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/DoubleEl_2012B
+141213_110804: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012C
+141213_112736: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012C
+141213_112804: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012D
+141213_113152: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012B
+141213_134545: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012B
+141213_134615: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/DoubleEl_2012B
+141213_143058: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012B
+141213_143239: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012C
+141213_143303: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012C
+141213_143314: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012D
+141213_143358: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012B
+141213_145639: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012B
+141213_152150: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012B
+141213_191243: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012B
+141213_191634: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012C
+141214_073520: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012D
+141214_073530: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/Data_v9.9/DoubleEl_2012D
+141229_150824: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+141229_151621: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+141229_152240: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+141230_131635: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M200_S10/
+141230_131712: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M200_S10/
+150309_153328: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+150313_123117: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+150313_131703: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150313_131732: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150316_105112: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150316_105132: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150316_105414: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+150317_100116: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+150317_100708: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+150317_101605: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+150330_112402: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150330_112931: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150330_113038: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150330_113232: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150330_113401: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_Narrow_S10/
+150330_114304: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_Narrow_S10/
+150330_130225: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_Narrow_S10/
+150330_131041: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_Narrow_S10/
+150330_132918: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_Narrow_S10/
+150330_133250: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_Narrow_S10/
+150412_172603: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+150413_104431: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150413_104946: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150413_105001: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150413_134419: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150413_134510: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150420_134702: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+150420_135405: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150420_141643: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+150420_142122: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+150420_153516: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150420_153836: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150420_153850: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150420_153953: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150420_154013: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150420_154042: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150420_164618: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+150420_164814: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+150420_165004: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+150421_111823: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150421_124245: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150421_124701: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150421_125003: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150421_125027: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150421_125249: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150421_135637: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+150505_102209: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+150505_104937: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+150505_105253: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+150505_124820: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_124910: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_130202: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -kill all -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_130213: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -kill all -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_130229: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -kill all -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_130251: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_130309: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_130717: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+150505_130914: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+150505_131553: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+150505_132228: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_132244: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_132313: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -kill all -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_132327: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -kill all -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_132343: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -kill all -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_132447: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_132846: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+150505_134928: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_134943: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_135152: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+150505_135456: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+150505_140248: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_140320: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_140334: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_140410: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_140500: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_140630: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_140812: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_141306: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_141319: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_141333: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_142327: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_142343: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_142358: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_142419: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_142434: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_142448: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_142502: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_142521: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_142536: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_143036: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_143056: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_143110: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_145544: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_145615: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_145633: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_145725: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_145754: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_145858: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_150052: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_150114: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_150138: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_150316: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_150744: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_150800: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_150900: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_151123: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_152013: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_152030: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_152102: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_152157: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_154155: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_154400: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_154737: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_154914: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_155119: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_155146: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_155201: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_155308: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_155750: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_155846: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_155910: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_160207: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_160343: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_163256: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_163319: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_163346: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_163428: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_163506: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_163726: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_163809: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_164208: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_164235: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_164902: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_164931: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_165145: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_165203: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_165216: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_165328: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_165616: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_165654: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_165808: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_165939: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_165950: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_170104: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_170119: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_170205: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_170217: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_170709: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_170828: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_170842: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_170859: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_170908: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_170924: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_171055: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_171106: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_171122: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_171133: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_171303: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_172013: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_172023: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150505_172034: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_172351: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_172402: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_172557: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_173411: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_173706: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150505_173752: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_173845: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_173909: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_173925: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_173941: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_174002: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_174227: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_174747: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_175506: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_175850: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_175922: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_180223: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_180339: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_180353: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_180719: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_193429: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150505_193610: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150529_103804: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+150529_104246: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+150529_105024: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg -submit
+150529_105708: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150529_110345: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150529_110426: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150529_110932: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150529_111004: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M800_S10/
+150529_111015: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150529_111254: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1200_S10/
+150529_111306: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150529_111533: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150529_111544: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150529_111817: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150529_111838: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/ggHZG_M1600_S10/
+150710_171419: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_Data.cfg -submit
+150710_172827: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_Data.cfg -submit
+150710_173048: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -c CRABS/Data_v9.9/SingleMu_2012A/
+150710_173230: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_Data.cfg
+150710_173418: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012B/
+150710_173555: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012B/
+150710_173724: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_Data.cfg
+150710_173917: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012C
+150710_174046: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012C
+150710_174302: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012C
+150710_174428: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_Data.cfg
+150710_174613: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150710_174926: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150710_175056: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150710_175209: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150711_114045: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -c CRABS/Data_v9.9/SingleMu_2012A/
+150711_114050: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -c CRABS/Data_v9.9/SingleMu_2012A/ -get
+150711_114157: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -c CRABS/Data_v9.9/SingleMu_2012A/ -get
+150711_114229: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012A/
+150711_114354: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150711_114651: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150711_114721: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012B
+150711_114812: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150711_115256: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150711_115328: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012C
+150711_115415: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150711_120147: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150711_120230: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150712_094751: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012A
+150712_094807: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012A
+150712_094844: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012A
+150712_094908: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_095036: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012B
+150712_095112: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_095331: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012C
+150712_095948: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_100133: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150712_100959: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012A
+150712_101017: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_101538: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_101656: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -kill all -c CRABS/Data_v9.9/SingleMu_2012C
+150712_102024: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_102150: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_Data.cfg
+150712_102239: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_Data.cfg
+150712_102455: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012C
+150712_102616: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012C
+150712_102713: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012C
+150712_102814: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012C
+150712_102913: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012C
+150712_103032: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012C
+150712_103132: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_103218: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150712_103252: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_103341: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit 387-388 -c CRABS/Data_v9.9/SingleMu_2012D
+150712_103354: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -kill 387-388 -c CRABS/Data_v9.9/SingleMu_2012D
+150712_103414: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit 387-388 -c CRABS/Data_v9.9/SingleMu_2012D
+150712_103534: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_103613: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_103652: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012B
+150712_103722: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012A
+150712_103907: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_103931: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_104013: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_104056: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150712_104224: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_104313: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_104604: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012A
+150712_104823: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012A
+150712_105046: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012A
+150712_105100: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_105125: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_105252: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012C
+150712_105525: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012A
+150712_105531: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012A
+150712_105633: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit 143 -c CRABS/Data_v9.9/SingleMu_2012A
+150712_105740: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_105808: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_105833: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_105925: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012C
+150712_110004: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_110053: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012A
+150712_110119: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_110148: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_110232: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_110315: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150712_110351: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_110429: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_110524: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012C
+150712_110830: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_122356: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012A
+150712_122430: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_122511: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012B
+150712_122537: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_124702: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_124949: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012C
+150712_125034: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150712_125049: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_125142: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150712_125231: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012A
+150712_125259: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_125356: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_125525: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_125629: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012A
+150712_125655: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_130113: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_131852: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_134718: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_135335: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_135443: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012C
+150712_135710: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012A
+150712_135756: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_135853: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_140023: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012B
+150712_140104: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_140814: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012C
+150712_141014: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_141122: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012C
+150712_141237: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_141647: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_141724: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit abd -c CRABS/Data_v9.9/SingleMu_2012D
+150712_141737: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150712_142113: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012A
+150712_143152: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_143420: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_144522: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012B
+150712_144901: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_145356: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_151138: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_151221: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012A
+150712_151256: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012A
+150712_151355: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_151426: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_151504: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012B
+150712_151534: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_151642: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_151727: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150712_151909: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_152032: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_152154: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_153846: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_153928: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_154652: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_155332: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_155506: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit 1316 -c CRABS/Data_v9.9/SingleMu_2012D
+150712_155848: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_160619: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_173452: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_173617: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012C
+150712_173659: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012B
+150712_173704: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_174045: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_174114: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_174929: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_175141: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_175654: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_175740: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150712_180256: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_180401: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -kill all -c CRABS/Data_v9.9/SingleMu_2012B
+150712_180907: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_Data.cfg
+150712_181124: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012B
+150712_181228: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012B
+150712_181447: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012B
+150712_181607: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012B
+150712_182058: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012B
+150712_182547: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012B
+150712_183007: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_183132: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_183206: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_183411: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_183448: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_183803: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_183942: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_184155: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150712_184253: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_184443: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_214212: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_215511: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_215918: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_220419: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012B
+150712_220601: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_220825: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_220958: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150712_221724: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_223333: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_223510: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_224053: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_224152: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_224604: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_224907: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012B
+150712_230245: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_230855: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_234003: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150712_234433: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012C
+150712_234437: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150712_235211: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_235314: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150712_235404: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012B
+150712_235457: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150712_235542: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -kill al -c CRABS/Data_v9.9/SingleMu_2012D
+150712_235548: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -kill all -c CRABS/Data_v9.9/SingleMu_2012D
+150712_235804: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_Data.cfg
+150713_000429: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150713_000710: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150713_001006: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150713_001534: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150713_001832: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150713_002112: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150713_002344: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150713_002811: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150713_002913: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012B
+150713_002956: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150713_003057: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012C
+150713_004057: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150713_004207: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_004343: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150713_071255: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_072256: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150713_072416: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012B
+150713_072445: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_072559: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150713_090153: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_090335: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_090553: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150713_094045: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_094216: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150713_100313: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_100537: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150713_111614: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_111742: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150713_111914: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_121413: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_121629: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150713_132349: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_132529: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150713_133622: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_135013: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_141211: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_141333: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -kill all -c CRABS/Data_v9.9/SingleMu_2012D
+150713_141348: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_141431: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit 506, 929, 941, 1011, 1127, 1571, 1622, 1646, 1657, 1712, 1718, 1720, 1738, 1869 -c CRABS/Data_v9.9/SingleMu_2012D
+150713_141521: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit 929,941,1011,1127,1571,1622,1646,1657,1712,1718,1720,1738,1869,2504 -c CRABS/Data_v9.9/SingleMu_2012D
+150713_141805: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_142200: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_143831: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_144613: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_144935: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_150314: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_150727: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_151349: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_151514: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_153634: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_153747: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150713_153843: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_154129: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_154330: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150713_155121: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_155522: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_160444: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_160946: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_172049: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_175618: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_175920: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150713_182346: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150715_145919: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150715_150302: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_Data.cfg
+150715_152442: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150715_152702: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150715_153225: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150715_153405: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150715_153610: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150715_153847: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150715_154745: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150715_155428: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150715_160151: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150715_160932: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150715_163711: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150715_164054: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150715_164654: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150715_164922: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150715_165244: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150715_165417: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150715_170007: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150715_174147: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150715_180030: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150715_180232: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150715_180940: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150715_231639: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150715_232257: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150715_232450: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150715_234408: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_001036: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_073848: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_074148: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150716_074458: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_081934: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_082325: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_082552: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_082901: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_084148: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_084554: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_085806: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_090512: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_092520: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_093012: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_093155: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_093522: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_093949: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_094620: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_095025: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_100824: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_102535: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_102952: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_103151: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_103544: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_110512: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_110631: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_130555: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_Data.cfg
+150716_131048: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150716_131519: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150716_132217: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_Data.cfg
+150716_132416: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150716_133542: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150716_134656: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_134720: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_134801: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150716_135928: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150716_141134: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150716_143048: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150716_145024: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150716_150250: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/Data_v9.9/SingleMu_2012D
+150716_151934: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_152945: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_153112: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_153812: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_153953: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150716_154155: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_154309: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_154711: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150716_154938: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_155119: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_160245: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_160501: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_160643: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_163432: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_163641: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_163840: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/Data_v9.9/SingleMu_2012D
+150716_173252: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_173405: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_174545: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_175208: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_184349: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_185421: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_185707: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_193525: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_193710: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_194100: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_194223: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_194712: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_195518: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_195931: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_200156: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150716_200244: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/Data_v9.9/SingleMu_2012D
+150724_160732: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.9_8TeV/Data/DoubleMu_Run2012D -create -USER.ui_working_dir=DATA/DoubleMu_2012D -CMSSW.datasetpath=/DoubleMuParked/Run2012D-22Jan2013-v1/AOD -submit -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000
+150724_161001: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.9_8TeV/Data/DoubleMu_Run2012C -create -USER.ui_working_dir=DATA/DoubleMu_2012C -CMSSW.datasetpath=/DoubleMuParked/Run2012C-22Jan2013-v1/AOD -submit -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000
+150724_161242: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.9_8TeV/Data/DoubleMu_Run2012B -create -USER.ui_working_dir=DATA/DoubleMu_2012B -CMSSW.datasetpath=/DoubleMuParked/Run2012B-22Jan2013-v1/AOD -submit -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=1000
+150724_161429: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.9_8TeV/Data/DoubleMu_Run2012A -create -USER.ui_working_dir=DATA/DoubleMu_2012A -CMSSW.datasetpath=/DoubleMu/Run2012A-22Jan2013-v1/AOD -submit -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=500
+150724_162545: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c DATA/DoubleMu_2012B/
+150724_163337: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c DATA/DoubleMu_2012B/
+150724_165555: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c DATA/DoubleMu_2012C/
+150724_173045: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012A/
+150724_173130: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012A/
+150724_173150: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c DATA/DoubleMu_2012C/
+150724_175144: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c DATA/DoubleMu_2012C/
+150724_181401: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c DATA/DoubleMu_2012C/
+150724_182524: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c DATA/DoubleMu_2012C/
+150724_183440: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c DATA/DoubleMu_2012C/
+150724_183556: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c DATA/DoubleMu_2012D
+150724_184816: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c DATA/DoubleMu_2012D
+150724_190018: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c DATA/DoubleMu_2012D
+150724_190908: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c DATA/DoubleMu_2012D
+150724_224812: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c DATA/DoubleMu_2012D
+150724_224822: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c DATA/DoubleMu_2012D
+150724_225740: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c DATA/DoubleMu_2012D
+150726_133527: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012A/
+150726_133544: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012A/
+150726_133602: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012A/
+150726_133619: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012B
+150726_150206: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012A/
+150726_150252: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012A/
+150726_150311: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c DATA/DoubleMu_2012A/
+150726_150334: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012B
+150726_150538: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012B
+150726_150601: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c DATA/DoubleMu_2012B
+150726_150643: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012C
+150726_151219: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012C
+150726_151249: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c DATA/DoubleMu_2012C
+150726_151637: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012D
+150726_153053: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012C
+150726_153121: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012D
+150726_154322: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c DATA/DoubleMu_2012D
+150726_162206: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012A
+150726_162219: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012A
+150726_162854: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012B
+150726_162930: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit 26,63,156,265,296,320,344,391,537,617,701,741 -c DATA/DoubleMu_2012B
+150726_162957: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012C
+150726_163053: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012C
+150726_163138: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012D
+150726_163322: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012B
+150727_081112: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012B
+150727_081137: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012B
+150727_081346: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012C
+150727_081415: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012C
+150727_081500: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012C
+150727_082239: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012D
+150727_083708: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c DATA/DoubleMu_2012D
+150731_161737: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg
+150731_162022: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg
+150731_162432: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg
+150731_162744: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150731_163023: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150731_164207: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150731_165356: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150731_165803: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150803_093702: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150803_094649: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150803_094719: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150803_094907: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150803_095134: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -kill 11,85,636,706 -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150803_095147: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit 11,85,636,706 -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150803_095301: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -create -cfg crabNtuples_MC.cfg
+150803_095504: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/MC_v9.9/TTJets_S10/
+150803_095628: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/MC_v9.9/TTJets_S10/
+150803_095726: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/MC_v9.9/TTJets_S10/
+150803_095822: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/MC_v9.9/TTJets_S10/
+150803_095937: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/MC_v9.9/TTJets_S10/
+150803_105207: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150803_105215: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150803_110443: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150803_111028: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150803_111255: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150803_111409: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/TTJets_S10/
+150803_113216: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/TTJets_S10/
+150803_113248: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/TTJets_S10/
+150803_122240: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit 2, 9, 10, 11, 12, 13, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 397, 398, 399, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 424, 425, 426, 427, 428, 429, 430, 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 446, 447, 448, 449, 450, 451, 452, 453, 454, 455, 456, 457, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 495, 496 -c CRABS/MC_v9.9/TTJets_S10/
+150803_122253: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/TTJets_S10/
+150803_122437: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/MC_v9.9/TTJets_S10/
+150803_122602: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/MC_v9.9/TTJets_S10/
+150803_122820: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/MC_v9.9/TTJets_S10/
+150803_123134: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/MC_v9.9/TTJets_S10/
+150803_132113: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/TTJets_S10/
+150803_132619: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150803_132800: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150803_132935: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150803_133708: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150803_133836: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/TTJets_S10/
+150803_134238: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/TTJets_S10/
+150803_134407: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/TTJets_S10/
+150803_134617: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/TTJets_S10/
+150803_134748: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit 2,9-13,24-53,64-88,90-147,149,152-154,157-160,162-232,234-343,345-422 -c CRABS/MC_v9.9/TTJets_S10/
+150803_134849: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/TTJets_S10/
+150803_135055: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit 424-621,623,625-792,794-823,825-832,834-895,897-949,951-1038 -c CRABS/MC_v9.9/TTJets_S10/
+150803_135114: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit 424-621,623,625-792,794-823,825-832,834-895,897-949,951 -c CRABS/MC_v9.9/TTJets_S10/
+150803_135127: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 424-621,623,625-792,794-823,825-832,834-895,897-949,951 -c CRABS/MC_v9.9/TTJets_S10/
+150803_135158: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 424-621,623,625-792,794-823,825-832,834 -c CRABS/MC_v9.9/TTJets_S10/
+150803_135253: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/TTJets_S10/
+150803_135915: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/MC_v9.9/TTJets_S10/
+150803_142522: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/TTJets_S10/
+150803_142658: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/TTJets_S10/
+150803_142736: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/MC_v9.9/TTJets_S10/
+150803_142914: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/MC_v9.9/TTJets_S10/
+150803_143114: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150803_143247: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150803_143432: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/TTJets_S10/
+150803_150336: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150803_150605: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150803_150717: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150803_151321: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/TTJets_S10/
+150803_151739: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/TTJets_S10/
+150803_151849: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/TTJets_S10/
+150803_151903: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/MC_v9.9/TTJets_S10/
+150803_152038: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/MC_v9.9/TTJets_S10/
+150803_152536: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/TTJets_S10/
+150803_154006: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/TTJets_S10/
+150803_170339: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150803_170706: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150803_170800: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -get -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150803_171024: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -get -c CRABS/MC_v9.9/TTJets_S10/
+150803_171045: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/TTJets_S10/
+150803_171225: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -get -c CRABS/MC_v9.9/TTJets_S10/
+150803_171241: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -get -c CRABS/MC_v9.9/TTJets_S10/
+150803_172205: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/TTJets_S10/
+150803_172332: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/TTJets_S10/
+150803_172725: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/TTJets_S10/
+150803_172841: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/TTJets_S10/
+150803_172917: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/TTJets_S10/
+150803_173252: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/TTJets_S10/
+150803_173354: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150803_173409: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150803_173539: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 3 -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150804_105341: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150804_110112: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150804_110522: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150804_110606: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150804_110623: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 10 -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150804_110656: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 10 -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150804_110735: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/TTJets_S10/
+150804_112013: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/TTJets_S10/
+150804_123957: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 10 -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150804_124835: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/TTJets_S10/
+150804_124922: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 10 -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150804_124927: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 10 -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150804_131449: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 10 -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150804_141303: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 10 -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150804_141544: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -get -c CRABS/MC_v9.9/DYJets_10-50_S10/
+150804_145728: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -resubmit bad -c CRABS/MC_v9.9/TTJets_S10/
+150804_145753: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 500 -c CRABS/MC_v9.9/TTJets_S10/
+150804_145833: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/MC_v9.9/TTJets_S10/
+150804_150421: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 186 -c CRABS/MC_v9.9/TTJets_S10/
+150804_153723: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 186 -c CRABS/MC_v9.9/TTJets_S10/
+150804_171435: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/MC_v9.9/TTJets_S10/
+150804_174434: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -get -status -c CRABS/MC_v9.9/TTJets_S10/
+150804_174507: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -submit 186 -c CRABS/MC_v9.9/TTJets_S10/
+150808_170418: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012D -create -USER.ui_working_dir=DATA/SingleMu_2012D -CMSSW.datasetpath=/SingleMu/Run2012D-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000
+150808_170657: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012A -create -USER.ui_working_dir=DATA/SingleMu_2012A -CMSSW.datasetpath=/SingleMu/Run2012A-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=500
+150808_170756: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012B -create -USER.ui_working_dir=DATA/SingleMu_2012B -CMSSW.datasetpath=/SingleMu/Run2012B-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=1000
+150808_170914: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012C -create -USER.ui_working_dir=DATA/SingleMu_2012C -CMSSW.datasetpath=/SingleMu/Run2012C-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000
+150808_171511: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012D -submit=500 -c=DATA/SingleMu_2012D -USER.ui_working_dir=DATA/SingleMu_2012D -CMSSW.datasetpath=/SingleMu/Run2012D-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000
+150808_172646: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012A -submit=500 -c=DATA/SingleMu_2012A -USER.ui_working_dir=DATA/SingleMu_2012A -CMSSW.datasetpath=/SingleMu/Run2012A-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=500
+150808_172931: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012B -submit=500 -c=DATA/SingleMu_2012B -USER.ui_working_dir=DATA/SingleMu_2012B -CMSSW.datasetpath=/SingleMu/Run2012B-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=1000
+150808_173524: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012C -submit=500 -c=DATA/SingleMu_2012C -USER.ui_working_dir=DATA/SingleMu_2012C -CMSSW.datasetpath=/SingleMu/Run2012C-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000
+150808_174638: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012D -submit=500 -c=DATA/SingleMu_2012D -USER.ui_working_dir=DATA/SingleMu_2012D -CMSSW.datasetpath=/SingleMu/Run2012D-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000
+150808_175744: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012A -submit=500 -c=DATA/SingleMu_2012A -USER.ui_working_dir=DATA/SingleMu_2012A -CMSSW.datasetpath=/SingleMu/Run2012A-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=500
+150808_175751: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012B -submit=500 -c=DATA/SingleMu_2012B -USER.ui_working_dir=DATA/SingleMu_2012B -CMSSW.datasetpath=/SingleMu/Run2012B-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=1000
+150808_175955: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012C -submit=500 -c=DATA/SingleMu_2012C -USER.ui_working_dir=DATA/SingleMu_2012C -CMSSW.datasetpath=/SingleMu/Run2012C-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000
+150808_181233: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012D -submit=500 -c=DATA/SingleMu_2012D -USER.ui_working_dir=DATA/SingleMu_2012D -CMSSW.datasetpath=/SingleMu/Run2012D-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000
+150808_182302: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012A -submit=500 -c=DATA/SingleMu_2012A -USER.ui_working_dir=DATA/SingleMu_2012A -CMSSW.datasetpath=/SingleMu/Run2012A-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=500
+150808_182310: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012B -submit=500 -c=DATA/SingleMu_2012B -USER.ui_working_dir=DATA/SingleMu_2012B -CMSSW.datasetpath=/SingleMu/Run2012B-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=1000
+150808_182319: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012C -submit=500 -c=DATA/SingleMu_2012C -USER.ui_working_dir=DATA/SingleMu_2012C -CMSSW.datasetpath=/SingleMu/Run2012C-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000
+150808_183858: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012D -submit=500 -c=DATA/SingleMu_2012D -USER.ui_working_dir=DATA/SingleMu_2012D -CMSSW.datasetpath=/SingleMu/Run2012D-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000
+150808_185251: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012A -submit=500 -c=DATA/SingleMu_2012A -USER.ui_working_dir=DATA/SingleMu_2012A -CMSSW.datasetpath=/SingleMu/Run2012A-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=500
+150808_185259: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012B -submit=500 -c=DATA/SingleMu_2012B -USER.ui_working_dir=DATA/SingleMu_2012B -CMSSW.datasetpath=/SingleMu/Run2012B-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=1000
+150808_185307: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012C -submit=500 -c=DATA/SingleMu_2012C -USER.ui_working_dir=DATA/SingleMu_2012C -CMSSW.datasetpath=/SingleMu/Run2012C-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000
+150808_190616: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012D -submit=500 -c=DATA/SingleMu_2012D -USER.ui_working_dir=DATA/SingleMu_2012D -CMSSW.datasetpath=/SingleMu/Run2012D-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000
+150808_191604: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012A -submit=500 -c=DATA/SingleMu_2012A -USER.ui_working_dir=DATA/SingleMu_2012A -CMSSW.datasetpath=/SingleMu/Run2012A-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=500
+150808_191612: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012B -submit=500 -c=DATA/SingleMu_2012B -USER.ui_working_dir=DATA/SingleMu_2012B -CMSSW.datasetpath=/SingleMu/Run2012B-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=1000
+150808_191622: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012C -submit=500 -c=DATA/SingleMu_2012C -USER.ui_working_dir=DATA/SingleMu_2012C -CMSSW.datasetpath=/SingleMu/Run2012C-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000
+150808_231230: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012D -submit=500 -c=DATA/SingleMu_2012D -USER.ui_working_dir=DATA/SingleMu_2012D -CMSSW.datasetpath=/SingleMu/Run2012D-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000
+150808_232343: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012A -submit=500 -c=DATA/SingleMu_2012A -USER.ui_working_dir=DATA/SingleMu_2012A -CMSSW.datasetpath=/SingleMu/Run2012A-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=500
+150808_232351: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012B -submit=500 -c=DATA/SingleMu_2012B -USER.ui_working_dir=DATA/SingleMu_2012B -CMSSW.datasetpath=/SingleMu/Run2012B-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=1000
+150808_232359: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012C -submit=500 -c=DATA/SingleMu_2012C -USER.ui_working_dir=DATA/SingleMu_2012C -CMSSW.datasetpath=/SingleMu/Run2012C-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000
+150808_233411: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012D -submit=500 -c=DATA/SingleMu_2012D -USER.ui_working_dir=DATA/SingleMu_2012D -CMSSW.datasetpath=/SingleMu/Run2012D-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000
+150808_234445: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012A -submit=500 -c=DATA/SingleMu_2012A -USER.ui_working_dir=DATA/SingleMu_2012A -CMSSW.datasetpath=/SingleMu/Run2012A-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=500
+150808_234454: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012B -submit=500 -c=DATA/SingleMu_2012B -USER.ui_working_dir=DATA/SingleMu_2012B -CMSSW.datasetpath=/SingleMu/Run2012B-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=1000
+150808_234502: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012C -submit=500 -c=DATA/SingleMu_2012C -USER.ui_working_dir=DATA/SingleMu_2012C -CMSSW.datasetpath=/SingleMu/Run2012C-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000
+150809_085351: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012D -submit=500 -c=DATA/SingleMu_2012D -USER.ui_working_dir=DATA/SingleMu_2012D -CMSSW.datasetpath=/SingleMu/Run2012D-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000
+150809_085758: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012A -submit=500 -c=DATA/SingleMu_2012A -USER.ui_working_dir=DATA/SingleMu_2012A -CMSSW.datasetpath=/SingleMu/Run2012A-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=500
+150809_085809: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012B -submit=500 -c=DATA/SingleMu_2012B -USER.ui_working_dir=DATA/SingleMu_2012B -CMSSW.datasetpath=/SingleMu/Run2012B-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=1000
+150809_085817: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012C -submit=500 -c=DATA/SingleMu_2012C -USER.ui_working_dir=DATA/SingleMu_2012C -CMSSW.datasetpath=/SingleMu/Run2012C-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000
+150809_090446: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012D -c=DATA/SingleMu_2012D -USER.ui_working_dir=DATA/SingleMu_2012D -CMSSW.datasetpath=/SingleMu/Run2012D-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000 -get
+150809_091312: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012A -c=DATA/SingleMu_2012A -USER.ui_working_dir=DATA/SingleMu_2012A -CMSSW.datasetpath=/SingleMu/Run2012A-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=500 -get
+150809_091406: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012B -c=DATA/SingleMu_2012B -USER.ui_working_dir=DATA/SingleMu_2012B -CMSSW.datasetpath=/SingleMu/Run2012B-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=1000 -get
+150809_091713: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012C -c=DATA/SingleMu_2012C -USER.ui_working_dir=DATA/SingleMu_2012C -CMSSW.datasetpath=/SingleMu/Run2012C-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000 -get
+150809_093715: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012D -c=DATA/SingleMu_2012D -USER.ui_working_dir=DATA/SingleMu_2012D -CMSSW.datasetpath=/SingleMu/Run2012D-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000 -get
+150809_093816: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012A -c=DATA/SingleMu_2012A -USER.ui_working_dir=DATA/SingleMu_2012A -CMSSW.datasetpath=/SingleMu/Run2012A-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=500 -get
+150809_093825: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012B -c=DATA/SingleMu_2012B -USER.ui_working_dir=DATA/SingleMu_2012B -CMSSW.datasetpath=/SingleMu/Run2012B-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=1000 -get
+150809_093836: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012C -c=DATA/SingleMu_2012C -USER.ui_working_dir=DATA/SingleMu_2012C -CMSSW.datasetpath=/SingleMu/Run2012C-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000 -get
+150809_093923: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012D -resubmit=bad -c=DATA/SingleMu_2012D -USER.ui_working_dir=DATA/SingleMu_2012D -CMSSW.datasetpath=/SingleMu/Run2012D-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000
+150809_094252: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012A -resubmit=bad -c=DATA/SingleMu_2012A -USER.ui_working_dir=DATA/SingleMu_2012A -CMSSW.datasetpath=/SingleMu/Run2012A-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=500
+150809_094306: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012B -resubmit=bad -c=DATA/SingleMu_2012B -USER.ui_working_dir=DATA/SingleMu_2012B -CMSSW.datasetpath=/SingleMu/Run2012B-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=1000
+150809_094331: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012C -resubmit=bad -c=DATA/SingleMu_2012C -USER.ui_working_dir=DATA/SingleMu_2012C -CMSSW.datasetpath=/SingleMu/Run2012C-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000
+150809_101549: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012D -c=DATA/SingleMu_2012D -USER.ui_working_dir=DATA/SingleMu_2012D -CMSSW.datasetpath=/SingleMu/Run2012D-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000 -get
+150809_101652: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012A -c=DATA/SingleMu_2012A -USER.ui_working_dir=DATA/SingleMu_2012A -CMSSW.datasetpath=/SingleMu/Run2012A-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=500 -get
+150809_101703: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012B -c=DATA/SingleMu_2012B -USER.ui_working_dir=DATA/SingleMu_2012B -CMSSW.datasetpath=/SingleMu/Run2012B-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=1000 -get
+150809_101714: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012C -c=DATA/SingleMu_2012C -USER.ui_working_dir=DATA/SingleMu_2012C -CMSSW.datasetpath=/SingleMu/Run2012C-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000 -get
+150809_104537: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012D -c=DATA/SingleMu_2012D -USER.ui_working_dir=DATA/SingleMu_2012D -CMSSW.datasetpath=/SingleMu/Run2012D-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000 -get
+150809_104640: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012A -c=DATA/SingleMu_2012A -USER.ui_working_dir=DATA/SingleMu_2012A -CMSSW.datasetpath=/SingleMu/Run2012A-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=500 -get
+150809_104651: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012B -c=DATA/SingleMu_2012B -USER.ui_working_dir=DATA/SingleMu_2012B -CMSSW.datasetpath=/SingleMu/Run2012B-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=1000 -get
+150809_104702: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012C -c=DATA/SingleMu_2012C -USER.ui_working_dir=DATA/SingleMu_2012C -CMSSW.datasetpath=/SingleMu/Run2012C-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000 -get
+150809_112420: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012D -c=DATA/SingleMu_2012D -USER.ui_working_dir=DATA/SingleMu_2012D -CMSSW.datasetpath=/SingleMu/Run2012D-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000 -get
+150809_112526: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012A -c=DATA/SingleMu_2012A -USER.ui_working_dir=DATA/SingleMu_2012A -CMSSW.datasetpath=/SingleMu/Run2012A-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=500 -get
+150809_112536: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012B -c=DATA/SingleMu_2012B -USER.ui_working_dir=DATA/SingleMu_2012B -CMSSW.datasetpath=/SingleMu/Run2012B-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=1000 -get
+150809_112550: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012C -c=DATA/SingleMu_2012C -USER.ui_working_dir=DATA/SingleMu_2012C -CMSSW.datasetpath=/SingleMu/Run2012C-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000 -get
+150809_112701: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012D -c=DATA/SingleMu_2012D -USER.ui_working_dir=DATA/SingleMu_2012D -CMSSW.datasetpath=/SingleMu/Run2012D-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000 -get
+150809_112749: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012A -c=DATA/SingleMu_2012A -USER.ui_working_dir=DATA/SingleMu_2012A -CMSSW.datasetpath=/SingleMu/Run2012A-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=500 -get
+150809_112758: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012B -c=DATA/SingleMu_2012B -USER.ui_working_dir=DATA/SingleMu_2012B -CMSSW.datasetpath=/SingleMu/Run2012B-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=1000 -get
+150809_112811: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012C -c=DATA/SingleMu_2012C -USER.ui_working_dir=DATA/SingleMu_2012C -CMSSW.datasetpath=/SingleMu/Run2012C-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000 -get
+150809_112915: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012D -resubmit=bad -c=DATA/SingleMu_2012D -USER.ui_working_dir=DATA/SingleMu_2012D -CMSSW.datasetpath=/SingleMu/Run2012D-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000
+150809_112940: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012A -resubmit=bad -c=DATA/SingleMu_2012A -USER.ui_working_dir=DATA/SingleMu_2012A -CMSSW.datasetpath=/SingleMu/Run2012A-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=500
+150809_112947: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012B -resubmit=bad -c=DATA/SingleMu_2012B -USER.ui_working_dir=DATA/SingleMu_2012B -CMSSW.datasetpath=/SingleMu/Run2012B-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=1000
+150809_112954: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012C -resubmit=bad -c=DATA/SingleMu_2012C -USER.ui_working_dir=DATA/SingleMu_2012C -CMSSW.datasetpath=/SingleMu/Run2012C-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000
+150809_113037: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012D -c=DATA/SingleMu_2012D -USER.ui_working_dir=DATA/SingleMu_2012D -CMSSW.datasetpath=/SingleMu/Run2012D-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000 -get
+150809_113126: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012A -c=DATA/SingleMu_2012A -USER.ui_working_dir=DATA/SingleMu_2012A -CMSSW.datasetpath=/SingleMu/Run2012A-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=500 -get
+150809_113135: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012B -c=DATA/SingleMu_2012B -USER.ui_working_dir=DATA/SingleMu_2012B -CMSSW.datasetpath=/SingleMu/Run2012B-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=1000 -get
+150809_113146: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012C -c=DATA/SingleMu_2012C -USER.ui_working_dir=DATA/SingleMu_2012C -CMSSW.datasetpath=/SingleMu/Run2012C-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000 -get
+150809_114223: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012D -resubmit=bad -c=DATA/SingleMu_2012D -USER.ui_working_dir=DATA/SingleMu_2012D -CMSSW.datasetpath=/SingleMu/Run2012D-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000
+150809_114233: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012A -resubmit=bad -c=DATA/SingleMu_2012A -USER.ui_working_dir=DATA/SingleMu_2012A -CMSSW.datasetpath=/SingleMu/Run2012A-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=500
+150809_114245: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012B -resubmit=bad -c=DATA/SingleMu_2012B -USER.ui_working_dir=DATA/SingleMu_2012B -CMSSW.datasetpath=/SingleMu/Run2012B-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=1000
+150809_114252: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012C -resubmit=bad -c=DATA/SingleMu_2012C -USER.ui_working_dir=DATA/SingleMu_2012C -CMSSW.datasetpath=/SingleMu/Run2012C-22Jan2013-v1/AOD -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000
+150809_115224: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012D -c=DATA/SingleMu_2012D -USER.ui_working_dir=DATA/SingleMu_2012D -CMSSW.datasetpath=/SingleMu/Run2012D-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000 -get
+150809_115325: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012A -c=DATA/SingleMu_2012A -USER.ui_working_dir=DATA/SingleMu_2012A -CMSSW.datasetpath=/SingleMu/Run2012A-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=500 -get
+150809_115335: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012B -c=DATA/SingleMu_2012B -USER.ui_working_dir=DATA/SingleMu_2012B -CMSSW.datasetpath=/SingleMu/Run2012B-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=1000 -get
+150809_115347: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012C -c=DATA/SingleMu_2012C -USER.ui_working_dir=DATA/SingleMu_2012C -CMSSW.datasetpath=/SingleMu/Run2012C-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000 -get
+150809_124334: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012D -c=DATA/SingleMu_2012D -USER.ui_working_dir=DATA/SingleMu_2012D -CMSSW.datasetpath=/SingleMu/Run2012D-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000 -get
+150809_124435: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012A -c=DATA/SingleMu_2012A -USER.ui_working_dir=DATA/SingleMu_2012A -CMSSW.datasetpath=/SingleMu/Run2012A-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=500 -get
+150809_124444: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012B -c=DATA/SingleMu_2012B -USER.ui_working_dir=DATA/SingleMu_2012B -CMSSW.datasetpath=/SingleMu/Run2012B-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=1000 -get
+150809_124458: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012C -c=DATA/SingleMu_2012C -USER.ui_working_dir=DATA/SingleMu_2012C -CMSSW.datasetpath=/SingleMu/Run2012C-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000 -get
+150809_151825: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012D -c=DATA/SingleMu_2012D -USER.ui_working_dir=DATA/SingleMu_2012D -CMSSW.datasetpath=/SingleMu/Run2012D-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000 -get
+150809_151912: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012A -c=DATA/SingleMu_2012A -USER.ui_working_dir=DATA/SingleMu_2012A -CMSSW.datasetpath=/SingleMu/Run2012A-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=500 -get
+150809_151922: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012B -c=DATA/SingleMu_2012B -USER.ui_working_dir=DATA/SingleMu_2012B -CMSSW.datasetpath=/SingleMu/Run2012B-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=1000 -get
+150809_151934: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -USER.user_remote_dir=/nuTuples_v9.10_8TeV/Data/SingleMu_Run2012C -c=DATA/SingleMu_2012C -USER.ui_working_dir=DATA/SingleMu_2012C -CMSSW.datasetpath=/SingleMu/Run2012C-22Jan2013-v1/AOD -status -CMSSW.pycfg_params=isRealData=1 -CMSSW.lumi_mask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt -CMSSW.total_number_of_lumis=-1 -CMSSW.number_of_jobs=5000 -get
+150809_152431: /cvmfs/cms.cern.ch/crab/CRAB_2_11_1_patch1/python/crab.py -status -c DATA/SingleMu_2012A/

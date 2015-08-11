@@ -115,6 +115,52 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     cicPhotonId_->configure(recVtxsBS_, tracksHandle_, gsfElectronHandle_, pfCands, rhoFactor);
 
     //////////////////////////
+    //Get PDF Weights for MC//
+    //////////////////////////
+     
+    // Get PDF weights
+
+      /*
+    if (!isRealData){
+      Handle<std::vector<double>> pdfHandle2;
+      iEvent.getByLabel(edm::InputTag("pdfWeights","CT10"), pdfHandle2);
+      const vector<double>* weights = pdfHandle2.product();
+
+      float nominal = weights->at(0);
+      float up = 0.;
+      float dn = 0.;
+      float nPairs = (weights->size() - 1)/2;
+
+      for(unsigned i = 0; i < nPairs; ++i) {
+          float wP = weights->at(i*2+1);
+          float wM = weights->at(i*2+2);
+          float wD[] = {nominal-wP,nominal-wM,0.};
+          float wU[] = {wP-nominal,wM-nominal,0.};
+
+          up += pow(*std::max_element(wU, wU+3),2);
+          dn += pow(*std::max_element(wD, wD+3),2);
+      }
+
+      pdfWeights[0] = nominal;
+      pdfWeights[1] = sqrt(up)/1.64485;
+      pdfWeights[2] = sqrt(dn)/1.64485;
+      //cout<<"nominal: "<<pdfWeights[0]<<" up: "<<pdfWeights[1]<<" down: "<<pdfWeights[2]<<endl;
+
+      edm::InputTag pdfWeightTag("pdfWeights:cteq66"); // or any other PDF set
+     edm::Handle<std::vector<double> > weightHandle;
+     iEvent.getByLabel(pdfWeightTag, weightHandle);
+
+     std::vector<double> weights = (*weightHandle);
+     std::cout << "Event weight for central PDF:" << weights[0] << std::endl;
+     unsigned int nmembers = weights.size();
+     for (unsigned int j=1; j<nmembers; j+=2) {
+           std::cout << "Event weight for PDF variation +" << (j+1)/2 << ": " << weights[j] << std::endl;
+           std::cout << "Event weight for PDF variation -" << (j+1)/2 << ": " << weights[j+1] << std::endl;
+     }
+    }
+     */
+
+    //////////////////////////
     //Get vertex information//
     //////////////////////////
 
@@ -195,6 +241,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     //cout<<" RHOS. In eta 4.4 = "<<rhoFactor<<"   in eta25 "<<rho25Factor<<"  MUs: "<<rhoMuFactor<<endl;
 
 
+    /*
     edm::Handle<reco::JetTagCollection> bTagCollectionTCHE;
     iEvent.getByLabel("trackCountingHighEffBJetTags", bTagCollectionTCHE);
     const reco::JetTagCollection & bTagsTCHE = *(bTagCollectionTCHE.product());
@@ -210,14 +257,24 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     edm::Handle<reco::JetTagCollection> bTagCollectionJBP;
     iEvent.getByLabel("jetBProbabilityBJetTags", bTagCollectionJBP);
     const reco::JetTagCollection & bTagsJBP = *(bTagCollectionJBP.product());
+    */
 
     edm::Handle<reco::JetTagCollection> bTagCollectionCSV;
     iEvent.getByLabel("combinedSecondaryVertexBJetTags", bTagCollectionCSV);
     const reco::JetTagCollection & bTagsCSV = *(bTagCollectionCSV.product());
 
-    edm::Handle<reco::JetTagCollection> bTagCollectionCSVMVA;
-    iEvent.getByLabel("combinedSecondaryVertexBJetTags", bTagCollectionCSVMVA);
+     edm::Handle<reco::JetTagCollection> bTagCollectionCSVMVA;
+    iEvent.getByLabel("combinedSecondaryVertexMVABJetTags", bTagCollectionCSVMVA);
     const reco::JetTagCollection & bTagsCSVMVA = *(bTagCollectionCSVMVA.product());
+    
+    edm::Handle<reco::JetTagCollection> bTagCollectionCSVv1;
+    iEvent.getByLabel("combinedSecondaryVertexV1BJetTags", bTagCollectionCSVv1);
+    const reco::JetTagCollection & bTagsCSVv1 = *(bTagCollectionCSVv1.product());
+
+    //edm::Handle<reco::JetTagCollection> bTagCollectionCSVSLv1;
+    //iEvent.getByLabel("combinedSecondaryVertexSoftPFLeptonV1BJetTags", bTagCollectionCSVSLv1);
+    //const reco::JetTagCollection & bTagsCSVSLv1 = *(bTagCollectionCSVSLv1.product());
+
 
     // Jet flavor matching //
     Handle<JetFlavourMatchingCollection> bJetFlavourMC;
@@ -259,11 +316,13 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
         jetCon->SetUncertaintyJES(-1);
 
-        jetCon->SetBDiscriminatorMap("TCHE",  MatchBTagsToJets(bTagsTCHE,  *iJet));
-        jetCon->SetBDiscriminatorMap("TCHP",  MatchBTagsToJets(bTagsTCHP,  *iJet));
-        jetCon->SetBDiscriminatorMap("SSVHE", MatchBTagsToJets(bTagsSSVHE, *iJet));
-        jetCon->SetBDiscriminatorMap("JBP",   MatchBTagsToJets(bTagsJBP,   *iJet));
+        //jetCon->SetBDiscriminatorMap("TCHE",  MatchBTagsToJets(bTagsTCHE,  *iJet));
+        //jetCon->SetBDiscriminatorMap("TCHP",  MatchBTagsToJets(bTagsTCHP,  *iJet));
+        //jetCon->SetBDiscriminatorMap("SSVHE", MatchBTagsToJets(bTagsSSVHE, *iJet));
+        //jetCon->SetBDiscriminatorMap("JBP",   MatchBTagsToJets(bTagsJBP,   *iJet));
         jetCon->SetBDiscriminatorMap("CSV",   MatchBTagsToJets(bTagsCSV,   *iJet));
+        jetCon->SetBDiscriminatorMap("CSVv1",   MatchBTagsToJets(bTagsCSVv1,   *iJet));
+        //jetCon->SetBDiscriminatorMap("CSVSLv1",   MatchBTagsToJets(bTagsCSVSLv1,   *iJet));
         jetCon->SetBDiscriminatorMap("CSVMVA",MatchBTagsToJets(bTagsCSVMVA,*iJet));
 
         /////////////////////
@@ -291,10 +350,14 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             ++vtx;
         }
         if( vtx == vertexes.end() ) { vtx = vertexes.begin(); }
-        puIdentifier = myPUJetID->computeIdVariables(&(*iJet), jec,  &(*vtx),  vertexes, false);
+        puIdentifier = myPUJetID->computeIdVariables(&(*iJet), jec,  &(*vtx),  vertexes, true);
         //cout<<"betaStarClassic:\t"<<puIdentifier.betaStarClassic()<<"\t"<<"dR2Mean:\t"<<puIdentifier.dR2Mean()<<endl;
         jetCon->SetBetaStarClassic(puIdentifier.betaStarClassic());
         jetCon->SetDR2Mean(puIdentifier.dR2Mean());
+        jetCon->SetIdMap("PUID_MVA",puIdentifier.mva());
+        jetCon->SetIdMap("PUID_MVA_Loose",puIdentifier.passJetId(puIdentifier.idFlag(),PileupJetIdentifier::kLoose));
+        jetCon->SetIdMap("PUID_MVA_Medium",puIdentifier.passJetId(puIdentifier.idFlag(),PileupJetIdentifier::kMedium));
+        jetCon->SetIdMap("PUID_MVA_Tight",puIdentifier.passJetId(puIdentifier.idFlag(),PileupJetIdentifier::kTight));
 
         ++jetCount;
     }
@@ -336,7 +399,6 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     ///////////////
     // Get muons //
     ///////////////
-
 
 
     Handle<vector<reco::Muon> > muons;
@@ -412,17 +474,17 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         // Set isolation map values
         // Detector-based isolation
 
-        /*
-           myMuon->SetIsoMap("NTracks_R03", iMuon->isolationR03().nTracks);
-           myMuon->SetIsoMap("EmIso_R03",   iMuon->isolationR03().emEt);
-           myMuon->SetIsoMap("HadIso_R03",  iMuon->isolationR03().hadEt);
-           myMuon->SetIsoMap("SumPt_R03",   iMuon->isolationR03().sumPt);
+        myMuon->SetIdMap("NTracks_R03", iMuon->isolationR03().nTracks);
+        myMuon->SetIdMap("EmIso_R03",   iMuon->isolationR03().emEt);
+        myMuon->SetIdMap("HadIso_R03",  iMuon->isolationR03().hadEt);
+        myMuon->SetIdMap("SumPt_R03",   iMuon->isolationR03().sumPt);
 
+        /*
            myMuon->SetIsoMap("NTracks_R05", iMuon->isolationR05().nTracks);
            myMuon->SetIsoMap("EmIso_R05",   iMuon->isolationR05().emEt);
            myMuon->SetIsoMap("HadIso_R05",  iMuon->isolationR05().hadEt);
            myMuon->SetIsoMap("SumPt_R05",   iMuon->isolationR05().sumPt);
-         */
+           */
         // PF-based isolation
         myMuon->SetIdMap("Iso_pfPUPt_R03",      iMuon->pfIsolationR03().sumPUPt);
         myMuon->SetIdMap("Iso_pfPhotonEt_R03",  iMuon->pfIsolationR03().sumPhotonEt);
@@ -537,7 +599,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     Int_t eee=0;
     for (vector<reco::GsfElectron>::const_iterator iElectron = electrons->begin(); iElectron != electrons->end(); ++iElectron) {
         eee++;
-        if (iElectron->pt() < 5) continue;
+        if (iElectron->pt() < 5 || std::isnan(iElectron->pt())) continue;
 
         TCElectron* myElectron = new ((*recoElectrons)[eleCount]) TCElectron;
 
@@ -545,6 +607,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         myElectron->SetPtEtaPhiM(iElectron->pt(), iElectron->eta(), iElectron->phi(), iElectron->mass());
         myElectron->SetVtx(iElectron->gsfTrack()->vx(),iElectron->gsfTrack()->vy(),iElectron->gsfTrack()->vz());
         myElectron->SetCharge(iElectron->charge());
+
 
         // Fiducial variables
         myElectron->SetIsEB(iElectron->isEB());
@@ -856,6 +919,7 @@ void ntupleProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         if (saveTriggerObj_){
           for (unsigned j = 0; j < triggerObjects.size(); ++j) {
               //float deltaR = triggerObjects[j].DeltaR(*myElectron);
+              //if (fabs(triggerObjects[j].Eta())>5) continue;
               float deltaR = reco::deltaR(triggerObjects[j].Eta(), triggerObjects[j].Phi(), myElectron->Eta(), myElectron->Phi());
               if (deltaR < 0.2) {
                   myElectron->SetTriggered(true);
@@ -1372,6 +1436,8 @@ void  ntupleProducer::beginJob()
     eventTree->Branch("hltPrescale",hltPrescale, "hltPrescale[64]/i");
 
     eventTree->Branch("NoiseFilters", &myNoiseFilters.isScraping, "isScraping/O:isNoiseHcalHBHE:isNoiseHcalLaser:isNoiseEcalTP:isNoiseEcalBE:isCSCTightHalo:isCSCLooseHalo:isNoiseTracking:isNoiseEEBadSc:isNoisetrkPOG1:isNoisetrkPOG2:isNoisetrkPOG3");
+
+    eventTree->Branch("pdfWeights",&pdfWeights,"pdfWeights[3]/D");
 
     jobTree->Branch("nEvents",&nEvents, "nEvents/i");
     jobTree->Branch("triggerNames", "vector<string>", &triggerPaths_);

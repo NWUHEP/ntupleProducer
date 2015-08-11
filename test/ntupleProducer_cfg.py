@@ -6,21 +6,24 @@ from RecoEgamma.PhotonIdentification.isolationCalculator_cfi import *
 process = cms.Process("NTUPLE")
 
 options = VarParsing.VarParsing ('analysis')
-options.maxEvents = 500
+options.maxEvents = 100
 #options.inputFiles = '/store/mc/Summer12_DR53X/TTH_HToZG_M-135_8TeV-pythia8175/AODSIM/PU_RD1_START53_V7N-v2/00000/0A4C1013-9287-E311-937C-003048D4397E.root'
 #options.inputFiles= '/store/data/Run2012C/SingleMu/AOD/22Jan2013-v1/30010/C0E05558-9078-E211-9E02-485B39800B65.root'
 #options.loadFromFile('inputFiles','PYTHIA8_175_H_Zg_8TeV.txt')
 #options.loadFromFile('inputFiles','PYTHIA8_175_POWHEG_PDF7_H_Zg_8TeV.txt')
-options.inputFiles = '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0000/02CDCF05-BED2-E111-85F4-0030486740BA.root'
+#options.inputFiles = '/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0000/02CDCF05-BED2-E111-85F4-0030486740BA.root'
 #options.inputFiles = '/store/data/Run2012D/SinglePhotonParked/AOD/22Jan2013-v1/30004/144D7268-4086-E211-9DC1-001E673984C1.root'
 #options.inputFiles = '/store/data/Run2012C/MuEG/AOD/22Jan2013-v1/20000/5A2C6379-8867-E211-BB9E-00266CFFC7E4.root'
 #options.inputFiles = '/store/user/cmkuo/Dalitz_H_eeg_125_MG_v1/Dalitz_H_eeg_m125_RECO_v1/d459946fa1e058e24b305fca3ec661c6/STEP2_RAW2DIGI_L1Reco_RECO_PU_100_1_jL0.root'
 #options.inputFiles = '/store/data/Run2012D/DoublePhoton/AOD/22Jan2013-v1/30002/FEA0AD2A-A284-E211-9B86-180373FF8D6A.root'
 #options.inputFiles = '/store/data/Run2012C/DoubleMuParked/AOD/22Jan2013-v1/10000/00858723-296D-E211-A4B3-00259073E488.root'
+#options.inputFiles = '/store/data/Run2012D/SingleMu/AOD/22Jan2013-v1/20000/5CA3C7A0-A185-E211-8F70-20CF305B04E3.root'
+options.inputFiles = '/store/data/Run2012D/SingleMu/AOD/22Jan2013-v1/20002/20CE206D-AE87-E211-BC71-20CF305616CC.root'
 #options.inputFiles = '/store/data/Run2012C/DoubleElectron/AOD/22Jan2013-v1/20000/00ABC56B-3668-E211-A0A5-003048678FDE.root'
 #options.inputFiles = '/store/data/Run2011A/DoubleMu/AOD/21Jun2013-v1/10000/006AD75C-17DE-E211-B24E-003048678B0C.root'
 #options.inputFiles = '/store/mc/Summer12_DR53X/GluGluToHToZZTo4L_M-125_8TeV-powheg-pythia6/AODSIM/PU_S10_START53_V7A-v1/0000/FEEEEFFF-7FFB-E111-8FE2-002618943810.root'
 #options.inputFiles = 'file:/uscms/home/bpollack/nobackup/genProd/CMSSW_5_3_13_cand1/src/MC_Gen/cfgs/STEP2_H_Zg_M500_Narrow_RAW2DIGI_L1Reco_RECO_VALIDATION_PU.root'
+#options.inputFiles = 'file:/uscms/home/bpollack/EOS/GenMC/H_ZG_M800/AOD/bpollack/PYTHIA8_H_Zg_M800_8TeV_cff_py_GEN_SIM_fix/STEP2_PYTHIA8_H_Zg_M800_8TeV_RAW2DIGI_L1Reco_RECO_VALIDATION_PU_fix/02b0b866ce8ea192318c0a18f8222e63/STEP2_H_Zg_M800_RAW2DIGI_L1Reco_RECO_VALIDATION_PU_43_1_BJQ.root'
 
 
 options.register("isRealData",
@@ -48,12 +51,13 @@ process.load("JetMETCorrections.Type1MET.correctedMet_cff")
 
 if (isRealData):
   #process.GlobalTag.globaltag = 'FT_53_V21_AN3::All'
-    process.GlobalTag.globaltag = 'FT_53_V21_AN4::All'
+    process.GlobalTag.globaltag = 'FT53_V21A_AN6::All'
     process.corrPfMetType1.jetCorrLabel = cms.string("ak5PFL1FastL2L3Residual")
     process.corrPfMetShiftXY.parameter = process.pfMEtSysShiftCorrParameters_2012runABCDvsNvtx_data
 else:
   #process.GlobalTag.globaltag = 'START53_V7N::All'
-    process.GlobalTag.globaltag = 'START53_V23::All'
+    process.GlobalTag.globaltag = 'START53_V26::All'
+    #process.GlobalTag.globaltag = 'START53_V27::All' # for MC >=538_patch3
     process.corrPfMetType1.jetCorrLabel = cms.string("ak5PFL1FastL2L3")
     process.corrPfMetShiftXY.parameter = process.pfMEtSysShiftCorrParameters_2012runABCDvsNvtx_mc
 
@@ -68,29 +72,30 @@ process.goodOfflinePrimaryVertices = cms.EDFilter( "PrimaryVertexObjectFilter",
 # jet energy corrections
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 process.load("CondCore.DBCommon.CondDBCommon_cfi")
+process.load('CondCore.DBCommon.CondDBSetup_cfi')
 
+process.BTauMVAJetTagComputerRecord = cms.ESSource('PoolDBESSource',
+    process.CondDBSetup,
+    timetype = cms.string('runnumber'),
+    toGet = cms.VPSet(cms.PSet(
+        record = cms.string('BTauGenericMVAJetTagComputerRcd'),
+        tag = cms.string('MVAComputerContainer_Retrained53X_JetTags_v2')
+    )),  # for CSVv1
+    connect = cms.string('frontier://FrontierProd/CMS_COND_PAT_000'),
+    BlobStreamerName = cms.untracked.string('TBufferBlobStreamingService')
+)
+process.es_prefer_BTauMVAJetTagComputerRecord = cms.ESPrefer('PoolDBESSource','BTauMVAJetTagComputerRecord')
 
+# 53X b-jet discriminator calibration
+process.GlobalTag.toGet = cms.VPSet(
+  cms.PSet(record = cms.string("BTagTrackProbability2DRcd"),
+      tag = cms.string("TrackProbabilityCalibration_2D_Data53X_v2"),
+      connect = cms.untracked.string("frontier://FrontierPrep/CMS_COND_BTAU")),
+  cms.PSet(record = cms.string("BTagTrackProbability3DRcd"),
+      tag = cms.string("TrackProbabilityCalibration_3D_Data53X_v2"),
+      connect = cms.untracked.string("frontier://FrontierPrep/CMS_COND_BTAU"))
+  )
 
-if (isRealData):
-    # 53X b-jet discriminator calibration
-    process.GlobalTag.toGet = cms.VPSet(
-        cms.PSet(record = cms.string("BTagTrackProbability2DRcd"),
-            tag = cms.string("TrackProbabilityCalibration_2D_Data53X_v2"),
-            connect = cms.untracked.string("frontier://FrontierPrep/CMS_COND_BTAU")),
-        cms.PSet(record = cms.string("BTagTrackProbability3DRcd"),
-            tag = cms.string("TrackProbabilityCalibration_3D_Data53X_v2"),
-            connect = cms.untracked.string("frontier://FrontierPrep/CMS_COND_BTAU"))
-        )
-else:
-    # 53X b-jet discriminator calibration
-    process.GlobalTag.toGet = cms.VPSet(
-        cms.PSet(record = cms.string("BTagTrackProbability2DRcd"),
-            tag = cms.string("TrackProbabilityCalibration_2D_Data53X_v2"),
-            connect = cms.untracked.string("frontier://FrontierPrep/CMS_COND_BTAU")),
-        cms.PSet(record = cms.string("BTagTrackProbability3DRcd"),
-            tag = cms.string("TrackProbabilityCalibration_3D_Data53X_v2"),
-            connect = cms.untracked.string("frontier://FrontierPrep/CMS_COND_BTAU"))
-        )
 
 ### To get b-tags from ak5PFJets
 process.load('RecoJets.JetAssociationProducers.ak5JTA_cff')
@@ -264,7 +269,9 @@ process.calibratedElectrons.linearityCorrectionsInputPath = cms.string("EgammaAn
 # event source
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(options.maxEvents))
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring(options.inputFiles)
+    fileNames = cms.untracked.vstring(options.inputFiles),
+    #firstRun = cms.untracked.uint32(206207),
+    #firstEvent = cms.untracked.uint32(523266524)
 )
 
 
@@ -338,6 +345,16 @@ process.modElectronIso = cms.EDProducer("BstdZeeModIsolProducer",
 # Photon CiC stuff
 from NWU.ntupleProducer.hggPhotonIDCuts_cfi import *
 
+### Get PDF weights ###
+#process.pdfWeights = cms.EDProducer("PdfWeightProducer",
+#            # Fix POWHEG if buggy (this PDF set will also appear on output,
+#            # so only two more PDF sets can be added in PdfSetNames if not "")
+#            #FixPOWHEG = cms.untracked.string("CT10.LHgrid"),
+#            GenTag = cms.untracked.InputTag("genParticles"),
+#            PdfInfoTag = cms.untracked.InputTag("generator"),
+#            PdfSetNames = cms.untracked.vstring("CT10.LHgrid")
+#)
+#
 
 ### ntuple producer
 process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
@@ -346,7 +363,7 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
   verboseMVAs          =    cms.untracked.bool(False),
 
   photonIsoCalcTag  =    cms.PSet(isolationSumsCalculator),
-  jetPUIdAlgo       =    cms.PSet(full_5x),
+  jetPUIdAlgo       =    cms.PSet(full_53x),
 
   JetTag            =    cms.untracked.InputTag('ak5PFJetsL1FastL2L3'),
   JecTag            =    cms.string("AK5PF"),
@@ -469,6 +486,10 @@ process.ntupleProducer   = cms.EDAnalyzer('ntupleProducer',
 
 process.eleIso = cms.Sequence(process.pfParticleSelectionSequence*process.eleIsoSequence)
 
+#process.btagging += cms.Sequence(process.combinedSecondaryVertexV1BJetTags *
+#    process.combinedSecondaryVertexSoftPFLeptonV1BJetTags)
+process.btagging += cms.Sequence(process.combinedSecondaryVertexV1BJetTags)
+
 process.preNtuple = cms.Sequence(
     process.goodOfflinePrimaryVertices
     * process.correctionTermsPfMetType1Type2
@@ -496,6 +517,7 @@ process.JetMC = cms.Sequence(process.myPartons * process.JetFlavour)
 if isRealData:
     process.ntuplePath = cms.Path(process.preNtuple * process.eleIso * process.ntupleProducer)
 else:
+  #process.ntuplePath = cms.Path(process.pdfWeights * process.preNtuple * process.JetMC * process.eleIso * process.ntupleProducer)
     process.ntuplePath = cms.Path(process.preNtuple * process.JetMC * process.eleIso * process.ntupleProducer)
 
 #process.out = cms.OutputModule("PoolOutputModule",

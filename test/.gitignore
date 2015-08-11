@@ -3,3 +3,5 @@ StressTest
 pollack
 *.out
 *.list
+DATA/
+CRABS/

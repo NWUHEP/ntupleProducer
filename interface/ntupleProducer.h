@@ -328,4 +328,7 @@ class ntupleProducer : public edm::EDAnalyzer {
         map<DetId, EcalRecHit> rechits_map_;
         auto_ptr<CaloSubdetectorTopology> topology_p;
         auto_ptr<CiCPhotonID> cicPhotonId_;
+
+        //PDF weights (simple array for CT10 for now)
+        double pdfWeights[3];
 };
